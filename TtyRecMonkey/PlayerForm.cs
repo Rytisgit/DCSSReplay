@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Putty;
 using ShinyConsole;
@@ -142,7 +143,6 @@ namespace TtyRecMonkey {
 
 			if ( files.Length>1 ) {
 				// multiselect!
-
 				var fof = new FileOrderingForm(files);
 				if ( fof.ShowDialog(this) != DialogResult.OK ) return;
 				files = fof.FileOrder.ToArray();
