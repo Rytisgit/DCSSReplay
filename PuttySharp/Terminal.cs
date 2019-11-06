@@ -2,22 +2,24 @@
 //
 // See the file LICENSE.txt for copying permission.
 
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
+
 namespace Putty {
 	public class Terminal : IDisposable {
 		IntPtr Handle;
 
-		[DllImport(@"PuttyDLL.dll")]        static extern IntPtr             CreatePuttyTerminal   ( int width, int height );
-		[DllImport(@"PuttyDLL.dll")]        static extern void               DestroyPuttyTerminal  ( IntPtr terminal );
-		[DllImport(@"PuttyDLL.dll")] unsafe static extern void               SendPuttyTerminal     ( IntPtr terminal, int stderr, byte* data, int length );
-		[DllImport(@"PuttyDLL.dll")] unsafe static extern TerminalCharacter* GetPuttyTerminalLine  ( IntPtr terminal, int y );
-		[DllImport(@"PuttyDLL.dll")]        static extern IntPtr             ClonePuttyTerminal    ( IntPtr terminal );
-		[DllImport(@"PuttyDLL.dll")]        static extern int                GetPuttyTerminalWidth ( IntPtr terminal );
-		[DllImport(@"PuttyDLL.dll")]        static extern int                GetPuttyTerminalHeight( IntPtr terminal );
+		[DllImport(@"PuttyDLL.dll", CallingConvention = CallingConvention.Cdecl)] static extern IntPtr             CreatePuttyTerminal   ( int width, int height );
+		[DllImport(@"PuttyDLL.dll", CallingConvention = CallingConvention.Cdecl)] static extern void               DestroyPuttyTerminal  ( IntPtr terminal );
+		[DllImport(@"PuttyDLL.dll", CallingConvention = CallingConvention.Cdecl)] unsafe static extern void               SendPuttyTerminal     ( IntPtr terminal, int stderr, byte* data, int length );
+		[DllImport(@"PuttyDLL.dll", CallingConvention = CallingConvention.Cdecl)] unsafe static extern TerminalCharacter* GetPuttyTerminalLine  ( IntPtr terminal, int y );
+		[DllImport(@"PuttyDLL.dll", CallingConvention = CallingConvention.Cdecl)] static extern IntPtr             ClonePuttyTerminal    ( IntPtr terminal );
+		[DllImport(@"PuttyDLL.dll", CallingConvention = CallingConvention.Cdecl)] static extern int                GetPuttyTerminalWidth ( IntPtr terminal );
+		[DllImport(@"PuttyDLL.dll", CallingConvention = CallingConvention.Cdecl)] static extern int                GetPuttyTerminalHeight( IntPtr terminal );
 
 		/// <summary>
 		/// Create a new PuTTY terminal
@@ -72,8 +74,8 @@ namespace Putty {
 		public unsafe void Send( byte[] payload ) {
 			if ( Disposed ) throw new ObjectDisposedException( "This terminal has already been disposed" );
 			fixed ( byte* pinned = payload ) SendPuttyTerminal( Handle, 0, pinned, payload.Length );
-			Debug.Assert( Width  == GetPuttyTerminalWidth (Handle) );
-			Debug.Assert( Height == GetPuttyTerminalHeight(Handle) );
+			////debug.assert( Width  == GetPuttyTerminalWidth (Handle) );
+			////debug.assert( Height == GetPuttyTerminalHeight(Handle) );
 		}
 
 		/// <summary>
@@ -90,7 +92,7 @@ namespace Putty {
 			var buffer = new List<TerminalCharacter>(w);
 			var src = GetPuttyTerminalLine( Handle, row );
 			for ( int x=0 ; x<w ; ++x ) buffer.Add(src[x]);
-			Debug.Assert(buffer.Count==w);
+			////debug.assert(buffer.Count==w);
 			return buffer.AsReadOnly();
 		}
 	}

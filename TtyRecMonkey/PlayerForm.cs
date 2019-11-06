@@ -15,21 +15,9 @@ using Font = ShinyConsole.Font; // Disambiguate from System.Drawing.Font
 
 namespace TtyRecMonkey {
 	[System.ComponentModel.DesignerCategory("")]
-	class PlayerForm : BasicShinyConsoleForm<PlayerForm.Character> {
-		public struct Character : IConsoleCharacter {
-			public new uint Foreground, Background;
-			public uint ActualForeground;// { get { return base.Foreground; } set { base.Foreground = value; }}
-			public uint ActualBackground;// { get { return base.Background; } set { base.Background = value; }}
-			public char Glyph;
-			public Font Font;
+	public class PlayerForm : BasicShinyConsoleForm<Character> {
 
-			uint IConsoleCharacter.Foreground { get { return ActualForeground; }}
-			uint IConsoleCharacter.Background { get { return ActualBackground; }}
-			Font IConsoleCharacter.Font       { get { return Font; }}
-			char IConsoleCharacter.Glyph      { get { return Glyph; }}
-		}
-
-		Point CursorPosition      = new Point(0,0);
+        Point CursorPosition      = new Point(0,0);
 		Point SavedCursorPosition = new Point(0,0);
 
 		Character Prototype = new Character()
@@ -38,7 +26,9 @@ namespace TtyRecMonkey {
 			, Glyph      = ' '
 			};
 
-		public PlayerForm(): base(80,50) {
+        bool generating = false;
+        TerminalCharacter[,] savedFrame;
+        public PlayerForm(): base(80,50) {
 			Text = "TtyRecMonkey";
 
 			GlyphSize = new Size(6,8);
@@ -50,8 +40,8 @@ namespace TtyRecMonkey {
 			{
 				Buffer[x,y] = Prototype;
 			}
-
-			Visible = true;
+            savedFrame = new TerminalCharacter[80, 30];
+            Visible = true;
 			Configuration.Load(this);
 			AfterConfiguration();
 		}
@@ -125,26 +115,26 @@ namespace TtyRecMonkey {
 			if ( resize ) ClientSize=ActiveSize;
 		}
 
-		TtyRecKeyframeDecoder Decoder = null;
+		public TtyRecKeyframeDecoder Decoder = null;
 		int PlaybackSpeed;
 		TimeSpan Seek;
 		readonly List<DateTime> PreviousFrames = new List<DateTime>();
 
 		void OpenFile() {
-			var open = new OpenFileDialog()
-				{ CheckFileExists  = true
-				, DefaultExt       = "ttyrec"
-				, Filter           = "TtyRec Files|*.ttyrec|All Files|*"
-				, InitialDirectory = @"I:\home\media\ttyrecs\"
-				, Multiselect      = true
-				, RestoreDirectory = true
-				, Title            = "Select a TtyRec to play"
-				};
-			if ( open.ShowDialog(this) != DialogResult.OK ) return;
+			//var open = new OpenFileDialog()
+			//	{ CheckFileExists  = true
+			//	, DefaultExt       = "ttyrec"
+			//	, Filter           = "TtyRec Files|*.ttyrec|All Files|*"
+			//	, InitialDirectory = @"I:\home\media\ttyrecs\"
+			//	, Multiselect      = true
+			//	, RestoreDirectory = true
+			//	, Title            = "Select a TtyRec to play"
+			//	};
+			//if ( open.ShowDialog(this) != DialogResult.OK ) return;
 
-			var files = open.FileNames;
-			using ( open ) {} open = null;
-			DoOpenFiles(files);
+			//var files = open.FileNames;
+			//using ( open ) {} open = null;
+			DoOpenFiles(new string[] { "C:\\source\\ttyrecPlayer\\ttyrecTiles\\2019-10-25.22_08_50.ttyrec" });
 		}
 
 		void DoOpenFiles( string[] files ) {
@@ -173,8 +163,10 @@ namespace TtyRecMonkey {
 		DateTime PreviousFrame = DateTime.Now;
 		void MainLoop() {
 			var now = DateTime.Now;
+            Dictionary<int, string> myTable = new Dictionary<int, string>();
+                Dictionary<int, string> myTable2 = new Dictionary<int, string>();
 
-			PreviousFrames.Add(now);
+            PreviousFrames.Add(now);
 			PreviousFrames.RemoveAll(f=>f.AddSeconds(1)<now);
 
 			var dt = Math.Max( 0, Math.Min( 0.1, (now-PreviousFrame).TotalSeconds ) );
@@ -189,17 +181,65 @@ namespace TtyRecMonkey {
 				Decoder.Seek( Seek );
 
 				var frame = Decoder.CurrentFrame.Data;
-				if ( frame != null )
-				for ( int y=0 ; y<BufferH ; ++y )
-				for ( int x=0 ; x<BufferW ; ++x )
-				{
-					var ch = (x<frame.GetLength(0) && y<frame.GetLength(1)) ? frame[x,y] : default(TerminalCharacter);
+                if(frame != null && frame.Length>0)
+                {
+                    //string test = "";
+                    //foreach (var item in frame)
+                    //{
+                    //   if( !myTable.TryGetValue(item.ForegroundPaletteIndex, out var a))
+                    //        myTable.Add(item.ForegroundPaletteIndex,"");
+                    //    if (!myTable2.TryGetValue(item.BackgroundPaletteIndex, out var b))
+                    //        myTable2.Add(item.BackgroundPaletteIndex, "");
 
-					Buffer[x,y].Glyph      = ch.Character;
-					Buffer[x,y].Foreground = Palette.Default[ ch.ForegroundPaletteIndex ];
-					Buffer[x,y].Background = Palette.Default[ ch.BackgroundPaletteIndex ];
-				}
-			} else {
+                           
+
+                    //}
+                    TerminalCharacter[,] f13 = new TerminalCharacter[80,30];
+
+                    //for (int i = 12; i < 15; i++)
+                    //{
+                    //    Console.Write(string.Concat(frame[37, i].Character == 55328 ? ' ' : frame[37, i].Character, ' ', frame[37, i].ForegroundPaletteIndex, ' ', ';'));
+                        
+                    //    var index = frame[37, i].ForegroundPaletteIndex;
+                    //    if (index == 8 || index == 13)
+                    //    {
+                    //        Array.Copy(frame, 1122, f13, 0, 7);
+                    //        Console.Write(string.Concat(frame[37, i].Character == 55328 ? ' ' : frame[37, i].Character, ' ', frame[37, i].ForegroundPaletteIndex, ' ', ';') + " index :" + index);
+                    //        Console.WriteLine();
+                    //    }
+                        
+                      
+                        
+                    //}
+                    //Console.WriteLine();
+                }
+
+                if ( frame != null) {
+
+                    for (int y = 0; y < BufferH; ++y)
+
+                        for (int x = 0; x < BufferW; ++x)
+                        {
+                            var ch = (x < frame.GetLength(0) && y < frame.GetLength(1)) ? frame[x, y] : default(TerminalCharacter);
+                            Buffer[x, y].Glyph = ch.Character;
+                            //if (x < 17)
+                            //    Buffer[x,y].Foreground = Palette.Default[ x ];
+                            //else
+                            Buffer[x, y].Foreground = Palette.Default[ch.ForegroundPaletteIndex];
+                            Buffer[x, y].Background = Palette.Default[ch.BackgroundPaletteIndex];
+                        }
+
+                    if (!generating)
+                    {
+                        generating = true;
+                      //  Array.Copy(frame, 0, savedFrame, 0, frame.Length);
+                      //  Task.Run(() => generator.GenerateImage(savedFrame).ContinueWith((_) => { generating = false; return; }));
+                    }
+                }
+
+                //InputParse.Model model = InputParse.Parser.ParseData(frame);
+
+            } else {
 				var text = new[]
 					{ "           PLACEHOLDER CONTROLS"
 					, ""
@@ -297,7 +337,7 @@ namespace TtyRecMonkey {
 			return string.Format( "{0:0,0}PB", bytes );
 		}
 
-		[STAThread] static void Main( string[] args ) {
+		 static void Main( string[] args ) {
 			using ( var form = new PlayerForm() ) {
 				if ( args.Length>0 ) form.DoOpenFiles(args);
 				MessagePump.Run( form, form.MainLoop );

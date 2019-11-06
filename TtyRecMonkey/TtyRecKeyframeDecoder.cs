@@ -11,12 +11,12 @@ using System.Threading;
 using Putty;
 
 namespace TtyRecMonkey {
-	struct TtyRecFrame {
+	public struct TtyRecFrame {
 		public TimeSpan SinceStart;
 		public TerminalCharacter[,] Data;
 	}
 
-	class TtyRecKeyframeDecoder : IDisposable {
+    public class TtyRecKeyframeDecoder : IDisposable {
 		public void Dispose() {
 			// n.b. Resize uses this -- we may need to refactor if we need to do something permanent
 
@@ -25,7 +25,7 @@ namespace TtyRecMonkey {
 			foreach ( var ap in Packets ) using ( ap.RestartPosition ) {}
 			Packets.Clear();
 
-			Debug.Assert( !LoadThread.IsAlive ); // We assert this...
+			//debug.assert( !LoadThread.IsAlive ); // We assert this...
 			LoadPacketBuffer.Clear(); // ... because we're not locking this.
 		}
 
@@ -60,8 +60,8 @@ namespace TtyRecMonkey {
 				}
 			}
 
-			if ( begin>0        ) Debug.Assert(!cond(list[begin-1]));
-			if ( end<list.Count ) Debug.Assert(cond(list[end]));
+			if ( begin>0        ) //debug.assert(!cond(list[begin-1]));
+			if ( end<list.Count ) //debug.assert(cond(list[end]));
 
 			for ( int i=begin ; i<end ; ++i ) if ( cond(list[i]) ) return i;
 			return -1;
@@ -82,7 +82,7 @@ namespace TtyRecMonkey {
 #if DEBUG
 			var reference_before_seek = Packets.FindLastIndex( ap => ap.RestartPosition!=null && ap.SinceStart <= seektarget );
 			if ( reference_before_seek == -1 ) reference_before_seek = 0;
-			Debug.Assert( before_seek == reference_before_seek );
+			//debug.assert( before_seek == reference_before_seek );
 #endif
 
 			var after_seek = Packets.FindIndex( before_seek+1, ap => ap.RestartPosition!=null && ap.SinceStart > seektarget );
@@ -97,7 +97,7 @@ namespace TtyRecMonkey {
 			if ( after_seek>=Packets.Count-1 ) {
 				after_seek = Packets.Count;
 			} else {
-				Debug.Assert( after_seek<Packets.Count-1 );
+				//debug.assert( after_seek<Packets.Count-1 );
 				after_seek = Packets.FindIndex( after_seek+1, ap=>ap.RestartPosition!=null );
 				if ( after_seek == -1 ) after_seek = Packets.Count;
 			}
@@ -108,8 +108,8 @@ namespace TtyRecMonkey {
 		int LastActiveRangeStart = int.MaxValue;
 		int LastActiveRangeEnd   = int.MinValue;
 		void SetActiveRange( int start, int end ) {
-			Debug.Assert( start<end );
-			Debug.Assert( Packets[start].RestartPosition != null );
+			//debug.assert( start<end );
+			//debug.assert( Packets[start].RestartPosition != null );
 
 			bool need_decode = false;
 
@@ -126,7 +126,7 @@ namespace TtyRecMonkey {
 				}
 			}
 
-			// Next, we stop strong referencing everything otuside this range:
+			// Next, we stop strong referencing everything outside this range:
 			for ( int i=LastActiveRangeStart ; i<start              ; ++i ) Packets[i].DecodedCache = null;
 			for ( int i=end                  ; i<LastActiveRangeEnd ; ++i ) Packets[i].DecodedCache = null;
 			LastActiveRangeStart = start;
@@ -166,7 +166,7 @@ namespace TtyRecMonkey {
 			DumpChunksAround(when);
 			var i = BinarySearchIndexBefore( Packets, ap => ap.SinceStart >= when );
 			if ( i==-1 ) i=0;
-			Debug.Assert(Packets[i].DecodedCache!=null);
+			//debug.assert(Packets[i].DecodedCache!=null);
 			CurrentFrame.SinceStart = Packets[i].SinceStart;
 			CurrentFrame.Data       = Packets[i].DecodedCache;
 		}
