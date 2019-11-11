@@ -36,7 +36,7 @@ namespace FrameGenerator.FileReading
         {
 
             var floorandwall = new Dictionary<string, string[]>();
-            string[] lines = System.IO.File.ReadAllLines(@"..\..\..\..\FrameGenerator\Extra\tilefloor.txt");
+            string[] lines = System.IO.File.ReadAllLines(@"..\..\..\FrameGenerator\Extra\tilefloor.txt");
                 
                 for (var i = 0; i < lines.Length; i += 3)
                 {
