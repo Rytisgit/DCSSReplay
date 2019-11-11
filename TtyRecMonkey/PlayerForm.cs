@@ -31,7 +31,7 @@ namespace TtyRecMonkey {
         bool generating = false;
         TerminalCharacter[,] savedFrame;
         Task test;
-        public PlayerForm(): base(80,50) {
+        public PlayerForm(): base(80,30) {
 			Text = "TtyRecMonkey";
             generator = new MainGenerator();
             GlyphSize = new Size(6,8);
@@ -124,20 +124,29 @@ namespace TtyRecMonkey {
 		readonly List<DateTime> PreviousFrames = new List<DateTime>();
 
 		void OpenFile() {
-			//var open = new OpenFileDialog()
-			//	{ CheckFileExists  = true
-			//	, DefaultExt       = "ttyrec"
-			//	, Filter           = "TtyRec Files|*.ttyrec|All Files|*"
-			//	, InitialDirectory = @"I:\home\media\ttyrecs\"
-			//	, Multiselect      = true
-			//	, RestoreDirectory = true
-			//	, Title            = "Select a TtyRec to play"
-			//	};
-			//if ( open.ShowDialog(this) != DialogResult.OK ) return;
+            //var open = new OpenFileDialog()
+            //{
+            //    CheckFileExists = true
+            //    ,
+            //    DefaultExt = "ttyrec"
+            //    ,
+            //    Filter = "TtyRec Files|*.ttyrec|All Files|*"
+            //    ,
+            //    InitialDirectory = @"I:\home\media\ttyrecs\"
+            //    ,
+            //    Multiselect = true
+            //    ,
+            //    RestoreDirectory = true
+            //    ,
+            //    Title = "Select a TtyRec to play"
+            //};
+            //if (open.ShowDialog(this) != DialogResult.OK) return;
 
-			//var files = open.FileNames;
-			//using ( open ) {} open = null;
-			DoOpenFiles(new string[] { "C:\\source\\ttyrecPlayer\\ttyrecTiles\\2019-10-25.22_08_50.ttyrec" });
+            //var files = open.FileNames;
+            //using (open) { }
+            //open = null;
+            //DoOpenFiles(files);
+            DoOpenFiles(new string[] { @"..\..\..\..\ttyrecTiles\2019-10-25.22_08_50.ttyrec" });
 		}
 
 		void DoOpenFiles( string[] files ) {
@@ -183,38 +192,6 @@ namespace TtyRecMonkey {
 				Decoder.Seek( Seek );
 
 				var frame = Decoder.CurrentFrame.Data;
-                if(frame != null && frame.Length>0)
-                {
-                    //string test = "";
-                    //foreach (var item in frame)
-                    //{
-                    //   if( !myTable.TryGetValue(item.ForegroundPaletteIndex, out var a))
-                    //        myTable.Add(item.ForegroundPaletteIndex,"");
-                    //    if (!myTable2.TryGetValue(item.BackgroundPaletteIndex, out var b))
-                    //        myTable2.Add(item.BackgroundPaletteIndex, "");
-
-                           
-
-                    //}
-                    TerminalCharacter[,] f13 = new TerminalCharacter[80,30];
-
-                    //for (int i = 12; i < 15; i++)
-                    //{
-                    //    Console.Write(string.Concat(frame[37, i].Character == 55328 ? ' ' : frame[37, i].Character, ' ', frame[37, i].ForegroundPaletteIndex, ' ', ';'));
-                        
-                    //    var index = frame[37, i].ForegroundPaletteIndex;
-                    //    if (index == 8 || index == 13)
-                    //    {
-                    //        Array.Copy(frame, 1122, f13, 0, 7);
-                    //        Console.Write(string.Concat(frame[37, i].Character == 55328 ? ' ' : frame[37, i].Character, ' ', frame[37, i].ForegroundPaletteIndex, ' ', ';') + " index :" + index);
-                    //        Console.WriteLine();
-                    //    }
-                        
-                      
-                        
-                    //}
-                    //Console.WriteLine();
-                }
 
                 if ( frame != null) {
 
@@ -235,9 +212,24 @@ namespace TtyRecMonkey {
                     {
                         generating = true;
                         Array.Copy(frame, 0, savedFrame, 0, frame.Length);
-                        //generator.GenerateImage(savedFrame);
-                        //generating = false;
-                        test = Task.Run(() => generator.GenerateImage(savedFrame)).ContinueWith((_) => { generating = false; return; });
+                        if (!true)
+                        {
+                            try
+                            {
+                                test = Task.Run(() => generator.GenerateImage(savedFrame)).ContinueWith((_) => { generating = false; return; });
+                            }
+                            catch (AggregateException)
+                            {
+                                Console.WriteLine("Bad Error");
+                                generator.GenerateImage(savedFrame);
+                                generating = false;
+                            }
+                        }
+                        else
+                        {
+                            generator.GenerateImage(savedFrame);
+                            generating = false;
+                        }
                     }
                 }
 
