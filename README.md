@@ -1,3 +1,11 @@
+## To launch with ttyrec tiles player on visual studio
+
+1. set solution start program to ttyrecmonkey, configuration to release, cpu to x86
+2. restore nuget packages
+3. rebuild the solution
+4. it should now work
+
+
 ![Screenshot](https://raw.githubusercontent.com/MaulingMonkey/TtyRecMonkey/master/.projnfo/screenshots/Untitled.png)
 
 # Quickstart
