@@ -9,8 +9,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\ttyrecTiles\Character\Character.csproj" />
-    <ProjectReference Include="..\..\ttyrecTiles\InputParse\InputParse.csproj" />
+    <ProjectReference Include="..\Character\Character.csproj" />
+    <ProjectReference Include="..\InputParse\InputParse.csproj" />
     <ProjectReference Include="..\Window\Window.csproj" />
   </ItemGroup>
 
