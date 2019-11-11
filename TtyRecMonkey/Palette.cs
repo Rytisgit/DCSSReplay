@@ -30,7 +30,7 @@ namespace TtyRecMonkey {
 				, 0xFFFFFFFF
 				};
 
-			Debug.Assert( 6*6*6 == 216 );
+			//debug.assert( 6*6*6 == 216 );
 
 			for ( uint r=0 ; r<6 ; ++r )
 			for ( uint g=0 ; g<6 ; ++g )
@@ -44,7 +44,7 @@ namespace TtyRecMonkey {
 				Default.Add( (0xFFu<<24) + 0x10101u * component );
 			}
 
-			Debug.Assert( Default.Count==256 );
+			//debug.assert( Default.Count==256 );
 
 			Default.Add( 0xFFE0E0E0 ); // default foreground
 			Default.Add( 0xFFFFFFFF ); // default bold foreground
