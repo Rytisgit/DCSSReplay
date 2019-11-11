@@ -23,7 +23,7 @@ namespace FrameGenerator
 
         public MainGenerator()
         {
-            string GameLocation = File.ReadAllLines(@"..\..\..\..\FrameGenerator\Extra\config.ini").First();
+            string GameLocation = File.ReadAllLines(@"..\..\..\FrameGenerator\Extra\config.ini").First();
             
             _monsterdata = ReadFromFile.GetMonsterData(GameLocation);
             _floorandwall = ReadFromFile.Get_Floor_And_Wall_Names_For_Dungeons();

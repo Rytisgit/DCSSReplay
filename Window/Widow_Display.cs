@@ -18,7 +18,7 @@ namespace Window
             Application.EnableVisualStyles();           
             //Application.SetCompatibleTextRenderingDefault(false);
             form = new Form1();
-            if (!File.Exists(@"..\..\..\..\FrameGenerator\Extra\config.ini"))
+            if (!File.Exists(@"..\..\..\FrameGenerator\Extra\config.ini"))
             {
               
                 Thread t = new Thread((System.Threading.ThreadStart)(() => {
@@ -46,7 +46,7 @@ namespace Window
             t.Start();
             t.Join();
          
-                using (StreamWriter outputFile = new StreamWriter(@"..\..\..\..\FrameGenerator\Extra\config.ini"))
+                using (StreamWriter outputFile = new StreamWriter(@"..\..\..\FrameGenerator\Extra\config.ini"))
                 {
                         outputFile.WriteLine(gamelocation);
                 }
