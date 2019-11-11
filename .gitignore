@@ -5,7 +5,9 @@ Thumbs.db
 *.sdf
 *.opensdf
 *.mdmp
+*.vs
 obj/
 bin/
 Debug/
 Release/
+Packages/
