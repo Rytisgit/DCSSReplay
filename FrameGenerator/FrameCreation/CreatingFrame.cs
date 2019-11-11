@@ -113,12 +113,12 @@ namespace FrameGenerator.FrameCreation
                     int x = 0;
                     int y = 0;
                     string[] tempo = model.SideData.Place.Split(':');
-                    string name = floorandwall[tempo[0].ToUpper()][0];
 
+                    if (!floorandwall.TryGetValue(tempo[0].ToUpper(), out var fnw)) return;
+                   // Console.WriteLine(fnw[0] + " " + fnw[1]);
+                    if (!wallpng.TryGetValue(fnw[0], out var wall)) return;
 
-                    Bitmap wall = wallpng[name];
-                    name = floorandwall[tempo[0].ToUpper()][1];
-                    Bitmap floor = floorpng[name];
+                    if (!floorpng.TryGetValue(fnw[1], out var floor)) return;
                     int i = 1;
                     foreach (var tile in model.TileNames)
                     {
