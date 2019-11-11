@@ -107,6 +107,10 @@
       <Project>{86b588bf-9b47-4071-8162-3a2a29bb8fef}</Project>
       <Name>Character</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FrameGenerator\FrameGenerator.csproj">
+      <Project>{56debc93-b053-4652-996f-81e3bb120df8}</Project>
+      <Name>FrameGenerator</Name>
+    </ProjectReference>
     <ProjectReference Include="..\InputParse\InputParse.csproj">
       <Project>{3a5ca5d2-f282-4044-9943-2a0900fe0f72}</Project>
       <Name>InputParse</Name>

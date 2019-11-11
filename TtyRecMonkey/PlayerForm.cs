@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using FrameGenerator;
 using Putty;
 using ShinyConsole;
 using SlimDX.Windows;
@@ -26,13 +27,14 @@ namespace TtyRecMonkey {
 			, Background = 0xFF000000u
 			, Glyph      = ' '
 			};
-
+        MainGenerator generator;
         bool generating = false;
         TerminalCharacter[,] savedFrame;
+        Task test;
         public PlayerForm(): base(80,50) {
 			Text = "TtyRecMonkey";
-
-			GlyphSize = new Size(6,8);
+            generator = new MainGenerator();
+            GlyphSize = new Size(6,8);
 			GlyphOverlap = new Size(1,1);
 			FitWindowToMetrics();
 
@@ -232,8 +234,10 @@ namespace TtyRecMonkey {
                     if (!generating)
                     {
                         generating = true;
-                      //  Array.Copy(frame, 0, savedFrame, 0, frame.Length);
-                      //  Task.Run(() => generator.GenerateImage(savedFrame).ContinueWith((_) => { generating = false; return; }));
+                        Array.Copy(frame, 0, savedFrame, 0, frame.Length);
+                        //generator.GenerateImage(savedFrame);
+                        //generating = false;
+                        test = Task.Run(() => generator.GenerateImage(savedFrame)).ContinueWith((_) => { generating = false; return; });
                     }
                 }
 

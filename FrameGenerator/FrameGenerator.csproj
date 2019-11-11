@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net35</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Threading.Tasks" Version="3.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ttyrecTiles\Character\Character.csproj" />
+    <ProjectReference Include="..\..\ttyrecTiles\InputParse\InputParse.csproj" />
+    <ProjectReference Include="..\Window\Window.csproj" />
+  </ItemGroup>
+
+</Project>

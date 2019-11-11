@@ -25,7 +25,7 @@ namespace InputParse
         LIGHTBLUE,//12
         LIGHTMAGENTA,//13
         LIGHTCYAN,//14
-        WWHITE//15
+        WHITE//15
     }
     public class ColorList
     {
@@ -39,7 +39,7 @@ namespace InputParse
         public SolidBrush LIGHTGREY = new SolidBrush(Color.LightGray);
         public SolidBrush DARKGREY = new SolidBrush(Color.DarkGray);
         public SolidBrush LIGHTRED = new SolidBrush(Color.LightSalmon);
-        public SolidBrush lightgreen = new SolidBrush(Color.LightGreen);
+        public SolidBrush LIGHTGREEN = new SolidBrush(Color.LightGreen);
         public SolidBrush YELLOW = new SolidBrush(Color.FromArgb(252, 233, 79));
         public SolidBrush LIGHTBLUE = new SolidBrush(Color.LightBlue);
         public SolidBrush LIGHTMAGENTA = new SolidBrush(Color.LightPink);
