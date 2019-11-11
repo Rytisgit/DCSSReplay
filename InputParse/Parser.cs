@@ -33,79 +33,8 @@ namespace InputParse
                     }
                 model.TileNames = coloredStrings;
 
-                StringBuilder name = new StringBuilder();
-                StringBuilder race = new StringBuilder();
-                StringBuilder weapon = new StringBuilder();
-                StringBuilder quiver = new StringBuilder();
-                StringBuilder status = new StringBuilder();
-                for (int i = 37; i < 75; i++)
-                {
-                    name.Append(GetCharacter(characters[i, 0]));
-                    race.Append(GetCharacter(characters[i, 1]));
-                    weapon.Append(GetCharacter(characters[i, 9]));
-                    quiver.Append(GetCharacter(characters[i, 10]));
-                    status.Append(GetCharacter(characters[i, 11]));
+                model.SideData = ParseSideData(characters);
 
-                }
-                model.SideData.Name = name.ToString();
-                model.SideData.Race = race.ToString();
-                model.SideData.Weapon = weapon.ToString();
-                model.SideData.Quiver = quiver.ToString();
-                model.SideData.Statuses1 = status.ToString();
-                model.SideData.Statuses2 = "";
-
-                StringBuilder ac = new StringBuilder();
-                StringBuilder ev = new StringBuilder();
-                StringBuilder sh = new StringBuilder();
-                StringBuilder xl = new StringBuilder();
-                for (int i = 40; i < 44; i++)
-                {
-                    ac.Append(GetCharacter(characters[i, 4]));
-                    ev.Append(GetCharacter(characters[i, 5]));
-                    sh.Append(GetCharacter(characters[i, 6]));
-                    xl.Append(GetCharacter(characters[i, 7]));
-
-                }
-                model.SideData.ArmourClass = ac.ToString();
-                model.SideData.Evasion = ev.ToString();
-                model.SideData.Shield = sh.ToString();
-                model.SideData.ExperienceLevel = xl.ToString();
-
-                StringBuilder str = new StringBuilder();
-                StringBuilder @int = new StringBuilder();
-                StringBuilder dex = new StringBuilder();
-                for (int i = 59; i < 63; i++)
-                {
-                    str.Append(GetCharacter(characters[i, 4]));
-                    @int.Append(GetCharacter(characters[i, 5]));
-                    dex.Append(GetCharacter(characters[i, 6]));
-
-                }
-                model.SideData.Strength = str.ToString();
-                model.SideData.Inteligence = @int.ToString();
-                model.SideData.Dexterity = dex.ToString();
-
-                StringBuilder hp = new StringBuilder();
-                StringBuilder mp = new StringBuilder();
-                for (int i = 43; i < 52; i++)
-                {
-                    hp.Append(GetCharacter(characters[i + 1, 2]));
-                    mp.Append(GetCharacter(characters[i, 3]));
-
-                }
-                var splithp = hp.ToString().Split('/');
-                var splitmp = mp.ToString().Split('/');
-                if (splithp.Length > 1)
-                {
-                    model.SideData.Magic = int.Parse(splitmp[0]);
-                    model.SideData.Health = int.Parse(splithp[0]);
-
-                }
-                if (splitmp.Length > 1)
-                {
-                    model.SideData.MaxMagic = int.Parse(splitmp[1]);
-                    model.SideData.MaxHealth = int.Parse(splithp[1]);
-                }
                 StringBuilder logLine1 = new StringBuilder();
                 StringBuilder logLine2 = new StringBuilder();
                 StringBuilder logLine3 = new StringBuilder();
@@ -152,6 +81,92 @@ namespace InputParse
             //Console.WriteLine();
             //Console.WriteLine();
             return model;
+        }
+
+        private static SideData ParseSideData(Putty.TerminalCharacter[,] characters)
+        {
+            var sideData = new SideData();
+            StringBuilder name = new StringBuilder();
+            StringBuilder race = new StringBuilder();
+            StringBuilder weapon = new StringBuilder();
+            StringBuilder quiver = new StringBuilder();
+            StringBuilder status = new StringBuilder();
+            StringBuilder ac = new StringBuilder();
+            StringBuilder ev = new StringBuilder();
+            StringBuilder sh = new StringBuilder();
+            StringBuilder xl = new StringBuilder();
+            StringBuilder str = new StringBuilder();
+            StringBuilder @int = new StringBuilder();
+            StringBuilder dex = new StringBuilder();
+            StringBuilder hp = new StringBuilder();
+            StringBuilder mp = new StringBuilder();
+            StringBuilder place = new StringBuilder();
+            StringBuilder time = new StringBuilder();
+            for (int i = 37; i < 75; i++)
+            {
+                name.Append(GetCharacter(characters[i, 0]));
+                race.Append(GetCharacter(characters[i, 1]));
+                weapon.Append(GetCharacter(characters[i, 9]));
+                quiver.Append(GetCharacter(characters[i, 10]));
+                status.Append(GetCharacter(characters[i, 11]));
+            }
+            for (int i = 40; i < 44; i++)
+            {
+                ac.Append(GetCharacter(characters[i, 4]));
+                ev.Append(GetCharacter(characters[i, 5]));
+                sh.Append(GetCharacter(characters[i, 6]));
+                xl.Append(GetCharacter(characters[i, 7]));
+
+            }
+            for (int i = 59; i < 63; i++)
+            {
+                str.Append(GetCharacter(characters[i, 4]));
+                @int.Append(GetCharacter(characters[i, 5]));
+                dex.Append(GetCharacter(characters[i, 6]));
+
+            }
+            for (int i = 43; i < 52; i++)
+            {
+                hp.Append(GetCharacter(characters[i + 1, 2]));
+                mp.Append(GetCharacter(characters[i, 3]));
+
+            }
+            for (int i = 60; i < 75; i++)
+            {
+                place.Append(GetCharacter(characters[i + 1, 7]));
+                time.Append(GetCharacter(characters[i, 8]));
+
+            }
+            var splithp = hp.ToString().Split('/');
+            var splitmp = mp.ToString().Split('/');
+            if (splithp.Length > 1)
+            {
+                sideData.Magic = int.Parse(splitmp[0]);
+                sideData.Health = int.Parse(splithp[0]);
+
+            }
+            if (splitmp.Length > 1)
+            {
+                sideData.MaxMagic = int.Parse(splitmp[1]);
+                sideData.MaxHealth = int.Parse(splithp[1]);
+            }
+            sideData.Name = name.ToString();
+            sideData.Race = race.ToString();
+            sideData.Weapon = weapon.ToString();
+            sideData.Quiver = quiver.ToString();
+            sideData.Statuses1 = status.ToString();
+            sideData.Statuses2 = "";
+            sideData.ArmourClass = ac.ToString();
+            sideData.Evasion = ev.ToString();
+            sideData.Shield = sh.ToString();
+            sideData.ExperienceLevel = xl.ToString();
+            sideData.Strength = str.ToString();
+            sideData.Inteligence = @int.ToString();
+            sideData.Dexterity = dex.ToString();
+            sideData.Place = place.ToString().Trim();
+            sideData.Time = time.ToString();
+
+            return sideData;
         }
     }
 }
