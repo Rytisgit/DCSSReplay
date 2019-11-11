@@ -32,10 +32,10 @@ namespace TtyRecMonkey {
 
 		[OnDeserialized] void FillOptionals( StreamingContext sc ) {
 			if ( DisplayConsoleSizeW == 0 ) DisplayConsoleSizeW = 80;
-			if ( DisplayConsoleSizeH == 0 ) DisplayConsoleSizeH = 50;
+			if ( DisplayConsoleSizeH == 0 ) DisplayConsoleSizeH = 30;
 			if ( LogicalConsoleSizeW == 0 ) LogicalConsoleSizeW = 80;
-			if ( LogicalConsoleSizeH == 0 ) LogicalConsoleSizeH = 50;
-			if ( GdiFont == null ) GdiFont = new Font("Courier New", 8.25f);
+			if ( LogicalConsoleSizeH == 0 ) LogicalConsoleSizeH = 30;
+			if ( GdiFont == null ) GdiFont = new Font("Courier New", 11f);
 		}
 	}
 
