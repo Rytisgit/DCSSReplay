@@ -15,10 +15,26 @@ namespace FrameGenerator.FrameCreation
     {
         public static void DrawFrame(Dictionary<string, string> monsterdata, Dictionary<string, Bitmap> monsterPNG, Dictionary<string, Bitmap> floorpng, Dictionary<string, Bitmap> wallpng, Dictionary<string, string[]> floorandwall, Window.Widow_Display display, TerminalCharacter[,] chars)
         {
-
+            var dict = new Dictionary<string, string>();
             var model = Parser.ParseData(chars);
 
-            Bitmap bmp = new Bitmap(1602, 1050);
+            Bitmap bmp;
+                try
+            {
+                bmp = new Bitmap(1602, 1050,PixelFormat.Format32bppArgb);
+            }
+            catch (Exception)
+            {
+                try
+                {
+                    bmp = new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
+                }
+                catch (Exception)
+                {
+                    return;
+                }
+            }
+            
 
             using (Graphics g = Graphics.FromImage(bmp))
             {
@@ -173,6 +189,10 @@ namespace FrameGenerator.FrameCreation
                             }
                             else if (tile[0] != ' ')
                             {
+                                if (!dict.ContainsKey(tile))
+                                {
+                                    dict.Add(tile, "");
+                                }
                                 var Color = model.ColorList.GetType().GetField(tile.Substring(1)).GetValue(model.ColorList);
                                 g.DrawString(tile[0] + "?", arialFont, (SolidBrush)Color, x, y);
                             }
@@ -194,6 +214,14 @@ namespace FrameGenerator.FrameCreation
                         y += 32;
                     }
 
+                    if (dict.Count < 10)
+                    {
+                        foreach (var item in dict)
+                        {
+                            Console.Write(item.Key + " ");
+                        }
+                        Console.WriteLine();
+                    }
                 }
                 display.Update_Window_Image(bmp);
             }
