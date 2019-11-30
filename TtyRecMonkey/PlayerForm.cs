@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using FrameGenerator;
@@ -124,30 +125,36 @@ namespace TtyRecMonkey {
 		readonly List<DateTime> PreviousFrames = new List<DateTime>();
 
 		void OpenFile() {
-            //var open = new OpenFileDialog()
-            //{
-            //    CheckFileExists = true
-            //    ,
-            //    DefaultExt = "ttyrec"
-            //    ,
-            //    Filter = "TtyRec Files|*.ttyrec|All Files|*"
-            //    ,
-            //    InitialDirectory = @"I:\home\media\ttyrecs\"
-            //    ,
-            //    Multiselect = true
-            //    ,
-            //    RestoreDirectory = true
-            //    ,
-            //    Title = "Select a TtyRec to play"
-            //};
-            //if (open.ShowDialog(this) != DialogResult.OK) return;
+            Thread mt = new Thread(o => {
+                var open = new OpenFileDialog()
+                {
+                    CheckFileExists = true
+,
+                    DefaultExt = "ttyrec"
+,
+                    Filter = "TtyRec Files|*.ttyrec|All Files|*"
+,
+                    InitialDirectory = @"I:\home\media\ttyrecs\"
+,
+                    Multiselect = true
+,
+                    RestoreDirectory = true
+,
+                    Title = "Select a TtyRec to play"
+                };
+                if (open.ShowDialog() != DialogResult.OK) return;
 
-            //var files = open.FileNames;
-            //using (open) { }
-            //open = null;
-            //DoOpenFiles(files);
-            DoOpenFiles(new string[] { @"..\..\..\..\ttyrecTiles\2019-10-25.22_08_50.ttyrec" });
-		}
+                var files = open.FileNames;
+                using (open) { }
+                open = null;
+                //new string[] { "C:\\source\\ttyrecPlayer\\ttyrecTiles\\2019-10-25.22_08_50.ttyrec" }
+                DoOpenFiles(files);
+            });
+            mt.SetApartmentState(ApartmentState.STA);
+            mt.Start();
+            mt.Join();
+        }
+		
 
 		void DoOpenFiles( string[] files ) {
 			var delay = TimeSpan.Zero;
@@ -162,10 +169,10 @@ namespace TtyRecMonkey {
 
 			var streams = files.Select(f=>File.OpenRead(f) as Stream);
 			var oldc = Cursor;
-			Cursor = Cursors.WaitCursor;
-			using ( Decoder ) {}
-			Cursor = oldc;
-			Decoder = null;
+			//Cursor = Cursors.WaitCursor;
+			//using ( Decoder ) {}
+			//Cursor = oldc;
+			//Decoder = null;
 			Decoder = new TtyRecKeyframeDecoder( Configuration.Main.LogicalConsoleSizeW, Configuration.Main.LogicalConsoleSizeH, streams, delay );
 			PlaybackSpeed = +1;
 			Seek = TimeSpan.Zero;
@@ -214,16 +221,20 @@ namespace TtyRecMonkey {
                         Array.Copy(frame, 0, savedFrame, 0, frame.Length);
                         if (!true)
                         {
-                            try
+                            ThreadPool.QueueUserWorkItem(o =>
                             {
-                                test = Task.Run(() => generator.GenerateImage(savedFrame)).ContinueWith((_) => { generating = false; return; });
-                            }
-                            catch (AggregateException)
-                            {
-                                Console.WriteLine("Bad Error");
-                                generator.GenerateImage(savedFrame);
-                                generating = false;
-                            }
+                                try
+                                {
+                                    generator.GenerateImage(savedFrame);
+                                    generating = false;
+                                }
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine("Bad Error " + ex.Message);
+                                    //generator.GenerateImage(savedFrame);
+                                    generating = false;
+                                }
+                            });
                         }
                         else
                         {
