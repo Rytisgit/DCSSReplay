@@ -16,8 +16,8 @@ namespace FrameGenerator.FrameCreation
         public static void DrawFrame(Dictionary<string, string> monsterdata, Dictionary<string, Bitmap> monsterPNG, Dictionary<string, Bitmap> floorpng, Dictionary<string, Bitmap> wallpng, Dictionary<string, string[]> floorandwall, Dictionary<string, string> _characterdata, Dictionary<string, Bitmap> _characterpng, Window.Widow_Display display, TerminalCharacter[,] chars)
         {
             var dict = new Dictionary<string, string>();
-            var model = Parser.ParseData(chars);
-
+            var model = Parser.ParseData(chars);        
+            
             Bitmap bmp;
                 try
             {
@@ -37,11 +37,11 @@ namespace FrameGenerator.FrameCreation
             
 
             using (Graphics g = Graphics.FromImage(bmp))
-            {
+            {   
                 g.Clear(Color.Black);
                 using (Font arialFont = new Font("Courier New", 16))
                 {
-
+                    string OnlyRace = model.SideData.Race.Substring(0, 6);
                     var yellow = new SolidBrush(Color.FromArgb(252, 233, 79));
                     var brown = new SolidBrush(Color.FromArgb(143, 89, 2));
                     var gray = new SolidBrush(Color.FromArgb(186, 189, 182));
@@ -175,6 +175,24 @@ namespace FrameGenerator.FrameCreation
                             var blueTint = new SolidBrush(Color.FromArgb(20, 0, 0, 200));
                             g.FillRectangle(blueTint, x, y, floor.Width, floor.Height);
                         }
+                        else if (tile[0] == '@')
+                        {
+
+
+                            if (_characterdata.ContainsKey(OnlyRace))
+                            {
+                                string nam = _characterdata[OnlyRace];
+                                if (_characterpng.TryGetValue(nam, out Bitmap chr))
+                                {
+                                    g.DrawImage(floor, x, y, floor.Width, floor.Height);
+                                    g.DrawImage(chr, x, y, chr.Width, chr.Height);
+                                }
+
+                            }
+
+                        }
+
+
                         else
                         {
                             if (monsterdata.ContainsKey(tile))
