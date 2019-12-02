@@ -125,7 +125,7 @@ namespace InputParse
                 dex.Append(GetCharacter(characters[i, 6]));
 
             }
-            for (int i = 43; i < 52; i++)
+            for (int i = 37; i < 52; i++)
             {
                 hp.Append(GetCharacter(characters[i + 1, 2]));
                 mp.Append(GetCharacter(characters[i, 3]));
@@ -137,18 +137,25 @@ namespace InputParse
                 time.Append(GetCharacter(characters[i, 8]));
 
             }
-            var splithp = hp.ToString().Split('/');
-            var splitmp = mp.ToString().Split('/');
+
+            var splithp = hp.ToString().Split(':').Length > 1 ? hp.ToString().Split(':')[1].Split('/') : new string[] {"1","1"};
+            var splitmp = mp.ToString().Split(':').Length > 1 ? mp.ToString().Split(':')[1].Split('/') : new string[] { "1", "1" };
+
+
             if (splithp.Length > 1)
             {
-                sideData.Magic = int.Parse(splitmp[0]);
                 sideData.Health = int.Parse(splithp[0]);
-
+                var truehp = splithp[1].Split(' ');
+                sideData.MaxHealth = int.Parse(truehp[0]);
+                sideData.TrueHealth = truehp.Length > 1 ? truehp[1] : "";
             }
             if (splitmp.Length > 1)
             {
-                sideData.MaxMagic = int.Parse(splitmp[1]);
-                sideData.MaxHealth = int.Parse(splithp[1]);
+                sideData.Magic = int.Parse(splitmp[0]);
+                var truemp = splitmp[1].Split(' ');
+                sideData.MaxMagic = int.Parse(truemp[0]);
+                sideData.TrueHealth = truemp.Length > 1 ? truemp[1] : "";
+
             }
             sideData.Name = name.ToString();
             sideData.Race = race.ToString();

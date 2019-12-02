@@ -64,8 +64,10 @@ namespace InputParse
         public string Race { get; set; } = "Ogre of Jiyva Jeggou ******";
         public int Health { get; set; } = -320;
         public int MaxHealth { get; set; } = 320;
+        public string TrueHealth { get; set; } = "(321)";
         public int Magic { get; set; } = 50;
         public int MaxMagic { get; set; } = 50;
+        public string TrueMagic { get; set; } = "(100)";
         public string ArmourClass { get; set; } = "100";
         public string Evasion { get; set; } = "100";
         public string Shield { get; set; } = "100";
