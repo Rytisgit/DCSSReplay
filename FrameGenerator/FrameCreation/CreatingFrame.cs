@@ -13,7 +13,7 @@ namespace FrameGenerator.FrameCreation
 
     class CreatingFrame
     {
-        public static void DrawFrame(Dictionary<string, string> monsterdata, Dictionary<string, Bitmap> monsterPNG, Dictionary<string, Bitmap> floorpng, Dictionary<string, Bitmap> wallpng, Dictionary<string, string[]> floorandwall, Window.Widow_Display display, TerminalCharacter[,] chars)
+        public static void DrawFrame(Dictionary<string, string> monsterdata, Dictionary<string, Bitmap> monsterPNG, Dictionary<string, Bitmap> floorpng, Dictionary<string, Bitmap> wallpng, Dictionary<string, string[]> floorandwall, Dictionary<string, string> _characterdata, Dictionary<string, Bitmap> _characterpng, Window.Widow_Display display, TerminalCharacter[,] chars)
         {
             var dict = new Dictionary<string, string>();
             var model = Parser.ParseData(chars);

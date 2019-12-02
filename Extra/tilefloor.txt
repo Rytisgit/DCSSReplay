@@ -58,7 +58,7 @@ swamp0
 SHOALS
 shoals_wall1
 sand1
-SPIDER NEST
+SPIDER
 spider00
 spider00
 ZOT

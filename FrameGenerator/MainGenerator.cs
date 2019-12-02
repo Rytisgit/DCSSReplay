@@ -16,15 +16,18 @@ namespace FrameGenerator
     {
         Widow_Display display = new Widow_Display();
         private Dictionary<string, string> _monsterdata;
+        private Dictionary<string, string> _characterdata;
         private Dictionary<string, string[]> _floorandwall;
         private Dictionary<string, Bitmap> _monsterpng;
+        private Dictionary<string, Bitmap> _characterpng;
         private Dictionary<string, Bitmap> _floorpng;
         private Dictionary<string, Bitmap> wallpng;
 
         public MainGenerator()
         {
-            string GameLocation = File.ReadAllLines(@"..\..\..\FrameGenerator\Extra\config.ini").First();
-            
+            string GameLocation = File.ReadAllLines(display.Folder + @"\config.ini").First();
+            _characterdata = ReadFromFile.CharacterData();
+            _characterpng = ReadFromFile.GetCharacterPNG(GameLocation);
             _monsterdata = ReadFromFile.GetMonsterData(GameLocation);
             _floorandwall = ReadFromFile.Get_Floor_And_Wall_Names_For_Dungeons();
             _monsterpng = ReadFromFile.GetMonsterPNG(GameLocation);
@@ -34,7 +37,7 @@ namespace FrameGenerator
 
         public void GenerateImage(TerminalCharacter[,] chars)
         {
-            if(chars != null) { CreatingFrame.DrawFrame(_monsterdata, _monsterpng, _floorpng, wallpng, _floorandwall, display, chars); }
+            if (chars != null) { CreatingFrame.DrawFrame(_monsterdata, _monsterpng, _floorpng, wallpng, _floorandwall, _characterdata, _characterpng, display, chars); }
             //Console.WriteLine("Done");
             return;
         }

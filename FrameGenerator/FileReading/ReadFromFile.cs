@@ -6,12 +6,29 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
 
 namespace FrameGenerator.FileReading
 {
     class ReadFromFile
     {
-         public static Dictionary<string, string> GetMonsterData(string gameLocation)
+
+
+        public static Dictionary<string, string> CharacterData()
+
+        {
+            var Character = new Dictionary<string, string>();
+
+            string[] lines = System.IO.File.ReadAllLines(@"..\..\..\Extra\racepng.txt");
+
+            for (var i = 0; i < lines.Length; i += 2)
+            {
+                Character[lines[i]] = lines[i + 1];
+            }
+            return Character;
+        }
+
+        public static Dictionary<string, string> GetMonsterData(string gameLocation)
 
             {
             var monster = new Dictionary<string, string>();
@@ -36,9 +53,9 @@ namespace FrameGenerator.FileReading
         {
 
             var floorandwall = new Dictionary<string, string[]>();
-            string[] lines = System.IO.File.ReadAllLines(@"..\..\..\FrameGenerator\Extra\tilefloor.txt");
-                
-                for (var i = 0; i < lines.Length; i += 3)
+            string[] lines = System.IO.File.ReadAllLines(@"..\..\..\Extra\tilefloor.txt");
+
+            for (var i = 0; i < lines.Length; i += 3)
                 {
                 string[] temp = new string[2];
                 temp[0] = lines[i + 1];
@@ -47,6 +64,23 @@ namespace FrameGenerator.FileReading
                 }
             
             return floorandwall;
+        }
+        public static Dictionary<string, Bitmap> GetCharacterPNG(string gameLocation)
+
+        {
+
+            var GetCharacterPNG = new Dictionary<string, Bitmap>();
+
+            List<string> allpngfiles = Directory.GetFiles(gameLocation + @"\source\rltiles\player\base", "*.png*", SearchOption.AllDirectories).ToList();
+            allpngfiles.AddRange(Directory.GetFiles(gameLocation + @"\source\rltiles\player\felids", "*.png*", SearchOption.AllDirectories).ToList());
+            foreach (var file in allpngfiles)
+            {
+                FileInfo info = new FileInfo(file);
+                Bitmap bitmap = new Bitmap(file);
+                GetCharacterPNG[info.Name.Replace(".png", "")] = bitmap;
+
+            }
+            return GetCharacterPNG;
         }
 
         public static Dictionary<string, Bitmap> GetMonsterPNG(string gameLocation)

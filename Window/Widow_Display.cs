@@ -10,6 +10,7 @@ namespace Window
 {
     public class Widow_Display
     {
+        public string Folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TtyRecMonkey");
         string gamelocation;
         public Form1 form;
         public Widow_Display()
@@ -18,7 +19,7 @@ namespace Window
             Application.EnableVisualStyles();           
             //Application.SetCompatibleTextRenderingDefault(false);
             form = new Form1();
-            if (!File.Exists(@"..\..\..\FrameGenerator\Extra\config.ini"))
+            if (!File.Exists(Folder + @"\config.ini"))
             {
               
                 Thread t = new Thread((System.Threading.ThreadStart)(() => {
@@ -39,17 +40,17 @@ namespace Window
                             //break;
                             
 
-                        }                                                                             
-               
-                    }));
+                        }
+                    StreamWriter outputFile = new StreamWriter(Folder + @"\config.ini", false);
+                    outputFile.WriteLine(gamelocation);
+                    outputFile.Close();
+
+
+                }));
             t.SetApartmentState(ApartmentState.STA);
             t.Start();
             t.Join();
          
-                using (StreamWriter outputFile = new StreamWriter(@"..\..\..\FrameGenerator\Extra\config.ini"))
-                {
-                        outputFile.WriteLine(gamelocation);
-                }
 
 
             }
