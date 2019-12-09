@@ -1,139 +1,172 @@
-+LIGHTGREY closed_door
-+LIGHTBLUE runed_door
-+LIGHTGREEN sealed_door
-+WHITE sealed_clear_door
-+CYAN closed_clear_door
-+LIGHTCYAN runed_clear_door
-
-
-7GREEN tree
-7BROWN tree
-7LIGHTGREEN tree
-
-
-#CYAN metal_wall
-#GREEN crystal_wall
-#LIGHTGREEN slimy_wall
-#LIGHTCYAN clear_rock_wall
-#LIGHTBLUE iron_grate
-#BLUE open_sea
-#RED endless_lava
-#WHITE endless_salt
-
-#LIGHTGREY stone_wall more stone walls
-
-
-#YELLOW rock_wall
-
-#rainbow rock_wall
-
-#BROWN rock_wall
-#MAGENTA rock_wall
-#LIGHTGREY rock_wall
-#DARKGREY rock_wall
-#LIGHTRED rock_wall
-#YELLOW rock_wall
-#LIGHTMAGENTA rock_wall
-
-
-8BROWN orcish_idol
-8DARKGREY granite_statue
-8BLUE statue_triangle
-
-\BLUE malign_gateway
-\CYAN malign_gateway
-\LIGHTBLUE malign_gateway
-
-
-âRED lava
-âBLUE deep_water
-âCYAN shallow_water
-
-
-.RED floor
-.GREEN floor
-.BLUE floor
-.MAGENTA floor
-.CYAN floor
-.LIGHTGREY floor
-.DARKGREY floor
-.LIGHTRED floor
-.LIGHTGREEN floor
-.YELLOW floor
-.LIGHTBLUE floor
-.LIGHTMAGENTA floor
-.LIGHTCYAN floor
-.WHITE floor
-
-.BROWN expired_portal
-
-'LIGHTGREY open_door
-'CYAN open_clear_door
-
-
-^LIGHTCYAN trap_mechanical
-^MAGENTA dispersal
-^LIGHTBLUE teleport
-^BLUE shadow
-^LIGHTRED alarm
-^LIGHTMAGENTA zot
-^GREEN passage_of_golubria
-^BROWN shaft
-^LIGHTGREY net
-
-\YELLOW enter_shop
-\LIGHTGREY stone_arch
-\BLACK unknown_portal
-
-<RED stone_stairs_down
-<WHITE stone_stairs_down
-<YELLOW stone_stairs_down
-
->GREEN stone_stairs_up
->WHITE stone_stairs_up
->YELLOW stone_stairs_up
-
-<BROWN escape_hatch_down
->BROWN escape_hatch_up
-
-<LIGHTBLUE exit_dungeon
-
-<LIGHTGREEN sealed_stair_up
->LIGHTGREEN sealed_stair_down
->LIGHTCYAN abyssal_stair
-
-
-_DARKGREY unknown // yra ir unknonw potion png
-
-}BLUE fountain_blue
-}LIGHTBLUE fountain_sparkling
-}RED fountain_blood
-}LIGHTGREY dry_fountain
-
-
-^YELLOW teleporter
-^RED transporter
-^WHITE transporter
-^DARKGREY transporter_landing_site
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
++LIGHTGREY
+closed_door
++LIGHTBLUE
+runed_door
++LIGHTGREEN
+sealed_door
++WHITE
+sealed_clear_door
++CYAN
+closed_clear_door
++LIGHTCYAN
+runed_clear_door
+7GREEN
+tree
+7BROWN
+tree
+7LIGHTGREEN
+tree
+#CYAN
+metal_wall
+#GREEN
+crystal_wall
+#LIGHTGREEN
+slimy_wall
+#LIGHTCYAN
+clear_rock_wall
+#LIGHTBLUE
+iron_grate
+#BLUE
+open_sea
+#RED
+endless_lava
+#WHITE
+endless_salt
+#LIGHTGREY
+stone_wall
+#YELLOW
+rock_wall
+#rainbow
+rock_wall
+#BROWN
+rock_wall
+#MAGENTA
+rock_wall
+#LIGHTGREY
+rock_wall
+#DARKGREY
+rock_wall
+#LIGHTRED
+rock_wall
+#YELLOW
+rock_wall
+#LIGHTMAGENTA
+rock_wall
+8BROWN
+orcish_idol
+8DARKGREY
+granite_statue
+8BLUE
+statue_triangle
+\BLUE
+malign_gateway
+\CYAN
+malign_gateway
+\LIGHTBLUE
+malign_gateway
+âRED
+lava
+âBLUE
+deep_water
+âCYAN
+shallow_water
+.RED
+floor
+.GREEN
+floor
+.BLUE
+floor
+.MAGENTA
+floor
+.CYAN
+floor
+.LIGHTGREY
+floor
+.DARKGREY
+floor
+.LIGHTRED
+floor
+.LIGHTGREEN
+floor
+.YELLOW
+floor
+.LIGHTBLUE
+floor
+.LIGHTMAGENTA
+floor
+.LIGHTCYAN
+floor
+.WHITE
+floor
+.BROWN
+expired_portal
+'LIGHTGREY
+open_door
+'CYAN
+open_clear_door
+^LIGHTCYAN
+trap_mechanical
+^MAGENTA
+dispersal
+^LIGHTBLUE
+teleport
+^BLUE
+shadow
+^LIGHTRED
+alarm
+^LIGHTMAGENTA
+zot
+^GREEN
+passage_of_golubria
+^BROWN
+shaft
+^LIGHTGREY
+net
+\YELLOW
+enter_shop
+\LIGHTGREY
+stone_arch
+\BLACK
+unknown_portal
+<RED
+stone_stairs_down
+<WHITE
+stone_stairs_down
+<YELLOW
+stone_stairs_down
+>GREEN
+stone_stairs_up
+>WHITE
+stone_stairs_up
+>YELLOW
+stone_stairs_up
+<BROWN
+escape_hatch_down
+>BROWN
+escape_hatch_up
+<LIGHTBLUE
+exit_dungeon
+<LIGHTGREEN
+sealed_stair_up
+>LIGHTGREEN
+sealed_stair_down
+>LIGHTCYAN
+abyssal_stair
+_DARKGREY
+unknown
+}BLUE
+fountain_blue
+}LIGHTBLUE
+fountain_sparkling
+}RED
+fountain_blood
+}LIGHTGREY
+dry_fountain
+^YELLOW
+teleporter
+^RED
+transporter
+^WHITE
+transporter
+^DARKGREY
+transporter_landing_site

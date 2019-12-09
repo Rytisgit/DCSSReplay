@@ -22,15 +22,15 @@ namespace Window
 
         public void update(Bitmap frame)
         {
-          //  if (pictureBox1.InvokeRequired)
-         //   {
-         //       var d = new SafeCallDelegate(update);
-         //       pictureBox1.Invoke(d, new object[] { frame });
-         //   }
-        //    else
-         //   {
+            if (pictureBox1.InvokeRequired)
+           {
+               var d = new SafeCallDelegate(update);
+               pictureBox1.Invoke(d, new object[] { frame });
+           }
+           else
+            {
                 pictureBox1.Image = frame;
-          //  }
+            }
             
         }
         /*

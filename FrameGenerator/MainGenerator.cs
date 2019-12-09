@@ -18,27 +18,32 @@ namespace FrameGenerator
         private Dictionary<string, string> _monsterdata;
         private Dictionary<string, string> _characterdata;
         private Dictionary<string, string[]> _floorandwall;
+        private Dictionary<string, string> moretiles;
         private Dictionary<string, Bitmap> _monsterpng;
         private Dictionary<string, Bitmap> _characterpng;
         private Dictionary<string, Bitmap> _floorpng;
         private Dictionary<string, Bitmap> wallpng;
+        private Dictionary<string, Bitmap> alldngnpng;
+
 
         public MainGenerator()
         {
             string GameLocation = File.ReadAllLines(display.Folder + @"\config.ini").First();
             _characterdata = ReadFromFile.CharacterData();
+            moretiles = ReadFromFile.AdditionalTileData();
             _characterpng = ReadFromFile.GetCharacterPNG(GameLocation);
             _monsterdata = ReadFromFile.GetMonsterData(GameLocation);
             _floorandwall = ReadFromFile.Get_Floor_And_Wall_Names_For_Dungeons();
             _monsterpng = ReadFromFile.GetMonsterPNG(GameLocation);
-            _floorpng = ReadFromFile.GetFloorPNG(GameLocation);
-            wallpng = ReadFromFile.GetWallPNG(GameLocation);
+           // _floorpng = ReadFromFile.GetFloorPNG(GameLocation);
+           // wallpng = ReadFromFile.GetWallPNG(GameLocation);
+            alldngnpng = ReadFromFile.GetAllDungeonPNG(GameLocation);
         }
 
         public void GenerateImage(TerminalCharacter[,] chars)
         {
-            if (chars != null) { CreatingFrame.DrawFrame(_monsterdata, _monsterpng, _floorpng, wallpng, _floorandwall, _characterdata, _characterpng, display, chars); }
-            //Console.WriteLine("Done");
+            if (chars != null) { CreatingFrame.DrawFrame(moretiles, alldngnpng, _monsterdata, _monsterpng, _floorandwall, _characterdata, _characterpng, display, chars); }
+           // Console.WriteLine("Done");
             return;
         }
 

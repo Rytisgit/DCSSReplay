@@ -219,7 +219,7 @@ namespace TtyRecMonkey {
                     {
                         generating = true;
                         Array.Copy(frame, 0, savedFrame, 0, frame.Length);
-                        if (!true)
+                        if (true)
                         {
                             ThreadPool.QueueUserWorkItem(o =>
                             {

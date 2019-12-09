@@ -13,27 +13,14 @@ namespace FrameGenerator.FrameCreation
 
     class CreatingFrame
     {
-        public static void DrawFrame(Dictionary<string, string> monsterdata, Dictionary<string, Bitmap> monsterPNG, Dictionary<string, Bitmap> floorpng, Dictionary<string, Bitmap> wallpng, Dictionary<string, string[]> floorandwall, Dictionary<string, string> _characterdata, Dictionary<string, Bitmap> _characterpng, Window.Widow_Display display, TerminalCharacter[,] chars)
+        public static void DrawFrame(Dictionary<string, string> moretiles, Dictionary<string, Bitmap> alldngnpng, Dictionary<string, string> monsterdata, Dictionary<string, Bitmap> monsterPNG, Dictionary<string, string[]> floorandwall, Dictionary<string, string> _characterdata, Dictionary<string, Bitmap> _characterpng, Window.Widow_Display display, TerminalCharacter[,] chars)
         {
             var dict = new Dictionary<string, string>();
-            var model = Parser.ParseData(chars);        
-            
-            Bitmap bmp;
-                try
-            {
-                bmp = new Bitmap(1602, 1050,PixelFormat.Format32bppArgb);
-            }
-            catch (Exception)
-            {
-                try
-                {
-                    bmp = new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
-                }
-                catch (Exception)
-                {
-                    return;
-                }
-            }
+            var model = Parser.ParseData(chars);
+
+
+            Bitmap bmp = new Bitmap(1602, 1050,PixelFormat.Format32bppArgb);
+          
             
 
             using (Graphics g = Graphics.FromImage(bmp))
@@ -132,9 +119,9 @@ namespace FrameGenerator.FrameCreation
 
                     if (!floorandwall.TryGetValue(tempo[0].ToUpper(), out var fnw)) return;
                    // Console.WriteLine(fnw[0] + " " + fnw[1]);
-                    if (!wallpng.TryGetValue(fnw[0], out var wall)) return;
+                    if (!alldngnpng.TryGetValue(fnw[0], out var wall)) return;
 
-                    if (!floorpng.TryGetValue(fnw[1], out var floor)) return;
+                    if (!alldngnpng.TryGetValue(fnw[1], out var floor)) return;
                     int i = 1;
                     foreach (var tile in model.TileNames)
                     {
@@ -191,19 +178,36 @@ namespace FrameGenerator.FrameCreation
                             }
 
                         }
-
-
                         else
                         {
                             if (monsterdata.ContainsKey(tile))
                             {
                                 string nam = monsterdata[tile];
 
-                                if (monsterPNG.TryGetValue(nam, out Bitmap mnstr))
+                                if (nam == "roxanne" && monsterPNG.TryGetValue(nam, out Bitmap mnstr))
+                                {                                                                     
+
+                                    g.DrawImage(floor, x, y, floor.Width, floor.Height);
+                                    g.DrawImage(mnstr, x, y, mnstr.Width, mnstr.Height);
+                                    var blueTint = new SolidBrush(Color.FromArgb(200, 0, 0, 0));
+                                    g.FillRectangle(blueTint, x, y, floor.Width, floor.Height);
+                                    
+                                }
+
+                                else if (monsterPNG.TryGetValue(nam, out mnstr))
                                 {
                                     g.DrawImage(floor, x, y, floor.Width, floor.Height);
                                     g.DrawImage(mnstr, x, y, mnstr.Width, mnstr.Height);
                                 }
+                            }
+                            else if (moretiles.ContainsKey(tile))
+                            {
+                                string nam = moretiles[tile];
+                                if (alldngnpng.TryGetValue(nam, out Bitmap chr))
+                                {
+                                    g.DrawImage(chr, x, y, chr.Width, chr.Height);
+                                }
+
                             }
                             else if (tile[0] != ' ')
                             {
@@ -214,6 +218,9 @@ namespace FrameGenerator.FrameCreation
                                 var Color = model.ColorList.GetType().GetField(tile.Substring(1)).GetValue(model.ColorList);
                                 g.DrawString(tile[0] + "?", arialFont, (SolidBrush)Color, x, y);
                             }
+
+                         
+
                         }
                         x += 32;
                         if (i == model.LineLength)
@@ -236,14 +243,14 @@ namespace FrameGenerator.FrameCreation
                     {
                         foreach (var item in dict)
                         {
-                            Console.Write(item.Key + " ");
+                           Console.Write(item.Key + " ");
                         }
                         Console.WriteLine();
                     }
                 }
                 display.Update_Window_Image(bmp);
             }
-
+            GC.Collect();
         }
 
     }

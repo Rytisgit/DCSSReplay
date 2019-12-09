@@ -28,6 +28,20 @@ namespace FrameGenerator.FileReading
             return Character;
         }
 
+        public static Dictionary<string, string> AdditionalTileData()
+
+        {
+            var Character = new Dictionary<string, string>();
+
+            string[] lines = System.IO.File.ReadAllLines(@"..\..\..\Extra\features.txt");
+
+            for (var i = 0; i < lines.Length; i += 2)
+            {
+                Character[lines[i]] = lines[i + 1];
+            }
+            return Character;
+        }
+
         public static Dictionary<string, string> GetMonsterData(string gameLocation)
 
             {
@@ -77,6 +91,8 @@ namespace FrameGenerator.FileReading
             {
                 FileInfo info = new FileInfo(file);
                 Bitmap bitmap = new Bitmap(file);
+             
+
                 GetCharacterPNG[info.Name.Replace(".png", "")] = bitmap;
 
             }
@@ -96,6 +112,8 @@ namespace FrameGenerator.FileReading
                 monsterPNG[info.Name.Replace(".png", "")] = bitmap;
 
             }
+            Bitmap bmp = new Bitmap(gameLocation+ @"\source\rltiles\dngn\statues\statue_triangle.png");
+            monsterPNG["roxanne"] = bmp;
             return monsterPNG;
         }
 
@@ -127,6 +145,23 @@ namespace FrameGenerator.FileReading
                 wallpng[info.Name.Replace(".png", "")] = bitmap;
             }
             return wallpng;
-        }     
+        }
+        public static Dictionary<string, Bitmap> GetAllDungeonPNG(string gameLocation)
+
+        {
+
+            var wallpng = new Dictionary<string, Bitmap>();
+            string[] wallpngfiles = Directory.GetFiles(gameLocation + @"\source\rltiles\dngn", "*.png*", SearchOption.AllDirectories);
+            foreach (var file in wallpngfiles)
+            {
+                FileInfo info = new FileInfo(file);
+                Bitmap bitmap = new Bitmap(file);
+                wallpng[info.Name.Replace(".png", "")] = bitmap;
+            }
+            return wallpng;
+        }
+
+
+
     }
 }
