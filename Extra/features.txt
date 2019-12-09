@@ -104,6 +104,14 @@ expired_portal
 open_door
 'CYAN
 open_clear_door
+^YELLOW
+teleporter
+^RED
+transporter
+^WHITE
+transporter
+^DARKGREY
+transporter_landing_site
 ^LIGHTCYAN
 trap_mechanical
 ^MAGENTA
@@ -127,7 +135,7 @@ enter_shop
 \LIGHTGREY
 stone_arch
 \BLACK
-unknown_portal
+portal_unknown
 <RED
 stone_stairs_down
 <WHITE
@@ -152,8 +160,6 @@ sealed_stair_up
 sealed_stair_down
 >LIGHTCYAN
 abyssal_stair
-_DARKGREY
-unknown
 }BLUE
 fountain_blue
 }LIGHTBLUE
@@ -162,11 +168,3 @@ fountain_sparkling
 fountain_blood
 }LIGHTGREY
 dry_fountain
-^YELLOW
-teleporter
-^RED
-transporter
-^WHITE
-transporter
-^DARKGREY
-transporter_landing_site
