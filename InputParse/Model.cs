@@ -29,22 +29,22 @@ namespace InputParse
     }
     public class ColorList
     {
-        public SolidBrush BLACK = new SolidBrush(Color.Black);
-        public SolidBrush RED = new SolidBrush(Color.Red);
-        public SolidBrush GREEN = new SolidBrush(Color.Green);
-        public SolidBrush BROWN = new SolidBrush(Color.Brown);
-        public SolidBrush BLUE = new SolidBrush(Color.Blue);
-        public SolidBrush MAGENTA = new SolidBrush(Color.Magenta);
-        public SolidBrush CYAN = new SolidBrush(Color.Cyan);
-        public SolidBrush LIGHTGREY = new SolidBrush(Color.LightGray);
-        public SolidBrush DARKGREY = new SolidBrush(Color.DarkGray);
-        public SolidBrush LIGHTRED = new SolidBrush(Color.LightSalmon);
-        public SolidBrush LIGHTGREEN = new SolidBrush(Color.LightGreen);
-        public SolidBrush YELLOW = new SolidBrush(Color.FromArgb(252, 233, 79));
-        public SolidBrush LIGHTBLUE = new SolidBrush(Color.LightBlue);
-        public SolidBrush LIGHTMAGENTA = new SolidBrush(Color.LightPink);
-        public SolidBrush LIGHTCYAN = new SolidBrush(Color.LightCyan);
-        public SolidBrush WHITE = new SolidBrush(Color.White);
+        public SolidBrush BLACK = new SolidBrush(Color.FromArgb(0, 0, 0));
+        public SolidBrush RED = new SolidBrush(Color.FromArgb(255, 0, 0));
+        public SolidBrush GREEN = new SolidBrush(Color.FromArgb(0, 255, 0));
+        public SolidBrush BROWN = new SolidBrush(Color.FromArgb(165, 91, 0));
+        public SolidBrush BLUE = new SolidBrush(Color.FromArgb(0, 64, 255)); 
+        public SolidBrush MAGENTA = new SolidBrush(Color.FromArgb(192, 0, 255));
+        public SolidBrush CYAN = new SolidBrush(Color.FromArgb(0, 255, 255));
+        public SolidBrush LIGHTGREY = new SolidBrush(Color.FromArgb(192, 192, 192));
+        public SolidBrush DARKGREY = new SolidBrush(Color.FromArgb(128, 128, 128));
+        public SolidBrush LIGHTRED = new SolidBrush(Color.FromArgb(255, 128, 128));
+        public SolidBrush LIGHTGREEN = new SolidBrush(Color.FromArgb(128, 255, 128));
+        public SolidBrush YELLOW = new SolidBrush(Color.FromArgb(255, 255, 0));
+        public SolidBrush LIGHTBLUE =new SolidBrush(Color.FromArgb(128, 128, 255));
+        public SolidBrush LIGHTMAGENTA = new SolidBrush(Color.FromArgb(255, 128, 255));
+        public SolidBrush LIGHTCYAN =new SolidBrush(Color.FromArgb(64, 255, 255));
+        public SolidBrush WHITE = new SolidBrush(Color.FromArgb(255, 255, 255));
     }
     public class Model
     {
