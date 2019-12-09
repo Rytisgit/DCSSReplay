@@ -20,7 +20,7 @@
 #RED endless_lava
 #WHITE endless_salt
 
-#LIGHTGREY stone_wall more stone walls
+#LIGHTGREY stone_wall //more stone walls
 
 
 #YELLOW rock_wall
@@ -70,7 +70,10 @@
 'LIGHTGREY open_door
 'CYAN open_clear_door
 
-
+^YELLOW teleporter
+^RED transporter
+^WHITE transporter
+^DARKGREY transporter_landing_site
 ^LIGHTCYAN trap_mechanical
 ^MAGENTA dispersal
 ^LIGHTBLUE teleport
@@ -83,7 +86,7 @@
 
 \YELLOW enter_shop
 \LIGHTGREY stone_arch
-\BLACK unknown_portal
+\BLACK portal_unknown
 
 <RED stone_stairs_down
 <WHITE stone_stairs_down
@@ -103,37 +106,25 @@
 >LIGHTCYAN abyssal_stair
 
 
-_DARKGREY unknown // yra ir unknonw potion png
+_BLACK unknown_altar //in Extra
+_RED unknown_altar
+_GREEN unknown_altar
+_BROWN unknown_altar
+_BLUE unknown_altar
+_MAGENTA unknown_altar
+_CYAN unknown_altar
+_LIGHTGREY unknown_altar
+_DARKGREY unknown_altar
+_LIGHTRED unknown_altar
+_LIGHTGREEN unknown_altar
+_YELLOW unknown_altar
+_LIGHTBLUE unknown_altar
+_LIGHTMAGENTA unknown_altar
+_LIGHTCYAN unknown_altar
+_WHITE unknown_altar
 
 }BLUE fountain_blue
 }LIGHTBLUE fountain_sparkling
 }RED fountain_blood
 }LIGHTGREY dry_fountain
-
-
-^YELLOW teleporter
-^RED transporter
-^WHITE transporter
-^DARKGREY transporter_landing_site
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
