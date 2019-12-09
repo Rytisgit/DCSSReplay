@@ -21,8 +21,8 @@ namespace FrameGenerator
         private Dictionary<string, string> moretiles;
         private Dictionary<string, Bitmap> _monsterpng;
         private Dictionary<string, Bitmap> _characterpng;
-        private Dictionary<string, Bitmap> _floorpng;
-        private Dictionary<string, Bitmap> wallpng;
+        private Dictionary<string, string> itemdata;
+        private Dictionary<string, Bitmap> itempng;
         private Dictionary<string, Bitmap> alldngnpng;
 
 
@@ -35,15 +35,14 @@ namespace FrameGenerator
             _monsterdata = ReadFromFile.GetMonsterData(GameLocation);
             _floorandwall = ReadFromFile.Get_Floor_And_Wall_Names_For_Dungeons();
             _monsterpng = ReadFromFile.GetMonsterPNG(GameLocation);
-           // _floorpng = ReadFromFile.GetFloorPNG(GameLocation);
-           // wallpng = ReadFromFile.GetWallPNG(GameLocation);
+            itempng = ReadFromFile.ItemsPNG(GameLocation);
+            itemdata = ReadFromFile.ItemData();
             alldngnpng = ReadFromFile.GetAllDungeonPNG(GameLocation);
         }
 
         public void GenerateImage(TerminalCharacter[,] chars)
         {
-            if (chars != null) { CreatingFrame.DrawFrame(moretiles, alldngnpng, _monsterdata, _monsterpng, _floorandwall, _characterdata, _characterpng, display, chars); }
-           // Console.WriteLine("Done");
+            if (chars != null) { CreatingFrame.DrawFrame(itempng, itemdata, moretiles, alldngnpng, _monsterdata, _monsterpng, _floorandwall, _characterdata, _characterpng, display, chars); }
             return;
         }
 

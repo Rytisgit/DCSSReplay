@@ -13,7 +13,7 @@ namespace FrameGenerator.FrameCreation
 
     class CreatingFrame
     {
-        public static void DrawFrame(Dictionary<string, string> moretiles, Dictionary<string, Bitmap> alldngnpng, Dictionary<string, string> monsterdata, Dictionary<string, Bitmap> monsterPNG, Dictionary<string, string[]> floorandwall, Dictionary<string, string> _characterdata, Dictionary<string, Bitmap> _characterpng, Window.Widow_Display display, TerminalCharacter[,] chars)
+        public static void DrawFrame(Dictionary<string, Bitmap> itempng, Dictionary<string, string> itemdata, Dictionary<string, string> moretiles, Dictionary<string, Bitmap> alldngnpng, Dictionary<string, string> monsterdata, Dictionary<string, Bitmap> monsterPNG, Dictionary<string, string[]> floorandwall, Dictionary<string, string> _characterdata, Dictionary<string, Bitmap> _characterpng, Window.Widow_Display display, TerminalCharacter[,] chars)
         {
             var dict = new Dictionary<string, string>();
             var model = Parser.ParseData(chars);
@@ -209,6 +209,16 @@ namespace FrameGenerator.FrameCreation
                                 }
 
                             }
+                            else if (itemdata.ContainsKey(tile))
+                            {
+                                string nam = itemdata[tile];
+                                if (itempng.TryGetValue(nam, out Bitmap chr))
+                                {
+                                    g.DrawImage(floor, x, y, floor.Width, floor.Height);
+                                    g.DrawImage(chr, x, y, chr.Width, chr.Height);
+                                }
+
+                            }
                             else if (tile[0] != ' ')
                             {
                                 if (!dict.ContainsKey(tile))
@@ -246,6 +256,7 @@ namespace FrameGenerator.FrameCreation
                            Console.Write(item.Key + " ");
                         }
                         Console.WriteLine();
+
                     }
                 }
                 display.Update_Window_Image(bmp);

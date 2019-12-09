@@ -41,6 +41,19 @@ namespace FrameGenerator.FileReading
             }
             return Character;
         }
+        public static Dictionary<string, string> ItemData()
+
+        {
+            var Character = new Dictionary<string, string>();
+
+            string[] lines = System.IO.File.ReadAllLines(@"..\..\..\Extra\items.txt");
+
+            for (var i = 0; i < lines.Length; i += 2)
+            {
+                Character[lines[i]] = lines[i + 1];
+            }
+            return Character;
+        }
 
         public static Dictionary<string, string> GetMonsterData(string gameLocation)
 
@@ -160,7 +173,22 @@ namespace FrameGenerator.FileReading
             }
             return wallpng;
         }
+        public static Dictionary<string, Bitmap> ItemsPNG(string gameLocation)
 
+        {
+
+            var wallpng = new Dictionary<string, Bitmap>();
+           
+            List<string> wallpngfiles = Directory.GetFiles(gameLocation + @"\source\rltiles\item", "*.png*", SearchOption.AllDirectories).ToList();
+            wallpngfiles.AddRange(Directory.GetFiles(@"..\..\..\Extra", "*.png*", SearchOption.AllDirectories).ToList());
+            foreach (var file in wallpngfiles)
+            {
+                FileInfo info = new FileInfo(file);
+                Bitmap bitmap = new Bitmap(file);
+                wallpng[info.Name.Replace(".png", "")] = bitmap;
+            }
+            return wallpng;
+        }
 
 
     }
