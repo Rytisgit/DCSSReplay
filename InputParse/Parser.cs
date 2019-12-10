@@ -23,7 +23,7 @@ namespace InputParse
             sideLocation = place.ToString();
             foreach (var location in Locations.locations)
             {
-                if (sideLocation.Contains(location.Substring(0, 5)))
+                if (sideLocation.Contains(location.Substring(0, 3)))
                 {
                     sideLocation = location;
                     found = true;
@@ -44,7 +44,7 @@ namespace InputParse
             
             foreach (var location in Locations.locations)
             {
-                if(mapLocation.Contains(location.Substring(0, 5)))
+                if(mapLocation.Contains(location.Substring(0, 3)))
                 {
                     mapLocation = location;
                     found = true;
