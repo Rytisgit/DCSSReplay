@@ -5,7 +5,7 @@ DEPTHS
 brick_dark_1_0
 grey_dirt_b_0
 VAULTS
-vault0
+metal_wall0
 rect_gray0
 TEMPLE
 wall_vines0
