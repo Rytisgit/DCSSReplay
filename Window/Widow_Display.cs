@@ -62,9 +62,9 @@ namespace Window
         }
         public void Update_Window_Image(Bitmap bmp)
         {         
-                form.pictureBox1.Image = bmp;
+              //  form.pictureBox1.Image = bmp;
             
-            //form.update(bmp);         
+            form.update(bmp);         
             
         }
 
