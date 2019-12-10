@@ -26,6 +26,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Window", "Window\Window.csp
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{CD38DEF8-DEDB-42D4-8BEB-C290D6F1348D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extra", "Extra", "{46E43B1B-7F91-48E6-9D5F-166C41B210A5}"
+	ProjectSection(SolutionItems) = preProject
+		Extra\features.txt = Extra\features.txt
+		Extra\items.txt = Extra\items.txt
+		Extra\racepng.txt = Extra\racepng.txt
+		Extra\tilefloor.txt = Extra\tilefloor.txt
+		Extra\unknown_altar.png = Extra\unknown_altar.png
+		Extra\unknown_potion.png = Extra\unknown_potion.png
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
