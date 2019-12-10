@@ -10,13 +10,91 @@ namespace InputParse
         {
             return character.Character == 55328 ? ' ' : character.Character;
         }
+        public static LayoutType GetLayoutType(Putty.TerminalCharacter[,] characters)
+        {
+            StringBuilder place = new StringBuilder();
+            bool found = false;
+
+            string sideLocation;
+            for (int i = 61; i < 75; i++)
+            {
+                place.Append(GetCharacter(characters[i, 7]));
+            }
+            sideLocation = place.ToString();
+            foreach (var location in Locations.locations)
+            {
+                if (sideLocation.Contains(location.Substring(0, 5)))
+                {
+                    sideLocation = location;
+                    found = true;
+                    break;
+                }
+            }
+            if (found)
+            {
+                return LayoutType.Normal;
+            }
+            place = new StringBuilder();
+            string mapLocation;
+            for (int i = 0; i < 30; i++)
+            {
+                place.Append(GetCharacter(characters[i, 7]));
+            }
+            mapLocation = place.ToString();
+            
+            foreach (var location in Locations.locations)
+            {
+                if(mapLocation.Contains(location.Substring(0, 5)))
+                {
+                    mapLocation = location;
+                    found = true;
+                    break;
+                }
+            }
+            if (found)
+            {
+                return LayoutType.MapOnly;
+            }
+            return LayoutType.TextOnly;
+        }
+        const int FullWidth = 75;
         const int GameViewWidth = 33;
         const int GameViewHeight = 17;
         public static Model ParseData(Putty.TerminalCharacter[,] chars)
         {
             var characters = chars;
             if (characters == null) return null;
+            
+            var layout = GetLayoutType(characters);
+            switch (layout)
+            {
+                case LayoutType.Normal:
+                    return parseNormalLayout(characters);
+                case LayoutType.TextOnly:
+                    return parseTextLayout(characters);
+                case LayoutType.MapOnly:
+                    return parseMapLayout(characters);
+            }
+            return new Model();          
+            //foreach (var item in coloredStrings)
+            //{
+            //    Console.Write('"' + item + "\", ");
+            //}
+            //Console.WriteLine();
+            //model.HighlightColors = highlightColorStrings;
+            //foreach (var item in highlightColorStrings)
+            //{
+            //    Console.Write('"' + item + "\", ");
+            //}
+            //Console.WriteLine();
+            //Console.WriteLine();
+            //Console.WriteLine();
+            }
+
+        private static Model parseNormalLayout(Putty.TerminalCharacter[,] characters)
+        {
             Model model = new Model();
+            model.Layout = LayoutType.Normal;
             model.LineLength = GameViewWidth;
             var coloredStrings = new string[GameViewWidth * GameViewHeight];
             var highlightColorStrings = new string[GameViewWidth * GameViewHeight];
@@ -66,22 +144,79 @@ namespace InputParse
 
                 return new Model();
             }
-            
-            //foreach (var item in coloredStrings)
-            //{
-            //    Console.Write('"' + item + "\", ");
-            //}
-            //Console.WriteLine();
-            //model.HighlightColors = highlightColorStrings;
-            //foreach (var item in highlightColorStrings)
-            //{
-            //    Console.Write('"' + item + "\", ");
-            //}
-            //Console.WriteLine();
-            //Console.WriteLine();
-            //Console.WriteLine();
             return model;
         }
+
+        private static Model parseMapLayout(Putty.TerminalCharacter[,] characters)
+        {
+            Model model = new Model();
+            model.Layout = LayoutType.MapOnly;
+            model.LineLength = FullWidth;
+            var coloredStrings = new string[model.LineLength * GameViewHeight];
+            var curentChar = 0;
+            try
+            {
+
+                for (int j = 0; j < GameViewHeight; j++)
+                    for (int i = 0; i < GameViewWidth; i++)
+                    {
+                        coloredStrings[curentChar] = GetCharacter(characters[i, j]) + Enum.GetName(typeof(ColorList2), characters[i, j].ForegroundPaletteIndex);
+                        curentChar++;
+                    }
+                model.TileNames = coloredStrings;
+
+                model.SideData = new SideData();
+                StringBuilder place = new StringBuilder();
+                for (int i = 61; i < 75; i++)
+                {
+                    place.Append(GetCharacter(characters[i, 7]));
+
+                }
+                model.SideData.Place = place.ToString().Trim();
+
+            }
+            catch (Exception)
+            {
+                foreach (var item in characters)
+                {
+                    if (item.ForegroundPaletteIndex > 15) Console.WriteLine(item.ForegroundPaletteIndex + item.ForegroundPaletteIndex);
+                }
+
+                return new Model();
+            }
+            return model;
+        }
+
+        private static Model parseTextLayout(Putty.TerminalCharacter[,] characters)
+        {
+            Model model = new Model();
+            model.Layout = LayoutType.TextOnly;
+            model.LineLength = FullWidth;
+            var coloredStrings = new string[model.LineLength * GameViewHeight];
+            var curentChar = 0;
+            try
+            {
+                for (int j = 0; j < GameViewHeight; j++)
+                    for (int i = 0; i < GameViewWidth; i++)
+                    {
+                        coloredStrings[curentChar] = GetCharacter(characters[i, j]) + Enum.GetName(typeof(ColorList2), characters[i, j].ForegroundPaletteIndex);
+                        curentChar++;
+                    }
+                model.TileNames = coloredStrings;
+
+            }
+            catch (Exception)
+            {
+                foreach (var item in characters)
+                {
+                    if (item.ForegroundPaletteIndex > 15) Console.WriteLine(item.ForegroundPaletteIndex + item.ForegroundPaletteIndex);
+                }
+
+                return new Model();
+            }
+            return model;
+        }
+
 
         private static SideData ParseSideData(Putty.TerminalCharacter[,] characters)
         {
