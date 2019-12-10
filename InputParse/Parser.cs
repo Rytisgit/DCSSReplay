@@ -96,14 +96,14 @@ namespace InputParse
             Model model = new Model();
             model.Layout = LayoutType.Normal;
             model.LineLength = GameViewWidth;
-            var coloredStrings = new string[GameViewWidth * GameViewHeight];
-            var highlightColorStrings = new string[GameViewWidth * GameViewHeight];
+            var coloredStrings = new string[model.LineLength * GameViewHeight];
+            var highlightColorStrings = new string[model.LineLength * GameViewHeight];
             var curentChar = 0;
             try
             {
 
                 for (int j = 0; j < GameViewHeight; j++)
-                    for (int i = 0; i < GameViewWidth; i++)
+                    for (int i = 0; i < model.LineLength; i++)
                     {
                         coloredStrings[curentChar] = GetCharacter(characters[i, j]) + Enum.GetName(typeof(ColorList2), characters[i, j].ForegroundPaletteIndex);
                         highlightColorStrings[curentChar] = Enum.GetName(typeof(ColorList2), characters[i, j].BackgroundPaletteIndex);
@@ -158,7 +158,7 @@ namespace InputParse
             {
 
                 for (int j = 0; j < GameViewHeight; j++)
-                    for (int i = 0; i < GameViewWidth; i++)
+                    for (int i = 0; i < model.LineLength; i++)
                     {
                         coloredStrings[curentChar] = GetCharacter(characters[i, j]) + Enum.GetName(typeof(ColorList2), characters[i, j].ForegroundPaletteIndex);
                         curentChar++;
@@ -197,7 +197,7 @@ namespace InputParse
             try
             {
                 for (int j = 0; j < GameViewHeight; j++)
-                    for (int i = 0; i < GameViewWidth; i++)
+                    for (int i = 0; i < model.LineLength; i++)
                     {
                         coloredStrings[curentChar] = GetCharacter(characters[i, j]) + Enum.GetName(typeof(ColorList2), characters[i, j].ForegroundPaletteIndex);
                         curentChar++;
