@@ -1,4 +1,6 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 
 namespace InputParse
 {
@@ -26,6 +28,12 @@ namespace InputParse
         LIGHTMAGENTA,//13
         LIGHTCYAN,//14
         WHITE//15
+    }
+    public static class Locations
+    {
+        public static List<String> locations = new List<String> { "Dungeon","Temple","Orcish Mines","Elven Halls","Lair","Swamp","Shoals","Snake Pit",
+    "Spider Nest","Slime Pits","Vaults","Hall of Blades","Crypt","Tomb","Hell","Dis","Gehenna","Cocytus","Tartarus","Zot","Abyss","Pandemonium",
+   "Ziggurat", "Bazaar","Trove","Sewer","Ossuary","Bailey","Ice Cave","Volcano","Wizlab","Depths"};
     }
     public class ColorList
     {
