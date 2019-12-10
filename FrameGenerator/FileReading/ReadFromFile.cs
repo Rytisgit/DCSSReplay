@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
+﻿using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
+using System.IO;
 using System.Linq;
 
 namespace FrameGenerator.FileReading
@@ -57,24 +52,24 @@ namespace FrameGenerator.FileReading
 
         public static Dictionary<string, string> GetMonsterData(string gameLocation)
 
-            {
+        {
             var monster = new Dictionary<string, string>();
 
             string[] lines = System.IO.File.ReadAllLines(gameLocation + @"\source\mon-data.h");
-       
-            for (var i = 0; i<lines.Length; i++)
+
+            for (var i = 0; i < lines.Length; i++)
             {
                 if (lines[i].Contains("  MONS_"))
                 {
                     string[] tokens = lines[i].Split(',');
-        tokens[1] = tokens[1].Replace("'", "").Replace(" ", "");
-        tokens[2] = tokens[2].Replace(" ", "");
-        tokens[0] = tokens[0].Replace("MONS_", "").Replace(" ", "").ToLower();
-        monster[tokens[1] + tokens[2]] = tokens[0];
+                    tokens[1] = tokens[1].Replace("'", "").Replace(" ", "");
+                    tokens[2] = tokens[2].Replace(" ", "");
+                    tokens[0] = tokens[0].Replace("MONS_", "").Replace(" ", "").ToLower();
+                    monster[tokens[1] + tokens[2]] = tokens[0];
                 }
-             }
-            return monster;
             }
+            return monster;
+        }
         public static Dictionary<string, string[]> Get_Floor_And_Wall_Names_For_Dungeons()
 
         {
@@ -83,13 +78,13 @@ namespace FrameGenerator.FileReading
             string[] lines = System.IO.File.ReadAllLines(@"..\..\..\Extra\tilefloor.txt");
 
             for (var i = 0; i < lines.Length; i += 3)
-                {
+            {
                 string[] temp = new string[2];
                 temp[0] = lines[i + 1];
                 temp[1] = lines[i + 2];
                 floorandwall[lines[i]] = temp;
-                }
-            
+            }
+
             return floorandwall;
         }
         public static Dictionary<string, Bitmap> GetCharacterPNG(string gameLocation)
@@ -104,7 +99,7 @@ namespace FrameGenerator.FileReading
             {
                 FileInfo info = new FileInfo(file);
                 Bitmap bitmap = new Bitmap(file);
-             
+
 
                 GetCharacterPNG[info.Name.Replace(".png", "")] = bitmap;
 
@@ -125,7 +120,7 @@ namespace FrameGenerator.FileReading
                 monsterPNG[info.Name.Replace(".png", "")] = bitmap;
 
             }
-            Bitmap bmp = new Bitmap(gameLocation+ @"\source\rltiles\dngn\statues\statue_triangle.png");
+            Bitmap bmp = new Bitmap(gameLocation + @"\source\rltiles\dngn\statues\statue_triangle.png");
             monsterPNG["roxanne"] = bmp;
             return monsterPNG;
         }
@@ -178,7 +173,7 @@ namespace FrameGenerator.FileReading
         {
 
             var wallpng = new Dictionary<string, Bitmap>();
-           
+
             List<string> wallpngfiles = Directory.GetFiles(gameLocation + @"\source\rltiles\item", "*.png*", SearchOption.AllDirectories).ToList();
             wallpngfiles.AddRange(Directory.GetFiles(@"..\..\..\Extra", "*.png*", SearchOption.AllDirectories).ToList());
             foreach (var file in wallpngfiles)

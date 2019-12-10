@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text;
-using TtyRecMonkey;
 
 namespace InputParse
 {
@@ -10,12 +9,13 @@ namespace InputParse
         {
             return character.Character == 55328 ? ' ' : character.Character;
         }
-        public static LayoutType GetLayoutType(Putty.TerminalCharacter[,] characters)
+        public static LayoutType GetLayoutType(Putty.TerminalCharacter[,] characters, out string newlocation)
         {
             StringBuilder place = new StringBuilder();
             bool found = false;
 
             string sideLocation;
+            newlocation = "";
             for (int i = 61; i < 75; i++)
             {
                 place.Append(GetCharacter(characters[i, 7]));
@@ -25,6 +25,7 @@ namespace InputParse
             {
                 if (sideLocation.Contains(location.Substring(0, 3)))
                 {
+                    newlocation = location;
                     sideLocation = location;
                     found = true;
                     break;
@@ -38,14 +39,15 @@ namespace InputParse
             string mapLocation;
             for (int i = 0; i < 30; i++)
             {
-                place.Append(GetCharacter(characters[i, 7]));
+                place.Append(GetCharacter(characters[i, 0]));
             }
             mapLocation = place.ToString();
-            
+
             foreach (var location in Locations.locations)
             {
-                if(mapLocation.Contains(location.Substring(0, 3)))
+                if (mapLocation.Contains(location.Substring(0, 3)))
                 {
+                    newlocation = location;
                     mapLocation = location;
                     found = true;
                     break;
@@ -57,6 +59,7 @@ namespace InputParse
             }
             return LayoutType.TextOnly;
         }
+
         const int FullWidth = 75;
         const int GameViewWidth = 33;
         const int GameViewHeight = 17;
@@ -64,8 +67,8 @@ namespace InputParse
         {
             var characters = chars;
             if (characters == null) return null;
-            
-            var layout = GetLayoutType(characters);
+
+            var layout = GetLayoutType(characters, out var location);
             switch (layout)
             {
                 case LayoutType.Normal:
@@ -73,9 +76,9 @@ namespace InputParse
                 case LayoutType.TextOnly:
                     return parseTextLayout(characters);
                 case LayoutType.MapOnly:
-                    return parseMapLayout(characters);
+                    return parseMapLayout(characters, location);
             }
-            return new Model();          
+            return new Model();
             //foreach (var item in coloredStrings)
             //{
             //    Console.Write('"' + item + "\", ");
@@ -89,7 +92,7 @@ namespace InputParse
             //Console.WriteLine();
             //Console.WriteLine();
             //Console.WriteLine();
-            }
+        }
 
         private static Model parseNormalLayout(Putty.TerminalCharacter[,] characters)
         {
@@ -147,7 +150,7 @@ namespace InputParse
             return model;
         }
 
-        private static Model parseMapLayout(Putty.TerminalCharacter[,] characters)
+        private static Model parseMapLayout(Putty.TerminalCharacter[,] characters, string location)
         {
             Model model = new Model();
             model.Layout = LayoutType.MapOnly;
@@ -166,13 +169,7 @@ namespace InputParse
                 model.TileNames = coloredStrings;
 
                 model.SideData = new SideData();
-                StringBuilder place = new StringBuilder();
-                for (int i = 61; i < 75; i++)
-                {
-                    place.Append(GetCharacter(characters[i, 7]));
-
-                }
-                model.SideData.Place = place.ToString().Trim();
+                model.SideData.Place = location;
 
             }
             catch (Exception)
@@ -273,7 +270,7 @@ namespace InputParse
 
             }
 
-            var splithp = hp.ToString().Split(':').Length > 1 ? hp.ToString().Split(':')[1].Split('/') : new string[] {"1","1"};
+            var splithp = hp.ToString().Split(':').Length > 1 ? hp.ToString().Split(':')[1].Split('/') : new string[] { "1", "1" };
             var splitmp = mp.ToString().Split(':').Length > 1 ? mp.ToString().Split(':')[1].Split('/') : new string[] { "1", "1" };
 
 

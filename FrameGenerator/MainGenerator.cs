@@ -1,14 +1,12 @@
 ﻿using FrameGenerator.FileReading;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Drawing;
 using FrameGenerator.FrameCreation;
-using System.Threading.Tasks;
-using Window;
-using System.Linq;
 using Putty;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Linq;
+using Window;
 
 namespace FrameGenerator
 {
@@ -24,10 +22,12 @@ namespace FrameGenerator
         private Dictionary<string, string> itemdata;
         private Dictionary<string, Bitmap> itempng;
         private Dictionary<string, Bitmap> alldngnpng;
+        private Bitmap lastframe= new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
 
 
         public MainGenerator()
         {
+         
             string GameLocation = File.ReadAllLines(display.Folder + @"\config.ini").First();
             _characterdata = ReadFromFile.CharacterData();
             moretiles = ReadFromFile.AdditionalTileData();
@@ -42,17 +42,18 @@ namespace FrameGenerator
 
         public void GenerateImage(TerminalCharacter[,] chars)
         {
-            if (chars != null) { CreatingFrame.DrawFrame(itempng, itemdata, moretiles, alldngnpng, _monsterdata, _monsterpng, _floorandwall, _characterdata, _characterpng, display, chars); }
+            if (chars != null) { CreatingFrame.DrawFrame(ref lastframe, itempng, itemdata, moretiles, alldngnpng, _monsterdata, _monsterpng, _floorandwall, _characterdata, _characterpng, display, chars); }
+
             return;
         }
 
-  
+
 
     }
 
-   
 
-    
+
+
 }
 
 

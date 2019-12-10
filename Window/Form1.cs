@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.Drawing;
 using System.Windows.Forms;
 
 namespace Window
@@ -23,15 +16,15 @@ namespace Window
         public void update(Bitmap frame)
         {
             if (pictureBox1.InvokeRequired)
-           {
-               var d = new SafeCallDelegate(update);
-               pictureBox1.Invoke(d, new object[] { frame });
-           }
-           else
+            {
+                var d = new SafeCallDelegate(update);
+                pictureBox1.Invoke(d, new object[] { frame });
+            }
+            else
             {
                 pictureBox1.Image = frame;
             }
-            
+
         }
         /*
       public void find()
