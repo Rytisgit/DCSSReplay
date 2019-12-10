@@ -41,7 +41,7 @@ namespace InputParse
         public SolidBrush RED = new SolidBrush(Color.FromArgb(255, 0, 0));
         public SolidBrush GREEN = new SolidBrush(Color.FromArgb(0, 255, 0));
         public SolidBrush BROWN = new SolidBrush(Color.FromArgb(165, 91, 0));
-        public SolidBrush BLUE = new SolidBrush(Color.FromArgb(0, 64, 255)); 
+        public SolidBrush BLUE = new SolidBrush(Color.FromArgb(0, 64, 255));
         public SolidBrush MAGENTA = new SolidBrush(Color.FromArgb(192, 0, 255));
         public SolidBrush CYAN = new SolidBrush(Color.FromArgb(0, 255, 255));
         public SolidBrush LIGHTGREY = new SolidBrush(Color.FromArgb(192, 192, 192));
@@ -49,9 +49,9 @@ namespace InputParse
         public SolidBrush LIGHTRED = new SolidBrush(Color.FromArgb(255, 128, 128));
         public SolidBrush LIGHTGREEN = new SolidBrush(Color.FromArgb(128, 255, 128));
         public SolidBrush YELLOW = new SolidBrush(Color.FromArgb(255, 255, 0));
-        public SolidBrush LIGHTBLUE =new SolidBrush(Color.FromArgb(128, 128, 255));
+        public SolidBrush LIGHTBLUE = new SolidBrush(Color.FromArgb(128, 128, 255));
         public SolidBrush LIGHTMAGENTA = new SolidBrush(Color.FromArgb(255, 128, 255));
-        public SolidBrush LIGHTCYAN =new SolidBrush(Color.FromArgb(64, 255, 255));
+        public SolidBrush LIGHTCYAN = new SolidBrush(Color.FromArgb(64, 255, 255));
         public SolidBrush WHITE = new SolidBrush(Color.FromArgb(255, 255, 255));
     }
     public class Model
