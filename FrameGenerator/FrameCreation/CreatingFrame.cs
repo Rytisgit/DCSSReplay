@@ -131,7 +131,7 @@ namespace FrameGenerator.FrameCreation
                             var blueTint = new SolidBrush(Color.FromArgb(200, 0, 0, 0));
                             g.FillRectangle(blueTint, x, y, wall.Width, wall.Height);
                         }
-                        else if (tile[0] == '#')
+                        else if (tile[0] == '#' && !tile.Equals("#LIGHTCYAN"))
                         {
                             g.DrawImage(wall, x, y, wall.Width, wall.Height);
 
