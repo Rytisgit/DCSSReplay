@@ -82,7 +82,7 @@ namespace FrameGenerator.FileReading
                 string[] temp = new string[2];
                 temp[0] = lines[i + 1];
                 temp[1] = lines[i + 2];
-                floorandwall[lines[i]] = temp;
+                floorandwall[lines[i].ToUpper()] = temp;
             }
 
             return floorandwall;

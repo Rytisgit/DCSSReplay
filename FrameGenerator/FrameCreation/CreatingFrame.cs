@@ -249,22 +249,7 @@ namespace FrameGenerator.FrameCreation
                     var blueTint = new SolidBrush(Color.FromArgb(20, 0, 0, 200));
                     g.FillRectangle(blueTint, x, y, floor.Width * resize, floor.Height * resize);
                 }
-                else if (tile[0] == '@')
-                {
-
-
-                    if (_characterdata.ContainsKey(OnlyRace))
-                    {
-                        string nam = _characterdata[OnlyRace];
-                        if (_characterpng.TryGetValue(nam, out Bitmap chr))
-                        {
-                            g.DrawImage(floor, x, y, floor.Width * resize, floor.Height * resize);
-                            g.DrawImage(chr, x, y, chr.Width * resize, chr.Height * resize);
-                        }
-
-                    }
-
-                }
+               
                 else
                 {
                     if (monsterdata.ContainsKey(tile))
@@ -293,6 +278,22 @@ namespace FrameGenerator.FrameCreation
                         if (alldngnpng.TryGetValue(nam, out Bitmap chr))
                         {
                             g.DrawImage(chr, x, y, chr.Width * resize, chr.Height * resize);
+                        }
+
+                    }
+                    else if (tile[0] == '@')
+                    {
+
+
+                        if (_characterdata.ContainsKey(OnlyRace))
+                        {
+                            string nam = _characterdata[OnlyRace];
+                            if (_characterpng.TryGetValue(nam, out Bitmap chr))
+                            {
+                                g.DrawImage(floor, x, y, floor.Width * resize, floor.Height * resize);
+                                g.DrawImage(chr, x, y, chr.Width * resize, chr.Height * resize);
+                            }
+
                         }
 
                     }
@@ -331,8 +332,8 @@ namespace FrameGenerator.FrameCreation
 
             for (i = 0; i < model.FullLengthStrings.Length; i++)
             {
-                // var Color = model.ColorList.GetType().GetField(model.FullLengthStringColors[i]).GetValue(model.ColorList);
-                //g.DrawString(model.FullLengthStrings[i], arialFont, (SolidBrush)Color, 0, y);
+                var Color = model.ColorList.GetType().GetField(model.FullLengthStringColors[i]).GetValue(model.ColorList);
+                g.DrawString(model.FullLengthStrings[i], new Font("Courier New", 16), (SolidBrush)Color, 0, y);
                 y += 32;
             }
 
