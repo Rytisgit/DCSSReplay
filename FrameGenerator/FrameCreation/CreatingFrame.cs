@@ -32,7 +32,8 @@ namespace FrameGenerator.FrameCreation
                 default:
                         break;                 
                 }
-            display.Update_Window_Image(currentFrame);
+            Bitmap forupdate = new Bitmap(currentFrame);
+            display.Update_Window_Image(forupdate);
             GC.Collect();
         
         }
