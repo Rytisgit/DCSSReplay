@@ -37,7 +37,7 @@ namespace InputParse
             }
             place = new StringBuilder();
             string mapLocation;
-            for (int i = 0; i < 30; i++)
+            for (int i = 0; i < 15; i++)
             {
                 place.Append(GetCharacter(characters[i, 0]));
             }
@@ -80,19 +80,6 @@ namespace InputParse
                     return parseMapLayout(characters, location);
             }
             return new Model();
-            //foreach (var item in coloredStrings)
-            //{
-            //    Console.Write('"' + item + "\", ");
-            //}
-            //Console.WriteLine();
-            //model.HighlightColors = highlightColorStrings;
-            //foreach (var item in highlightColorStrings)
-            //{
-            //    Console.Write('"' + item + "\", ");
-            //}
-            //Console.WriteLine();
-            //Console.WriteLine();
-            //Console.WriteLine();
         }
 
         private static Model parseNormalLayout(Putty.TerminalCharacter[,] characters)
@@ -306,6 +293,21 @@ namespace InputParse
             sideData.Place = place.ToString().Trim();
             sideData.Time = time.ToString();
 
+            var parsed = sideData.Place.Split(':');
+            bool found = false;
+            foreach (var location in Locations.locations)
+            {
+                if (parsed[0].Contains(location.Substring(0, 3)))
+                {
+                    sideData.Place = location;
+                    found = true;
+                    break;
+                }
+            }
+            if (found && parsed.Length>1)
+            {
+                sideData.Place += ":" + parsed[1];
+            }
             return sideData;
         }
     }
