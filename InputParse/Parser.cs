@@ -61,6 +61,7 @@ namespace InputParse
         }
 
         const int FullWidth = 75;
+        const int FullHeight = 24;
         const int GameViewWidth = 33;
         const int GameViewHeight = 17;
         public static Model ParseData(Putty.TerminalCharacter[,] chars)
@@ -155,12 +156,12 @@ namespace InputParse
             Model model = new Model();
             model.Layout = LayoutType.MapOnly;
             model.LineLength = FullWidth;
-            var coloredStrings = new string[model.LineLength * GameViewHeight];
+            var coloredStrings = new string[model.LineLength * FullHeight];
             var curentChar = 0;
             try
             {
 
-                for (int j = 0; j < GameViewHeight; j++)
+                for (int j = 0; j < FullHeight; j++)
                     for (int i = 0; i < model.LineLength; i++)
                     {
                         coloredStrings[curentChar] = GetCharacter(characters[i, j]) + Enum.GetName(typeof(ColorList2), characters[i, j].ForegroundPaletteIndex);
@@ -189,11 +190,11 @@ namespace InputParse
             Model model = new Model();
             model.Layout = LayoutType.TextOnly;
             model.LineLength = FullWidth;
-            var coloredStrings = new string[model.LineLength * GameViewHeight];
+            var coloredStrings = new string[model.LineLength * FullHeight];
             var curentChar = 0;
             try
             {
-                for (int j = 0; j < GameViewHeight; j++)
+                for (int j = 0; j < FullHeight; j++)
                     for (int i = 0; i < model.LineLength; i++)
                     {
                         coloredStrings[curentChar] = GetCharacter(characters[i, j]) + Enum.GetName(typeof(ColorList2), characters[i, j].ForegroundPaletteIndex);

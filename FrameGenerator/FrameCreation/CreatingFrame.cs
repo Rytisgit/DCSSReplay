@@ -15,92 +15,107 @@ namespace FrameGenerator.FrameCreation
             var dict = new Dictionary<string, string>();
             var model = Parser.ParseData(chars);
 
+            Bitmap currentFrame = new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
 
-
-           
             switch (model.Layout)
                 {
-                    case LayoutType.Normal:
-                    Bitmap bmp = new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
-                    using (Graphics g = Graphics.FromImage(bmp))
-                    {
-                        DrawSideDATA(g, model);
-                       
-                        DrawTiles(0,0,0,resize:1, g, model, dict, itempng, itemdata, moretiles, alldngnpng, monsterdata, monsterPNG, floorandwall, _characterdata, _characterpng, wallpng, floorpng);
-                    }
-                    lastframe = new Bitmap(bmp);               
-                    display.Update_Window_Image(bmp);
+                case LayoutType.Normal:
+                    currentFrame = DrawNormal(wallpng, floorpng, itempng, itemdata, moretiles, alldngnpng, monsterdata, monsterPNG, floorandwall, _characterdata, _characterpng, dict, model);
+                    lastframe = currentFrame;
                     break;
-                    case LayoutType.TextOnly:
-                    Bitmap temp = new Bitmap(lastframe);
-                    using (Graphics g = Graphics.FromImage(temp))
-                    {
-                      
-                        Pen blackPen = new Pen(new SolidBrush(Color.FromArgb(255, 125, 98, 60)), 2);
-                        Rectangle rect2 = new Rectangle(50, 50, 1000, 500);
-                        g.FillRectangle(new SolidBrush(Color.Black), rect2);
-                        g.DrawRectangle(blackPen, rect2);
-
-
-                        float x = 50;
-                        float y = 50;
-                        int i = 1;
-                        foreach (var tile in model.TileNames)
-                        {
-                            var Color = model.ColorList.GetType().GetField(tile.Substring(1)).GetValue(model.ColorList);
-                            g.DrawString(tile[0].ToString(), new Font("Courier New", 12), (SolidBrush)Color, x, y);
-                            x += 12;
-                            if (i == model.LineLength)
-                            {
-                                i = 0;
-                                x = 50;
-                                y += 12;
-                            }
-                            i++;
-                        }
-                    }
-                    display.Update_Window_Image(temp);
-
+                case LayoutType.TextOnly:
+                    currentFrame = DrawTextBox(lastframe, model);
                     break;
-                    case LayoutType.MapOnly:
-                    Bitmap temp2 = new Bitmap(lastframe);
-
-                    Rectangle rect = new Rectangle(0, 0, 1056, 1050);
-                    
-                    using (Graphics g = Graphics.FromImage(temp2))
-                    {
-                        Pen blackPen = new Pen(Color.Black, 2);
-                        g.FillRectangle(new SolidBrush(Color.Black), rect);
-                        g.DrawRectangle(blackPen,  rect);
-                        float x = 0;
-                        float y = 0;
-                        int i = 1;
-                        int j=0;
-                        for (; j < model.TileNames.Length;j++)
-                        {
-                            var Color = model.ColorList.GetType().GetField(model.TileNames[j].Substring(1)).GetValue(model.ColorList);
-                            g.DrawString(model.TileNames[j][0].ToString(), new Font("Courier New", 12), (SolidBrush)Color, x, y);
-                            x += 12;
-                            if (i == model.LineLength)
-                            {
-                                break;
-                            }
-                            i++;
-                        }
-                        Console.WriteLine(j);
-
-                        DrawTiles(0,24,j,resize:0.44f, g, model, dict, itempng, itemdata, moretiles, alldngnpng, monsterdata, monsterPNG, floorandwall, _characterdata, _characterpng, wallpng, floorpng);
-                    }
-                    display.Update_Window_Image(temp2);
-
+                case LayoutType.MapOnly:
+                    currentFrame = DrawMap(lastframe, wallpng, floorpng, itempng, itemdata, moretiles, alldngnpng, monsterdata, monsterPNG, floorandwall, _characterdata, _characterpng, dict, model);
                     break;
-                    default:
+                default:
                         break;                 
                 }
+            display.Update_Window_Image(currentFrame);
             GC.Collect();
         
         }
 
+        private static Bitmap DrawMap(Bitmap lastframe, Dictionary<string, Bitmap> wallpng, Dictionary<string, Bitmap> floorpng, Dictionary<string, Bitmap> itempng, Dictionary<string, string> itemdata, Dictionary<string, string> moretiles, Dictionary<string, Bitmap> alldngnpng, Dictionary<string, string> monsterdata, Dictionary<string, Bitmap> monsterPNG, Dictionary<string, string[]> floorandwall, Dictionary<string, string> _characterdata, Dictionary<string, Bitmap> _characterpng, Dictionary<string, string> dict, Model model)
+        {
+            Bitmap temp2 = new Bitmap(lastframe);
+
+            Rectangle rect = new Rectangle(0, 0, 1056, 1050);
+
+            using (Graphics g = Graphics.FromImage(temp2))
+            {
+                Pen blackPen = new Pen(Color.Black, 2);
+                g.FillRectangle(new SolidBrush(Color.Black), rect);
+                g.DrawRectangle(blackPen, rect);
+                float x = 0;
+                float y = 0;
+                int i = 1;
+                int j = 0;
+                for (; j < model.TileNames.Length; j++)
+                {
+                    var Color = model.ColorList.GetType().GetField(model.TileNames[j].Substring(1)).GetValue(model.ColorList);
+                    g.DrawString(model.TileNames[j][0].ToString(), new Font("Courier New", 12), (SolidBrush)Color, x, y);
+                    x += 12;
+                    if (i == model.LineLength)
+                    {
+                        break;
+                    }
+                    i++;
+                }
+                Console.WriteLine(j);
+
+                DrawTiles(0, 24, j, resize: 0.44f, g, model, dict, itempng, itemdata, moretiles, alldngnpng, monsterdata, monsterPNG, floorandwall, _characterdata, _characterpng, wallpng, floorpng);
+            }
+
+            return temp2;
+        }
+
+        private static Bitmap DrawTextBox(Bitmap lastframe, Model model)
+        {
+            Bitmap temp = new Bitmap(lastframe);
+            using (Graphics g = Graphics.FromImage(temp))
+            {
+
+                Pen blackPen = new Pen(new SolidBrush(Color.FromArgb(255, 125, 98, 60)), 2);
+                Rectangle rect2 = new Rectangle(50, 50, 1000, 500);
+                g.FillRectangle(new SolidBrush(Color.Black), rect2);
+                g.DrawRectangle(blackPen, rect2);
+
+
+                float x = 50;
+                float y = 50;
+                int i = 1;
+                foreach (var tile in model.TileNames)
+                {
+                    var Color = model.ColorList.GetType().GetField(tile.Substring(1)).GetValue(model.ColorList);
+                    g.DrawString(tile[0].ToString(), new Font("Courier New", 12), (SolidBrush)Color, x, y);
+                    x += 12;
+                    if (i == model.LineLength)
+                    {
+                        i = 0;
+                        x = 50;
+                        y += 16;
+                    }
+                    i++;
+                }
+            }
+
+            return temp;
+        }
+
+        private static Bitmap DrawNormal(Dictionary<string, Bitmap> wallpng, Dictionary<string, Bitmap> floorpng, Dictionary<string, Bitmap> itempng, Dictionary<string, string> itemdata, Dictionary<string, string> moretiles, Dictionary<string, Bitmap> alldngnpng, Dictionary<string, string> monsterdata, Dictionary<string, Bitmap> monsterPNG, Dictionary<string, string[]> floorandwall, Dictionary<string, string> _characterdata, Dictionary<string, Bitmap> _characterpng, Dictionary<string, string> dict, Model model)
+        {
+            Bitmap bmp = new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                DrawSideDATA(g, model);
+
+                DrawTiles(0, 0, 0, resize: 1, g, model, dict, itempng, itemdata, moretiles, alldngnpng, monsterdata, monsterPNG, floorandwall, _characterdata, _characterpng, wallpng, floorpng);
+            }
+
+            return bmp;
+        }
 
         public static void DrawSideDATA(Graphics g, Model model)
 
@@ -347,11 +362,5 @@ namespace FrameGenerator.FrameCreation
 
             }
         }
-
-
-
-
-
-
     }
 }
