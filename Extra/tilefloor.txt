@@ -13,10 +13,10 @@ floor_vines0
 DWARF
 relief0
 limestone0
-BRANCH_BLADE
+Hall of Blades
 relief0
 mesh0
-BRANCH_ELF
+Elven Halls
 relief0
 mesh0
 TARTARUS
@@ -28,7 +28,7 @@ crypt_domino_1a
 TOMB
 undead0
 tomb0
-VESTIBULE
+HELL
 hell01
 cage0
 DIS
@@ -40,16 +40,16 @@ rough_red0
 COCYTUS
 ice_wall0
 frozen0
-ORC
+Orcish Mines
 orc0
 orc0
 LAIR
 lair0
 lair0
-SLIME
+SLIME PITS
 slime0
 bog_green0
-SNAKE
+SNAKE Pit
 snake0
 mosaic0
 SWAMP
@@ -58,7 +58,7 @@ swamp0
 SHOALS
 shoals_wall1
 sand1
-SPIDER
+SPIDER NEST
 spider00
 spider00
 ZOT
@@ -71,6 +71,9 @@ ABYSS
 abyss0
 floor_nerves0
 PANDEMONIUM
+wall_flesh0
+demonic_red1
+PAN
 wall_flesh0
 demonic_red1
 ZIGGURAT
@@ -97,7 +100,7 @@ sandstone_floor0
 BAILEY
 brick_brown0
 cobble_blood1
-ICE_CAVE
+ICE CAVE
 ice_block0
 ice0
 VOLCANO
