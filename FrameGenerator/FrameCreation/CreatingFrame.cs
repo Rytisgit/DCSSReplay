@@ -10,7 +10,7 @@ namespace FrameGenerator.FrameCreation
 
     class CreatingFrame
     {
-        public static void DrawFrame(ref Bitmap lastframe, Dictionary<string, Bitmap> itempng, Dictionary<string, string> itemdata, Dictionary<string, string> moretiles, Dictionary<string, Bitmap> alldngnpng, Dictionary<string, string> monsterdata, Dictionary<string, Bitmap> monsterPNG, Dictionary<string, string[]> floorandwall, Dictionary<string, string> _characterdata, Dictionary<string, Bitmap> _characterpng, Window.Widow_Display display, TerminalCharacter[,] chars)
+        public static void DrawFrame(ref Bitmap lastframe, Dictionary<string, Bitmap> wallpng, Dictionary<string, Bitmap> floorpng, Dictionary<string, Bitmap> itempng,  Dictionary<string, string> itemdata, Dictionary<string, string> moretiles, Dictionary<string, Bitmap> alldngnpng, Dictionary<string, string> monsterdata, Dictionary<string, Bitmap> monsterPNG, Dictionary<string, string[]> floorandwall, Dictionary<string, string> _characterdata, Dictionary<string, Bitmap> _characterpng, Window.Widow_Display display, TerminalCharacter[,] chars)
         {
             var dict = new Dictionary<string, string>();
             var model = Parser.ParseData(chars);
@@ -26,7 +26,7 @@ namespace FrameGenerator.FrameCreation
                     {
                         DrawSideDATA(g, model);
                        
-                        DrawTiles(0,0,0,resize:1, g, model, dict, itempng, itemdata, moretiles, alldngnpng, monsterdata, monsterPNG, floorandwall, _characterdata, _characterpng);
+                        DrawTiles(0,0,0,resize:1, g, model, dict, itempng, itemdata, moretiles, alldngnpng, monsterdata, monsterPNG, floorandwall, _characterdata, _characterpng, wallpng, floorpng);
                     }
                     lastframe = new Bitmap(bmp);               
                     display.Update_Window_Image(bmp);
@@ -89,7 +89,7 @@ namespace FrameGenerator.FrameCreation
                         }
                         Console.WriteLine(j);
 
-                        DrawTiles(0,24,j,resize:0.44f, g, model, dict, itempng, itemdata, moretiles, alldngnpng, monsterdata, monsterPNG, floorandwall, _characterdata, _characterpng);
+                        DrawTiles(0,24,j,resize:0.44f, g, model, dict, itempng, itemdata, moretiles, alldngnpng, monsterdata, monsterPNG, floorandwall, _characterdata, _characterpng, wallpng, floorpng);
                     }
                     display.Update_Window_Image(temp2);
 
@@ -195,7 +195,7 @@ namespace FrameGenerator.FrameCreation
             }
         }
 
-        public static void DrawTiles(float x, float y, int j,float resize, Graphics g, Model model, Dictionary<string, string> dict, Dictionary<string, Bitmap> itempng, Dictionary<string, string> itemdata, Dictionary<string, string> moretiles, Dictionary<string, Bitmap> alldngnpng, Dictionary<string, string> monsterdata, Dictionary<string, Bitmap> monsterPNG, Dictionary<string, string[]> floorandwall, Dictionary<string, string> _characterdata, Dictionary<string, Bitmap> _characterpng)
+        public static void DrawTiles(float x, float y, int j,float resize, Graphics g, Model model, Dictionary<string, string> dict, Dictionary<string, Bitmap> itempng, Dictionary<string, string> itemdata, Dictionary<string, string> moretiles, Dictionary<string, Bitmap> alldngnpng, Dictionary<string, string> monsterdata, Dictionary<string, Bitmap> monsterPNG, Dictionary<string, string[]> floorandwall, Dictionary<string, string> _characterdata, Dictionary<string, Bitmap> _characterpng, Dictionary<string, Bitmap> wallpng, Dictionary<string, Bitmap> floorpng)
 
         {
 
@@ -204,9 +204,9 @@ namespace FrameGenerator.FrameCreation
             string[] tempo = model.SideData.Place.Split(':');
             if (!floorandwall.TryGetValue(tempo[0].ToUpper(), out var fnw)) return;
             // Console.WriteLine(fnw[0] + " " + fnw[1]);
-            if (!alldngnpng.TryGetValue(fnw[0], out var wall)) return;
+            if (!wallpng.TryGetValue(fnw[0], out var wall)) return;
 
-            if (!alldngnpng.TryGetValue(fnw[1], out var floor)) return;
+            if (!floorpng.TryGetValue(fnw[1], out var floor)) return;
             int i = 1;
 
             for (; j < model.TileNames.Length; j++)
