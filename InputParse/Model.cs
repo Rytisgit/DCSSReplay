@@ -27,7 +27,8 @@ namespace InputParse
         LIGHTBLUE,//12
         LIGHTMAGENTA,//13
         LIGHTCYAN,//14
-        WHITE//15
+        WHITE,//15
+        WHITE2 = 256
     }
     public static class Locations
     {
@@ -53,6 +54,7 @@ namespace InputParse
         public SolidBrush LIGHTMAGENTA = new SolidBrush(Color.FromArgb(255, 128, 255));
         public SolidBrush LIGHTCYAN = new SolidBrush(Color.FromArgb(64, 255, 255));
         public SolidBrush WHITE = new SolidBrush(Color.FromArgb(255, 255, 255));
+        public SolidBrush WHITE2 = new SolidBrush(Color.FromArgb(255, 255, 255));
     }
     public class Model
     {
