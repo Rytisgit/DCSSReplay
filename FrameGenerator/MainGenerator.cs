@@ -22,6 +22,8 @@ namespace FrameGenerator
         private Dictionary<string, string> itemdata;
         private Dictionary<string, Bitmap> itempng;
         private Dictionary<string, Bitmap> alldngnpng;
+        private Dictionary<string, Bitmap> floorpng;
+        private Dictionary<string, Bitmap> wallpng;
         private Bitmap lastframe= new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
 
 
@@ -37,12 +39,14 @@ namespace FrameGenerator
             _monsterpng = ReadFromFile.GetMonsterPNG(GameLocation);
             itempng = ReadFromFile.ItemsPNG(GameLocation);
             itemdata = ReadFromFile.ItemData();
+            floorpng = ReadFromFile.GetFloorPNG(GameLocation);
+            wallpng = ReadFromFile.GetWallPNG(GameLocation);
             alldngnpng = ReadFromFile.GetAllDungeonPNG(GameLocation);
         }
 
         public void GenerateImage(TerminalCharacter[,] chars)
         {
-            if (chars != null) { CreatingFrame.DrawFrame(ref lastframe, itempng, itemdata, moretiles, alldngnpng, _monsterdata, _monsterpng, _floorandwall, _characterdata, _characterpng, display, chars); }
+            if (chars != null) { CreatingFrame.DrawFrame(ref lastframe, wallpng, floorpng, itempng, itemdata, moretiles, alldngnpng, _monsterdata, _monsterpng, _floorandwall, _characterdata, _characterpng, display, chars); }
 
             return;
         }
