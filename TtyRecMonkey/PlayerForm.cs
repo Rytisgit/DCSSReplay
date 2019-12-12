@@ -185,10 +185,6 @@ namespace TtyRecMonkey
 
             var streams = files.Select(f => File.OpenRead(f) as Stream);
             var oldc = Cursor;
-            //Cursor = Cursors.WaitCursor;
-            //using ( Decoder ) {}
-            //Cursor = oldc;
-            //Decoder = null;
             Decoder = new TtyRecKeyframeDecoder(Configuration.Main.LogicalConsoleSizeW, Configuration.Main.LogicalConsoleSizeH, streams, delay);
             PlaybackSpeed = +1;
             Seek = TimeSpan.Zero;

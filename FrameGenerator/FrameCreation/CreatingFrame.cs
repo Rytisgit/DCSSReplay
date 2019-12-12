@@ -79,7 +79,7 @@ namespace FrameGenerator.FrameCreation
             {
 
                 Pen blackPen = new Pen(new SolidBrush(Color.FromArgb(255, 125, 98, 60)), 2);
-                Rectangle rect2 = new Rectangle(50, 50, 1000, 500);
+                Rectangle rect2 = new Rectangle(25, 25, 1000, 430);
                 g.FillRectangle(new SolidBrush(Color.Black), rect2);
                 g.DrawRectangle(blackPen, rect2);
 
