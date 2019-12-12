@@ -104,6 +104,8 @@ floor
 expired_portal
 'LIGHTGREY
 open_door
+'BLUE
+open_door
 'CYAN
 open_clear_door
 ^YELLOW

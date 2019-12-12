@@ -37,12 +37,12 @@ namespace InputParse
             }
             place = new StringBuilder();
             string mapLocation;
-            for (int i = 0; i < 15; i++)
+            for (int i = 0; i < 30; i++)
             {
                 place.Append(GetCharacter(characters[i, 0]));
             }
             mapLocation = place.ToString();
-
+            if (!mapLocation.Contains("of")) return LayoutType.TextOnly;
             foreach (var location in Locations.locations)
             {
                 if (mapLocation.Contains(location.Substring(0, 3)))
@@ -60,7 +60,7 @@ namespace InputParse
             return LayoutType.TextOnly;
         }
 
-        const int FullWidth = 75;
+        const int FullWidth = 80;
         const int FullHeight = 24;
         const int GameViewWidth = 33;
         const int GameViewHeight = 17;
@@ -222,6 +222,7 @@ namespace InputParse
             StringBuilder mp = new StringBuilder();
             StringBuilder place = new StringBuilder();
             StringBuilder time = new StringBuilder();
+            StringBuilder next = new StringBuilder();
             for (int i = 37; i < 75; i++)
             {
                 name.Append(GetCharacter(characters[i, 0]));
@@ -236,7 +237,7 @@ namespace InputParse
                 ev.Append(GetCharacter(characters[i, 5]));
                 sh.Append(GetCharacter(characters[i, 6]));
                 xl.Append(GetCharacter(characters[i, 7]));
-
+                next.Append(GetCharacter(characters[i+10, 7]));
             }
             for (int i = 59; i < 63; i++)
             {
@@ -292,6 +293,7 @@ namespace InputParse
             sideData.Dexterity = dex.ToString();
             sideData.Place = place.ToString().Trim();
             sideData.Time = time.ToString();
+            sideData.NextLevel = next.ToString();
 
             var parsed = sideData.Place.Split(':');
             bool found = false;
