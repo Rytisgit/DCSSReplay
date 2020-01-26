@@ -36,6 +36,20 @@ namespace FrameGenerator.FileReading
             }
             return Character;
         }
+
+        public static Dictionary<string, string> GetCloudData()
+
+        {
+            var Clouds = new Dictionary<string, string>();
+
+            string[] lines = System.IO.File.ReadAllLines(@"..\..\..\Extra\clouds.txt");
+
+            for (var i = 0; i < lines.Length; i += 2)
+            {
+                Clouds[lines[i]] = lines[i + 1];
+            }
+            return Clouds;
+        }
         public static Dictionary<string, string> ItemData()
 
         {
@@ -160,6 +174,20 @@ namespace FrameGenerator.FileReading
 
             var wallpng = new Dictionary<string, Bitmap>();
             string[] wallpngfiles = Directory.GetFiles(gameLocation + @"\source\rltiles\dngn", "*.png*", SearchOption.AllDirectories);
+            foreach (var file in wallpngfiles)
+            {
+                FileInfo info = new FileInfo(file);
+                Bitmap bitmap = new Bitmap(file);
+                wallpng[info.Name.Replace(".png", "")] = bitmap;
+            }
+            return wallpng;
+        }
+        public static Dictionary<string, Bitmap> GetAllEffectPNG(string gameLocation)
+
+        {
+
+            var wallpng = new Dictionary<string, Bitmap>();
+            string[] wallpngfiles = Directory.GetFiles(gameLocation + @"\source\rltiles\effect", "*.png*", SearchOption.AllDirectories);
             foreach (var file in wallpngfiles)
             {
                 FileInfo info = new FileInfo(file);

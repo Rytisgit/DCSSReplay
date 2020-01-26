@@ -22,11 +22,6 @@ namespace TtyRecMonkey
         public int FontOverlapY = 1;
         public Bitmap Font = Resources.Font2;
 
-        [OptionalField] public int DisplayConsoleSizeW;
-        [OptionalField] public int DisplayConsoleSizeH;
-        [OptionalField] public int LogicalConsoleSizeW;
-        [OptionalField] public int LogicalConsoleSizeH;
-
         [OptionalField] public Font GdiFont;
 
         public ConfigurationData1()
@@ -37,10 +32,6 @@ namespace TtyRecMonkey
         [OnDeserialized]
         void FillOptionals(StreamingContext sc)
         {
-            if (DisplayConsoleSizeW == 0) DisplayConsoleSizeW = 80;
-            if (DisplayConsoleSizeH == 0) DisplayConsoleSizeH = 30;
-            if (LogicalConsoleSizeW == 0) LogicalConsoleSizeW = 80;
-            if (LogicalConsoleSizeH == 0) LogicalConsoleSizeH = 30;
             if (GdiFont == null) GdiFont = new Font("Courier New", 11f);
         }
     }

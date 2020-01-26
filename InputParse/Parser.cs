@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Linq;
 
 namespace InputParse
 {
@@ -9,6 +10,10 @@ namespace InputParse
         {
             return character.Character == 55328 ? ' ' : character.Character;
         }
+        private static string GetColoredCharacter(Putty.TerminalCharacter character)
+        {
+            return GetCharacter(character) + Enum.GetName(typeof(ColorList2), character.ForegroundPaletteIndex);
+        }
         public static LayoutType GetLayoutType(Putty.TerminalCharacter[,] characters, out string newlocation)
         {
             StringBuilder place = new StringBuilder();
@@ -16,7 +21,7 @@ namespace InputParse
 
             string sideLocation;
             newlocation = "";
-            for (int i = 61; i < 75; i++)
+            for (int i = 61; i < FullWidth; i++)
             {
                 place.Append(GetCharacter(characters[i, 7]));
             }
@@ -96,35 +101,24 @@ namespace InputParse
                 for (int j = 0; j < GameViewHeight; j++)
                     for (int i = 0; i < model.LineLength; i++)
                     {
-                        coloredStrings[curentChar] = GetCharacter(characters[i, j]) + Enum.GetName(typeof(ColorList2), characters[i, j].ForegroundPaletteIndex);
+                        coloredStrings[curentChar] = GetColoredCharacter(characters[i, j]);
                         highlightColorStrings[curentChar] = Enum.GetName(typeof(ColorList2), characters[i, j].BackgroundPaletteIndex);
                         curentChar++;
                     }
                 model.TileNames = coloredStrings;
 
                 model.SideData = ParseSideData(characters);
+                
+                model.FullLengthStrings = ParseLogLines(characters); ;
+                model.FullLengthStringColors = new string[6] {
+                    Enum.GetName(typeof(ColorList2), characters[1, 17].ForegroundPaletteIndex),
+                    Enum.GetName(typeof(ColorList2), characters[1, 18].ForegroundPaletteIndex),
+                    Enum.GetName(typeof(ColorList2), characters[1, 19].ForegroundPaletteIndex),
+                    Enum.GetName(typeof(ColorList2), characters[1, 20].ForegroundPaletteIndex),
+                    Enum.GetName(typeof(ColorList2), characters[1, 21].ForegroundPaletteIndex),
+                    Enum.GetName(typeof(ColorList2), characters[1, 22].ForegroundPaletteIndex)};
 
-                StringBuilder logLine1 = new StringBuilder();
-                StringBuilder logLine2 = new StringBuilder();
-                StringBuilder logLine3 = new StringBuilder();
-                StringBuilder logLine4 = new StringBuilder();
-                StringBuilder logLine5 = new StringBuilder();
-                StringBuilder logLine6 = new StringBuilder();
-                for (int i = 0; i < 75; i++)
-                {
-                    logLine1.Append(GetCharacter(characters[i, 17]));
-                    logLine2.Append(GetCharacter(characters[i, 18]));
-                    logLine3.Append(GetCharacter(characters[i, 19]));
-                    logLine4.Append(GetCharacter(characters[i, 20]));
-                    logLine5.Append(GetCharacter(characters[i, 21]));
-                    logLine6.Append(GetCharacter(characters[i, 22]));
-                }
-
-                model.FullLengthStrings = new string[6] { logLine1.ToString(), logLine2.ToString(), logLine3.ToString(), logLine4.ToString(), logLine5.ToString(), logLine6.ToString() };
-                model.FullLengthStringColors = new string[6] { Enum.GetName(typeof(ColorList2), characters[1, 18].ForegroundPaletteIndex), Enum.GetName(typeof(ColorList2), characters[1, 19].ForegroundPaletteIndex), Enum.GetName(typeof(ColorList2), characters[1, 20].ForegroundPaletteIndex),
-                Enum.GetName(typeof(ColorList2),characters[1, 21].ForegroundPaletteIndex), Enum.GetName(typeof(ColorList2),characters[1, 22].ForegroundPaletteIndex), Enum.GetName(typeof(ColorList2),characters[1, 23].ForegroundPaletteIndex), };
-
-
+                model.MonsterData = ParseMonsterDisplay(characters);
             }
             catch (Exception)
             {
@@ -136,6 +130,67 @@ namespace InputParse
                 return new Model();
             }
             return model;
+        }
+
+        private static string[] ParseLogLines(Putty.TerminalCharacter[,] characters)
+        {
+            StringBuilder logLine1 = new StringBuilder();
+            StringBuilder logLine2 = new StringBuilder();
+            StringBuilder logLine3 = new StringBuilder();
+            StringBuilder logLine4 = new StringBuilder();
+            StringBuilder logLine5 = new StringBuilder();
+            StringBuilder logLine6 = new StringBuilder();
+            for (int i = 0; i < FullWidth; i++)
+            {
+                logLine1.Append(GetCharacter(characters[i, 17]));
+                logLine2.Append(GetCharacter(characters[i, 18]));
+                logLine3.Append(GetCharacter(characters[i, 19]));
+                logLine4.Append(GetCharacter(characters[i, 20]));
+                logLine5.Append(GetCharacter(characters[i, 21]));
+                logLine6.Append(GetCharacter(characters[i, 22]));
+            }
+            return new string[6] { logLine1.ToString(), logLine2.ToString(), logLine3.ToString(), logLine4.ToString(), logLine5.ToString(), logLine6.ToString() };
+        }
+
+        private static MonsterData[] ParseMonsterDisplay(Putty.TerminalCharacter[,] characters)
+        {
+            StringBuilder monsterLine1 = new StringBuilder();
+            StringBuilder monsterLine2 = new StringBuilder();
+            StringBuilder monsterLine3 = new StringBuilder();
+            StringBuilder monsterLine4 = new StringBuilder();
+            string[] monsterLine1Colored = new string[FullWidth - GameViewWidth + 1];
+            string[] monsterLine2Colored = new string[FullWidth - GameViewWidth + 1];
+            string[] monsterLine3Colored = new string[FullWidth - GameViewWidth + 1];
+            string[] monsterLine4Colored = new string[FullWidth - GameViewWidth + 1];
+            int currentChar = 0;
+            for (int i = GameViewWidth; i < FullWidth; i++, currentChar++)
+            {
+                monsterLine1.Append(GetCharacter(characters[i, 13]));
+                monsterLine2.Append(GetCharacter(characters[i, 14]));
+                monsterLine3.Append(GetCharacter(characters[i, 15]));
+                monsterLine4.Append(GetCharacter(characters[i, 16]));
+                monsterLine1Colored[currentChar] = GetColoredCharacter(characters[i, 13]);
+                monsterLine2Colored[currentChar] = GetColoredCharacter(characters[i, 14]);
+                monsterLine3Colored[currentChar] = GetColoredCharacter(characters[i, 15]);
+                monsterLine4Colored[currentChar] = GetColoredCharacter(characters[i, 16]);
+            }
+            
+            return new MonsterData[4] { 
+                FormatMonsterData(monsterLine1.ToString(), monsterLine1Colored),
+                FormatMonsterData(monsterLine2.ToString(), monsterLine2Colored),
+                FormatMonsterData(monsterLine3.ToString(), monsterLine3Colored),
+                FormatMonsterData(monsterLine4.ToString(), monsterLine4Colored) };
+        }
+
+        private static MonsterData FormatMonsterData(string monsterLine, string[] monsterLineColored)
+        {
+            if (monsterLine[0].Equals(' '))
+            {
+                return new MonsterData();
+            }
+            var chars = new char[] { ' ' };
+            var split = monsterLine.ToString().Split(chars, count: 2);
+            return new MonsterData() { empty = false, MonsterTextRaw = split[1], MonsterDisplay = monsterLineColored.Take(split.Length).ToArray(), MonsterText = monsterLineColored.Skip(split.Length).ToArray() };
         }
 
         private static Model parseMapLayout(Putty.TerminalCharacter[,] characters, string location)
@@ -151,7 +206,7 @@ namespace InputParse
                 for (int j = 0; j < FullHeight; j++)
                     for (int i = 0; i < model.LineLength; i++)
                     {
-                        coloredStrings[curentChar] = GetCharacter(characters[i, j]) + Enum.GetName(typeof(ColorList2), characters[i, j].ForegroundPaletteIndex);
+                        coloredStrings[curentChar] = GetColoredCharacter(characters[i, j]);
                         curentChar++;
                     }
                 model.TileNames = coloredStrings;
@@ -184,7 +239,7 @@ namespace InputParse
                 for (int j = 0; j < FullHeight; j++)
                     for (int i = 0; i < model.LineLength; i++)
                     {
-                        coloredStrings[curentChar] = GetCharacter(characters[i, j]) + Enum.GetName(typeof(ColorList2), characters[i, j].ForegroundPaletteIndex);
+                        coloredStrings[curentChar] = GetColoredCharacter(characters[i, j]);
                         curentChar++;
                     }
                 model.TileNames = coloredStrings;
@@ -211,6 +266,7 @@ namespace InputParse
             StringBuilder weapon = new StringBuilder();
             StringBuilder quiver = new StringBuilder();
             StringBuilder status = new StringBuilder();
+            StringBuilder status2 = new StringBuilder();
             StringBuilder ac = new StringBuilder();
             StringBuilder ev = new StringBuilder();
             StringBuilder sh = new StringBuilder();
@@ -230,6 +286,7 @@ namespace InputParse
                 weapon.Append(GetCharacter(characters[i, 9]));
                 quiver.Append(GetCharacter(characters[i, 10]));
                 status.Append(GetCharacter(characters[i, 11]));
+                status2.Append(GetCharacter(characters[i, 12]));
             }
             for (int i = 40; i < 44; i++)
             {
@@ -283,7 +340,7 @@ namespace InputParse
             sideData.Weapon = weapon.ToString();
             sideData.Quiver = quiver.ToString();
             sideData.Statuses1 = status.ToString();
-            sideData.Statuses2 = "";
+            sideData.Statuses2 = status2.ToString();
             sideData.ArmourClass = ac.ToString();
             sideData.Evasion = ev.ToString();
             sideData.Shield = sh.ToString();
