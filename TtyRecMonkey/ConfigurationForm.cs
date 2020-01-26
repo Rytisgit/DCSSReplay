@@ -21,16 +21,6 @@ namespace TtyRecMonkey
             checkBoxForceGC.Checked = Configuration.Main.ChunksForceGC;
             textBoxTargetChunksMemory.Text = Configuration.Main.ChunksTargetMemoryMB.ToString();
             textBoxTargetLoadMS.Text = Configuration.Main.ChunksTargetLoadMS.ToString();
-            textBoxConsoleDisplaySize.Text = string.Format
-                ("{0},{1}"
-                , Configuration.Main.DisplayConsoleSizeW
-                , Configuration.Main.DisplayConsoleSizeH
-                );
-            textBoxConsoleLogicalSize.Text = string.Format
-                ("{0},{1}"
-                , Configuration.Main.LogicalConsoleSizeW
-                , Configuration.Main.LogicalConsoleSizeH
-                );
             textBoxFontOverlapXY.Text = string.Format
                 ("{0},{1}"
                 , Configuration.Main.FontOverlapX
@@ -50,19 +40,11 @@ namespace TtyRecMonkey
             var mb = int.Parse(textBoxTargetChunksMemory.Text);
             var ms = int.Parse(textBoxTargetLoadMS.Text);
             var fonto = textBoxFontOverlapXY.Text.Split(',').Select(s => int.Parse(s)).ToArray();
-            var display = textBoxConsoleDisplaySize.Text.Split(',').Select(s => int.Parse(s)).ToArray();
-            var logical = textBoxConsoleLogicalSize.Text.Split(',').Select(s => int.Parse(s)).ToArray();
             if (fonto.Length != 2) throw new Exception();
-            if (display.Length != 2) throw new Exception();
-            if (logical.Length != 2) throw new Exception();
 
             Configuration.Main.ChunksForceGC = checkBoxForceGC.Checked;
             Configuration.Main.ChunksTargetMemoryMB = mb;
             Configuration.Main.ChunksTargetLoadMS = ms;
-            Configuration.Main.DisplayConsoleSizeW = display[0];
-            Configuration.Main.DisplayConsoleSizeH = display[1];
-            Configuration.Main.LogicalConsoleSizeW = logical[0];
-            Configuration.Main.LogicalConsoleSizeH = logical[1];
             Configuration.Main.FontOverlapX = fonto[0];
             Configuration.Main.FontOverlapY = fonto[1];
             Configuration.Main.Font = (Bitmap)pictureBoxFontPreview.Image;

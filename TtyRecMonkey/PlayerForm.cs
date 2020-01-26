@@ -12,7 +12,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace TtyRecMonkey
@@ -35,8 +34,7 @@ namespace TtyRecMonkey
         MainGenerator generator;
         bool generating = false;
         TerminalCharacter[,] savedFrame;
-        Task test;
-        public PlayerForm() : base(80, 30)
+        public PlayerForm() : base(80, 24)
         {
             Text = "TtyRecMonkey";
             generator = new MainGenerator();
@@ -49,7 +47,7 @@ namespace TtyRecMonkey
                 {
                     Buffer[x, y] = Prototype;
                 }
-            savedFrame = new TerminalCharacter[80, 30];
+            savedFrame = new TerminalCharacter[80, 24];
             Visible = true;
             Configuration.Load(this);
             AfterConfiguration();
@@ -114,17 +112,13 @@ namespace TtyRecMonkey
             Prototype.Font = ShinyConsole.Font.FromBitmap(Configuration.Main.Font, Configuration.Main.Font.Width / 16, Configuration.Main.Font.Height / 16);
             GlyphSize = new Size(Configuration.Main.Font.Width / 16, Configuration.Main.Font.Height / 16);
             GlyphOverlap = new Size(Configuration.Main.FontOverlapX, Configuration.Main.FontOverlapY);
-            ResizeConsole(Configuration.Main.DisplayConsoleSizeW, Configuration.Main.DisplayConsoleSizeH);
+            //ResizeConsole(Configuration.Main.DisplayConsoleSizeW, Configuration.Main.DisplayConsoleSizeH);
 
-            if (Decoder != null &&
-                (Configuration.Main.LogicalConsoleSizeW != Decoder.CurrentFrame.Data.GetLength(0)
-                || Configuration.Main.LogicalConsoleSizeH != Decoder.CurrentFrame.Data.GetLength(1)
-                )
-            )
+            if (Decoder != null)
             {
                 var oldc = Cursor;
                 Cursor = Cursors.WaitCursor;
-                Decoder.Resize(Configuration.Main.LogicalConsoleSizeW, Configuration.Main.LogicalConsoleSizeH);
+
                 Cursor = oldc;
             }
 
@@ -185,7 +179,7 @@ namespace TtyRecMonkey
 
             var streams = files.Select(f => File.OpenRead(f) as Stream);
             var oldc = Cursor;
-            Decoder = new TtyRecKeyframeDecoder(Configuration.Main.LogicalConsoleSizeW, Configuration.Main.LogicalConsoleSizeH, streams, delay);
+            Decoder = new TtyRecKeyframeDecoder(80, 24, streams, delay);
             PlaybackSpeed = +1;
             Seek = TimeSpan.Zero;
         }
@@ -223,9 +217,6 @@ namespace TtyRecMonkey
                         {
                             var ch = (x < frame.GetLength(0) && y < frame.GetLength(1)) ? frame[x, y] : default(TerminalCharacter);
                             Buffer[x, y].Glyph = ch.Character;
-                            //if (x < 17)
-                            //    Buffer[x,y].Foreground = Palette.Default[ x ];
-                            //else
                             Buffer[x, y].Foreground = Palette.Default[ch.ForegroundPaletteIndex];
                             Buffer[x, y].Background = Palette.Default[ch.BackgroundPaletteIndex];
                         }
@@ -245,7 +236,7 @@ namespace TtyRecMonkey
                                 }
                                 catch (Exception ex)
                                 {
-                                    Console.WriteLine("Bad Error " + ex.Message);
+                                    Console.WriteLine(ex.Message);
                                     //generator.GenerateImage(savedFrame);
                                     generating = false;
                                 }
@@ -258,8 +249,6 @@ namespace TtyRecMonkey
                         }
                     }
                 }
-
-                //InputParse.Model model = InputParse.Parser.ParseData(frame);
 
             }
             else

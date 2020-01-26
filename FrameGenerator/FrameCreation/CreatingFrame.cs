@@ -10,9 +10,26 @@ namespace FrameGenerator.FrameCreation
 
     class CreatingFrame
     {
-        public static void DrawFrame(ref Bitmap lastframe, Dictionary<string, Bitmap> wallpng, Dictionary<string, Bitmap> floorpng, Dictionary<string, Bitmap> itempng,  Dictionary<string, string> itemdata, Dictionary<string, string> moretiles, Dictionary<string, Bitmap> alldngnpng, Dictionary<string, string> monsterdata, Dictionary<string, Bitmap> monsterPNG, Dictionary<string, string[]> floorandwall, Dictionary<string, string> _characterdata, Dictionary<string, Bitmap> _characterpng, Window.Widow_Display display, TerminalCharacter[,] chars)
+        public static Bitmap DrawFrame(
+            ref Bitmap lastframe,
+            ref int previousHP,
+            Dictionary<string, Bitmap> wallpng,
+            Dictionary<string, Bitmap> floorpng,
+            Dictionary<string, Bitmap> itempng,
+            Dictionary<string, string> itemdata,
+            Dictionary<string, string> moretiles,
+            Dictionary<string, string> cloudtiles,
+            Dictionary<string, Bitmap> alldngnpng,
+            Dictionary<string, string> monsterdata,
+            Dictionary<string, Bitmap> monsterPNG,
+            Dictionary<string, string[]> floorandwall,
+            Dictionary<string, string> _characterdata,
+            Dictionary<string, Bitmap> _characterpng,
+            TerminalCharacter[,] chars,
+            Dictionary<string, Bitmap> _alleffects
+            )
         {
-            var dict = new Dictionary<string, string>();
+            var dict = new Dictionary<string, string>();//logging
             var model = Parser.ParseData(chars);
 
             Bitmap currentFrame = new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
@@ -20,35 +37,35 @@ namespace FrameGenerator.FrameCreation
             switch (model.Layout)
                 {
                 case LayoutType.Normal:
-                    currentFrame = DrawNormal(wallpng, floorpng, itempng, itemdata, moretiles, alldngnpng, monsterdata, monsterPNG, floorandwall, _characterdata, _characterpng, dict, model);
+                    currentFrame = DrawNormal(wallpng, floorpng, itempng, itemdata, moretiles, cloudtiles, alldngnpng, monsterdata, monsterPNG, floorandwall, _characterdata, _characterpng, dict, model, _alleffects, previousHP);
                     lastframe = currentFrame;
+                    previousHP = model.SideData.Health;
                     break;
                 case LayoutType.TextOnly:
                     currentFrame = DrawTextBox(lastframe, model);
                     break;
                 case LayoutType.MapOnly:
-                    currentFrame = DrawMap(lastframe, wallpng, floorpng, itempng, itemdata, moretiles, alldngnpng, monsterdata, monsterPNG, floorandwall, _characterdata, _characterpng, dict, model);
+                    currentFrame = DrawMap(lastframe, wallpng, floorpng, itempng, itemdata, moretiles, cloudtiles, alldngnpng, monsterdata, monsterPNG, floorandwall, _characterdata, _characterpng, dict, model, _alleffects);
                     break;
                 default:
                         break;                 
                 }
             Bitmap forupdate = new Bitmap(currentFrame);
-            display.Update_Window_Image(forupdate);
-            GC.Collect();
+            return forupdate;
         
         }
 
-        private static Bitmap DrawMap(Bitmap lastframe, Dictionary<string, Bitmap> wallpng, Dictionary<string, Bitmap> floorpng, Dictionary<string, Bitmap> itempng, Dictionary<string, string> itemdata, Dictionary<string, string> moretiles, Dictionary<string, Bitmap> alldngnpng, Dictionary<string, string> monsterdata, Dictionary<string, Bitmap> monsterPNG, Dictionary<string, string[]> floorandwall, Dictionary<string, string> _characterdata, Dictionary<string, Bitmap> _characterpng, Dictionary<string, string> dict, Model model)
+        private static Bitmap DrawMap(Bitmap lastframe, Dictionary<string, Bitmap> wallpng, Dictionary<string, Bitmap> floorpng, Dictionary<string, Bitmap> itempng, Dictionary<string, string> itemdata, Dictionary<string, string> moretiles, Dictionary<string, string> cloudTiles, Dictionary<string, Bitmap> alldngnpng, Dictionary<string, string> monsterdata, Dictionary<string, Bitmap> monsterPNG, Dictionary<string, string[]> floorandwall, Dictionary<string, string> _characterdata, Dictionary<string, Bitmap> _characterpng, Dictionary<string, string> dict, Model model, Dictionary<string, Bitmap> effects)
         {
-            Bitmap temp2 = new Bitmap(lastframe);
+            Bitmap bmp = new Bitmap(1602, 768, PixelFormat.Format32bppArgb);
 
-            Rectangle rect = new Rectangle(0, 0, 1056, 1050);
+            //Rectangle rect = new Rectangle(0, 0, 1056, 780);
 
-            using (Graphics g = Graphics.FromImage(temp2))
+            using (Graphics g = Graphics.FromImage(bmp))
             {
                 Pen blackPen = new Pen(Color.Black, 2);
-                g.FillRectangle(new SolidBrush(Color.Black), rect);
-                g.DrawRectangle(blackPen, rect);
+                //g.FillRectangle(new SolidBrush(Color.Black), rect);
+                //g.DrawRectangle(blackPen, rect);
                 float x = 0;
                 float y = 0;
                 int i = 1;
@@ -56,20 +73,19 @@ namespace FrameGenerator.FrameCreation
                 for (; j < model.TileNames.Length; j++)
                 {
                     var Color = model.ColorList.GetType().GetField(model.TileNames[j].Substring(1)).GetValue(model.ColorList);
-                    g.DrawString(model.TileNames[j][0].ToString(), new Font("Courier New", 12), (SolidBrush)Color, x, y);
-                    x += 12;
+                    g.DrawString(model.TileNames[j][0].ToString(), new Font("Courier New", 22), (SolidBrush)Color, x, y);
+                    x += 20;
                     if (i == model.LineLength)
                     {
                         break;
                     }
                     i++;
                 }
-                Console.WriteLine(j);
 
-                DrawTiles(0, 24, j, resize: 0.44f, g, model, dict, itempng, itemdata, moretiles, alldngnpng, monsterdata, monsterPNG, floorandwall, _characterdata, _characterpng, wallpng, floorpng);
+                DrawTiles(0, 32, j+1, resize: 1f, g, model, dict, itempng, itemdata, moretiles, cloudTiles, alldngnpng, monsterdata, monsterPNG, floorandwall, _characterdata, _characterpng, wallpng, floorpng, effects);
             }
 
-            return temp2;
+            return bmp;
         }
 
         private static Bitmap DrawTextBox(Bitmap lastframe, Model model)
@@ -105,20 +121,49 @@ namespace FrameGenerator.FrameCreation
             return temp;
         }
 
-        private static Bitmap DrawNormal(Dictionary<string, Bitmap> wallpng, Dictionary<string, Bitmap> floorpng, Dictionary<string, Bitmap> itempng, Dictionary<string, string> itemdata, Dictionary<string, string> moretiles, Dictionary<string, Bitmap> alldngnpng, Dictionary<string, string> monsterdata, Dictionary<string, Bitmap> monsterPNG, Dictionary<string, string[]> floorandwall, Dictionary<string, string> _characterdata, Dictionary<string, Bitmap> _characterpng, Dictionary<string, string> dict, Model model)
+        private static Bitmap DrawNormal(
+            Dictionary<string, Bitmap> wallpng,
+            Dictionary<string, Bitmap> floorpng,
+            Dictionary<string, Bitmap> itempng,
+            Dictionary<string, string> itemdata,
+            Dictionary<string, string> moretiles,
+            Dictionary<string, string> cloudTiles,
+            Dictionary<string, Bitmap> alldngnpng,
+            Dictionary<string, string> monsterdata,
+            Dictionary<string, Bitmap> monsterPNG,
+            Dictionary<string, string[]> floorandwall,
+            Dictionary<string, string> _characterdata,
+            Dictionary<string, Bitmap> _characterpng,
+            Dictionary<string, string> dict,
+            Model model,
+            Dictionary<string, Bitmap> effects,
+            int prevHP)
         {
-            Bitmap bmp = new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
+            Bitmap bmp = new Bitmap(1602, 768, PixelFormat.Format32bppArgb);
             using (Graphics g = Graphics.FromImage(bmp))
             {
-                DrawSideDATA(g, model);
+                DrawSideDATA(g, model, prevHP);
 
-                DrawTiles(0, 0, 0, resize: 1, g, model, dict, itempng, itemdata, moretiles, alldngnpng, monsterdata, monsterPNG, floorandwall, _characterdata, _characterpng, wallpng, floorpng);
+                DrawTiles(0, 0, 0, resize: 1, g, model, dict, itempng, itemdata, moretiles, cloudTiles, alldngnpng, monsterdata, monsterPNG, floorandwall, _characterdata, _characterpng, wallpng, floorpng, effects);
+
+                DrawLogs(model, g);
             }
 
             return bmp;
         }
 
-        public static void DrawSideDATA(Graphics g, Model model)
+        private static void DrawLogs(Model model, Graphics g)
+        {
+            int y = 544;
+            for (int i = 0; i < model.FullLengthStrings.Length; i++)
+            {
+                var Color = model.ColorList.GetType().GetField(model.FullLengthStringColors[i]).GetValue(model.ColorList);
+                g.DrawString(model.FullLengthStrings[i], new Font("Courier New", 16), (SolidBrush)Color, 0, y);
+                y += 32;
+            }
+        }
+
+        public static void DrawSideDATA(Graphics g, Model model, int prevHP)
 
         {
             g.Clear(Color.Black);
@@ -173,6 +218,9 @@ namespace FrameGenerator.FrameCreation
 
                 g.DrawString(model.SideData.Statuses1, arialFont, gray, 32 * model.LineLength, 220 + increase);
                 g.DrawString(model.SideData.Statuses2, arialFont, gray, 32 * model.LineLength, 240 + increase);
+
+
+
                 g.DrawString("Str: ", arialFont, brown, 32 * (model.LineLength + 8), 80);
                 g.DrawString(model.SideData.Strength, arialFont, gray, 32 * (model.LineLength + 8) + g.MeasureString("Str: ", arialFont).Width, 80);
                 g.DrawString("Int: ", arialFont, brown, 32 * (model.LineLength + 8), 100);
@@ -190,20 +238,29 @@ namespace FrameGenerator.FrameCreation
                 temp.Clear(Color.Gray);
                 g.DrawImage(bar, 32 * (model.LineLength + 8), 40);
                 g.DrawImage(bar, 32 * (model.LineLength + 8), 60);
-                int percentage;
+                int barLength;
                 if (model.SideData.Health > 0)
                 {
-                    percentage = (int)(250 * ((float)model.SideData.Health / model.SideData.MaxHealth));
-                    Bitmap heathbar = new Bitmap(percentage, 16);
-                    temp = Graphics.FromImage(heathbar);
+                    barLength = (int)(250 * ((float)model.SideData.Health / model.SideData.MaxHealth));
+                    Bitmap healthbar = new Bitmap(barLength, 16);
+                    temp = Graphics.FromImage(healthbar);
                     temp.Clear(Color.Green);
-                    g.DrawImage(heathbar, 32 * (model.LineLength + 8), 40);
+                    var x = 32 * (model.LineLength + 8);
+                    g.DrawImage(healthbar, x, 40);
+                    if (barLength != 250 && prevHP - model.SideData.Health > 0)
+                    {
+                        int prevBarLength = (int)(250 * ((float)(prevHP - model.SideData.Health) / model.SideData.Health));
+                        Bitmap losthealthbar = new Bitmap(prevBarLength, 16);
+                        temp = Graphics.FromImage(losthealthbar);
+                        temp.Clear(Color.Red);
+                        g.DrawImage(losthealthbar, x + barLength, 40);
+                    }
 
                 }
                 if (model.SideData.Magic > 0)
                 {
-                    percentage = (int)(250 * ((float)model.SideData.Magic / model.SideData.MaxMagic));
-                    Bitmap mana = new Bitmap(percentage, 16);
+                    barLength = (int)(250 * ((float)model.SideData.Magic / model.SideData.MaxMagic));
+                    Bitmap mana = new Bitmap(barLength, 16);
                     temp = Graphics.FromImage(mana);
                     temp.Clear(Color.Blue);
                     g.DrawImage(mana, 32 * (model.LineLength + 8), 60);
@@ -211,7 +268,7 @@ namespace FrameGenerator.FrameCreation
             }
         }
 
-        public static void DrawTiles(float x, float y, int j,float resize, Graphics g, Model model, Dictionary<string, string> dict, Dictionary<string, Bitmap> itempng, Dictionary<string, string> itemdata, Dictionary<string, string> moretiles, Dictionary<string, Bitmap> alldngnpng, Dictionary<string, string> monsterdata, Dictionary<string, Bitmap> monsterPNG, Dictionary<string, string[]> floorandwall, Dictionary<string, string> _characterdata, Dictionary<string, Bitmap> _characterpng, Dictionary<string, Bitmap> wallpng, Dictionary<string, Bitmap> floorpng)
+        public static void DrawTiles(float x, float y, int j,float resize, Graphics g, Model model, Dictionary<string, string> dict, Dictionary<string, Bitmap> itempng, Dictionary<string, string> itemdata, Dictionary<string, string> moretiles, Dictionary<string, string> cloudTiles, Dictionary<string, Bitmap> alldngnpng, Dictionary<string, string> monsterdata, Dictionary<string, Bitmap> monsterPNG, Dictionary<string, string[]> floorandwall, Dictionary<string, string> _characterdata, Dictionary<string, Bitmap> _characterpng, Dictionary<string, Bitmap> wallpng, Dictionary<string, Bitmap> floorpng, Dictionary<string, Bitmap> effects)
 
         {
 
@@ -297,6 +354,181 @@ namespace FrameGenerator.FrameCreation
                         }
 
                     }
+                    else if (cloudTiles.ContainsKey(tile))
+                    {
+                        bool drawn = false;
+                        if (model.SideData.Race.Contains("Q")) 
+                        { }
+                            g.DrawImage(floor, x, y, floor.Width * resize, floor.Height * resize);
+                        //special rules first
+                        if (model.SideData.Statuses1.Contains("Torna") || model.SideData.Statuses2.Contains("Torna"))//tornado override
+                        {
+                            var t1Colors = new List<string>() {
+                                Enum.GetName(typeof(ColorList2), ColorList2.LIGHTRED),
+                                Enum.GetName(typeof(ColorList2), ColorList2.LIGHTCYAN),
+                                Enum.GetName(typeof(ColorList2), ColorList2.LIGHTBLUE),
+                                Enum.GetName(typeof(ColorList2), ColorList2.WHITE) };
+                            var t2Colors = new List<string>() { 
+                                Enum.GetName(typeof(ColorList2), ColorList2.RED),
+                                Enum.GetName(typeof(ColorList2), ColorList2.CYAN),
+                                Enum.GetName(typeof(ColorList2), ColorList2.BLUE),
+                                Enum.GetName(typeof(ColorList2), ColorList2.LIGHTGREY) };
+                            foreach (var color in t1Colors)
+                            {
+                                if (tile.Contains(color))
+                                {
+                                    if (effects.TryGetValue("tornado1", out Bitmap bmp))
+                                    {
+                                        g.DrawImage(bmp, x, y, bmp.Width * resize, bmp.Height * resize);
+                                    }
+                                }
+                                
+                            }
+                            foreach (var color in t2Colors)
+                            {
+                                if (tile.Contains(color))
+                                {
+                                    if (effects.TryGetValue("tornado2", out Bitmap bmp))
+                                    {
+                                        g.DrawImage(bmp, x, y, bmp.Width * resize, bmp.Height * resize);
+                                    }
+                                }
+
+                            }
+                        }
+                        else if (model.SideData.Place.Contains("Salt"))
+                        {
+                            var colors = new List<string>() { Enum.GetName(typeof(ColorList2), ColorList2.LIGHTGREY), Enum.GetName(typeof(ColorList2), ColorList2.WHITE) };
+                            if (tile[0].Equals('§'))
+                            {
+                                foreach (var color in colors)
+                                {
+                                    if (tile.Contains(color))
+                                    {
+                                        if (effects.TryGetValue("cloud_grey_smoke", out Bitmap bmp))
+                                        {
+                                            g.DrawImage(bmp, x, y, bmp.Width * resize, bmp.Height * resize);
+                                            drawn = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else if(model.SideData.Race.Contains("of Qazlal"))
+                        {
+                            
+                            var colors = new List<string>() { Enum.GetName(typeof(ColorList2), ColorList2.LIGHTGREY), Enum.GetName(typeof(ColorList2), ColorList2.DARKGREY) };
+                            var colors2 = new List<string>() { Enum.GetName(typeof(ColorList2), ColorList2.GREEN) };
+                            if (tile[0].Equals('§'))
+                            {
+                                foreach (var color in colors)
+                                {
+                                    if (tile.Contains(color))
+                                    {
+                                        if (effects.TryGetValue("cloud_storm2", out Bitmap bmp))
+                                        {
+                                            g.DrawImage(bmp, x, y, bmp.Width * resize, bmp.Height * resize);
+                                            drawn = true;
+                                        }
+                                    }
+                                }
+                            }
+                            var durations = new List<char>() { '°', '○', '☼', '§' };
+                            int dur = 0;
+                            for (int c = 0; c < durations.Count; c++)
+                            {
+                                if (tile[0] == durations[c])
+                                {
+                                    dur = c;
+                                }
+                            }
+                            foreach (var color in colors2)
+                            {
+                                if (tile.Contains(color))
+                                {
+                                    if (effects.TryGetValue("cloud_dust" + dur.ToString(), out Bitmap bmp))
+                                    {
+                                        g.DrawImage(bmp, x, y, bmp.Width * resize, bmp.Height * resize);
+                                        drawn = true;
+                                    }
+                                }
+                            }
+                        }
+                        else if (model.SideData.Place.Contains("Shoal"))
+                        {
+                            var colors = new List<string>() { Enum.GetName(typeof(ColorList2), ColorList2.DARKGREY) };
+                            if (tile[0].Equals('§'))
+                            {
+                                foreach (var color in colors)
+                                {
+                                    if (tile.Contains(color))
+                                    {
+                                        if (effects.TryGetValue("ink_full", out Bitmap bmp))
+                                        {
+                                            g.DrawImage(bmp, x, y, bmp.Width * resize, bmp.Height * resize);
+                                            drawn = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else if (model.SideData.Place.Contains("Dung") || model.SideData.Place.Contains("Lair"))
+                        {
+                            if (tile[0].Equals("§WHITE"))
+                            {
+                                if (effects.TryGetValue("cloud_calc_dust2", out Bitmap bmp))
+                                {
+                                    g.DrawImage(bmp, x, y, bmp.Width * resize, bmp.Height * resize);
+                                    drawn = true;
+                                }
+
+                            }
+                        }
+                        else if (model.SideData.Place.Contains("Pand"))//TODO: CHeck For holy enemies?
+                        {
+                            if (tile[0].Equals("§WHITE"))
+                            {
+                                if (effects.TryGetValue("cloud_yellow_smoke", out Bitmap bmp))
+                                {
+                                    g.DrawImage(bmp, x, y, bmp.Width * resize, bmp.Height * resize);
+                                    drawn = true;
+                                }
+
+                            }
+                        }
+                        else if (model.SideData.Race.Contains("of Wu Jian"))
+                        {
+                            var colors = new List<string>() { Enum.GetName(typeof(ColorList2), ColorList2.WHITE), Enum.GetName(typeof(ColorList2), ColorList2.YELLOW) };
+                            var durations = new List<char>() {'°', '○', '☼', '§' };
+                            int dur = 0;
+                            for (int c = 0; c < durations.Count; c++)
+                            {
+                                if (tile[0]==durations[c])
+                                {
+                                    dur = c;
+                                }
+                            }
+                            foreach (var color in colors)
+                                {
+                                    if (tile.Contains(color))
+                                    {
+                                        if (effects.TryGetValue("cloud_gold_dust" + dur.ToString(), out Bitmap bmp))
+                                        {
+                                            g.DrawImage(bmp, x, y, bmp.Width * resize, bmp.Height * resize);
+                                            drawn = true;
+                                        }
+                                    }
+                                }
+                            
+                        }
+
+                            string nam = cloudTiles[tile];
+                            if (!drawn && effects.TryGetValue(nam, out Bitmap chr))
+                            {
+                                g.DrawImage(chr, x, y, chr.Width * resize, chr.Height * resize);
+                            }
+
+                    }
                     else if (tile[0] == '@')
                     {
 
@@ -346,20 +578,18 @@ namespace FrameGenerator.FrameCreation
                 i++;
             }
 
-            for (i = 0; i < model.FullLengthStrings.Length; i++)
-            {
-                var Color = model.ColorList.GetType().GetField(model.FullLengthStringColors[i]).GetValue(model.ColorList);
-                g.DrawString(model.FullLengthStrings[i], new Font("Courier New", 16), (SolidBrush)Color, 0, y);
-                y += 32;
-            }
-
             if (dict.Count < 10)
             {
+                bool written = false;
                 foreach (var item in dict)
                 {
+                    if (!string.IsNullOrEmpty(item.Key))written = true;
                     Console.Write(item.Key + " ");
                 }
-                Console.WriteLine();
+                if (written)
+                {
+                    Console.WriteLine();
+                }
 
             }
         }
