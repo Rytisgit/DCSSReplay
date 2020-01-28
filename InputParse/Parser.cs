@@ -66,6 +66,7 @@ namespace InputParse
         }
 
         const int FullWidth = 80;
+        const int AlmostFullWidth = 75;
         const int FullHeight = 24;
         const int GameViewWidth = 33;
         const int GameViewHeight = 17;
@@ -140,7 +141,7 @@ namespace InputParse
             StringBuilder logLine4 = new StringBuilder();
             StringBuilder logLine5 = new StringBuilder();
             StringBuilder logLine6 = new StringBuilder();
-            for (int i = 0; i < FullWidth; i++)
+            for (int i = 0; i < AlmostFullWidth; i++)
             {
                 logLine1.Append(GetCharacter(characters[i, 17]));
                 logLine2.Append(GetCharacter(characters[i, 18]));
@@ -158,12 +159,12 @@ namespace InputParse
             StringBuilder monsterLine2 = new StringBuilder();
             StringBuilder monsterLine3 = new StringBuilder();
             StringBuilder monsterLine4 = new StringBuilder();
-            string[] monsterLine1Colored = new string[FullWidth - GameViewWidth + 1];
-            string[] monsterLine2Colored = new string[FullWidth - GameViewWidth + 1];
-            string[] monsterLine3Colored = new string[FullWidth - GameViewWidth + 1];
-            string[] monsterLine4Colored = new string[FullWidth - GameViewWidth + 1];
+            string[] monsterLine1Colored = new string[AlmostFullWidth - GameViewWidth - 4];
+            string[] monsterLine2Colored = new string[AlmostFullWidth - GameViewWidth - 4];
+            string[] monsterLine3Colored = new string[AlmostFullWidth - GameViewWidth - 4];
+            string[] monsterLine4Colored = new string[AlmostFullWidth - GameViewWidth - 4];
             int currentChar = 0;
-            for (int i = GameViewWidth; i < FullWidth; i++, currentChar++)
+            for (int i = GameViewWidth + 4; i < AlmostFullWidth; i++, currentChar++)
             {
                 monsterLine1.Append(GetCharacter(characters[i, 13]));
                 monsterLine2.Append(GetCharacter(characters[i, 14]));
@@ -190,7 +191,7 @@ namespace InputParse
             }
             var chars = new char[] { ' ' };
             var split = monsterLine.ToString().Split(chars, count: 2);
-            return new MonsterData() { empty = false, MonsterTextRaw = split[1], MonsterDisplay = monsterLineColored.Take(split.Length).ToArray(), MonsterText = monsterLineColored.Skip(split.Length).ToArray() };
+            return new MonsterData() { empty = false, MonsterTextRaw = split[1], MonsterDisplay = monsterLineColored.Take(split[0].Length).ToArray(), MonsterText = monsterLineColored.Skip(split[0].Length).ToArray() };
         }
 
         private static Model parseMapLayout(Putty.TerminalCharacter[,] characters, string location)

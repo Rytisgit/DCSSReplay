@@ -146,10 +146,44 @@ namespace FrameGenerator.FrameCreation
 
                 DrawTiles(0, 0, 0, resize: 1, g, model, dict, itempng, itemdata, moretiles, cloudTiles, alldngnpng, monsterdata, monsterPNG, floorandwall, _characterdata, _characterpng, wallpng, floorpng, effects);
 
+                DrawMonsterDisplay(g, model, monsterPNG, monsterdata);
+
                 DrawLogs(model, g);
             }
 
             return bmp;
+        }
+
+        private static void DrawMonsterDisplay(Graphics g, Model model, Dictionary<string, Bitmap> monsterPNG, Dictionary<string, string> monsterdata)
+        {
+            var sideOfTilesX = 32 * model.LineLength; var currentLineY = 300;
+            foreach (var monsterlist in model.MonsterData)
+            {
+                var x = sideOfTilesX;
+                if (!monsterlist.empty)
+                {
+                    foreach (var monster in monsterlist.MonsterDisplay)//draw all monsters in 1 line
+                    {
+                        if (monsterdata.TryGetValue(monster, out var tileName))
+                        {
+                            if (monsterPNG.TryGetValue(tileName, out var mnstr))
+                            {
+                                g.DrawImage(mnstr, x, currentLineY, mnstr.Width, mnstr.Height);
+                                x += 32;
+                            }
+                        }
+                    }
+                    foreach (var coloredCharacter in monsterlist.MonsterText)//write all text in 1 line
+                    {
+                        var Color = model.ColorList.GetType().GetField(coloredCharacter.Substring(1)).GetValue(model.ColorList);
+                        g.DrawString(coloredCharacter[0].ToString(), new Font("Courier New", 16), (SolidBrush)Color, x, currentLineY + 6);
+                        x += 12;
+                    }
+
+                    currentLineY += 32;
+                }
+            }
+
         }
 
         private static void DrawLogs(Model model, Graphics g)
@@ -251,8 +285,7 @@ namespace FrameGenerator.FrameCreation
                     {
                         int prevBarLength = (int)(250 * ((float)(prevHP - model.SideData.Health) / model.SideData.Health));
                         Bitmap losthealthbar = new Bitmap(prevBarLength, 16);
-                        temp = Graphics.FromImage(losthealthbar);
-                        temp.Clear(Color.Red);
+                        Graphics.FromImage(losthealthbar).Clear(Color.Red);
                         g.DrawImage(losthealthbar, x + barLength, 40);
                     }
 
@@ -266,6 +299,7 @@ namespace FrameGenerator.FrameCreation
                     g.DrawImage(mana, 32 * (model.LineLength + 8), 60);
                 }
             }
+
         }
 
         public static void DrawTiles(float x, float y, int j,float resize, Graphics g, Model model, Dictionary<string, string> dict, Dictionary<string, Bitmap> itempng, Dictionary<string, string> itemdata, Dictionary<string, string> moretiles, Dictionary<string, string> cloudTiles, Dictionary<string, Bitmap> alldngnpng, Dictionary<string, string> monsterdata, Dictionary<string, Bitmap> monsterPNG, Dictionary<string, string[]> floorandwall, Dictionary<string, string> _characterdata, Dictionary<string, Bitmap> _characterpng, Dictionary<string, Bitmap> wallpng, Dictionary<string, Bitmap> floorpng, Dictionary<string, Bitmap> effects)
@@ -357,8 +391,6 @@ namespace FrameGenerator.FrameCreation
                     else if (cloudTiles.ContainsKey(tile))
                     {
                         bool drawn = false;
-                        if (model.SideData.Race.Contains("Q")) 
-                        { }
                             g.DrawImage(floor, x, y, floor.Width * resize, floor.Height * resize);
                         //special rules first
                         if (model.SideData.Statuses1.Contains("Torna") || model.SideData.Statuses2.Contains("Torna"))//tornado override
