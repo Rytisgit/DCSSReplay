@@ -362,6 +362,7 @@ namespace TtyRecMonkey
             using (var form = new PlayerForm())
             {
                 if (args.Length > 0) form.DoOpenFiles(args);
+                else form.OpenFile(); 
                 MessagePump.Run(form, form.MainLoop);
             }
         }
