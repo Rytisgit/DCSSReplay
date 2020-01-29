@@ -141,7 +141,7 @@ namespace InputParse
             StringBuilder logLine4 = new StringBuilder();
             StringBuilder logLine5 = new StringBuilder();
             StringBuilder logLine6 = new StringBuilder();
-            for (int i = 0; i < AlmostFullWidth; i++)
+            for (int i = 0; i < FullWidth; i++)
             {
                 logLine1.Append(GetCharacter(characters[i, 17]));
                 logLine2.Append(GetCharacter(characters[i, 18]));

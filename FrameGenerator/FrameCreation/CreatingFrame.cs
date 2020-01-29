@@ -322,7 +322,7 @@ namespace FrameGenerator.FrameCreation
                 if (tile == "#BLUE")
                 {
                     g.DrawImage(wall, x, y, wall.Width * resize, wall.Height * resize);
-                    var blueTint = new SolidBrush(Color.FromArgb(200, 0, 0, 0));
+                    var blueTint = new SolidBrush(Color.FromArgb(150, 0, 0, 0));
                     g.FillRectangle(blueTint, x, y, wall.Width * resize, wall.Height * resize);
                 }
                 else if (tile[0] == '#' && !tile.Equals("#LIGHTCYAN"))
@@ -334,7 +334,7 @@ namespace FrameGenerator.FrameCreation
                 else if (tile == ".BLUE")
                 {
                     g.DrawImage(floor, x, y, floor.Width * resize, floor.Height * resize);
-                    var blueTint = new SolidBrush(Color.FromArgb(200, 0, 0, 0));
+                    var blueTint = new SolidBrush(Color.FromArgb(150, 0, 0, 0));
                     g.FillRectangle(blueTint, x, y, floor.Width * resize, floor.Height * resize);
                 }
                 else if (tile[0] == '.')
@@ -345,7 +345,7 @@ namespace FrameGenerator.FrameCreation
                 else if (tile == "*BLUE")
                 {
                     g.DrawImage(wall, x, y, wall.Width * resize, wall.Height * resize);
-                    var blueTint = new SolidBrush(Color.FromArgb(50, 0, 0, 200));
+                    var blueTint = new SolidBrush(Color.FromArgb(40, 30, 30, 200));
                     g.FillRectangle(blueTint, x, y, wall.Width * resize, wall.Height * resize);
 
 
@@ -353,7 +353,7 @@ namespace FrameGenerator.FrameCreation
                 else if (tile == ",BLUE")
                 {
                     g.DrawImage(floor, x, y, floor.Width * resize, floor.Height * resize);
-                    var blueTint = new SolidBrush(Color.FromArgb(20, 0, 0, 200));
+                    var blueTint = new SolidBrush(Color.FromArgb(40, 20, 20, 200));
                     g.FillRectangle(blueTint, x, y, floor.Width * resize, floor.Height * resize);
                 }
                

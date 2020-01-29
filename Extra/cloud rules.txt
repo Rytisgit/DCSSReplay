@@ -24,7 +24,7 @@ split into paths for different tiles
 test of type by function / enum into the correct path
 add bz2
 add tiles to instalation
-add current monsters
+
 check some types by current monsters
 
 magical condensation random clouds - caused by ood, maybe should change when orb spiders on screen
@@ -41,6 +41,6 @@ add held weapon?
 reflection for color is slow?? not?
 make mapping between color object and enum of color
 
-some change slowed ttyrecmonkey to ~100fps?
+map is offset sometimes
 
 add replay speed increase by 1
