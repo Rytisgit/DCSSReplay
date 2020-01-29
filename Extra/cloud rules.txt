@@ -27,11 +27,20 @@ add tiles to instalation
 add current monsters
 check some types by current monsters
 
-magical condensation random clouds - caused by ood, maybe change when orb spiders on screen
+magical condensation random clouds - caused by ood, maybe should change when orb spiders on screen
 
-add lost health indicator per turn/ buggy lol
+add lost health indicator per turn/ its in but somehow buggy lol
 
 P - plant
 
-fix leftover bad a's.
+fix leftover bad a's
 
+bottom logs cutting off
+add held weapon?
+
+reflection for color is slow?? not?
+make mapping between color object and enum of color
+
+some change slowed ttyrecmonkey to ~100fps?
+
+add replay speed increase by 1
