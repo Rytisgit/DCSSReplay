@@ -3,6 +3,7 @@
 // See the file LICENSE.txt for copying permission.
 
 using FrameGenerator;
+using ICSharpCode.SharpZipLib.BZip2;
 using Putty;
 using ShinyConsole;
 using SlimDX.Windows;
@@ -140,7 +141,7 @@ namespace TtyRecMonkey
 ,
                     DefaultExt = "ttyrec"
 ,
-                    Filter = "TtyRec Files|*.ttyrec|All Files|*"
+                    Filter = "TtyRec Files|*.ttyrec;*.ttyrec.bz2|All Files|*"
 ,
                     InitialDirectory = @"I:\home\media\ttyrecs\"
 ,
@@ -155,7 +156,6 @@ namespace TtyRecMonkey
                 var files = open.FileNames;
                 using (open) { }
                 open = null;
-                //new string[] { "C:\\source\\ttyrecPlayer\\ttyrecTiles\\2019-10-25.22_08_50.ttyrec" }
                 DoOpenFiles(files);
             });
             mt.SetApartmentState(ApartmentState.STA);
@@ -176,12 +176,27 @@ namespace TtyRecMonkey
                 files = fof.FileOrder.ToArray();
                 delay = TimeSpan.FromSeconds(fof.SecondsBetweenFiles);
             }
-
-            var streams = files.Select(f => File.OpenRead(f) as Stream);
+            var streams = ttyrecToStream(files);
             var oldc = Cursor;
             Decoder = new TtyRecKeyframeDecoder(80, 24, streams, delay);
             PlaybackSpeed = +1;
             Seek = TimeSpan.Zero;
+        }
+
+        private static IEnumerable<Stream> ttyrecToStream(string[] files)
+        {
+            return files.Select(f =>
+            {
+                var stream = File.OpenRead(f) as Stream;
+                if (f.EndsWith(".bz2"))
+                {
+                    var bzipSteam = new BZip2InputStream(stream);
+                    var decodedData = new byte[bzipSteam.Length];
+                    bzipSteam.Read(decodedData, 0, decodedData.Length);
+                    stream = new MemoryStream(decodedData);
+                }
+                return stream;
+            });
         }
 
         DateTime PreviousFrame = DateTime.Now;
