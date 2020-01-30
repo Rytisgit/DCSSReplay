@@ -22,8 +22,9 @@ tornado2 RED CYAN BLUE LIGHTGREY
 
 split into paths for different tiles
 test of type by function / enum into the correct path
-add bz2
+
 add tiles to instalation
+
 
 check some types by current monsters
 
@@ -35,12 +36,14 @@ P - plant
 
 fix leftover bad a's
 
-bottom logs cutting off
 add held weapon?
 
-reflection for color is slow?? not?
 make mapping between color object and enum of color
 
 map is offset sometimes
 
-add replay speed increase by 1
+recolor tiles based on background color (selectors, travels paths, bolts)
+
+Wrong tiles in zot
+
+rename project

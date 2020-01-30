@@ -23,23 +23,25 @@ namespace Window
                 Thread t = new Thread((System.Threading.ThreadStart)(() =>
                 {
 
-                    form.folderBrowserDialog1.Description = "Choose your game location";
+                    //form.folderBrowserDialog1.Description = "Choose your game location";
 
-                    FolderBrowserDialog dlg = new FolderBrowserDialog();
-
-
-
-                    DialogResult result = dlg.ShowDialog();
+                    //FolderBrowserDialog dlg = new FolderBrowserDialog();
 
 
-                    if (result == DialogResult.OK && Directory.Exists(dlg.SelectedPath + @"\source\rltiles\mon"))
-                    {
 
-                        gamelocation = dlg.SelectedPath;
-                        //break;
+                    //DialogResult result = dlg.ShowDialog();
 
 
-                    }
+                    //if (result == DialogResult.OK && Directory.Exists(dlg.SelectedPath + @"\source\rltiles\mon"))
+                    //{
+
+                    //    gamelocation = dlg.SelectedPath;
+                    //    //break;
+
+
+                    //}
+
+                    gamelocation = @"..\..\..\Extra";
                     StreamWriter outputFile = new StreamWriter(Folder + @"\config.ini", false);
                     outputFile.WriteLine(gamelocation);
                     outputFile.Close();
