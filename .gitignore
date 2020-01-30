@@ -6,6 +6,8 @@ Thumbs.db
 *.opensdf
 *.mdmp
 *.vs
+*.ttyrec
+*.bz2
 obj/
 bin/
 Debug/

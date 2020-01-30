@@ -176,7 +176,7 @@ namespace FrameGenerator.FrameCreation
                     foreach (var coloredCharacter in monsterlist.MonsterText)//write all text in 1 line
                     {
                         var Color = model.ColorList.GetType().GetField(coloredCharacter.Substring(1)).GetValue(model.ColorList);
-                        g.DrawString(coloredCharacter[0].ToString(), new Font("Courier New", 16), (SolidBrush)Color, x, currentLineY + 6);
+                        g.DrawString(coloredCharacter[0].ToString(), new Font("Courier New", 16), (SolidBrush)Color, x, currentLineY + 4);
                         x += 12;
                     }
 
