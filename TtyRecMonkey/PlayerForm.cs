@@ -145,12 +145,12 @@ namespace TtyRecMonkey
 ,
                     InitialDirectory = @"I:\home\media\ttyrecs\"
 ,
-                    Multiselect = true
+                    Multiselect = false
 ,
                     RestoreDirectory = true
 ,
                     Title = "Select a TtyRec to play"
-                };
+                };//TODO: bring back multiselect?
                 if (open.ShowDialog() != DialogResult.OK) return;
 
                 var files = open.FileNames;
