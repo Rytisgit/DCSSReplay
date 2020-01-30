@@ -127,7 +127,7 @@ namespace TtyRecMonkey
         }
 
         public TtyRecKeyframeDecoder Decoder = null;
-        int PlaybackSpeed;
+        int PlaybackSpeed, PausedSpeed;
         TimeSpan Seek;
         readonly List<DateTime> PreviousFrames = new List<DateTime>();
 
@@ -277,8 +277,13 @@ namespace TtyRecMonkey
                     , "Alt+Enter  Toggle fullscreen"
                     , ""
                     , "ZXC        Play backwards at x100, x10, or x1 speed"
-                    , "   V       Pause (press a speed to unpause)"
+                    , "   V       Play / Pause"
                     , "    BNM    Play forwards at 1x, x10, or x100 speed"
+                    , ""
+                    , "   F       Decrease speed by 1"
+                    , "   G       Increase speed by 1"
+                    , ""                    
+                    , " Space     Play / Pause"
                     , ""
                     , " A / S     Zoom In/Out"
                     };
@@ -337,10 +342,18 @@ namespace TtyRecMonkey
                 case Keys.Z: PlaybackSpeed = -100; break;
                 case Keys.X: PlaybackSpeed = -10; break;
                 case Keys.C: PlaybackSpeed = -1; break;
-                case Keys.V: PlaybackSpeed = 0; break;
                 case Keys.B: PlaybackSpeed = +1; break;
                 case Keys.N: PlaybackSpeed = +10; break;
                 case Keys.M: PlaybackSpeed = +100; break;
+
+                case Keys.F: PlaybackSpeed = PlaybackSpeed - 1; break;//progresive increase/decrease
+                case Keys.G: PlaybackSpeed = PlaybackSpeed + 1; break;
+
+                case Keys.V://Play / Pause
+                case Keys.Space: 
+                    if (PlaybackSpeed != 0) { PausedSpeed = PlaybackSpeed; PlaybackSpeed = 0; }
+                    else { PlaybackSpeed = PausedSpeed; } 
+                    break;
 
                 case Keys.A: ++Zoom; if (resize) ClientSize = ActiveSize; break;
                 case Keys.S: if (Zoom > 1) --Zoom; if (resize) ClientSize = ActiveSize; break;
