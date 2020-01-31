@@ -14,8 +14,8 @@ See the latest [Releases](https://github.com/Rytisgit/DCSSReplay/releases)
 ### The window that accepts controls is the ASCII window, it needs to have focus
 
 ```
-ZXCVBNM    Alter playback speed (-100x, -10x, -1x, PAUSE, +1x, +10x, +100x)
-SPACE      Pause
+ZXCVBNM    Alter playback speed (-100x, -10x, -1x, Pause/Resume, 1x, 10x, 100x)
+SPACE      Pause/Resume
 FG         Increase/Decrease PLayback speed (-1x, +1x)
 Ctrl+C     Reconfigure TtyRecMonkey
 Ctrl+O     Open a ttyrec
