@@ -86,3 +86,5 @@ It currently handles:
 ### Character - Rytisgit -TODO description
 ### Window - Aspectus -TODO description
 
+### Installer - Rytisgit https://github.com/Rytisgit/DCSSReplayInstaller
+
