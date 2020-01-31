@@ -24,8 +24,8 @@ Ctrl+O     Open a ttyrec
 ## Contact
 
 - The author can be contacted in Discord as Sentei#5306
-- Those who prefer slower communication can send emails to prytisx@gmail.com
-- File github issues
+- Those who prefer slower communication can send emails to petronisrytis@gmail.com
+- You can file github issues as well
 
 # Development
 
