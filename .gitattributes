@@ -1,2 +1,4 @@
 Putty/**/* linguist-vendored
 Putty/* linguist-vendored
+Putty/WINDOWS/* linguist-vendored
+Putty/WINDOWS/** linguist-vendored
