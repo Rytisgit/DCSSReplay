@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -82,6 +83,18 @@ namespace FrameGenerator.FileReading
                     monster[tokens[1] + tokens[2]] = tokens[0];
                 }
             }
+
+            //Fun Overrides for duplicates
+
+            var names = new List<string> {"DYELLOW" };
+
+            var png = new List<string> { "golden_dragon" };
+
+            for (int i = 0; i < names.Count; i++)
+            {
+                monster[names.ElementAt(i)] = png.ElementAt(i);
+            }
+
             return monster;
         }
         public static Dictionary<string, string[]> Get_Floor_And_Wall_Names_For_Dungeons()

@@ -3,10 +3,8 @@
 // See the file LICENSE.txt for copying permission.
 
 using FrameGenerator;
-using ICSharpCode.SharpZipLib.BZip2;
 using Putty;
 using ShinyConsole;
-using SlimDX.Windows;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -14,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using SlimDX.Windows;
 
 namespace TtyRecMonkey
 {
@@ -35,6 +34,7 @@ namespace TtyRecMonkey
         MainGenerator generator;
         bool generating = false;
         TerminalCharacter[,] savedFrame;
+        MemoryStream output = new MemoryStream();
         public PlayerForm() : base(80, 24)
         {
             Text = "TtyRecMonkey";
@@ -127,7 +127,7 @@ namespace TtyRecMonkey
         }
 
         public TtyRecKeyframeDecoder Decoder = null;
-        int PlaybackSpeed, PausedSpeed;
+        double PlaybackSpeed, PausedSpeed;
         TimeSpan Seek;
         readonly List<DateTime> PreviousFrames = new List<DateTime>();
 
@@ -141,7 +141,7 @@ namespace TtyRecMonkey
 ,
                     DefaultExt = "ttyrec"
 ,
-                    Filter = "TtyRec Files|*.ttyrec;*.ttyrec.bz2|All Files|*"
+                    Filter = "TtyRec Files|*.ttyrec|All Files|*"
 ,
                     InitialDirectory = @"I:\home\media\ttyrecs\"
 ,
@@ -168,14 +168,14 @@ namespace TtyRecMonkey
         {
             var delay = TimeSpan.Zero;
 
-            if (files.Length > 1)
-            {
-                // multiselect!
-                var fof = new FileOrderingForm(files);
-                if (fof.ShowDialog(this) != DialogResult.OK) return;
-                files = fof.FileOrder.ToArray();
-                delay = TimeSpan.FromSeconds(fof.SecondsBetweenFiles);
-            }
+            //if (files.Length > 1)
+            //{
+            //    // multiselect!
+            //    var fof = new FileOrderingForm(files);
+            //    if (fof.ShowDialog(this) != DialogResult.OK) return;
+            //    files = fof.FileOrder.ToArray();
+            //    delay = TimeSpan.FromSeconds(fof.SecondsBetweenFiles);
+            //}
             var streams = ttyrecToStream(files);
             var oldc = Cursor;
             Decoder = new TtyRecKeyframeDecoder(80, 24, streams, delay);
@@ -183,19 +183,11 @@ namespace TtyRecMonkey
             Seek = TimeSpan.Zero;
         }
 
-        private static IEnumerable<Stream> ttyrecToStream(string[] files)
+        private IEnumerable<Stream> ttyrecToStream(string[] files)
         {
             return files.Select(f =>
             {
-                var stream = File.OpenRead(f) as Stream;
-                if (f.EndsWith(".bz2"))
-                {
-                    var bzipSteam = new BZip2InputStream(stream);
-                    var decodedData = new byte[bzipSteam.Length];
-                    bzipSteam.Read(decodedData, 0, decodedData.Length);
-                    stream = new MemoryStream(decodedData);
-                }
-                return stream;
+                return File.OpenRead(f) as Stream;
             });
         }
 
@@ -301,17 +293,18 @@ namespace TtyRecMonkey
             }
 
 
-            Text = string.Format
-                ("TtyRecMonkey -- {0} FPS -- {1} @ {2} of {3} ({4} keyframes {5} packets) -- Speed {6} -- GC recognized memory: {7}"
-                , PreviousFrames.Count
-                , PrettyTimeSpan(Seek)
-                , Decoder == null ? "N/A" : PrettyTimeSpan(Decoder.CurrentFrame.SinceStart)
-                , Decoder == null ? "N/A" : PrettyTimeSpan(Decoder.Length)
-                , Decoder == null ? "N/A" : Decoder.Keyframes.ToString()
-                , Decoder == null ? "N/A" : Decoder.PacketCount.ToString()
-                , PlaybackSpeed
-                , PrettyByteCount(GC.GetTotalMemory(false))
-                );
+            //Text = string.Format
+            //    ("TtyRecMonkey -- {0} FPS -- {1} @ {2} of {3} ({4} keyframes {5} packets) -- Speed {6} -- GC recognized memory: {7}"
+            //    , PreviousFrames.Count
+            //    , PrettyTimeSpan(Seek)
+            //    , Decoder == null ? "N/A" : PrettyTimeSpan(Decoder.CurrentFrame.SinceStart)
+            //    , Decoder == null ? "N/A" : PrettyTimeSpan(Decoder.Length)
+            //    , Decoder == null ? "N/A" : Decoder.Keyframes.ToString()
+            //    , Decoder == null ? "N/A" : Decoder.PacketCount.ToString()
+            //    , PlaybackSpeed
+            //    , PrettyByteCount(GC.GetTotalMemory(false))
+            //    );
+            Text = "Console";
             Redraw();
         }
 
@@ -344,10 +337,13 @@ namespace TtyRecMonkey
                 case Keys.C: PlaybackSpeed = -1; break;
                 case Keys.B: PlaybackSpeed = +1; break;
                 case Keys.N: PlaybackSpeed = +10; break;
-                case Keys.M: PlaybackSpeed = +100; break;
+                case Keys.M: PlaybackSpeed += +100; break;
 
                 case Keys.F: PlaybackSpeed = PlaybackSpeed - 1; break;//progresive increase/decrease
                 case Keys.G: PlaybackSpeed = PlaybackSpeed + 1; break;
+
+                case Keys.D: PlaybackSpeed = PlaybackSpeed - 0.2; break;//progresive increase/decrease
+                case Keys.H: PlaybackSpeed = PlaybackSpeed + 0.2; break;
 
                 case Keys.V://Play / Pause
                 case Keys.Space: 

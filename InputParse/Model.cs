@@ -55,7 +55,49 @@ namespace InputParse
         public SolidBrush LIGHTCYAN = new SolidBrush(Color.FromArgb(64, 255, 255));
         public SolidBrush WHITE = new SolidBrush(Color.FromArgb(255, 255, 255));
         public SolidBrush WHITE2 = new SolidBrush(Color.FromArgb(255, 255, 255));
+
+        public static Color GetColor(string name)
+        {
+            switch (name)
+            {
+                case "BLACK" : 
+                    return Color.FromArgb(0, 0, 0);
+                case "RED" :
+                    return Color.FromArgb(255, 0, 0);
+                case "GREEN":
+                    return Color.FromArgb(0, 255, 0);
+                case "BROWN":
+                    return Color.FromArgb(165, 91, 0);
+                case "BLUE":
+                    return Color.FromArgb(0, 64, 255);
+                case "MAGENTA":
+                    return Color.FromArgb(192, 0, 255);
+                case "CYAN":
+                    return Color.FromArgb(0, 255, 255);
+                case "LIGHTGREY":
+                    return Color.FromArgb(192, 192, 192);
+                case "DARKGREY":
+                    return Color.FromArgb(128, 128, 128);
+                case "LIGHTRED":
+                    return Color.FromArgb(255, 128, 128);
+                case "LIGHTGREEN":
+                    return Color.FromArgb(128, 255, 128);
+                case "YELLOW":
+                    return Color.FromArgb(255, 255, 0);
+                case "LIGHTBLUE":
+                    return Color.FromArgb(128, 128, 255);
+                case "LIGHTMAGENTA":
+                    return Color.FromArgb(255, 128, 255);
+                case "LIGHTCYAN":
+                    return Color.FromArgb(64, 255, 255);
+                case "WHITE":
+                    return Color.FromArgb(255, 255, 255);
+                default: throw new ArgumentException("No Color like that is defined");
+            }
+        } 
     }
+
+        
     public class Model
     {
         public LayoutType Layout { get; set; } = LayoutType.Normal;
@@ -73,6 +115,7 @@ namespace InputParse
         public string[] MonsterText { get; set; }//{" LIGHTGRAY, jYELLOW" ...}
         public string MonsterTextRaw { get; set; }// jackal
         public string[] MonsterDisplay { get; set; }//{"jYELLOW",....}
+        public string[] MonsterBackground { get; set; }//{"YELLOW",....}
     }
     public class SideData
     {

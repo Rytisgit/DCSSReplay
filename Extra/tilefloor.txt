@@ -2,7 +2,7 @@ DUNGEON
 brick_dark_1_0
 grey_dirt0
 DEPTHS
-brick_dark_1_0
+brick_dark_4_0
 grey_dirt_b_0
 VAULTS
 metal_wall0
@@ -62,8 +62,8 @@ SPIDER NEST
 spider00
 spider00
 ZOT
-zot_blue0
-tomb0
+zot_magenta1
+rough_magenta3
 FOREST
 lair0
 grass0

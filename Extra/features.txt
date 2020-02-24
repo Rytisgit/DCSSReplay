@@ -72,6 +72,8 @@ lava
 deep_water
 ≈CYAN
 shallow_water
+≈LIGHTCYAN
+shoals_shallow_water9
 .RED
 floor
 .GREEN
@@ -133,6 +135,8 @@ passage_of_golubria
 ^BROWN
 shaft
 ^LIGHTGREY
+net
+^LIGHTCYAN
 net
 ∩YELLOW
 enter_shop
