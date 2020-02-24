@@ -15,6 +15,7 @@ See the latest [Releases](https://github.com/Rytisgit/DCSSReplay/releases)
 
 ```
 ZXCVBNM    Alter playback speed (-100x, -10x, -1x, Pause/Resume, 1x, 10x, 100x)
+M          Increase Playback speed by +100, stacks
 SPACE      Pause/Resume
 FG         Increase/Decrease PLayback speed (-1x, +1x)
 Ctrl+C     Reconfigure TtyRecMonkey
