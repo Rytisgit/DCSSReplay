@@ -14,6 +14,10 @@ namespace InputParse
         {
             return GetCharacter(character) + Enum.GetName(typeof(ColorList2), character.ForegroundPaletteIndex);
         }
+        private static string GetBackgroundColor(Putty.TerminalCharacter character)
+        {
+            return Enum.GetName(typeof(ColorList2), character.BackgroundPaletteIndex);
+        }
         public static LayoutType GetLayoutType(Putty.TerminalCharacter[,] characters, out string newlocation)
         {
             StringBuilder place = new StringBuilder();
@@ -163,6 +167,10 @@ namespace InputParse
             string[] monsterLine2Colored = new string[AlmostFullWidth - GameViewWidth - 4];
             string[] monsterLine3Colored = new string[AlmostFullWidth - GameViewWidth - 4];
             string[] monsterLine4Colored = new string[AlmostFullWidth - GameViewWidth - 4];
+            string[] monsterLine1Background = new string[AlmostFullWidth - GameViewWidth - 4];
+            string[] monsterLine2Background = new string[AlmostFullWidth - GameViewWidth - 4];
+            string[] monsterLine3Background = new string[AlmostFullWidth - GameViewWidth - 4];
+            string[] monsterLine4Background = new string[AlmostFullWidth - GameViewWidth - 4];
             int currentChar = 0;
             for (int i = GameViewWidth + 4; i < AlmostFullWidth; i++, currentChar++)
             {
@@ -174,16 +182,20 @@ namespace InputParse
                 monsterLine2Colored[currentChar] = GetColoredCharacter(characters[i, 14]);
                 monsterLine3Colored[currentChar] = GetColoredCharacter(characters[i, 15]);
                 monsterLine4Colored[currentChar] = GetColoredCharacter(characters[i, 16]);
+                monsterLine1Background[currentChar] = GetBackgroundColor(characters[i, 13]);
+                monsterLine2Background[currentChar] = GetBackgroundColor(characters[i, 14]);
+                monsterLine3Background[currentChar] = GetBackgroundColor(characters[i, 15]);
+                monsterLine4Background[currentChar] = GetBackgroundColor(characters[i, 16]);
             }
             
             return new MonsterData[4] { 
-                FormatMonsterData(monsterLine1.ToString(), monsterLine1Colored),
-                FormatMonsterData(monsterLine2.ToString(), monsterLine2Colored),
-                FormatMonsterData(monsterLine3.ToString(), monsterLine3Colored),
-                FormatMonsterData(monsterLine4.ToString(), monsterLine4Colored) };
+                FormatMonsterData(monsterLine1.ToString(), monsterLine1Colored, monsterLine1Background),
+                FormatMonsterData(monsterLine2.ToString(), monsterLine2Colored, monsterLine2Background),
+                FormatMonsterData(monsterLine3.ToString(), monsterLine3Colored, monsterLine3Background),
+                FormatMonsterData(monsterLine4.ToString(), monsterLine4Colored, monsterLine4Background) };
         }
 
-        private static MonsterData FormatMonsterData(string monsterLine, string[] monsterLineColored)
+        private static MonsterData FormatMonsterData(string monsterLine, string[] monsterLineColored, string[] monsterBackgroundColors)
         {
             if (monsterLine[0].Equals(' '))
             {
@@ -191,7 +203,13 @@ namespace InputParse
             }
             var chars = new char[] { ' ' };
             var split = monsterLine.ToString().Split(chars, count: 2);
-            return new MonsterData() { empty = false, MonsterTextRaw = split[1], MonsterDisplay = monsterLineColored.Take(split[0].Length).ToArray(), MonsterText = monsterLineColored.Skip(split[0].Length).ToArray() };
+            return new MonsterData() { 
+                empty = false,
+                MonsterTextRaw = split[1],
+                MonsterDisplay = monsterLineColored.Take(split[0].Length).ToArray(),
+                MonsterText = monsterLineColored.Skip(split[0].Length).ToArray(),
+                MonsterBackground = monsterBackgroundColors
+            };
         }
 
         private static Model parseMapLayout(Putty.TerminalCharacter[,] characters, string location)

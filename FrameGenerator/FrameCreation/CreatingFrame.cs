@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Linq;
 
 namespace FrameGenerator.FrameCreation
 {
@@ -156,12 +157,16 @@ namespace FrameGenerator.FrameCreation
 
         private static void DrawMonsterDisplay(Graphics g, Model model, Dictionary<string, Bitmap> monsterPNG, Dictionary<string, string> monsterdata)
         {
+            var black = ColorList.GetColor("BLACK");
+            var yellow = ColorList.GetColor("YELLOW");
+            var brown = ColorList.GetColor("BROWN");
             var sideOfTilesX = 32 * model.LineLength; var currentLineY = 300;
             foreach (var monsterlist in model.MonsterData)
             {
                 var x = sideOfTilesX;
                 if (!monsterlist.empty)
                 {
+
                     foreach (var monster in monsterlist.MonsterDisplay)//draw all monsters in 1 line
                     {
                         if (monsterdata.TryGetValue(monster, out var tileName))
@@ -173,6 +178,23 @@ namespace FrameGenerator.FrameCreation
                             }
                         }
                     }
+                    var otherx = x;
+                    foreach (var backgroundColor in monsterlist.MonsterBackground.Skip(monsterlist.MonsterDisplay.Length))
+                    {
+                        var color = ColorList.GetColor(backgroundColor);
+                        if (color != black)
+                        {
+                            if (color.ToArgb() == brown.ToArgb())
+                            {
+                                color = yellow;
+                            }
+                            Bitmap backgroundColorbmp = new Bitmap(12, 16);
+                            Graphics.FromImage(backgroundColorbmp).Clear(color);
+                            g.DrawImage(backgroundColorbmp, otherx, currentLineY + 4);
+                        }
+                        otherx += 12;
+                    }
+
                     foreach (var coloredCharacter in monsterlist.MonsterText)//write all text in 1 line
                     {
                         var Color = model.ColorList.GetType().GetField(coloredCharacter.Substring(1)).GetValue(model.ColorList);
@@ -281,13 +303,13 @@ namespace FrameGenerator.FrameCreation
                     temp.Clear(Color.Green);
                     var x = 32 * (model.LineLength + 8);
                     g.DrawImage(healthbar, x, 40);
-                    if (barLength != 250 && prevHP - model.SideData.Health > 0)
-                    {
-                        int prevBarLength = (int)(250 * ((float)(prevHP - model.SideData.Health) / model.SideData.Health));
-                        Bitmap losthealthbar = new Bitmap(prevBarLength, 16);
-                        Graphics.FromImage(losthealthbar).Clear(Color.Red);
-                        g.DrawImage(losthealthbar, x + barLength, 40);
-                    }
+                    //if (barLength != 250 && prevHP - model.SideData.Health > 0)
+                    //{
+                    //    int prevBarLength = (int)(250 * ((float)(prevHP - model.SideData.Health) / model.SideData.Health));
+                    //    Bitmap losthealthbar = new Bitmap(prevBarLength, 16);
+                    //    Graphics.FromImage(losthealthbar).Clear(Color.Red);
+                    //    g.DrawImage(losthealthbar, x + barLength, 40);
+                    //}
 
                 }
                 if (model.SideData.Magic > 0)
@@ -486,6 +508,21 @@ namespace FrameGenerator.FrameCreation
                                 }
                             }
                         }
+                        else if (!model.MonsterData[0].empty && model.MonsterData[0].MonsterTextRaw.Contains("catob") ||
+                            !model.MonsterData[1].empty && model.MonsterData[1].MonsterTextRaw.Contains("catob") ||
+                            !model.MonsterData[2].empty && model.MonsterData[2].MonsterTextRaw.Contains("catob") ||
+                            !model.MonsterData[3].empty && model.MonsterData[3].MonsterTextRaw.Contains("catob"))
+                        {
+                            if (tile.Equals("§WHITE"))
+                            {
+                                if (effects.TryGetValue("cloud_calc_dust2", out Bitmap bmp))
+                                {
+                                    g.DrawImage(bmp, x, y, bmp.Width * resize, bmp.Height * resize);
+                                    drawn = true;
+                                }
+
+                            }
+                        }
                         else if (model.SideData.Place.Contains("Shoal"))
                         {
                             var colors = new List<string>() { Enum.GetName(typeof(ColorList2), ColorList2.DARKGREY) };
@@ -502,18 +539,6 @@ namespace FrameGenerator.FrameCreation
                                         }
                                     }
                                 }
-                            }
-                        }
-                        else if (model.SideData.Place.Contains("Dung") || model.SideData.Place.Contains("Lair"))
-                        {
-                            if (tile[0].Equals("§WHITE"))
-                            {
-                                if (effects.TryGetValue("cloud_calc_dust2", out Bitmap bmp))
-                                {
-                                    g.DrawImage(bmp, x, y, bmp.Width * resize, bmp.Height * resize);
-                                    drawn = true;
-                                }
-
                             }
                         }
                         else if (model.SideData.Place.Contains("Pand"))//TODO: CHeck For holy enemies?
@@ -594,7 +619,7 @@ namespace FrameGenerator.FrameCreation
                             dict.Add(tile, "");
                         }
                         var Color = model.ColorList.GetType().GetField(tile.Substring(1)).GetValue(model.ColorList);
-                        g.DrawString(tile[0] + "?", new Font("Courier New", 16), (SolidBrush)Color, x, y);
+                        g.DrawString(tile[0].ToString() , new Font("Courier New", 16), (SolidBrush)Color, x, y);
                     }
 
 
