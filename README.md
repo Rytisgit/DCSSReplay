@@ -5,9 +5,9 @@ Still quite a few things to be improved but at least its something.
 
 ![Screenshot](https://github.com/Rytisgit/DCSSReplay/blob/master/.projnfo/screenshots/Untitled.png)
 
-## Downloads
+# Downloads
 
-See the latest [Releases](https://github.com/Rytisgit/DCSSReplay/releases)
+## See the latest [Releases](https://github.com/Rytisgit/DCSSReplay/releases)
 
 ## Placeholder Controls
 
