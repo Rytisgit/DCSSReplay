@@ -7,7 +7,7 @@ Still quite a few things to be improved but at least its something.
 
 # Downloads
 
-## See the latest [Releases](https://github.com/Rytisgit/DCSSReplay/releases)
+## [See the latest Releases](https://github.com/Rytisgit/DCSSReplay/releases)
 
 ## Placeholder Controls
 
