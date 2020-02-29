@@ -18,6 +18,7 @@ ZXCVBNM    Alter playback speed (-100x, -10x, -1x, Pause/Resume, 1x, 10x, 100x)
 M          Increase Playback speed by +100, stacks
 SPACE      Pause/Resume
 FG         Increase/Decrease PLayback speed (-1x, +1x)
+DH         Increase/Decrease PLayback speed (-0.2x, +0.2x)
 Ctrl+C     Reconfigure TtyRecMonkey
 Ctrl+O     Open a ttyrec
 ```
