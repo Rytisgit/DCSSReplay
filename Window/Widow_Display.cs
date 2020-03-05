@@ -42,6 +42,7 @@ namespace Window
                     //}
 
                     gamelocation = @"..\..\..\Extra";
+                    System.IO.Directory.CreateDirectory(Folder);
                     StreamWriter outputFile = new StreamWriter(Folder + @"\config.ini", false);
                     outputFile.WriteLine(gamelocation);
                     outputFile.Close();
