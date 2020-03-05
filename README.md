@@ -5,9 +5,9 @@ Still quite a few things to be improved but at least its something.
 
 ![Screenshot](https://github.com/Rytisgit/DCSSReplay/blob/master/.projnfo/screenshots/Untitled.png)
 
-## Downloads
+# Downloads
 
-See the latest [Releases](https://github.com/Rytisgit/DCSSReplay/releases)
+## [See the latest Releases](https://github.com/Rytisgit/DCSSReplay/releases)
 
 ## Placeholder Controls
 
@@ -15,8 +15,10 @@ See the latest [Releases](https://github.com/Rytisgit/DCSSReplay/releases)
 
 ```
 ZXCVBNM    Alter playback speed (-100x, -10x, -1x, Pause/Resume, 1x, 10x, 100x)
+M          Increase Playback speed by +100, stacks
 SPACE      Pause/Resume
 FG         Increase/Decrease PLayback speed (-1x, +1x)
+DH         Increase/Decrease PLayback speed (-0.2x, +0.2x)
 Ctrl+C     Reconfigure TtyRecMonkey
 Ctrl+O     Open a ttyrec
 ```
