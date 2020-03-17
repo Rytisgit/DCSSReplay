@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace InputParse
 {
@@ -114,14 +115,7 @@ namespace InputParse
 
                 model.SideData = ParseSideData(characters);
                 
-                model.FullLengthStrings = ParseLogLines(characters); ;
-                model.FullLengthStringColors = new string[6] {
-                    Enum.GetName(typeof(ColorList2), characters[1, 17].ForegroundPaletteIndex),
-                    Enum.GetName(typeof(ColorList2), characters[1, 18].ForegroundPaletteIndex),
-                    Enum.GetName(typeof(ColorList2), characters[1, 19].ForegroundPaletteIndex),
-                    Enum.GetName(typeof(ColorList2), characters[1, 20].ForegroundPaletteIndex),
-                    Enum.GetName(typeof(ColorList2), characters[1, 21].ForegroundPaletteIndex),
-                    Enum.GetName(typeof(ColorList2), characters[1, 22].ForegroundPaletteIndex)};
+                model.LogData = ParseLogLines(characters); 
 
                 model.MonsterData = ParseMonsterDisplay(characters);
             }
@@ -137,24 +131,37 @@ namespace InputParse
             return model;
         }
 
-        private static string[] ParseLogLines(Putty.TerminalCharacter[,] characters)
+        private static LogData[] ParseLogLines(Putty.TerminalCharacter[,] characters)
         {
-            StringBuilder logLine1 = new StringBuilder();
-            StringBuilder logLine2 = new StringBuilder();
-            StringBuilder logLine3 = new StringBuilder();
-            StringBuilder logLine4 = new StringBuilder();
-            StringBuilder logLine5 = new StringBuilder();
-            StringBuilder logLine6 = new StringBuilder();
-            for (int i = 0; i < FullWidth; i++)
+            var loglines = new LogData[6] { new LogData(), new LogData(), new LogData(), new LogData(), new LogData(), new LogData() };
+            StringBuilder logLine = new StringBuilder();
+            var logText = new List<string>();
+            var logBackground = new List<string>();
+            var loglineRow = 17;
+            foreach (var line in loglines)
             {
-                logLine1.Append(GetCharacter(characters[i, 17]));
-                logLine2.Append(GetCharacter(characters[i, 18]));
-                logLine3.Append(GetCharacter(characters[i, 19]));
-                logLine4.Append(GetCharacter(characters[i, 20]));
-                logLine5.Append(GetCharacter(characters[i, 21]));
-                logLine6.Append(GetCharacter(characters[i, 22]));
+                for (int i = 0; i < FullWidth; i++)
+                {
+                    logLine.Append(GetCharacter(characters[i, loglineRow]));
+                }
+                line.LogTextRaw = logLine.ToString();
+                if (line.LogTextRaw.Length > 0)
+                {
+                    line.empty = false;
+                    for (int i = 0; i < line.LogTextRaw.Length; i++)
+                    {
+                        logText.Add(GetColoredCharacter(characters[i, loglineRow]));
+                        logBackground.Add(GetBackgroundColor(characters[i, loglineRow]));
+                    }
+                    line.LogText = logText.ToArray();
+                    line.LogBackground = logBackground.ToArray();
+                    logText.Clear();
+                    logBackground.Clear();
+                }
+                logLine.Clear();
+                loglineRow++;
             }
-            return new string[6] { logLine1.ToString(), logLine2.ToString(), logLine3.ToString(), logLine4.ToString(), logLine5.ToString(), logLine6.ToString() };
+            return loglines;
         }
 
         private static MonsterData[] ParseMonsterDisplay(Putty.TerminalCharacter[,] characters)
