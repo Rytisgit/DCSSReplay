@@ -15,40 +15,45 @@ namespace FrameGenerator
     public class MainGenerator
     {
         Widow_Display display = new Widow_Display();
-        private Dictionary<string, string> _monsterdata;
-        private Dictionary<string, string> _characterdata;
-        private Dictionary<string, string[]> _floorandwall;
-        private Dictionary<string, string> _moretiles;
-        private Dictionary<string, string> _cloudtiles;
-        private Dictionary<string, Bitmap> _monsterpng;
-        private Dictionary<string, Bitmap> _characterpng;
-        private Dictionary<string, string> _itemdata;
-        private Dictionary<string, Bitmap> _itempng;
-        private Dictionary<string, Bitmap> _alldngnpng;
-        private Dictionary<string, Bitmap> _alleffects;
-        private Dictionary<string, Bitmap> _floorpng;
-        private Dictionary<string, Bitmap> _wallpng;
-        private Bitmap _lastframe= new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
+        private readonly Dictionary<string, string> _monsterdata;
+        private readonly Dictionary<string, string> _characterdata;
+        private readonly Dictionary<string, string[]> _floorandwall;
+        private readonly Dictionary<string, string> _moretiles;
+        private readonly Dictionary<string, string> _cloudtiles;
+        private readonly Dictionary<string, string> _itemdata;
+        private readonly Dictionary<string, Bitmap> _monsterpng;
+        private readonly Dictionary<string, Bitmap> _characterpng;
+        private readonly Dictionary<string, Bitmap> _itempng;
+        private readonly Dictionary<string, Bitmap> _alldngnpng;
+        private readonly Dictionary<string, Bitmap> _alleffects;
+        private readonly Dictionary<string, Bitmap> _floorpng;
+        private readonly Dictionary<string, Bitmap> _wallpng;
+        private Bitmap _lastframe = new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
         private int previousHP = 0;
-
 
         public MainGenerator()
         {
-         
-            string GameLocation = File.ReadAllLines(display.Folder + @"\config.ini").First();
-            _characterdata = ReadFromFile.CharacterData();
-            _moretiles = ReadFromFile.AdditionalTileData();
-            _characterpng = ReadFromFile.GetCharacterPNG(GameLocation);
-            _monsterdata = ReadFromFile.GetMonsterData(GameLocation);
-            _floorandwall = ReadFromFile.Get_Floor_And_Wall_Names_For_Dungeons();
-            _monsterpng = ReadFromFile.GetMonsterPNG(GameLocation);
-            _itempng = ReadFromFile.ItemsPNG(GameLocation);
-            _itemdata = ReadFromFile.ItemData();
-            _floorpng = ReadFromFile.GetFloorPNG(GameLocation);
-            _wallpng = ReadFromFile.GetWallPNG(GameLocation);
-            _alldngnpng = ReadFromFile.GetAllDungeonPNG(GameLocation);
-            _alleffects = ReadFromFile.GetAllEffectPNG(GameLocation);
-            _cloudtiles = ReadFromFile.GetCloudData();
+
+            string gameLocation = File.ReadAllLines(display.Folder + @"\config.ini").First();
+
+            _characterdata = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\racepng.txt");
+            _moretiles = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\features.txt");
+            _cloudtiles = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\clouds.txt");
+            _itemdata = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\items.txt");
+            
+            _floorandwall = ReadFromFile.GetFloorAndWallNamesForDungeons();
+
+            _monsterdata = ReadFromFile.GetMonsterData(gameLocation);
+
+            _floorpng = ReadFromFile.GetBitmapDictionaryFromFolder(gameLocation + @"\rltiles\dngn\floor");
+            _wallpng = ReadFromFile.GetBitmapDictionaryFromFolder(gameLocation + @"\rltiles\dngn\wall");
+            _alldngnpng = ReadFromFile.GetBitmapDictionaryFromFolder(gameLocation + @"\rltiles\dngn");
+            _alleffects = ReadFromFile.GetBitmapDictionaryFromFolder(gameLocation + @"\rltiles\effect");
+
+            _characterpng = ReadFromFile.GetCharacterPNG(gameLocation);
+            _monsterpng = ReadFromFile.GetMonsterPNG(gameLocation);
+            _itempng = ReadFromFile.ItemsPNG(gameLocation);
+
         }
 
         public void GenerateImage(TerminalCharacter[,] chars)
@@ -66,19 +71,17 @@ namespace FrameGenerator
 
         private Bitmap DrawFrame(Model model)
         {
-            var dict = new Dictionary<string, string>();//logging
-
             Bitmap currentFrame = new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
 
             switch (model.Layout)
             {
                 case LayoutType.Normal:
-                    currentFrame = DrawNormal(dict, model, previousHP);
+                    currentFrame = DrawNormal(model, previousHP);
                     _lastframe = currentFrame;
                     previousHP = model.SideData.Health;
                     break;
                 case LayoutType.TextOnly:
-                    currentFrame = DrawTextBox(_lastframe, model);
+                    currentFrame = DrawTextBox(model, _lastframe);
                     break;
                 case LayoutType.MapOnly:
                     currentFrame = DrawMap(model);
@@ -123,9 +126,7 @@ namespace FrameGenerator
             return bmp;
         }
 
-
-
-        private Bitmap DrawTextBox(Bitmap lastframe, Model model)
+        private Bitmap DrawTextBox(Model model, Bitmap lastframe)
         {
             Bitmap temp = new Bitmap(lastframe);
             using (Graphics g = Graphics.FromImage(temp))
@@ -157,11 +158,13 @@ namespace FrameGenerator
             return temp;
         }
 
-        private Bitmap DrawNormal(Dictionary<string, string> dict, Model model, int prevHP)
+        private Bitmap DrawNormal(Model model, int prevHP)
         {
             Bitmap bmp = new Bitmap(1602, 768, PixelFormat.Format32bppArgb);
             using (Graphics g = Graphics.FromImage(bmp))
             {
+                g.Clear(Color.Black);
+
                 DrawSideDATA(g, model, prevHP);
 
                 DrawTiles(g, model, 0, 0, 0, resize: 1);
@@ -233,104 +236,65 @@ namespace FrameGenerator
         public static void DrawSideDATA(Graphics g, Model model, int prevHP)
 
         {
-            g.Clear(Color.Black);
-            using (Font arialFont = new Font("Courier New", 16))
+            using (Font font = new Font("Courier New", 16))
             {
 
                 var yellow = new SolidBrush(Color.FromArgb(252, 233, 79));
                 var brown = new SolidBrush(Color.FromArgb(143, 89, 2));
                 var gray = new SolidBrush(Color.FromArgb(186, 189, 182));
 
+                var lineCount = 0;
+                var lineHeight = 20;
 
-                g.DrawString(model.SideData.Name, arialFont, yellow, 32 * model.LineLength, 0);
-                g.DrawString(model.SideData.Race, arialFont, yellow, 32 * model.LineLength, 20);
-                g.DrawString("Health: ", arialFont, brown, 32 * model.LineLength, 40);
-                g.DrawString(model.SideData.Health.ToString() + '/' + model.SideData.MaxHealth.ToString(), arialFont, gray, 32 * model.LineLength + g.MeasureString("Health: ", arialFont).Width, 40);
-                g.DrawString("Mana: ", arialFont, brown, 32 * model.LineLength, 60);
-                g.DrawString(model.SideData.Magic.ToString() + '/' + model.SideData.MaxMagic.ToString(), arialFont, gray, 32 * model.LineLength + g.MeasureString("Mana: ", arialFont).Width, 60);
-                g.DrawString("AC: ", arialFont, brown, 32 * model.LineLength, 80);
-                g.DrawString(model.SideData.ArmourClass, arialFont, gray, 32 * model.LineLength + g.MeasureString("AC: ", arialFont).Width, 80);
-                g.DrawString("EV: ", arialFont, brown, 32 * model.LineLength, 100);
-                g.DrawString(model.SideData.Evasion, arialFont, gray, 32 * model.LineLength + g.MeasureString("EV: ", arialFont).Width, 100);
-                g.DrawString("SH: ", arialFont, brown, 32 * model.LineLength, 120);
-                g.DrawString(model.SideData.Shield, arialFont, gray, 32 * model.LineLength + g.MeasureString("SH: ", arialFont).Width, 120);
-                g.DrawString("XL: ", arialFont, brown, 32 * model.LineLength, 140);
-                g.DrawString(model.SideData.ExperienceLevel, arialFont, gray, 32 * model.LineLength + g.MeasureString("XL: ", arialFont).Width, 140);
-                g.DrawString(" Next: ", arialFont, brown, 32 * model.LineLength + g.MeasureString("XL: " + model.SideData.ExperienceLevel, arialFont).Width, 140);
-                g.DrawString(model.SideData.NextLevel, arialFont, gray, 32 * model.LineLength + g.MeasureString("XL: " + model.SideData.ExperienceLevel + " Next: ", arialFont).Width, 140);
-                g.DrawString("Noise:", arialFont, brown, 32 * model.LineLength, 160);
+                g.DrawString(model.SideData.Name, font, yellow, 32 * model.LineLength, lineCount * lineHeight);
+                lineCount++;
+                g.DrawString(model.SideData.Race, font, yellow, 32 * model.LineLength, lineCount * lineHeight);
+                lineCount++;
+                g.WriteSideDataInfo("Health: ", model.SideData.Health.ToString() + '/' + model.SideData.MaxHealth.ToString(), font, 32 * model.LineLength, lineCount * lineHeight);
+                g.DrawPercentageBar(model.SideData.Health, model.SideData.MaxHealth, Color.Green, 32 * (model.LineLength + 8), lineCount * lineHeight);
+                lineCount++;
+                g.WriteSideDataInfo("Mana: ", model.SideData.Magic.ToString() + '/' + model.SideData.MaxMagic.ToString(), font, 32 * model.LineLength, lineCount * lineHeight);
+                g.DrawPercentageBar(model.SideData.Magic, model.SideData.MaxMagic, Color.Blue, 32 * (model.LineLength + 8), lineCount * lineHeight);
+                lineCount++;
+                g.WriteSideDataInfo("AC: ", model.SideData.ArmourClass, font, 32 * model.LineLength, lineCount * lineHeight);
+                g.WriteSideDataInfo("Str: ", model.SideData.Strength, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
+                lineCount++;
+                g.WriteSideDataInfo("EV: ", model.SideData.Evasion, font, 32 * model.LineLength, lineCount * lineHeight);
+                g.WriteSideDataInfo("Int: ", model.SideData.Inteligence, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
+                lineCount++;
+                g.WriteSideDataInfo("SH: ", model.SideData.Shield, font, 32 * model.LineLength, lineCount * lineHeight);
+                g.WriteSideDataInfo("Dex: ", model.SideData.Dexterity, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
+                lineCount++;
+                g.WriteSideDataInfo("XL: ", model.SideData.ExperienceLevel, font, 32 * model.LineLength, lineCount * lineHeight);
+                g.WriteSideDataInfo(" Next: ", model.SideData.ExperienceLevel, font, 32 * model.LineLength + g.MeasureString("XL: " + model.SideData.ExperienceLevel, font).Width, lineCount * lineHeight);
+                g.WriteSideDataInfo("Place: ", model.SideData.Place, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
+                lineCount++;
+                g.WriteSideDataInfo("Noise:", "noise here", font, 32 * model.LineLength, lineCount * lineHeight);
+                g.WriteSideDataInfo("Time: ", model.SideData.Time, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
+                lineCount++;
 
-                int increase = 0;
-
-                g.DrawString("Wp: ", arialFont, brown, 32 * model.LineLength, 180);
+                g.WriteSideDataInfo("Wp: ", model.SideData.Weapon.Substring(0, 35), font, 32 * model.LineLength, lineCount * lineHeight);
+                lineCount++;
                 if (model.SideData.Weapon.Length > 39)
                 {
-                    g.DrawString(model.SideData.Weapon.Substring(0, 35), arialFont, gray, 32 * model.LineLength + g.MeasureString("Wp: ", arialFont).Width, 180);
-                    g.DrawString(model.SideData.Weapon.Substring(35), arialFont, gray, 32 * model.LineLength + g.MeasureString("Wp: ", arialFont).Width, 200);
-                    increase += 20;
-
+                    g.DrawString(model.SideData.Weapon.Substring(35), font, gray, 32 * model.LineLength + g.MeasureString("Wp: ", font).Width, lineCount * lineHeight);
+                    lineCount++;
                 }
-                else g.DrawString(model.SideData.Weapon, arialFont, gray, 32 * model.LineLength + g.MeasureString("Wp: ", arialFont).Width, 180);
 
-                g.DrawString("Qv: ", arialFont, brown, 32 * model.LineLength, 200 + increase);
-
+                g.WriteSideDataInfo("Qv: ", model.SideData.Quiver.Substring(0, 35), font, 32 * model.LineLength, lineCount * lineHeight);
+                lineCount++;
                 if (model.SideData.Quiver.Length > 39)
-
                 {
-                    g.DrawString(model.SideData.Quiver.Substring(0, 35), arialFont, gray, 32 * model.LineLength + g.MeasureString("Qv: ", arialFont).Width, 200 + increase);
-                    g.DrawString(model.SideData.Quiver.Substring(35), arialFont, gray, 32 * model.LineLength + g.MeasureString("Qv: ", arialFont).Width, 220 + increase);
-                    increase += 20;
+                    g.DrawString(model.SideData.Quiver.Substring(35), font, gray, 32 * model.LineLength + g.MeasureString("Qv: ", font).Width, lineCount * lineHeight);
+                    lineCount++;
                 }
-                else g.DrawString(model.SideData.Quiver, arialFont, gray, 32 * model.LineLength + g.MeasureString("Qv: ", arialFont).Width, 200 + increase);
 
-                g.DrawString(model.SideData.Statuses1, arialFont, gray, 32 * model.LineLength, 220 + increase);
-                g.DrawString(model.SideData.Statuses2, arialFont, gray, 32 * model.LineLength, 240 + increase);
+                // TODO better status writing
+                g.DrawString(model.SideData.Statuses1, font, gray, 32 * model.LineLength, lineCount * lineHeight);
+                lineCount++;
+                g.DrawString(model.SideData.Statuses2, font, gray, 32 * model.LineLength, lineCount * lineHeight);
+                lineCount++;
 
-
-
-                g.DrawString("Str: ", arialFont, brown, 32 * (model.LineLength + 8), 80);
-                g.DrawString(model.SideData.Strength, arialFont, gray, 32 * (model.LineLength + 8) + g.MeasureString("Str: ", arialFont).Width, 80);
-                g.DrawString("Int: ", arialFont, brown, 32 * (model.LineLength + 8), 100);
-                g.DrawString(model.SideData.Inteligence, arialFont, gray, 32 * (model.LineLength + 8) + g.MeasureString("Int: ", arialFont).Width, 100);
-                g.DrawString("Dex: ", arialFont, brown, 32 * (model.LineLength + 8), 120);
-                g.DrawString(model.SideData.Dexterity, arialFont, gray, 32 * (model.LineLength + 8) + g.MeasureString("Dex: ", arialFont).Width, 120);
-                g.DrawString("Place: ", arialFont, brown, 32 * (model.LineLength + 8), 140);
-                g.DrawString(model.SideData.Place, arialFont, gray, 32 * (model.LineLength + 8) + g.MeasureString("Place: ", arialFont).Width, 140);
-                g.DrawString("Time: ", arialFont, brown, 32 * (model.LineLength + 8), 160);
-                g.DrawString(model.SideData.Time, arialFont, gray, 32 * (model.LineLength + 8) + g.MeasureString("Time: ", arialFont).Width, 160);
-
-
-                Bitmap bar = new Bitmap(250, 16);
-                Graphics temp = Graphics.FromImage(bar);
-                temp.Clear(Color.Gray);
-                g.DrawImage(bar, 32 * (model.LineLength + 8), 40);
-                g.DrawImage(bar, 32 * (model.LineLength + 8), 60);
-                int barLength;
-                if (model.SideData.Health > 0)
-                {
-                    barLength = (int)(250 * ((float)model.SideData.Health / model.SideData.MaxHealth));
-                    Bitmap healthbar = new Bitmap(barLength, 16);
-                    temp = Graphics.FromImage(healthbar);
-                    temp.Clear(Color.Green);
-                    var x = 32 * (model.LineLength + 8);
-                    g.DrawImage(healthbar, x, 40);
-                    //if (barLength != 250 && prevHP - model.SideData.Health > 0)
-                    //{
-                    //    int prevBarLength = (int)(250 * ((float)(prevHP - model.SideData.Health) / model.SideData.Health));
-                    //    Bitmap losthealthbar = new Bitmap(prevBarLength, 16);
-                    //    Graphics.FromImage(losthealthbar).Clear(Color.Red);
-                    //    g.DrawImage(losthealthbar, x + barLength, 40);
-                    //}
-
-                }
-                if (model.SideData.Magic > 0)
-                {
-                    barLength = (int)(250 * ((float)model.SideData.Magic / model.SideData.MaxMagic));
-                    Bitmap mana = new Bitmap(barLength, 16);
-                    temp = Graphics.FromImage(mana);
-                    temp.Clear(Color.Blue);
-                    g.DrawImage(mana, 32 * (model.LineLength + 8), 60);
-                }
             }
 
         }

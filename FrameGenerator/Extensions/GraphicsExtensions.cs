@@ -8,7 +8,7 @@ using System.Text;
 namespace FrameGenerator.Extensions
 {
     public static class GraphicsExtensions
-    {      
+    {
         public static void WriteCharacter(this Graphics g, string coloredCharacter, Font font, float x, float y)
         {
             var brush = new SolidBrush(ColorList.GetColor(coloredCharacter.Substring(1)));
@@ -48,6 +48,39 @@ namespace FrameGenerator.Extensions
                 Bitmap backgroundColorbmp = new Bitmap(font.Height, (int)font.Size);
                 Graphics.FromImage(backgroundColorbmp).Clear(color);
                 g.DrawImage(backgroundColorbmp, x, y);
+            }
+        }
+
+        public static void WriteSideDataInfo(this Graphics g, string title, string info, Font font, float x, float y)
+        {
+            var brown = new SolidBrush(Color.FromArgb(143, 89, 2));
+            var gray = new SolidBrush(Color.FromArgb(186, 189, 182));
+
+            g.DrawString(title, font, brown, x, y);
+            g.DrawString(info, font, gray, x + g.MeasureString(title, font).Width, y);
+        }
+
+        public static void DrawPercentageBar(this Graphics g, int amount, int maxAmount, Color barColor, float x, float y)
+        {
+            Bitmap bar = new Bitmap(250, 16);
+            Graphics temp = Graphics.FromImage(bar);
+            temp.Clear(Color.Gray);
+            g.DrawImage(bar, x, y);
+
+            if (amount > 0)
+            {
+                int barLength = (int)(250 * ((float)amount / maxAmount));
+                bar = new Bitmap(barLength, 16);
+                temp = Graphics.FromImage(bar);
+                temp.Clear(barColor);
+                g.DrawImage(bar, x, y);
+                //if (barLength != 250 && prevHP - model.SideData.Health > 0)
+                //{
+                //    int prevBarLength = (int)(250 * ((float)(prevHP - model.SideData.Health) / model.SideData.Health));
+                //    Bitmap losthealthbar = new Bitmap(prevBarLength, 16);
+                //    Graphics.FromImage(losthealthbar).Clear(Color.Red);
+                //    g.DrawImage(losthealthbar, x + barLength, 40);
+                //}
             }
         }
     }
