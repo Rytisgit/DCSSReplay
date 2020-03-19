@@ -6,63 +6,19 @@ using System.Linq;
 
 namespace FrameGenerator.FileReading
 {
-    class ReadFromFile
+    public static class ReadFromFile
     {
-
-
-        public static Dictionary<string, string> CharacterData()
-
+        public static Dictionary<string, string> GetDictionaryFromFile(string path)
         {
-            var Character = new Dictionary<string, string>();
+            var dict = new Dictionary<string, string>();
 
-            string[] lines = System.IO.File.ReadAllLines(@"..\..\..\Extra\racepng.txt");
+            string[] lines = File.ReadAllLines(path);
 
             for (var i = 0; i < lines.Length; i += 2)
             {
-                Character[lines[i]] = lines[i + 1];
+                dict[lines[i]] = lines[i + 1];
             }
-            return Character;
-        }
-
-        public static Dictionary<string, string> AdditionalTileData()
-
-        {
-            var Character = new Dictionary<string, string>();
-
-            string[] lines = System.IO.File.ReadAllLines(@"..\..\..\Extra\features.txt");
-
-            for (var i = 0; i < lines.Length; i += 2)
-            {
-                Character[lines[i]] = lines[i + 1];
-            }
-            return Character;
-        }
-
-        public static Dictionary<string, string> GetCloudData()
-
-        {
-            var Clouds = new Dictionary<string, string>();
-
-            string[] lines = System.IO.File.ReadAllLines(@"..\..\..\Extra\clouds.txt");
-
-            for (var i = 0; i < lines.Length; i += 2)
-            {
-                Clouds[lines[i]] = lines[i + 1];
-            }
-            return Clouds;
-        }
-        public static Dictionary<string, string> ItemData()
-
-        {
-            var Character = new Dictionary<string, string>();
-
-            string[] lines = System.IO.File.ReadAllLines(@"..\..\..\Extra\items.txt");
-
-            for (var i = 0; i < lines.Length; i += 2)
-            {
-                Character[lines[i]] = lines[i + 1];
-            }
-            return Character;
+            return dict;
         }
 
         public static Dictionary<string, string> GetMonsterData(string gameLocation)
@@ -70,7 +26,7 @@ namespace FrameGenerator.FileReading
         {
             var monster = new Dictionary<string, string>();
 
-            string[] lines = System.IO.File.ReadAllLines(gameLocation + @"\mon-data.h");
+            string[] lines = File.ReadAllLines(gameLocation + @"\mon-data.h");
 
             for (var i = 0; i < lines.Length; i++)
             {
@@ -97,7 +53,8 @@ namespace FrameGenerator.FileReading
 
             return monster;
         }
-        public static Dictionary<string, string[]> Get_Floor_And_Wall_Names_For_Dungeons()
+
+        public static Dictionary<string, string[]> GetFloorAndWallNamesForDungeons()
 
         {
 
@@ -114,8 +71,21 @@ namespace FrameGenerator.FileReading
 
             return floorandwall;
         }
+        
+        public static Dictionary<string, Bitmap> GetBitmapDictionaryFromFolder(string folder)
+        {
+            var dict = new Dictionary<string, Bitmap>();
+            string[] pngFiles = Directory.GetFiles(folder, "*.png*", SearchOption.AllDirectories);
+            foreach (var file in pngFiles)
+            {
+                FileInfo info = new FileInfo(file);
+                Bitmap bitmap = new Bitmap(file);
+                dict[info.Name.Replace(".png", "")] = bitmap;
+            }
+            return dict;
+        }
+    
         public static Dictionary<string, Bitmap> GetCharacterPNG(string gameLocation)
-
         {
 
             var GetCharacterPNG = new Dictionary<string, Bitmap>();
@@ -135,7 +105,6 @@ namespace FrameGenerator.FileReading
         }
 
         public static Dictionary<string, Bitmap> GetMonsterPNG(string gameLocation)
-
         {
 
             var monsterPNG = new Dictionary<string, Bitmap>();
@@ -152,63 +121,6 @@ namespace FrameGenerator.FileReading
             return monsterPNG;
         }
 
-        public static Dictionary<string, Bitmap> GetFloorPNG(string gameLocation)
-
-        {
-
-            var floorpng = new Dictionary<string, Bitmap>();
-            string[] floorpngfiles = Directory.GetFiles(gameLocation + @"\rltiles\dngn\floor", "*.png*", SearchOption.AllDirectories);
-            foreach (var file in floorpngfiles)
-            {
-                FileInfo info = new FileInfo(file);
-                Bitmap bitmap = new Bitmap(file);
-                floorpng[info.Name.Replace(".png", "")] = bitmap;
-            }
-            return floorpng;
-        }
-
-        public static Dictionary<string, Bitmap> GetWallPNG(string gameLocation)
-
-        {
-
-            var wallpng = new Dictionary<string, Bitmap>();
-            string[] wallpngfiles = Directory.GetFiles(gameLocation + @"\rltiles\dngn\wall", "*.png*", SearchOption.AllDirectories);
-            foreach (var file in wallpngfiles)
-            {
-                FileInfo info = new FileInfo(file);
-                Bitmap bitmap = new Bitmap(file);
-                wallpng[info.Name.Replace(".png", "")] = bitmap;
-            }
-            return wallpng;
-        }
-        public static Dictionary<string, Bitmap> GetAllDungeonPNG(string gameLocation)
-
-        {
-
-            var wallpng = new Dictionary<string, Bitmap>();
-            string[] wallpngfiles = Directory.GetFiles(gameLocation + @"\rltiles\dngn", "*.png*", SearchOption.AllDirectories);
-            foreach (var file in wallpngfiles)
-            {
-                FileInfo info = new FileInfo(file);
-                Bitmap bitmap = new Bitmap(file);
-                wallpng[info.Name.Replace(".png", "")] = bitmap;
-            }
-            return wallpng;
-        }
-        public static Dictionary<string, Bitmap> GetAllEffectPNG(string gameLocation)
-
-        {
-
-            var wallpng = new Dictionary<string, Bitmap>();
-            string[] wallpngfiles = Directory.GetFiles(gameLocation + @"\rltiles\effect", "*.png*", SearchOption.AllDirectories);
-            foreach (var file in wallpngfiles)
-            {
-                FileInfo info = new FileInfo(file);
-                Bitmap bitmap = new Bitmap(file);
-                wallpng[info.Name.Replace(".png", "")] = bitmap;
-            }
-            return wallpng;
-        }
         public static Dictionary<string, Bitmap> ItemsPNG(string gameLocation)
 
         {
@@ -225,7 +137,5 @@ namespace FrameGenerator.FileReading
             }
             return wallpng;
         }
-
-
     }
 }
