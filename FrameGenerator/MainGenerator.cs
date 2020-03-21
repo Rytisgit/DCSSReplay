@@ -250,27 +250,27 @@ namespace FrameGenerator
                 lineCount++;
                 g.DrawString(model.SideData.Race, font, yellow, 32 * model.LineLength, lineCount * lineHeight);
                 lineCount++;
-                g.WriteSideDataInfo("Health: ", model.SideData.Health.ToString() + '/' + model.SideData.MaxHealth.ToString(), font, 32 * model.LineLength, lineCount * lineHeight);
-                g.DrawPercentageBar(model.SideData.Health, model.SideData.MaxHealth, Color.Green, 32 * (model.LineLength + 8), lineCount * lineHeight);
+                g.WriteSideDataInfo("Health: ", model.SideData.Health.ToString() + '/' + model.SideData.MaxHealth.ToString(), font, 32 * model.LineLength, lineCount * lineHeight)
+                .DrawPercentageBar(model.SideData.Health, model.SideData.MaxHealth, Color.Green, 32 * (model.LineLength + 8), lineCount * lineHeight);
                 lineCount++;
-                g.WriteSideDataInfo("Mana: ", model.SideData.Magic.ToString() + '/' + model.SideData.MaxMagic.ToString(), font, 32 * model.LineLength, lineCount * lineHeight);
-                g.DrawPercentageBar(model.SideData.Magic, model.SideData.MaxMagic, Color.Blue, 32 * (model.LineLength + 8), lineCount * lineHeight);
+                g.WriteSideDataInfo("Mana: ", model.SideData.Magic.ToString() + '/' + model.SideData.MaxMagic.ToString(), font, 32 * model.LineLength, lineCount * lineHeight)
+                .DrawPercentageBar(model.SideData.Magic, model.SideData.MaxMagic, Color.Blue, 32 * (model.LineLength + 8), lineCount * lineHeight);
                 lineCount++;
-                g.WriteSideDataInfo("AC: ", model.SideData.ArmourClass, font, 32 * model.LineLength, lineCount * lineHeight);
-                g.WriteSideDataInfo("Str: ", model.SideData.Strength, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
+                g.WriteSideDataInfo("AC: ", model.SideData.ArmourClass, font, 32 * model.LineLength, lineCount * lineHeight)
+                .WriteSideDataInfo("Str: ", model.SideData.Strength, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
                 lineCount++;
-                g.WriteSideDataInfo("EV: ", model.SideData.Evasion, font, 32 * model.LineLength, lineCount * lineHeight);
-                g.WriteSideDataInfo("Int: ", model.SideData.Inteligence, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
+                g.WriteSideDataInfo("EV: ", model.SideData.Evasion, font, 32 * model.LineLength, lineCount * lineHeight)
+                .WriteSideDataInfo("Int: ", model.SideData.Inteligence, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
                 lineCount++;
-                g.WriteSideDataInfo("SH: ", model.SideData.Shield, font, 32 * model.LineLength, lineCount * lineHeight);
-                g.WriteSideDataInfo("Dex: ", model.SideData.Dexterity, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
+                g.WriteSideDataInfo("SH: ", model.SideData.Shield, font, 32 * model.LineLength, lineCount * lineHeight)
+                .WriteSideDataInfo("Dex: ", model.SideData.Dexterity, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
                 lineCount++;
-                g.WriteSideDataInfo("XL: ", model.SideData.ExperienceLevel, font, 32 * model.LineLength, lineCount * lineHeight);
-                g.WriteSideDataInfo(" Next: ", model.SideData.ExperienceLevel, font, 32 * model.LineLength + g.MeasureString("XL: " + model.SideData.ExperienceLevel, font).Width, lineCount * lineHeight);
-                g.WriteSideDataInfo("Place: ", model.SideData.Place, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
+                g.WriteSideDataInfo("XL: ", model.SideData.ExperienceLevel, font, 32 * model.LineLength, lineCount * lineHeight)
+                .WriteSideDataInfo(" Next: ", model.SideData.ExperienceLevel, font, 32 * model.LineLength + g.MeasureString("XL: " + model.SideData.ExperienceLevel, font).Width, lineCount * lineHeight)
+                .WriteSideDataInfo("Place: ", model.SideData.Place, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
                 lineCount++;
-                g.WriteSideDataInfo("Noise:", "noise here", font, 32 * model.LineLength, lineCount * lineHeight);
-                g.WriteSideDataInfo("Time: ", model.SideData.Time, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
+                g.WriteSideDataInfo("Noise:", "noise here", font, 32 * model.LineLength, lineCount * lineHeight)
+                .WriteSideDataInfo("Time: ", model.SideData.Time, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
                 lineCount++;
 
                 g.WriteSideDataInfo("Wp: ", model.SideData.Weapon.Substring(0, 35), font, 32 * model.LineLength, lineCount * lineHeight);
@@ -299,315 +299,34 @@ namespace FrameGenerator
 
         }
 
-        public void DrawTiles(Graphics g, Model model, float x, float y, int j, float resize)
+        public void DrawTiles(Graphics g, Model model, float startX, float startY, int startIndex, float resize)
 
         {
             var dict = new Dictionary<string, string>();//logging
-            string OnlyRace = model.SideData.Race.Substring(0, 6);
+            string characterRace = model.SideData.Race.Substring(0, 6);
 
-            string[] tempo = model.SideData.Place.Split(':');
-            if (!_floorandwall.TryGetValue(tempo[0].ToUpper(), out var fnw)) return;
-            // Console.WriteLine(fnw[0] + " " + fnw[1]);
-            if (!_wallpng.TryGetValue(fnw[0], out var wall)) return;
+            string[] location = model.SideData.Place.Split(':');
 
-            if (!_floorpng.TryGetValue(fnw[1], out var floor)) return;
-            int i = 1;
+            if (!_floorandwall.TryGetValue(location[0].ToUpper(), out var CurrentLocationFloorAndWallName)) return;
 
-            for (; j < model.TileNames.Length; j++)
+            if (!_wallpng.TryGetValue(CurrentLocationFloorAndWallName[0], out var wall)) return;
+            if (!_floorpng.TryGetValue(CurrentLocationFloorAndWallName[1], out var floor)) return;
+
+            var currentTileX = startX;
+            var currentTileY = startY;
+            if (startIndex == 0) currentTileY -= 32 * resize;
+
+            for (int i = startIndex; i < model.TileNames.Length; i++)
             {
-                var tile = model.TileNames[j];
-                if (tile == "#BLUE")
-                {
-                    g.DrawImage(wall, x, y, wall.Width * resize, wall.Height * resize);
-                    var blueTint = new SolidBrush(Color.FromArgb(150, 0, 0, 0));
-                    g.FillRectangle(blueTint, x, y, wall.Width * resize, wall.Height * resize);
-                }
-                else if (tile[0] == '#' && !tile.Equals("#LIGHTCYAN"))
-                {
-                    g.DrawImage(wall, x, y, wall.Width * resize, wall.Height * resize);
-
-                }
-
-                else if (tile == ".BLUE")
-                {
-                    g.DrawImage(floor, x, y, floor.Width * resize, floor.Height * resize);
-                    var blueTint = new SolidBrush(Color.FromArgb(150, 0, 0, 0));
-                    g.FillRectangle(blueTint, x, y, floor.Width * resize, floor.Height * resize);
-                }
-                else if (tile[0] == '.')
-                {
-                    g.DrawImage(floor, x, y, floor.Width * resize, floor.Height * resize);
-                }
-
-                else if (tile == "*BLUE")
-                {
-                    g.DrawImage(wall, x, y, wall.Width * resize, wall.Height * resize);
-                    var blueTint = new SolidBrush(Color.FromArgb(40, 30, 30, 200));
-                    g.FillRectangle(blueTint, x, y, wall.Width * resize, wall.Height * resize);
-
-
-                }
-                else if (tile == ",BLUE")
-                {
-                    g.DrawImage(floor, x, y, floor.Width * resize, floor.Height * resize);
-                    var blueTint = new SolidBrush(Color.FromArgb(40, 20, 20, 200));
-                    g.FillRectangle(blueTint, x, y, floor.Width * resize, floor.Height * resize);
-                }
-
+                if (i % model.LineLength != 0)
+                    currentTileX += 32 * resize;
                 else
                 {
-                    if (_monsterdata.ContainsKey(tile))
-                    {
-                        string nam = _monsterdata[tile];
-
-                        if (nam == "roxanne" && _monsterpng.TryGetValue(nam, out Bitmap mnstr))
-                        {
-
-                            g.DrawImage(floor, x, y, floor.Width * resize, floor.Height * resize);
-                            g.DrawImage(mnstr, x, y, mnstr.Width * resize, mnstr.Height * resize);
-                            var blueTint = new SolidBrush(Color.FromArgb(200, 0, 0, 0));
-                            g.FillRectangle(blueTint, x, y, floor.Width * resize, floor.Height * resize);
-
-                        }
-
-                        else if (_monsterpng.TryGetValue(nam, out mnstr))
-                        {
-                            g.DrawImage(floor, x, y, floor.Width * resize, floor.Height * resize);
-                            g.DrawImage(mnstr, x, y, mnstr.Width * resize, mnstr.Height * resize);
-                        }
-                    }
-                    else if (_moretiles.ContainsKey(tile))
-                    {
-                        string nam = _moretiles[tile];
-                        if (_alldngnpng.TryGetValue(nam, out Bitmap chr))
-                        {
-                            g.DrawImage(chr, x, y, chr.Width * resize, chr.Height * resize);
-                        }
-
-                    }
-                    else if (_cloudtiles.ContainsKey(tile))
-                    {
-                        bool drawn = false;
-                        g.DrawImage(floor, x, y, floor.Width * resize, floor.Height * resize);
-                        //special rules first
-                        if (model.SideData.Statuses1.Contains("Torna") || model.SideData.Statuses2.Contains("Torna"))//tornado override
-                        {
-                            var t1Colors = new List<string>() {
-                                Enum.GetName(typeof(ColorList2), ColorList2.LIGHTRED),
-                                Enum.GetName(typeof(ColorList2), ColorList2.LIGHTCYAN),
-                                Enum.GetName(typeof(ColorList2), ColorList2.LIGHTBLUE),
-                                Enum.GetName(typeof(ColorList2), ColorList2.WHITE) };
-                            var t2Colors = new List<string>() {
-                                Enum.GetName(typeof(ColorList2), ColorList2.RED),
-                                Enum.GetName(typeof(ColorList2), ColorList2.CYAN),
-                                Enum.GetName(typeof(ColorList2), ColorList2.BLUE),
-                                Enum.GetName(typeof(ColorList2), ColorList2.LIGHTGREY) };
-                            foreach (var color in t1Colors)
-                            {
-                                if (tile.Contains(color))
-                                {
-                                    if (_alleffects.TryGetValue("tornado1", out Bitmap bmp))
-                                    {
-                                        g.DrawImage(bmp, x, y, bmp.Width * resize, bmp.Height * resize);
-                                    }
-                                }
-
-                            }
-                            foreach (var color in t2Colors)
-                            {
-                                if (tile.Contains(color))
-                                {
-                                    if (_alleffects.TryGetValue("tornado2", out Bitmap bmp))
-                                    {
-                                        g.DrawImage(bmp, x, y, bmp.Width * resize, bmp.Height * resize);
-                                    }
-                                }
-
-                            }
-                        }
-                        else if (model.SideData.Place.Contains("Salt"))
-                        {
-                            var colors = new List<string>() { Enum.GetName(typeof(ColorList2), ColorList2.LIGHTGREY), Enum.GetName(typeof(ColorList2), ColorList2.WHITE) };
-                            if (tile[0].Equals('§'))
-                            {
-                                foreach (var color in colors)
-                                {
-                                    if (tile.Contains(color))
-                                    {
-                                        if (_alleffects.TryGetValue("cloud_grey_smoke", out Bitmap bmp))
-                                        {
-                                            g.DrawImage(bmp, x, y, bmp.Width * resize, bmp.Height * resize);
-                                            drawn = true;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        else if (model.SideData.Race.Contains("of Qazlal"))
-                        {
-
-                            var colors = new List<string>() { Enum.GetName(typeof(ColorList2), ColorList2.LIGHTGREY), Enum.GetName(typeof(ColorList2), ColorList2.DARKGREY) };
-                            var colors2 = new List<string>() { Enum.GetName(typeof(ColorList2), ColorList2.GREEN) };
-                            if (tile[0].Equals('§'))
-                            {
-                                foreach (var color in colors)
-                                {
-                                    if (tile.Contains(color))
-                                    {
-                                        if (_alleffects.TryGetValue("cloud_storm2", out Bitmap bmp))
-                                        {
-                                            g.DrawImage(bmp, x, y, bmp.Width * resize, bmp.Height * resize);
-                                            drawn = true;
-                                        }
-                                    }
-                                }
-                            }
-                            var durations = new List<char>() { '°', '○', '☼', '§' };
-                            int dur = 0;
-                            for (int c = 0; c < durations.Count; c++)
-                            {
-                                if (tile[0] == durations[c])
-                                {
-                                    dur = c;
-                                }
-                            }
-                            foreach (var color in colors2)
-                            {
-                                if (tile.Contains(color))
-                                {
-                                    if (_alleffects.TryGetValue("cloud_dust" + dur.ToString(), out Bitmap bmp))
-                                    {
-                                        g.DrawImage(bmp, x, y, bmp.Width * resize, bmp.Height * resize);
-                                        drawn = true;
-                                    }
-                                }
-                            }
-                        }
-                        else if (!model.MonsterData[0].empty && model.MonsterData[0].MonsterTextRaw.Contains("catob") ||
-                            !model.MonsterData[1].empty && model.MonsterData[1].MonsterTextRaw.Contains("catob") ||
-                            !model.MonsterData[2].empty && model.MonsterData[2].MonsterTextRaw.Contains("catob") ||
-                            !model.MonsterData[3].empty && model.MonsterData[3].MonsterTextRaw.Contains("catob"))
-                        {
-                            if (tile.Equals("§WHITE"))
-                            {
-                                if (_alleffects.TryGetValue("cloud_calc_dust2", out Bitmap bmp))
-                                {
-                                    g.DrawImage(bmp, x, y, bmp.Width * resize, bmp.Height * resize);
-                                    drawn = true;
-                                }
-
-                            }
-                        }
-                        else if (model.SideData.Place.Contains("Shoal"))
-                        {
-                            var colors = new List<string>() { Enum.GetName(typeof(ColorList2), ColorList2.DARKGREY) };
-                            if (tile[0].Equals('§'))
-                            {
-                                foreach (var color in colors)
-                                {
-                                    if (tile.Contains(color))
-                                    {
-                                        if (_alleffects.TryGetValue("ink_full", out Bitmap bmp))
-                                        {
-                                            g.DrawImage(bmp, x, y, bmp.Width * resize, bmp.Height * resize);
-                                            drawn = true;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        else if (model.SideData.Place.Contains("Pand"))//TODO: CHeck For holy enemies?
-                        {
-                            if (tile[0].Equals("§WHITE"))
-                            {
-                                if (_alleffects.TryGetValue("cloud_yellow_smoke", out Bitmap bmp))
-                                {
-                                    g.DrawImage(bmp, x, y, bmp.Width * resize, bmp.Height * resize);
-                                    drawn = true;
-                                }
-
-                            }
-                        }
-                        else if (model.SideData.Race.Contains("of Wu Jian"))
-                        {
-                            var colors = new List<string>() { Enum.GetName(typeof(ColorList2), ColorList2.WHITE), Enum.GetName(typeof(ColorList2), ColorList2.YELLOW) };
-                            var durations = new List<char>() { '°', '○', '☼', '§' };
-                            int dur = 0;
-                            for (int c = 0; c < durations.Count; c++)
-                            {
-                                if (tile[0] == durations[c])
-                                {
-                                    dur = c;
-                                }
-                            }
-                            foreach (var color in colors)
-                            {
-                                if (tile.Contains(color))
-                                {
-                                    if (_alleffects.TryGetValue("cloud_gold_dust" + dur.ToString(), out Bitmap bmp))
-                                    {
-                                        g.DrawImage(bmp, x, y, bmp.Width * resize, bmp.Height * resize);
-                                        drawn = true;
-                                    }
-                                }
-                            }
-
-                        }
-
-                        string nam = _cloudtiles[tile];
-                        if (!drawn && _alleffects.TryGetValue(nam, out Bitmap chr))
-                        {
-                            g.DrawImage(chr, x, y, chr.Width * resize, chr.Height * resize);
-                        }
-
-                    }
-                    else if (tile[0] == '@')
-                    {
-
-
-                        if (_characterdata.ContainsKey(OnlyRace))
-                        {
-                            string nam = _characterdata[OnlyRace];
-                            if (_characterpng.TryGetValue(nam, out Bitmap chr))
-                            {
-                                g.DrawImage(floor, x, y, floor.Width * resize, floor.Height * resize);
-                                g.DrawImage(chr, x, y, chr.Width * resize, chr.Height * resize);
-                            }
-
-                        }
-
-                    }
-                    else if (_itemdata.ContainsKey(tile))
-                    {
-                        string nam = _itemdata[tile];
-                        if (_itempng.TryGetValue(nam, out Bitmap chr))
-                        {
-                            g.DrawImage(floor, x, y, floor.Width * resize, floor.Height * resize);
-                            g.DrawImage(chr, x, y, chr.Width * resize, chr.Height * resize);
-                        }
-
-                    }
-                    else if (tile[0] != ' ')
-                    {
-                        if (!dict.ContainsKey(tile))
-                        {
-                            dict.Add(tile, "");
-                        }
-                        var Color = model.ColorList.GetType().GetField(tile.Substring(1)).GetValue(model.ColorList);
-                        g.DrawString(tile[0].ToString(), new Font("Courier New", 16), (SolidBrush)Color, x, y);
-                    }
-
-
-
+                    currentTileX = 0;
+                    currentTileY += 32 * resize;
                 }
-                x += 32 * resize;
-                if (i == model.LineLength)
-                {
-                    i = 0;
-                    x = 0;
-                    y += 32 * resize;
-                }
-                i++;
+
+                DrawCurrentTile(g, model, resize, dict, characterRace, wall, floor, currentTileX, currentTileY, model.TileNames[i]);
             }
 
             if (dict.Count < 10)
@@ -623,6 +342,252 @@ namespace FrameGenerator
                     Console.WriteLine();
                 }
 
+            }
+        }
+
+        private void DrawCurrentTile(Graphics g, Model model, float resize, Dictionary<string, string> dict, string OnlyRace, Bitmap wall, Bitmap floor, float x, float y, string tile)
+        {
+            if(g.TryDrawWallOrFloor(tile, wall, floor, x, y)) return;
+
+            if (_monsterdata.ContainsKey(tile))
+            {
+                string nam = _monsterdata[tile];
+
+                if (nam == "roxanne" && _monsterpng.TryGetValue(nam, out Bitmap mnstr))
+                {
+
+                    g.DrawImage(floor, x, y, floor.Width * resize, floor.Height * resize);
+                    g.DrawImage(mnstr, x, y, mnstr.Width * resize, mnstr.Height * resize);
+                    var blueTint = new SolidBrush(Color.FromArgb(200, 0, 0, 0));
+                    g.FillRectangle(blueTint, x, y, floor.Width * resize, floor.Height * resize);
+
+                }
+
+                else if (_monsterpng.TryGetValue(nam, out mnstr))
+                {
+                    g.DrawImage(floor, x, y, floor.Width * resize, floor.Height * resize);
+                    g.DrawImage(mnstr, x, y, mnstr.Width * resize, mnstr.Height * resize);
+                }
+            }
+            else if (_moretiles.ContainsKey(tile))
+            {
+                string nam = _moretiles[tile];
+                if (_alldngnpng.TryGetValue(nam, out Bitmap chr))
+                {
+                    g.DrawImage(chr, x, y, chr.Width * resize, chr.Height * resize);
+                }
+
+            }
+            else if (_cloudtiles.ContainsKey(tile))
+            {
+                bool drawn = false;
+                g.DrawImage(floor, x, y, floor.Width * resize, floor.Height * resize);
+                //special rules first
+                if (model.SideData.Statuses1.Contains("Torna") || model.SideData.Statuses2.Contains("Torna"))//tornado override
+                {
+                    var t1Colors = new List<string>() {
+                                Enum.GetName(typeof(ColorList2), ColorList2.LIGHTRED),
+                                Enum.GetName(typeof(ColorList2), ColorList2.LIGHTCYAN),
+                                Enum.GetName(typeof(ColorList2), ColorList2.LIGHTBLUE),
+                                Enum.GetName(typeof(ColorList2), ColorList2.WHITE) };
+                    var t2Colors = new List<string>() {
+                                Enum.GetName(typeof(ColorList2), ColorList2.RED),
+                                Enum.GetName(typeof(ColorList2), ColorList2.CYAN),
+                                Enum.GetName(typeof(ColorList2), ColorList2.BLUE),
+                                Enum.GetName(typeof(ColorList2), ColorList2.LIGHTGREY) };
+                    foreach (var color in t1Colors)
+                    {
+                        if (tile.Contains(color))
+                        {
+                            if (_alleffects.TryGetValue("tornado1", out Bitmap bmp))
+                            {
+                                g.DrawImage(bmp, x, y, bmp.Width * resize, bmp.Height * resize);
+                            }
+                        }
+
+                    }
+                    foreach (var color in t2Colors)
+                    {
+                        if (tile.Contains(color))
+                        {
+                            if (_alleffects.TryGetValue("tornado2", out Bitmap bmp))
+                            {
+                                g.DrawImage(bmp, x, y, bmp.Width * resize, bmp.Height * resize);
+                            }
+                        }
+
+                    }
+                }
+                else if (model.SideData.Place.Contains("Salt"))
+                {
+                    var colors = new List<string>() { Enum.GetName(typeof(ColorList2), ColorList2.LIGHTGREY), Enum.GetName(typeof(ColorList2), ColorList2.WHITE) };
+                    if (tile[0].Equals('§'))
+                    {
+                        foreach (var color in colors)
+                        {
+                            if (tile.Contains(color))
+                            {
+                                if (_alleffects.TryGetValue("cloud_grey_smoke", out Bitmap bmp))
+                                {
+                                    g.DrawImage(bmp, x, y, bmp.Width * resize, bmp.Height * resize);
+                                    drawn = true;
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (model.SideData.Race.Contains("of Qazlal"))
+                {
+
+                    var colors = new List<string>() { Enum.GetName(typeof(ColorList2), ColorList2.LIGHTGREY), Enum.GetName(typeof(ColorList2), ColorList2.DARKGREY) };
+                    var colors2 = new List<string>() { Enum.GetName(typeof(ColorList2), ColorList2.GREEN) };
+                    if (tile[0].Equals('§'))
+                    {
+                        foreach (var color in colors)
+                        {
+                            if (tile.Contains(color))
+                            {
+                                if (_alleffects.TryGetValue("cloud_storm2", out Bitmap bmp))
+                                {
+                                    g.DrawImage(bmp, x, y, bmp.Width * resize, bmp.Height * resize);
+                                    drawn = true;
+                                }
+                            }
+                        }
+                    }
+                    var durations = new List<char>() { '°', '○', '☼', '§' };
+                    int dur = 0;
+                    for (int c = 0; c < durations.Count; c++)
+                    {
+                        if (tile[0] == durations[c])
+                        {
+                            dur = c;
+                        }
+                    }
+                    foreach (var color in colors2)
+                    {
+                        if (tile.Contains(color))
+                        {
+                            if (_alleffects.TryGetValue("cloud_dust" + dur.ToString(), out Bitmap bmp))
+                            {
+                                g.DrawImage(bmp, x, y, bmp.Width * resize, bmp.Height * resize);
+                                drawn = true;
+                            }
+                        }
+                    }
+                }
+                else if (!model.MonsterData[0].empty && model.MonsterData[0].MonsterTextRaw.Contains("catob") ||
+                    !model.MonsterData[1].empty && model.MonsterData[1].MonsterTextRaw.Contains("catob") ||
+                    !model.MonsterData[2].empty && model.MonsterData[2].MonsterTextRaw.Contains("catob") ||
+                    !model.MonsterData[3].empty && model.MonsterData[3].MonsterTextRaw.Contains("catob"))
+                {
+                    if (tile.Equals("§WHITE"))
+                    {
+                        if (_alleffects.TryGetValue("cloud_calc_dust2", out Bitmap bmp))
+                        {
+                            g.DrawImage(bmp, x, y, bmp.Width * resize, bmp.Height * resize);
+                            drawn = true;
+                        }
+
+                    }
+                }
+                else if (model.SideData.Place.Contains("Shoal"))
+                {
+                    var colors = new List<string>() { Enum.GetName(typeof(ColorList2), ColorList2.DARKGREY) };
+                    if (tile[0].Equals('§'))
+                    {
+                        foreach (var color in colors)
+                        {
+                            if (tile.Contains(color))
+                            {
+                                if (_alleffects.TryGetValue("ink_full", out Bitmap bmp))
+                                {
+                                    g.DrawImage(bmp, x, y, bmp.Width * resize, bmp.Height * resize);
+                                    drawn = true;
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (model.SideData.Place.Contains("Pand"))//TODO: CHeck For holy enemies?
+                {
+                    if (tile[0].Equals("§WHITE"))
+                    {
+                        if (_alleffects.TryGetValue("cloud_yellow_smoke", out Bitmap bmp))
+                        {
+                            g.DrawImage(bmp, x, y, bmp.Width * resize, bmp.Height * resize);
+                            drawn = true;
+                        }
+
+                    }
+                }
+                else if (model.SideData.Race.Contains("of Wu Jian"))
+                {
+                    var colors = new List<string>() { Enum.GetName(typeof(ColorList2), ColorList2.WHITE), Enum.GetName(typeof(ColorList2), ColorList2.YELLOW) };
+                    var durations = new List<char>() { '°', '○', '☼', '§' };
+                    int dur = 0;
+                    for (int c = 0; c < durations.Count; c++)
+                    {
+                        if (tile[0] == durations[c])
+                        {
+                            dur = c;
+                        }
+                    }
+                    foreach (var color in colors)
+                    {
+                        if (tile.Contains(color))
+                        {
+                            if (_alleffects.TryGetValue("cloud_gold_dust" + dur.ToString(), out Bitmap bmp))
+                            {
+                                g.DrawImage(bmp, x, y, bmp.Width * resize, bmp.Height * resize);
+                                drawn = true;
+                            }
+                        }
+                    }
+
+                }
+
+                string nam = _cloudtiles[tile];
+                if (!drawn && _alleffects.TryGetValue(nam, out Bitmap chr))
+                {
+                    g.DrawImage(chr, x, y, chr.Width * resize, chr.Height * resize);
+                }
+
+            }
+            else if (tile[0] == '@')
+            {
+
+
+                if (_characterdata.ContainsKey(OnlyRace))
+                {
+                    string nam = _characterdata[OnlyRace];
+                    if (_characterpng.TryGetValue(nam, out Bitmap chr))
+                    {
+                        g.DrawImage(floor, x, y, floor.Width * resize, floor.Height * resize);
+                        g.DrawImage(chr, x, y, chr.Width * resize, chr.Height * resize);
+                    }
+
+                }
+
+            }
+            else if (_itemdata.ContainsKey(tile))
+            {
+                string nam = _itemdata[tile];
+                if (_itempng.TryGetValue(nam, out Bitmap chr))
+                {
+                    g.DrawImage(floor, x, y, floor.Width * resize, floor.Height * resize);
+                    g.DrawImage(chr, x, y, chr.Width * resize, chr.Height * resize);
+                }
+
+            }
+            else if (tile[0] != ' ')
+            {
+                if (!dict.ContainsKey(tile))
+                {
+                    dict.Add(tile, "");
+                }
+                var Color = model.ColorList.GetType().GetField(tile.Substring(1)).GetValue(model.ColorList);
+                g.DrawString(tile[0].ToString(), new Font("Courier New", 16), (SolidBrush)Color, x, y);
             }
         }
     }

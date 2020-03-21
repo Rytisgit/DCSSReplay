@@ -45,22 +45,24 @@ namespace FrameGenerator.Extensions
                 {
                     color = yellow;
                 }
-                Bitmap backgroundColorbmp = new Bitmap(font.Height, (int)font.Size);
+                Bitmap backgroundColorbmp = new Bitmap(font.Height, (int)font.Size);//wrong
                 Graphics.FromImage(backgroundColorbmp).Clear(color);
                 g.DrawImage(backgroundColorbmp, x, y);
             }
         }
 
-        public static void WriteSideDataInfo(this Graphics g, string title, string info, Font font, float x, float y)
+        public static Graphics WriteSideDataInfo(this Graphics g, string title, string info, Font font, float x, float y)
         {
             var brown = new SolidBrush(Color.FromArgb(143, 89, 2));
             var gray = new SolidBrush(Color.FromArgb(186, 189, 182));
 
             g.DrawString(title, font, brown, x, y);
             g.DrawString(info, font, gray, x + g.MeasureString(title, font).Width, y);
+
+            return g;
         }
 
-        public static void DrawPercentageBar(this Graphics g, int amount, int maxAmount, Color barColor, float x, float y)
+        public static Graphics DrawPercentageBar(this Graphics g, int amount, int maxAmount, Color barColor, float x, float y)
         {
             Bitmap bar = new Bitmap(250, 16);
             Graphics temp = Graphics.FromImage(bar);
@@ -82,6 +84,56 @@ namespace FrameGenerator.Extensions
                 //    g.DrawImage(losthealthbar, x + barLength, 40);
                 //}
             }
+
+            return g;
+        }
+
+        public static bool TryDrawWallOrFloor(this Graphics g, string tile, Bitmap wall, Bitmap floor, float x, float y)
+        {
+            if (tile == "#BLUE")
+            {
+                g.DrawImage(wall, x, y, wall.Width, wall.Height);
+                var blueTint = new SolidBrush(Color.FromArgb(150, 0, 0, 0));
+                g.FillRectangle(blueTint, x, y, wall.Width, wall.Height);
+                return true;
+            }
+
+            if (tile[0] == '#' && !tile.Equals("#LIGHTCYAN"))
+            {
+                g.DrawImage(wall, x, y, wall.Width, wall.Height);
+                return true;
+            }
+
+            if (tile == ".BLUE")
+            {
+                g.DrawImage(floor, x, y, floor.Width, floor.Height);
+                var blueTint = new SolidBrush(Color.FromArgb(150, 0, 0, 0));
+                g.FillRectangle(blueTint, x, y, floor.Width, floor.Height);
+                return true;
+            }
+
+            if (tile[0] == '.')
+            {
+                g.DrawImage(floor, x, y, floor.Width, floor.Height);
+                return true;
+            }
+
+             if (tile == "*BLUE")
+            {
+                g.DrawImage(wall, x, y, wall.Width, wall.Height);
+                var blueTint = new SolidBrush(Color.FromArgb(40, 30, 30, 200));
+                g.FillRectangle(blueTint, x, y, wall.Width, wall.Height);
+                return true;
+            }
+            if (tile == ",BLUE")
+            {
+                g.DrawImage(floor, x, y, floor.Width, floor.Height);
+                var blueTint = new SolidBrush(Color.FromArgb(40, 20, 20, 200));
+                g.FillRectangle(blueTint, x, y, floor.Width, floor.Height);
+                return true;
+            }
+
+            return false;
         }
     }
 }
