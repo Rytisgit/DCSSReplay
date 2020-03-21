@@ -303,8 +303,8 @@ namespace FrameGenerator
 
         {
             var dict = new Dictionary<string, string>();//logging
-            string characterRace = model.SideData.Race.Substring(0, 6);
 
+            string characterRace = model.SideData.Race.Substring(0, 6);
             string[] location = model.SideData.Place.Split(':');
 
             if (!_floorandwall.TryGetValue(location[0].ToUpper(), out var CurrentLocationFloorAndWallName)) return;
@@ -314,17 +314,17 @@ namespace FrameGenerator
 
             var currentTileX = startX;
             var currentTileY = startY;
-            if (startIndex == 0) currentTileY -= 32 * resize;
+            if (startIndex == 0) currentTileY -= 32 * resize;//since start of loop begins on a newline we back up one so it isn't one line too low.
 
             for (int i = startIndex; i < model.TileNames.Length; i++)
             {
-                if (i % model.LineLength != 0)
-                    currentTileX += 32 * resize;
-                else
+                if (i % model.LineLength == 0)
                 {
                     currentTileX = 0;
                     currentTileY += 32 * resize;
                 }
+                else
+                    currentTileX += 32 * resize;
 
                 DrawCurrentTile(g, model, resize, dict, characterRace, wall, floor, currentTileX, currentTileY, model.TileNames[i]);
             }
