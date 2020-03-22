@@ -107,20 +107,13 @@ namespace FrameGenerator
                 //g.DrawRectangle(blackPen, rect);
                 float x = 0;
                 float y = 0;
-                int i = 1;
-                int j = 0;
-                for (; j < model.TileNames.Length; j++)
+                for (int j = 0; j < model.LineLength; j++)
                 {
                     g.WriteCharacter(model.TileNames[j], font, x, y);
                     x += 20;
-                    if (i == model.LineLength)
-                    {
-                        break;
-                    }
-                    i++;
                 }
 
-                DrawTiles(g, model, 0, 32, j + 1, resize: 1f);
+                DrawTiles(g, model, 0, 32, model.LineLength, resize: 1f);
             }
 
             return bmp;
