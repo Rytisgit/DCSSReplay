@@ -205,14 +205,14 @@ namespace InputParse
             Model model = new Model();
             model.Layout = LayoutType.MapOnly;
             model.LineLength = FullWidth;
-            var coloredStrings = new string[GameViewWidth * FullHeight];
-            var highlightColorStrings = new string[GameViewWidth * FullHeight];
+            var coloredStrings = new string[FullWidth * FullHeight];
+            var highlightColorStrings = new string[FullWidth * FullHeight];
             var curentChar = 0;
             try
             {
 
                 for (int j = 0; j < FullHeight; j++)
-                    for (int i = 0; i < GameViewWidth; i++)
+                    for (int i = 0; i < FullWidth; i++)
                     {
                         coloredStrings[curentChar] = GetColoredCharacter(characters[i, j]);
                         highlightColorStrings[curentChar] = GetBackgroundColor(characters[i, j]);
