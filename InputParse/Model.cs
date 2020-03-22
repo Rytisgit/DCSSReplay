@@ -30,7 +30,8 @@ namespace InputParse
         WHITE,//15
         WHITE2 = 256
     }
-    public static class Locations
+
+public static class Locations
     {
         public static List<String> locations = new List<String> { "Dungeon","Temple","Orcish Mines","Elven Halls","Lair","Swamp","Shoals","Snake Pit",
     "Spider Nest","Slime Pits","Vaults","Hall of Blades","Crypt","Tomb","Hell","Dis","Gehenna","Cocytus","Tartarus","Zot","Abyss","Pandemonium",
