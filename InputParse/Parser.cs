@@ -1,24 +1,23 @@
 ﻿using System;
 using System.Text;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace InputParse
 {
     public class Parser
     {
-        private static char GetCharacter(Putty.TerminalCharacter character)
-        {
-            return character.Character == 55328 ? ' ' : character.Character;
-        }
-        private static string GetColoredCharacter(Putty.TerminalCharacter character)
-        {
-            return GetCharacter(character) + Enum.GetName(typeof(ColorList2), character.ForegroundPaletteIndex);
-        }
-        private static string GetBackgroundColor(Putty.TerminalCharacter character)
-        {
-            return Enum.GetName(typeof(ColorList2), character.BackgroundPaletteIndex);
-        }
-        public static LayoutType GetLayoutType(Putty.TerminalCharacter[,] characters, out string newlocation)
+        const int FullWidth = 80;
+        const int AlmostFullWidth = 75;
+        const int FullHeight = 24;
+        const int GameViewWidth = 33;
+        const int GameViewHeight = 17;
+
+        private static char GetCharacter(Putty.TerminalCharacter character) => character.Character == 55328 ? ' ' : character.Character;
+        private static string GetColoredCharacter(Putty.TerminalCharacter character) => GetCharacter(character) + Enum.GetName(typeof(ColorList2), character.ForegroundPaletteIndex);
+        private static string GetBackgroundColor(Putty.TerminalCharacter character) => Enum.GetName(typeof(ColorList2), character.BackgroundPaletteIndex);
+
+        private static LayoutType GetLayoutType(Putty.TerminalCharacter[,] characters, out string newlocation)
         {
             StringBuilder place = new StringBuilder();
             bool found = false;
@@ -69,25 +68,18 @@ namespace InputParse
             return LayoutType.TextOnly;
         }
 
-        const int FullWidth = 80;
-        const int AlmostFullWidth = 75;
-        const int FullHeight = 24;
-        const int GameViewWidth = 33;
-        const int GameViewHeight = 17;
         public static Model ParseData(Putty.TerminalCharacter[,] chars)
         {
-            var characters = chars;
-            if (characters == null) return null;
+            if (chars == null) throw new ArgumentNullException("TerminalCharacter array is null");
 
-            var layout = GetLayoutType(characters, out var location);
-            switch (layout)
+            switch (GetLayoutType(chars, out var location))
             {
                 case LayoutType.Normal:
-                    return parseNormalLayout(characters);
+                    return parseNormalLayout(chars);
                 case LayoutType.TextOnly:
-                    return parseTextLayout(characters);
+                    return parseTextLayout(chars);
                 case LayoutType.MapOnly:
-                    return parseMapLayout(characters, location);
+                    return parseMapLayout(chars, location);
             }
             return new Model();
         }
@@ -97,31 +89,26 @@ namespace InputParse
             Model model = new Model();
             model.Layout = LayoutType.Normal;
             model.LineLength = GameViewWidth;
-            var coloredStrings = new string[model.LineLength * GameViewHeight];
-            var highlightColorStrings = new string[model.LineLength * GameViewHeight];
+            var coloredStrings = new string[GameViewWidth * GameViewHeight];
+            var highlightColorStrings = new string[GameViewWidth * GameViewHeight];
             var curentChar = 0;
             try
             {
 
                 for (int j = 0; j < GameViewHeight; j++)
-                    for (int i = 0; i < model.LineLength; i++)
+                    for (int i = 0; i < GameViewWidth; i++)
                     {
                         coloredStrings[curentChar] = GetColoredCharacter(characters[i, j]);
-                        highlightColorStrings[curentChar] = Enum.GetName(typeof(ColorList2), characters[i, j].BackgroundPaletteIndex);
+                        highlightColorStrings[curentChar] = GetBackgroundColor(characters[i, j]);
                         curentChar++;
                     }
+
                 model.TileNames = coloredStrings;
+                model.HighlightColors = highlightColorStrings;
 
                 model.SideData = ParseSideData(characters);
                 
-                model.FullLengthStrings = ParseLogLines(characters); ;
-                model.FullLengthStringColors = new string[6] {
-                    Enum.GetName(typeof(ColorList2), characters[1, 17].ForegroundPaletteIndex),
-                    Enum.GetName(typeof(ColorList2), characters[1, 18].ForegroundPaletteIndex),
-                    Enum.GetName(typeof(ColorList2), characters[1, 19].ForegroundPaletteIndex),
-                    Enum.GetName(typeof(ColorList2), characters[1, 20].ForegroundPaletteIndex),
-                    Enum.GetName(typeof(ColorList2), characters[1, 21].ForegroundPaletteIndex),
-                    Enum.GetName(typeof(ColorList2), characters[1, 22].ForegroundPaletteIndex)};
+                model.LogData = ParseLogLines(characters); 
 
                 model.MonsterData = ParseMonsterDisplay(characters);
             }
@@ -137,62 +124,63 @@ namespace InputParse
             return model;
         }
 
-        private static string[] ParseLogLines(Putty.TerminalCharacter[,] characters)
+        private static LogData[] ParseLogLines(Putty.TerminalCharacter[,] characters)
         {
-            StringBuilder logLine1 = new StringBuilder();
-            StringBuilder logLine2 = new StringBuilder();
-            StringBuilder logLine3 = new StringBuilder();
-            StringBuilder logLine4 = new StringBuilder();
-            StringBuilder logLine5 = new StringBuilder();
-            StringBuilder logLine6 = new StringBuilder();
-            for (int i = 0; i < FullWidth; i++)
+            var loglines = new LogData[6] { new LogData(), new LogData(), new LogData(), new LogData(), new LogData(), new LogData() };
+            StringBuilder logLine = new StringBuilder();
+            var logText = new List<string>();
+            var logBackground = new List<string>();
+            var loglineRow = 17;
+            foreach (var line in loglines)
             {
-                logLine1.Append(GetCharacter(characters[i, 17]));
-                logLine2.Append(GetCharacter(characters[i, 18]));
-                logLine3.Append(GetCharacter(characters[i, 19]));
-                logLine4.Append(GetCharacter(characters[i, 20]));
-                logLine5.Append(GetCharacter(characters[i, 21]));
-                logLine6.Append(GetCharacter(characters[i, 22]));
+                for (int i = 0; i < FullWidth; i++)
+                {
+                    logLine.Append(GetCharacter(characters[i, loglineRow]));
+                }
+                line.LogTextRaw = logLine.ToString();
+                if (line.LogTextRaw.Length > 0)
+                {
+                    line.empty = false;
+                    for (int i = 0; i < line.LogTextRaw.Length; i++)
+                    {
+                        logText.Add(GetColoredCharacter(characters[i, loglineRow]));
+                        logBackground.Add(GetBackgroundColor(characters[i, loglineRow]));
+                    }
+                    line.LogText = logText.ToArray();
+                    line.LogBackground = logBackground.ToArray();
+                    logText.Clear();
+                    logBackground.Clear();
+                }
+                logLine.Clear();
+                loglineRow++;
             }
-            return new string[6] { logLine1.ToString(), logLine2.ToString(), logLine3.ToString(), logLine4.ToString(), logLine5.ToString(), logLine6.ToString() };
+            return loglines;
         }
 
         private static MonsterData[] ParseMonsterDisplay(Putty.TerminalCharacter[,] characters)
         {
-            StringBuilder monsterLine1 = new StringBuilder();
-            StringBuilder monsterLine2 = new StringBuilder();
-            StringBuilder monsterLine3 = new StringBuilder();
-            StringBuilder monsterLine4 = new StringBuilder();
-            string[] monsterLine1Colored = new string[AlmostFullWidth - GameViewWidth - 4];
-            string[] monsterLine2Colored = new string[AlmostFullWidth - GameViewWidth - 4];
-            string[] monsterLine3Colored = new string[AlmostFullWidth - GameViewWidth - 4];
-            string[] monsterLine4Colored = new string[AlmostFullWidth - GameViewWidth - 4];
-            string[] monsterLine1Background = new string[AlmostFullWidth - GameViewWidth - 4];
-            string[] monsterLine2Background = new string[AlmostFullWidth - GameViewWidth - 4];
-            string[] monsterLine3Background = new string[AlmostFullWidth - GameViewWidth - 4];
-            string[] monsterLine4Background = new string[AlmostFullWidth - GameViewWidth - 4];
+            List<MonsterData> monsterDataList = new List<MonsterData>(4);
+            StringBuilder monsterLine = new StringBuilder();
+            List<string> monsterLineColored = new List<string>(AlmostFullWidth - GameViewWidth - 4);
+            List<string> monsterLineBackground = new List<string>(AlmostFullWidth - GameViewWidth - 4);
+
+            var lineOffset = 13;
             int currentChar = 0;
-            for (int i = GameViewWidth + 4; i < AlmostFullWidth; i++, currentChar++)
+            for (int lineIndex = 0; lineIndex < 4; lineIndex++)
             {
-                monsterLine1.Append(GetCharacter(characters[i, 13]));
-                monsterLine2.Append(GetCharacter(characters[i, 14]));
-                monsterLine3.Append(GetCharacter(characters[i, 15]));
-                monsterLine4.Append(GetCharacter(characters[i, 16]));
-                monsterLine1Colored[currentChar] = GetColoredCharacter(characters[i, 13]);
-                monsterLine2Colored[currentChar] = GetColoredCharacter(characters[i, 14]);
-                monsterLine3Colored[currentChar] = GetColoredCharacter(characters[i, 15]);
-                monsterLine4Colored[currentChar] = GetColoredCharacter(characters[i, 16]);
-                monsterLine1Background[currentChar] = GetBackgroundColor(characters[i, 13]);
-                monsterLine2Background[currentChar] = GetBackgroundColor(characters[i, 14]);
-                monsterLine3Background[currentChar] = GetBackgroundColor(characters[i, 15]);
-                monsterLine4Background[currentChar] = GetBackgroundColor(characters[i, 16]);
+                for (int i = GameViewWidth + 4; i < AlmostFullWidth; i++, currentChar++)
+                {
+                    monsterLine.Append(GetCharacter(characters[i, lineIndex + lineOffset]));
+                    monsterLineColored.Add(GetColoredCharacter(characters[i, lineIndex + lineOffset]));
+                    monsterLineBackground.Add(GetBackgroundColor(characters[i, lineIndex + lineOffset]));
+                }
+                monsterDataList.Add(FormatMonsterData(monsterLine.ToString(), monsterLineColored.ToArray(), monsterLineBackground.ToArray()));
+                monsterLine.Clear();
+                monsterLineColored.Clear();
+                monsterLineBackground.Clear();
             }
-            
-            return new MonsterData[4] { 
-                FormatMonsterData(monsterLine1.ToString(), monsterLine1Colored, monsterLine1Background),
-                FormatMonsterData(monsterLine2.ToString(), monsterLine2Colored, monsterLine2Background),
-                FormatMonsterData(monsterLine3.ToString(), monsterLine3Colored, monsterLine3Background),
-                FormatMonsterData(monsterLine4.ToString(), monsterLine4Colored, monsterLine4Background) };
+
+            return monsterDataList.ToArray();
         }
 
         private static MonsterData FormatMonsterData(string monsterLine, string[] monsterLineColored, string[] monsterBackgroundColors)
@@ -217,18 +205,22 @@ namespace InputParse
             Model model = new Model();
             model.Layout = LayoutType.MapOnly;
             model.LineLength = FullWidth;
-            var coloredStrings = new string[model.LineLength * FullHeight];
+            var coloredStrings = new string[FullWidth * FullHeight];
+            var highlightColorStrings = new string[FullWidth * FullHeight];
             var curentChar = 0;
             try
             {
 
                 for (int j = 0; j < FullHeight; j++)
-                    for (int i = 0; i < model.LineLength; i++)
+                    for (int i = 0; i < FullWidth; i++)
                     {
                         coloredStrings[curentChar] = GetColoredCharacter(characters[i, j]);
+                        highlightColorStrings[curentChar] = GetBackgroundColor(characters[i, j]);
                         curentChar++;
                     }
+
                 model.TileNames = coloredStrings;
+                model.HighlightColors = highlightColorStrings;
 
                 model.SideData = new SideData();
                 model.SideData.Place = location;
@@ -251,12 +243,12 @@ namespace InputParse
             Model model = new Model();
             model.Layout = LayoutType.TextOnly;
             model.LineLength = FullWidth;
-            var coloredStrings = new string[model.LineLength * FullHeight];
+            var coloredStrings = new string[FullWidth * FullHeight];
             var curentChar = 0;
             try
             {
                 for (int j = 0; j < FullHeight; j++)
-                    for (int i = 0; i < model.LineLength; i++)
+                    for (int i = 0; i < FullWidth; i++)
                     {
                         coloredStrings[curentChar] = GetColoredCharacter(characters[i, j]);
                         curentChar++;
