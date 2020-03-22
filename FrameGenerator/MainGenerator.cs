@@ -41,7 +41,7 @@ namespace FrameGenerator
             _cloudtiles = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\clouds.txt");
             _itemdata = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\items.txt");
             
-            _floorandwall = ReadFromFile.GetFloorAndWallNamesForDungeons();
+            _floorandwall = ReadFromFile.GetFloorAndWallNamesForDungeons(@"..\..\..\Extra\tilefloor.txt");
 
             _monsterdata = ReadFromFile.GetMonsterData(gameLocation);
 

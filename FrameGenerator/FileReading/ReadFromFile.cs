@@ -54,12 +54,12 @@ namespace FrameGenerator.FileReading
             return monster;
         }
 
-        public static Dictionary<string, string[]> GetFloorAndWallNamesForDungeons()
+        public static Dictionary<string, string[]> GetFloorAndWallNamesForDungeons(string file)
 
         {
 
             var floorandwall = new Dictionary<string, string[]>();
-            string[] lines = System.IO.File.ReadAllLines(@"..\..\..\Extra\tilefloor.txt");
+            string[] lines = File.ReadAllLines(file);
 
             for (var i = 0; i < lines.Length; i += 3)
             {
