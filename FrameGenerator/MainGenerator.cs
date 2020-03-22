@@ -43,7 +43,7 @@ namespace FrameGenerator
             
             _floorandwall = ReadFromFile.GetFloorAndWallNamesForDungeons(@"..\..\..\Extra\tilefloor.txt");
 
-            _monsterdata = ReadFromFile.GetMonsterData(gameLocation);
+            _monsterdata = ReadFromFile.GetMonsterData(gameLocation + @"\mon-data.h");
 
             _floorpng = ReadFromFile.GetBitmapDictionaryFromFolder(gameLocation + @"\rltiles\dngn\floor");
             _wallpng = ReadFromFile.GetBitmapDictionaryFromFolder(gameLocation + @"\rltiles\dngn\wall");

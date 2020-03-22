@@ -21,12 +21,12 @@ namespace FrameGenerator.FileReading
             return dict;
         }
 
-        public static Dictionary<string, string> GetMonsterData(string gameLocation)
+        public static Dictionary<string, string> GetMonsterData(string file)
 
         {
             var monster = new Dictionary<string, string>();
 
-            string[] lines = File.ReadAllLines(gameLocation + @"\mon-data.h");
+            string[] lines = File.ReadAllLines(file);
 
             for (var i = 0; i < lines.Length; i++)
             {
