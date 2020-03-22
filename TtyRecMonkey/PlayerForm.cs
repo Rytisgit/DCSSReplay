@@ -232,9 +232,8 @@ namespace TtyRecMonkey
                     {
                         generating = true;
                         Array.Copy(frame, 0, savedFrame, 0, frame.Length);
-                        if (true)
-                        {
-                            ThreadPool.QueueUserWorkItem(o =>
+#if true
+                        ThreadPool.QueueUserWorkItem(o =>
                             {
                                 try
                                 {
@@ -248,12 +247,10 @@ namespace TtyRecMonkey
                                     generating = false;
                                 }
                             });
-                        }
-                        else
-                        {
+#else //non threaded image generation (slow)
                             generator.GenerateImage(savedFrame);
                             generating = false;
-                        }
+#endif
                     }
                 }
 
