@@ -42,7 +42,6 @@ namespace FrameGenerator
             _itemdata = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\items.txt");
             
             _floorandwall = ReadFromFile.GetFloorAndWallNamesForDungeons(@"..\..\..\Extra\tilefloor.txt");
-
             _monsterdata = ReadFromFile.GetMonsterData(gameLocation + @"\mon-data.h");
 
             _floorpng = ReadFromFile.GetBitmapDictionaryFromFolder(gameLocation + @"\rltiles\dngn\floor");
@@ -97,25 +96,20 @@ namespace FrameGenerator
         private Bitmap DrawMap(Model model)
         {
             Bitmap bmp = new Bitmap(1602, 768, PixelFormat.Format32bppArgb);
-            
-            //Rectangle rect = new Rectangle(0, 0, 1056, 780);
-
+           
             using (Graphics g = Graphics.FromImage(bmp))
             {
                 using (var font = new Font("Courier New", 22))
                 {
-                    //Pen blackPen = new Pen(Color.Black, 2);
-                    //g.FillRectangle(new SolidBrush(Color.Black), rect);
-                    //g.DrawRectangle(blackPen, rect);
                     float x = 0;
                     float y = 0;
-                    for (int j = 0; j < model.LineLength; j++)
+                    for (int j = 0; j < model.LineLength; j++)//write out first line as text
                     {
                         g.WriteCharacter(model.TileNames[j], font, x, y);
                         x += 20;
                     }
 
-                    DrawTiles(g, model, 0, 32, model.LineLength, resize: 1f);
+                    DrawTiles(g, model, 0, 32, model.LineLength, resize: 1f);//draw the rest of the map
                 }
             }
 
@@ -124,41 +118,39 @@ namespace FrameGenerator
 
         private Bitmap DrawTextBox(Model model, Bitmap lastframe)
         {
-            Bitmap temp = new Bitmap(lastframe);
+            Bitmap overlayImage = new Bitmap(lastframe);
 
-            using (Graphics g = Graphics.FromImage(temp)){
-                using (var font = new Font("Courier New", 12)){
-
+            using (Graphics g = Graphics.FromImage(overlayImage))
+            {
+                using (var font = new Font("Courier New", 12))
+                {
                     var darkPen = new Pen(new SolidBrush(Color.FromArgb(255, 125, 98, 60)), 2);
                     Rectangle rect2 = new Rectangle(25, 25, 1000, 430);
                     g.DrawRectangle(darkPen, rect2);
                     g.FillRectangle(new SolidBrush(Color.Black), rect2);
 
                     float x = 50;
-                    float y = 50;
-                    int i = 1;
-                    foreach (var tile in model.TileNames)
+                    float y = 34;
+                    for (int i = 0; i < model.TileNames.Length; i++)
                     {
-                        g.WriteCharacter(tile, font, x, y);
-                        x += 12;
-                        if (i == model.LineLength)
+                        if (i % model.LineLength == 0)//next line
                         {
-                            i = 0;
                             x = 50;
                             y += 16;
                         }
-                        i++;
+                        g.WriteCharacter(model.TileNames[i], font, x, y);
+                        x += 12;
                     }
                 }
             }
 
-            return temp;
+            return overlayImage;
         }
 
         private Bitmap DrawNormal(Model model, int prevHP)
         {
-            Bitmap bmp = new Bitmap(1602, 768, PixelFormat.Format32bppArgb);
-            using (Graphics g = Graphics.FromImage(bmp))
+            Bitmap newFrame = new Bitmap(1602, 768, PixelFormat.Format32bppArgb);
+            using (Graphics g = Graphics.FromImage(newFrame))
             {
                 g.Clear(Color.Black);
 
@@ -168,10 +160,10 @@ namespace FrameGenerator
 
                 DrawMonsterDisplay(g, model);
 
-                DrawLogs(model, g);
+                DrawLogs(g, model);
             }
 
-            return bmp;
+            return newFrame;
         }
 
         private void DrawMonsterDisplay(Graphics graphics, Model model)
@@ -184,7 +176,6 @@ namespace FrameGenerator
                 var x = sideOfTilesX;
                 if (!monsterlist.empty)
                 {
-
                     foreach (var monster in monsterlist.MonsterDisplay)//draw all monsters in 1 line
                     {
                         if (_monsterdata.TryGetValue(monster, out var tileName))
@@ -192,8 +183,9 @@ namespace FrameGenerator
                             if (_monsterpng.TryGetValue(tileName, out var mnstr))
                             {
                                 graphics.DrawImage(mnstr, x, currentLineY, mnstr.Width, mnstr.Height);
-                                x += 32;
                             }
+                            else graphics.WriteCharacter(monster, font, x, currentLineY);//not found write as string
+                            x += 32;
                         }
                     }
                     var otherx = x;
@@ -214,7 +206,7 @@ namespace FrameGenerator
             }
         }
 
-        private static void DrawLogs(Model model, Graphics g)
+        private static void DrawLogs(Graphics g, Model model)
         {
             int y = 544;
             var font = new Font("Courier New", 16);
