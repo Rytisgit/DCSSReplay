@@ -122,29 +122,30 @@ namespace FrameGenerator
         private Bitmap DrawTextBox(Model model, Bitmap lastframe)
         {
             Bitmap temp = new Bitmap(lastframe);
-            using (Graphics g = Graphics.FromImage(temp))
-            {
 
-                var font = new Font("Courier New", 12);
-                Pen darkPen = new Pen(new SolidBrush(Color.FromArgb(255, 125, 98, 60)), 2);
-                Rectangle rect2 = new Rectangle(25, 25, 1000, 430);
-                g.FillRectangle(new SolidBrush(Color.Black), rect2);
-                g.DrawRectangle(darkPen, rect2);
+            using (Graphics g = Graphics.FromImage(temp)){
+                using (var font = new Font("Courier New", 12)){
 
-                float x = 50;
-                float y = 50;
-                int i = 1;
-                foreach (var tile in model.TileNames)
-                {
-                    g.WriteCharacter(tile, font, x, y);
-                    x += 12;
-                    if (i == model.LineLength)
+                    var darkPen = new Pen(new SolidBrush(Color.FromArgb(255, 125, 98, 60)), 2);
+                    Rectangle rect2 = new Rectangle(25, 25, 1000, 430);
+                    g.DrawRectangle(darkPen, rect2);
+                    g.FillRectangle(new SolidBrush(Color.Black), rect2);
+
+                    float x = 50;
+                    float y = 50;
+                    int i = 1;
+                    foreach (var tile in model.TileNames)
                     {
-                        i = 0;
-                        x = 50;
-                        y += 16;
+                        g.WriteCharacter(tile, font, x, y);
+                        x += 12;
+                        if (i == model.LineLength)
+                        {
+                            i = 0;
+                            x = 50;
+                            y += 16;
+                        }
+                        i++;
                     }
-                    i++;
                 }
             }
 
