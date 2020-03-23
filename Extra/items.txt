@@ -381,7 +381,7 @@ cloth
 :LIGHTCYAN
 cloth
 :WHITE
-cloth
+manual1
 |BLACK
 staff03
 |RED
