@@ -163,7 +163,7 @@ long_sword1
 )RED
 spear1
 )GREEN
-staff05
+staff
 )BROWN
 sling1
 )BLUE
@@ -269,7 +269,7 @@ blue_fountain2
 }CYAN
 blue_fountain2
 }LIGHTGREY
-blue_fountain2
+misc_lightning_rod
 }DARKGREY
 blue_fountain2
 }LIGHTRED
@@ -277,7 +277,7 @@ blue_fountain2
 }LIGHTGREEN
 blue_fountain2
 }YELLOW
-blue_fountain2
+misc_lamp
 }LIGHTBLUE
 blue_fountain2
 }LIGHTMAGENTA
@@ -285,7 +285,7 @@ blue_fountain2
 }LIGHTCYAN
 blue_fountain2
 }WHITE
-blue_fountain2
+misc_sack
 /BLACK
 gem_glass
 /RED
