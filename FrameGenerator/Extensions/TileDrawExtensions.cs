@@ -102,7 +102,7 @@ namespace FrameGenerator.Extensions
         {
             if (!itemData.TryGetValue(tile, out var pngName)) return false;
             if (!itemPngs.TryGetValue(pngName, out Bitmap png)) return false;
-
+            //TODO demonic weapon override
             g.DrawImage(floor, x, y, floor.Width, floor.Height);
             g.DrawImage(png, x, y, png.Width, png.Height);
 
