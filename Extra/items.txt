@@ -433,7 +433,7 @@ bread_ration
 %DARKGREY
 bread_ration
 %LIGHTRED
-bread_ration
+chunk
 %LIGHTGREEN
 bread_ration
 %YELLOW
