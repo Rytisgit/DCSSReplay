@@ -98,13 +98,27 @@ namespace FrameGenerator.Extensions
             return true;
         }
 
-        public static bool TryDrawItem(this Graphics g, string tile, Dictionary<string, string> itemData, Dictionary<string, Bitmap> itemPngs, Bitmap floor, float x, float y)
+        public static bool TryDrawItem(this Graphics g, string tile, Dictionary<string, string> itemData, Dictionary<string, Bitmap> itemPngs, Bitmap floor, string location, float x, float y)
         {
             if (!itemData.TryGetValue(tile, out var pngName)) return false;
-            if (!itemPngs.TryGetValue(pngName, out Bitmap png)) return false;
-            //TODO demonic weapon override
-            //TODO if black and background not black means on top of pile and should use background color
+
             g.DrawImage(floor, x, y, floor.Width, floor.Height);
+            
+            var demonicWeaponLocations = new List<string>() { "Hell", "Dis", "Gehenna", "Cocytus", "Tartarus", "Vaults", "Depths"};
+
+            if (tile.Substring(1).Equals(ColorList2.LIGHTRED) && demonicWeaponLocations.Contains(location)) 
+            {
+                if (itemPngs.TryGetValue("demon_blade2", out Bitmap demonBlade)) 
+                {
+                    g.DrawImage(demonBlade, x, y, demonBlade.Width, demonBlade.Height);
+                    return true;
+                }
+            }
+
+            //TODO if black and background not black means on top of pile and should use background color
+
+            if (!itemPngs.TryGetValue(pngName, out Bitmap png)) return false;
+            
             g.DrawImage(png, x, y, png.Width, png.Height);
 
             return true;
