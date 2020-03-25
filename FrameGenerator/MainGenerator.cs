@@ -345,7 +345,7 @@ namespace FrameGenerator
 
             if (g.TryDrawPlayer(tile, _characterdata, _characterpng, floor, OnlyRace, x, y)) return;//TODO player drawing should not be here any more
 
-            if (g.TryDrawItem(tile, _itemdata, _itempng, floor, x, y)) return;
+            if (g.TryDrawItem(tile, _itemdata, _itempng, floor, model.Location, x, y)) return;
 
             else if (tile[0] != ' ')//unhandled tile, write it as a character instead
             {

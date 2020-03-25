@@ -75,7 +75,7 @@ namespace InputParse
             switch (GetLayoutType(chars, out var location))
             {
                 case LayoutType.Normal:
-                    return parseNormalLayout(chars);
+                    return parseNormalLayout(chars, location);
                 case LayoutType.TextOnly:
                     return parseTextLayout(chars);
                 case LayoutType.MapOnly:
@@ -84,9 +84,10 @@ namespace InputParse
             return new Model();
         }
 
-        private static Model parseNormalLayout(Putty.TerminalCharacter[,] characters)
+        private static Model parseNormalLayout(Putty.TerminalCharacter[,] characters, string location)
         {
             Model model = new Model();
+            model.Location = location;
             model.Layout = LayoutType.Normal;
             model.LineLength = GameViewWidth;
             var coloredStrings = new string[GameViewWidth * GameViewHeight];
@@ -203,6 +204,7 @@ namespace InputParse
         private static Model parseMapLayout(Putty.TerminalCharacter[,] characters, string location)
         {
             Model model = new Model();
+            model.Location = location;
             model.Layout = LayoutType.MapOnly;
             model.LineLength = FullWidth;
             var coloredStrings = new string[FullWidth * FullHeight];
