@@ -103,6 +103,7 @@ namespace FrameGenerator.Extensions
             if (!itemData.TryGetValue(tile, out var pngName)) return false;
             if (!itemPngs.TryGetValue(pngName, out Bitmap png)) return false;
             //TODO demonic weapon override
+            //TODO if black and background not black means on top of pile and should use background color
             g.DrawImage(floor, x, y, floor.Width, floor.Height);
             g.DrawImage(png, x, y, png.Width, png.Height);
 
@@ -116,8 +117,9 @@ namespace FrameGenerator.Extensions
             g.DrawImage(floor, x, y, floor.Width, floor.Height);
 
             //check special rules first before drawing normal
+
             var durationLength = new Dictionary<char, int>() { { '°', 0 }, { '○', 1 }, { '☼', 2 }, { '§', 3 } };
-            var duration = new char[4] { '°', '○', '☼', '§' };
+            var durationChar = new char[4] { '°', '○', '☼', '§' };
 
             var tileColor = tile.Substring(1);
 
@@ -179,7 +181,7 @@ namespace FrameGenerator.Extensions
                     Enum.GetName(typeof(ColorList2), ColorList2.LIGHTGREY),
                     Enum.GetName(typeof(ColorList2), ColorList2.DARKGREY) };
 
-                if (tile[0].Equals(duration[3]))
+                if (tile[0].Equals(durationChar[3]))
                 {
                     if (stormColors.Contains(tileColor))
                     {
@@ -204,7 +206,7 @@ namespace FrameGenerator.Extensions
 
             if (monsterData.MonsterIsVisible("catob"))//when catoblepass is on screen, white clouds are calcifiyng
             {
-                if (tile[0].Equals(duration[3]) && tileColor.Equals(Enum.GetName(typeof(ColorList2), ColorList2.WHITE)))
+                if (tile[0].Equals(durationChar[3]) && tileColor.Equals(Enum.GetName(typeof(ColorList2), ColorList2.WHITE)))
                 {
                     if (effectPngs.TryGetValue("cloud_calc_dust2", out Bitmap bmp))
                     {
@@ -217,7 +219,7 @@ namespace FrameGenerator.Extensions
 
             if (sideData.Place.Contains("Shoal"))//in shoals darkgrey clouds are ink
             {
-                if (tile[0].Equals(duration[3]) && tileColor.Equals(Enum.GetName(typeof(ColorList2), ColorList2.DARKGREY)))
+                if (tile[0].Equals(durationChar[3]) && tileColor.Equals(Enum.GetName(typeof(ColorList2), ColorList2.DARKGREY)))
                 {
                     if (effectPngs.TryGetValue("ink_full", out Bitmap bmp))
                     {
@@ -229,7 +231,7 @@ namespace FrameGenerator.Extensions
 
             if (monsterData.MonsterIsVisible("ophan"))//ophans make holy flame
             {
-                if (tile[0].Equals(duration[3]) && tileColor.Equals(Enum.GetName(typeof(ColorList2), ColorList2.WHITE)))
+                if (tile[0].Equals(durationChar[3]) && tileColor.Equals(Enum.GetName(typeof(ColorList2), ColorList2.WHITE)))
                 {
                     if (effectPngs.TryGetValue("cloud_yellow_smoke", out Bitmap bmp))
                     {
