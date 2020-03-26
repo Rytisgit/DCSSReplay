@@ -98,29 +98,45 @@ namespace FrameGenerator.Extensions
             return true;
         }
 
-        public static bool TryDrawItem(this Graphics g, string tile, Dictionary<string, string> itemData, Dictionary<string, Bitmap> itemPngs, Bitmap floor, string location, float x, float y)
+        private static bool FixHighlight(string tile, string backgroundColor, out string correctTile)//if highlighted, returns fixed string
         {
-            if (!itemData.TryGetValue(tile, out var pngName)) return false;
+            if (backgroundColor.Equals(Enum.GetName(typeof(ColorList2), ColorList2.BLACK))) { 
+                correctTile = tile; 
+                return false; 
+            }
+            else { 
+                correctTile = tile[0] + backgroundColor;
+            }
+            return true;
+        }
+
+        public static bool TryDrawItem(this Graphics g, string tile, string background, Dictionary<string, string> itemData, Dictionary<string, Bitmap> itemPngs, Dictionary<string, Bitmap> miscPngs, Bitmap floor, string location, float x, float y)
+        {
+            var isHighlighted = FixHighlight(tile, background, out var correctTile);
+            Bitmap underneathIcon;
+
+            if (!itemData.TryGetValue(correctTile, out var pngName)) return false;
 
             g.DrawImage(floor, x, y, floor.Width, floor.Height);
             
             var demonicWeaponLocations = new List<string>() { "Hell", "Dis", "Gehenna", "Cocytus", "Tartarus", "Vaults", "Depths"};
 
-            if (tile.Substring(1).Equals(ColorList2.LIGHTRED) && demonicWeaponLocations.Contains(location)) 
+            if (correctTile.Substring(1).Equals(Enum.GetName(typeof(ColorList2), ColorList2.LIGHTRED)) && demonicWeaponLocations.Contains(location)) 
             {
                 if (itemPngs.TryGetValue("demon_blade2", out Bitmap demonBlade)) 
                 {
                     g.DrawImage(demonBlade, x, y, demonBlade.Width, demonBlade.Height);
+
+                    if (isHighlighted && miscPngs.TryGetValue("something_under", out underneathIcon)) g.DrawImage(underneathIcon, x, y, underneathIcon.Width, underneathIcon.Height);
                     return true;
                 }
             }
-
-            //TODO if black and background not black means on top of pile and should use background color
 
             if (!itemPngs.TryGetValue(pngName, out Bitmap png)) return false;
             
             g.DrawImage(png, x, y, png.Width, png.Height);
 
+            if(isHighlighted && miscPngs.TryGetValue("something_under", out underneathIcon)) g.DrawImage(underneathIcon, x, y, underneathIcon.Width, underneathIcon.Height);
             return true;
         }
 
