@@ -31,6 +31,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extra", "Extra", "{46E43B1B
 		Extra\items.txt = Extra\items.txt
 		Extra\neg_tloc_hybrid.png = Extra\neg_tloc_hybrid.png
 		Extra\racepng.txt = Extra\racepng.txt
+		SameMonsterRules.txt = SameMonsterRules.txt
 		Extra\tilefloor.txt = Extra\tilefloor.txt
 		Extra\unknown_altar.png = Extra\unknown_altar.png
 		Extra\unknown_potion.png = Extra\unknown_potion.png

@@ -62,6 +62,10 @@ namespace FrameGenerator.Extensions
         {
             if (!monsterData.TryGetValue(tile, out var pngName)) return false;
             if (!monsterPng.TryGetValue(pngName, out Bitmap png)) return false;
+            foreach (var monsterTileName in monsterData)
+            {
+                if (!monsterPng.TryGetValue(monsterTileName.Value, out Bitmap temp)) Console.WriteLine(monsterTileName.Key + " badPngName: " + monsterTileName.Value);
+            }
 
             g.DrawImage(floor, x, y, floor.Width, floor.Height);
             g.DrawImage(png, x, y, png.Width, png.Height);

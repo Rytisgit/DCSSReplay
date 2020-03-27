@@ -3,24 +3,12 @@ hYELLOW exist: hound new: holy_swine
 pWHITE exist: slave new: necromancer
 pLIGHTRED exist: vault_warden new: shapeshifter
 pLIGHTRED exist: vault_warden new: glowing_shapeshifter
-pYELLOW exist: ironbrand_convoker new: demigod
-pLIGHTGREY exist: human new: halfling
-uCOLOUR_UNDEF exist: ugly_thing new: very_ugly_thing
-xBROWN exist: crawling_corpse new: macabre_mass
-RLIGHTCYAN exist: ancestor new: ancestor_knight
-RLIGHTCYAN exist: ancestor new: ancestor_battlemage
-RLIGHTCYAN exist: ancestor new: ancestor_hexer
-WWHITE exist: ghost new: player_ghost
-ZBROWN exist: zombie new: zombie_small
-ZLIGHTGREY exist: skeleton new: skeleton_small
-ZLIGHTBLUE exist: simulacrum new: simulacrum_small
-WMAGENTA exist: shadow new: player_shadow
-8LIGHTGREY exist: statue new: training_dummy
+//TODO player ghosts instead of ghost.png
+ZLIGHTGREY exist: skeleton new: skeleton_small skeleton_humanoid_medium
+ZLIGHTBLUE exist: simulacrum new: simulacrum_small simulacrum_small
 8WHITE exist: saltling new: pillar_of_salt
-8WHITE exist: saltling new: diamond_obelisk
 *LIGHTCYAN exist: starspawn_tentacle_segment new: ball_lightning
 *LIGHTGREEN exist: snaplasher_vine_segment new: lost_soul
-*ETC_MAGIC exist: fulminant_prism new: battlesphere
 DYELLOW exist: golden_dragon new: lernaean_hydra
 eLIGHTBLUE exist: deep_elf_annihilator new: fannar
 FLIGHTCYAN exist: barachi new: prince_ribbit
@@ -34,7 +22,6 @@ oRED exist: lava_orc new: urug
 @BLUE exist: donald new: eustachio
 @GREEN exist: frederick new: maurice
 @LIGHTCYAN exist: terence new: nikola
-XWHITE exist: test_spawner new: test_statue
 
 
 bETC_JEWEL bcolored: butterfly
@@ -72,4 +59,71 @@ DETC_IRON bcolored: serpent_of_hell_dis
 DETC_DEATH bcolored: serpent_of_hell_tartarus
 DETC_ELECTRICITY bcolored: bai_suzhen_dragon
 gCOLOUR_UNDEF bcolored: crazy_yiuf
-{LIGHTGRAY bcolored: sensed_easy
+{LIGHTGRAY bcolored: sensed_easy.
+
+
+BLIGHTRED badPngName: program_bug
+dBROWN badPngName: draconian
+fLIGHTRED badPngName: shambling_mangrove
+hLIGHTGREEN badPngName: howler_monkey
+hMAGENTA badPngName: felid
+oRED badPngName: lava_orc
+pETC_RANDOM badPngName: killer_klown
+rLIGHTGREEN badPngName: river_rat
+rLIGHTRED badPngName: hell_rat
+vRED badPngName: fire_vortex
+vETC_RANDOM badPngName: spatial_vortex
+vYELLOW badPngName: spatial_maelstrom
+vETC_AIR badPngName: twister
+DLIGHTGREEN badPngName: hydra
+ELIGHTCYAN badPngName: elemental_wellspring
+FLIGHTCYAN badPngName: barachi
+HMAGENTA badPngName: mutant_beast
+PGREEN badPngName: plant
+PETC_RANDOM badPngName: demonic_plant
+PDARKGREY badPngName: withered_plant
+PRED badPngName: burning_bush
+PCOLOUR_UNDEF badPngName: toadstool
+PLIGHTGREY badPngName: fungus
+wLIGHTGREEN badPngName: snaplasher_vine
+*LIGHTGREEN badPngName: snaplasher_vine_segment
+wLIGHTCYAN badPngName: starspawn_tentacle
+*LIGHTCYAN badPngName: starspawn_tentacle_segment
+YBLUE badPngName: dire_elephant
+YLIGHTRED badPngName: hellephant
+ZBROWN badPngName: zombie
+ZLIGHTGREY badPngName: skeleton
+ZLIGHTBLUE badPngName: simulacrum
+ZWHITE badPngName: skeleton_large
+ZGREEN badPngName: spectral_thing
+XLIGHTMAGENTA badPngName: kraken
+wLIGHTMAGENTA badPngName: kraken_tentacle
+*LIGHTMAGENTA badPngName: kraken_tentacle_segment
+@WHITE badPngName: player_illusion
+(COLOUR_UNDEF badPngName: dancing_weapon
+(GREEN badPngName: spectral_weapon
+wCOLOUR_UNDEF badPngName: eldritch_tentacle
+*COLOUR_UNDEF badPngName: eldritch_tentacle_segment
+6LIGHTGRAY badPngName: monstrous_demonspawn
+6BLUE badPngName: gelid_demonspawn
+6RED badPngName: infernal_demonspawn
+6MAGENTA badPngName: torturous_demonspawn
+4ETC_RANDOM badPngName: chaos_spawn
+8LIGHTRED badPngName: orange_statue
+8LIGHTGREY badPngName: statue
+*WHITE badPngName: orb_of_destruction
+*ETC_MAGIC badPngName: fulminant_prism
+dCOLOUR_UNDEF badPngName: tiamat
+dLIGHTBLUE badPngName: bai_suzhen
+DETC_FIRE badPngName: serpent_of_hell
+DETC_ICE badPngName: serpent_of_hell_cocytus
+DETC_IRON badPngName: serpent_of_hell_dis
+DETC_DEATH badPngName: serpent_of_hell_tartarus
+DETC_ELECTRICITY badPngName: bai_suzhen_dragon
+iLIGHTMAGENTA badPngName: the_enchantress
+{RED badPngName: sensed
+{GREEN badPngName: sensed_friendly
+{BLUE badPngName: sensed_trivial
+{LIGHTGRAY badPngName: sensed_easy
+{YELLOW badPngName: sensed_tough
+{LIGHTRED badPngName: sensed_nasty
