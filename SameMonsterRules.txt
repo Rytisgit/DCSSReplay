@@ -1,0 +1,75 @@
+eLIGHTRED exist: elf new: deep_elf_elementalist
+hYELLOW exist: hound new: holy_swine
+pWHITE exist: slave new: necromancer
+pLIGHTRED exist: vault_warden new: shapeshifter
+pLIGHTRED exist: vault_warden new: glowing_shapeshifter
+pYELLOW exist: ironbrand_convoker new: demigod
+pLIGHTGREY exist: human new: halfling
+uCOLOUR_UNDEF exist: ugly_thing new: very_ugly_thing
+xBROWN exist: crawling_corpse new: macabre_mass
+RLIGHTCYAN exist: ancestor new: ancestor_knight
+RLIGHTCYAN exist: ancestor new: ancestor_battlemage
+RLIGHTCYAN exist: ancestor new: ancestor_hexer
+WWHITE exist: ghost new: player_ghost
+ZBROWN exist: zombie new: zombie_small
+ZLIGHTGREY exist: skeleton new: skeleton_small
+ZLIGHTBLUE exist: simulacrum new: simulacrum_small
+WMAGENTA exist: shadow new: player_shadow
+8LIGHTGREY exist: statue new: training_dummy
+8WHITE exist: saltling new: pillar_of_salt
+8WHITE exist: saltling new: diamond_obelisk
+*LIGHTCYAN exist: starspawn_tentacle_segment new: ball_lightning
+*LIGHTGREEN exist: snaplasher_vine_segment new: lost_soul
+*ETC_MAGIC exist: fulminant_prism new: battlesphere
+DYELLOW exist: golden_dragon new: lernaean_hydra
+eLIGHTBLUE exist: deep_elf_annihilator new: fannar
+FLIGHTCYAN exist: barachi new: prince_ribbit
+hMAGENTA exist: felid new: natasha
+iLIGHTCYAN exist: spriggan_air_mage new: agnes
+oRED exist: lava_orc new: urug
+@WHITE exist: player_illusion new: josephine
+@LIGHTMAGENTA exist: psyche new: louise
+@YELLOW exist: sigmund new: frances
+@LIGHTRED exist: rupert new: margery
+@BLUE exist: donald new: eustachio
+@GREEN exist: frederick new: maurice
+@LIGHTCYAN exist: terence new: nikola
+XWHITE exist: test_spawner new: test_statue
+
+
+bETC_JEWEL bcolored: butterfly
+pETC_RANDOM bcolored: killer_klown
+uCOLOUR_UNDEF bcolored: ugly_thing
+uCOLOUR_UNDEF bcolored: very_ugly_thing
+vETC_RANDOM bcolored: spatial_vortex
+vETC_AIR bcolored: twister
+DETC_HOLY bcolored: pearl_dragon
+EETC_EARTH bcolored: earth_elemental
+EETC_FIRE bcolored: fire_elemental
+EETC_WATER bcolored: water_elemental
+EETC_AIR bcolored: air_elemental
+EETC_IRON bcolored: iron_elemental
+GETC_GOLD bcolored: golden_eye
+NLIGHTGRAY bcolored: naga_sharpshooter
+PETC_RANDOM bcolored: demonic_plant
+PCOLOUR_UNDEF bcolored: toadstool
+@ETC_FIRE bcolored: hellbinder
+@ETC_SILVER bcolored: cloud_mage
+(COLOUR_UNDEF bcolored: dancing_weapon
+wCOLOUR_UNDEF bcolored: eldritch_tentacle
+*COLOUR_UNDEF bcolored: eldritch_tentacle_segment
+6LIGHTGRAY bcolored: monstrous_demonspawn
+4ETC_RANDOM bcolored: chaos_spawn
+8ETC_ICE bcolored: block_of_ice
+8ETC_ELECTRICITY bcolored: lightning_spire
+&COLOUR_UNDEF bcolored: pandemonium_lord
+*ETC_MAGIC bcolored: fulminant_prism
+*ETC_MAGIC bcolored: battlesphere
+dCOLOUR_UNDEF bcolored: tiamat
+DETC_FIRE bcolored: serpent_of_hell
+DETC_ICE bcolored: serpent_of_hell_cocytus
+DETC_IRON bcolored: serpent_of_hell_dis
+DETC_DEATH bcolored: serpent_of_hell_tartarus
+DETC_ELECTRICITY bcolored: bai_suzhen_dragon
+gCOLOUR_UNDEF bcolored: crazy_yiuf
+{LIGHTGRAY bcolored: sensed_easy
