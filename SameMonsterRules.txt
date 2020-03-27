@@ -1,27 +1,30 @@
-eLIGHTRED exist: elf new: deep_elf_elementalist
-hYELLOW exist: hound new: holy_swine
-pWHITE exist: slave new: necromancer
-pLIGHTRED exist: vault_warden new: shapeshifter
-pLIGHTRED exist: vault_warden new: glowing_shapeshifter
+eLIGHTRED deep_elf_elementalist1
+
+hYELLOW hound ifinlog: holy_swine
+
+pWHITE necromancer ifinlog: slave
+pLIGHTRED exist: vault_warden ifinlog: shapeshifter ifinlog: glowing_shapeshifter
+
 //TODO player ghosts instead of ghost.png
-ZLIGHTGREY exist: skeleton new: skeleton_small skeleton_humanoid_medium
-ZLIGHTBLUE exist: simulacrum new: simulacrum_small simulacrum_small
-8WHITE exist: saltling new: pillar_of_salt
-*LIGHTCYAN exist: starspawn_tentacle_segment new: ball_lightning
-*LIGHTGREEN exist: snaplasher_vine_segment new: lost_soul
-DYELLOW exist: golden_dragon new: lernaean_hydra
-eLIGHTBLUE exist: deep_elf_annihilator new: fannar
-FLIGHTCYAN exist: barachi new: prince_ribbit
-hMAGENTA exist: felid new: natasha
-iLIGHTCYAN exist: spriggan_air_mage new: agnes
-oRED exist: lava_orc new: urug
+
+ZLIGHTGREY skeleton_humanoid_medium
+ZLIGHTBLUE simulacrum_small
+8WHITE pillar_of_salt ifinlog: saltling
+*LIGHTCYAN ball_lightning ifAbyss: starspawn_tentacle_segment
+*LIGHTGREEN lost_soul ifForest STatus: vine_segment_E_NW
+DYELLOW golden_dragon ifSwamp: lernaean_hydra10
+eLIGHTBLUE deep_elf_annihilator ifinlog: fannar
+FLIGHTCYAN prince_ribbit
+hMAGENTA natasha
+iLIGHTCYAN spriggan_air_mage ifinlog: agnes
+oRED urug
 @WHITE exist: player_illusion new: josephine
-@LIGHTMAGENTA exist: psyche new: louise
-@YELLOW exist: sigmund new: frances
-@LIGHTRED exist: rupert new: margery
-@BLUE exist: donald new: eustachio
-@GREEN exist: frederick new: maurice
-@LIGHTCYAN exist: terence new: nikola
+@LIGHTMAGENTA psyche ifinlog: louise
+@YELLOW sigmund ifinlog: frances
+@LIGHTRED rupert ifinlog: margery
+@BLUE eustachio ifinlog: donald 
+@GREEN maurice ifinlog: frederick
+@LIGHTCYAN terence ifinlog: nikola
 
 
 bETC_JEWEL bcolored: butterfly
