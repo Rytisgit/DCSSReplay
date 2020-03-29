@@ -58,14 +58,24 @@ namespace FrameGenerator.Extensions
             return false;
         }
 
-        public static bool TryDrawMonster(this Graphics g, string tile, Dictionary<string, string> monsterData, Dictionary<string, Bitmap> monsterPng, Bitmap floor, float x, float y)
+        public static bool TryDrawMonster(this Graphics g, string tile, string background, Dictionary<string, string> monsterData, Dictionary<string, Bitmap> monsterPng, Dictionary<string, string> overrides, Bitmap floor, float x, float y)
         {
-            if (!monsterData.TryGetValue(tile, out var pngName)) return false;
-            if (!monsterPng.TryGetValue(pngName, out Bitmap png)) return false;
-            foreach (var monsterTileName in monsterData)
+            if (tile.StartsWith("@BL")) return false;//player tile draw override TODO
+            var isHighlighted = FixHighlight(tile, background, out var correctTile);
+            string pngName;
+            if (!overrides.TryGetValue(correctTile, out pngName))
             {
-                if (!monsterPng.TryGetValue(monsterTileName.Value, out Bitmap temp)) Console.WriteLine(monsterTileName.Key + " badPngName: " + monsterTileName.Value);
+                if (!monsterData.TryGetValue(correctTile, out pngName)) return false;
             }
+            //foreach (var item in monsterData)
+            //{
+            //    if (item.Key[0] == '*') Console.WriteLine(item.Key);
+            //}
+            if (!monsterPng.TryGetValue(pngName, out Bitmap png)) return false;
+            //foreach (var monsterTileName in monsterData)
+            //{
+            //    if (!monsterPng.TryGetValue(monsterTileName.Value, out Bitmap temp)) Console.WriteLine(monsterTileName.Key + " badPngName: " + monsterTileName.Value);
+            //}
 
             g.DrawImage(floor, x, y, floor.Width, floor.Height);
             g.DrawImage(png, x, y, png.Width, png.Height);
@@ -75,6 +85,21 @@ namespace FrameGenerator.Extensions
                 var blueTint = new SolidBrush(Color.FromArgb(200, 0, 0, 0));
                 g.FillRectangle(blueTint, x, y, floor.Width, floor.Height);
             }
+
+            return true;
+        }
+
+        public static bool TryDrawMonster(this Graphics g, string tile, string background, Dictionary<string, string> monsterData, Dictionary<string, Bitmap> monsterPng, Dictionary<string, string> overrides, float x, float y)
+        {
+            if (tile.StartsWith("@BL")) return false;//player tile draw override TODO
+            var isHighlighted = FixHighlight(tile, background, out var correctTile);
+            string pngName;
+            if (!overrides.TryGetValue(correctTile, out pngName)) { 
+                if (!monsterData.TryGetValue(correctTile, out pngName)) return false; 
+            }
+            if (!monsterPng.TryGetValue(pngName, out Bitmap png)) return false;
+
+            g.DrawImage(png, x, y, png.Width, png.Height);
 
             return true;
         }
