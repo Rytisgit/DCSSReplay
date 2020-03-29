@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace FrameGenerator
 {
-    public class MainGenerator 
+    public class MainGenerator  
     {
         public string Folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TtyRecMonkey");
         private readonly Dictionary<string, string> _monsterdata;
@@ -62,7 +62,7 @@ namespace FrameGenerator
                 var model = Parser.ParseData(chars);
 
                 var image = DrawFrame(model);
-               // display.Update_Window_Image(image);
+                //update2(image);
                 GC.Collect();
                 return image;
             }
@@ -154,7 +154,7 @@ namespace FrameGenerator
             using (Graphics g = Graphics.FromImage(newFrame))
             {
                 g.Clear(Color.Black);
-
+            
                 DrawSideDATA(g, model, prevHP);
 
                 DrawTiles(g, model, 0, 0, 0, resize: 1);
@@ -162,10 +162,35 @@ namespace FrameGenerator
                 DrawMonsterDisplay(g, model);
 
                 DrawLogs(g, model);
+
+                DrawConsole(g, model);
             }
 
             return newFrame;
         }
+
+        private void DrawConsole(Graphics g, Model model)
+        {
+            float currentTileY = 468;
+            float currentTileX = 1075;
+            var font2 = new Font("Courier New", 16);
+
+            for (var i = 0; i < model.TileNames.Length; i++)
+            {
+               
+                if (i % model.LineLength == 0)
+                {
+                    currentTileX = 1000;
+                    currentTileY += 16;
+                }       
+                else  currentTileX += 17;
+
+                g.WriteCharacter(model.TileNames[i], font2, currentTileX, currentTileY, model.HighlightColors[i]);
+
+
+            }
+        }
+   
 
         private void DrawMonsterDisplay(Graphics graphics, Model model)
         {
@@ -358,6 +383,7 @@ namespace FrameGenerator
                 g.WriteCharacter(tile, new Font("Courier New", 16), x, y);
             }
         }
+
     }
 }
 

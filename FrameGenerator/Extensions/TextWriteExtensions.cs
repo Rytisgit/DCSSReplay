@@ -15,6 +15,22 @@ namespace FrameGenerator.Extensions
             var brush = new SolidBrush(ColorList.GetColor(coloredCharacter.Substring(1)));
             g.DrawString(coloredCharacter[0].ToString(), font, brush, x, y);
         }
+        private static int _MeasureDisplayStringWidth(Graphics graphics, string text, Font font)
+        {
+
+            StringFormat format = new StringFormat(StringFormat.GenericDefault);
+            RectangleF rect = new RectangleF(0, 0, 1000, 1000);
+            CharacterRange[] ranges = { new CharacterRange(0, text.Length) };
+            Region[] regions = new Region[1];
+
+            format.SetMeasurableCharacterRanges(ranges);
+            format.FormatFlags = StringFormatFlags.MeasureTrailingSpaces;
+
+            regions = graphics.MeasureCharacterRanges(text, font, rect, format);
+            rect = regions[0].GetBounds(graphics);
+
+            return (int)(rect.Right);
+        }
         public static void WriteCharacter(this Graphics g, string coloredCharacter, Font font, float x, float y, string backgroundColor)
         {
             var black = ColorList.GetColor("BLACK");
@@ -28,12 +44,14 @@ namespace FrameGenerator.Extensions
                 {
                     color = yellow;
                 }
-                Bitmap backgroundColorbmp = new Bitmap(font.Height, (int)font.Size);
+                int stringWidth = _MeasureDisplayStringWidth(g, coloredCharacter[0].ToString(), font);
+                Bitmap backgroundColorbmp = new Bitmap(stringWidth, font.Height);
                 Graphics.FromImage(backgroundColorbmp).Clear(color);
                 g.DrawImage(backgroundColorbmp, x, y);
             }
             g.DrawString(coloredCharacter[0].ToString(), font, brush, x, y);
         }
+       
         public static void PaintBackground(this Graphics g, string backgroundColor, Font font, float x, float y)
         {
             var black = ColorList.GetColor("BLACK");
@@ -46,7 +64,8 @@ namespace FrameGenerator.Extensions
                 {
                     color = yellow;
                 }
-                Bitmap backgroundColorbmp = new Bitmap(font.Height, (int)font.Size);//wrong
+                int stringWidth = _MeasureDisplayStringWidth(g, " ", font);
+                Bitmap backgroundColorbmp = new Bitmap(stringWidth, font.Height);//wrong
                 Graphics.FromImage(backgroundColorbmp).Clear(color);
                 g.DrawImage(backgroundColorbmp, x, y);
             }
