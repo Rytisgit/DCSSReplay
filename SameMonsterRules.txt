@@ -1,132 +1,27 @@
-eLIGHTRED deep_elf_elementalist1
-
-hYELLOW hound ifinlog: holy_swine
-
-pWHITE necromancer ifinlog: slave
-pLIGHTRED exist: vault_warden ifinlog: shapeshifter ifinlog: glowing_shapeshifter
-
 //TODO player ghosts instead of ghost.png
-
-ZLIGHTGREY skeleton_humanoid_medium
-ZLIGHTBLUE simulacrum_small
-8WHITE pillar_of_salt ifinlog: saltling
-*LIGHTCYAN ball_lightning ifAbyss: starspawn_tentacle_segment
-*LIGHTGREEN lost_soul ifForest STatus: vine_segment_E_NW
-DYELLOW golden_dragon ifSwamp: lernaean_hydra10
-eLIGHTBLUE deep_elf_annihilator ifinlog: fannar
-FLIGHTCYAN prince_ribbit
-hMAGENTA natasha
-iLIGHTCYAN spriggan_air_mage ifinlog: agnes
-oRED urug
-@WHITE exist: player_illusion new: josephine
-@LIGHTMAGENTA psyche ifinlog: louise
-@YELLOW sigmund ifinlog: frances
-@LIGHTRED rupert ifinlog: margery
-@BLUE eustachio ifinlog: donald 
-@GREEN maurice ifinlog: frederick
-@LIGHTCYAN terence ifinlog: nikola
+//todo player illusion mara @WHITE
+//todo 8ETC_ICE bcolored: block_of_ice //glaciate 8BLUE block_of_ice
 
 
-bETC_JEWEL bcolored: butterfly
+if Forest STatus: *LIGHTGREEN vine_segment_E_NW
 pETC_RANDOM bcolored: killer_klown
+vETC_RANDOM bcolored: spatial_vortex //if chaotic malstrom or spacial vortex in log
+PETC_RANDOM bcolored: demonic_plant //where do demonic plants spawn
+4ETC_RANDOM bcolored: chaos_spawn
+
+//get colour from visible monster list, insert override for that color
+PCOLOUR_UNDEF bcolored: toadstool
+(COLOUR_UNDEF bcolored: dancing_weapon
+wCOLOUR_UNDEF bcolored: eldritch_tentacle_S
+*COLOUR_UNDEF bcolored: eldritch_tentacle_segment_E_S
+&COLOUR_UNDEF bcolored: pandemonium_lord
+dCOLOUR_UNDEF bcolored: tiamat
+gCOLOUR_UNDEF bcolored: crazy_yiuf
+
+
 uCOLOUR_UNDEF bcolored: ugly_thing
 uCOLOUR_UNDEF bcolored: very_ugly_thing
-vETC_RANDOM bcolored: spatial_vortex
-vETC_AIR bcolored: twister
-DETC_HOLY bcolored: pearl_dragon
-EETC_EARTH bcolored: earth_elemental
-EETC_FIRE bcolored: fire_elemental
-EETC_WATER bcolored: water_elemental
-EETC_AIR bcolored: air_elemental
-EETC_IRON bcolored: iron_elemental
-GETC_GOLD bcolored: golden_eye
-NLIGHTGRAY bcolored: naga_sharpshooter
-PETC_RANDOM bcolored: demonic_plant
-PCOLOUR_UNDEF bcolored: toadstool
-@ETC_FIRE bcolored: hellbinder
-@ETC_SILVER bcolored: cloud_mage
-(COLOUR_UNDEF bcolored: dancing_weapon
-wCOLOUR_UNDEF bcolored: eldritch_tentacle
-*COLOUR_UNDEF bcolored: eldritch_tentacle_segment
-6LIGHTGRAY bcolored: monstrous_demonspawn
-4ETC_RANDOM bcolored: chaos_spawn
-8ETC_ICE bcolored: block_of_ice
-8ETC_ELECTRICITY bcolored: lightning_spire
-&COLOUR_UNDEF bcolored: pandemonium_lord
-*ETC_MAGIC bcolored: fulminant_prism
-*ETC_MAGIC bcolored: battlesphere
-dCOLOUR_UNDEF bcolored: tiamat
-DETC_FIRE bcolored: serpent_of_hell
-DETC_ICE bcolored: serpent_of_hell_cocytus
-DETC_IRON bcolored: serpent_of_hell_dis
-DETC_DEATH bcolored: serpent_of_hell_tartarus
-DETC_ELECTRICITY bcolored: bai_suzhen_dragon
-gCOLOUR_UNDEF bcolored: crazy_yiuf
-{LIGHTGRAY bcolored: sensed_easy.
 
 
-BLIGHTRED badPngName: program_bug
-dBROWN badPngName: draconian
-fLIGHTRED badPngName: shambling_mangrove
-hLIGHTGREEN badPngName: howler_monkey
-hMAGENTA badPngName: felid
-oRED badPngName: lava_orc
-pETC_RANDOM badPngName: killer_klown
-rLIGHTGREEN badPngName: river_rat
-rLIGHTRED badPngName: hell_rat
-vRED badPngName: fire_vortex
-vETC_RANDOM badPngName: spatial_vortex
-vYELLOW badPngName: spatial_maelstrom
-vETC_AIR badPngName: twister
-DLIGHTGREEN badPngName: hydra
-ELIGHTCYAN badPngName: elemental_wellspring
-FLIGHTCYAN badPngName: barachi
-HMAGENTA badPngName: mutant_beast
-PGREEN badPngName: plant
-PETC_RANDOM badPngName: demonic_plant
-PDARKGREY badPngName: withered_plant
-PRED badPngName: burning_bush
-PCOLOUR_UNDEF badPngName: toadstool
-PLIGHTGREY badPngName: fungus
-wLIGHTGREEN badPngName: snaplasher_vine
-*LIGHTGREEN badPngName: snaplasher_vine_segment
-wLIGHTCYAN badPngName: starspawn_tentacle
-*LIGHTCYAN badPngName: starspawn_tentacle_segment
-YBLUE badPngName: dire_elephant
-YLIGHTRED badPngName: hellephant
-ZBROWN badPngName: zombie
-ZLIGHTGREY badPngName: skeleton
-ZLIGHTBLUE badPngName: simulacrum
-ZWHITE badPngName: skeleton_large
-ZGREEN badPngName: spectral_thing
-XLIGHTMAGENTA badPngName: kraken
-wLIGHTMAGENTA badPngName: kraken_tentacle
-*LIGHTMAGENTA badPngName: kraken_tentacle_segment
-@WHITE badPngName: player_illusion
-(COLOUR_UNDEF badPngName: dancing_weapon
-(GREEN badPngName: spectral_weapon
-wCOLOUR_UNDEF badPngName: eldritch_tentacle
-*COLOUR_UNDEF badPngName: eldritch_tentacle_segment
-6LIGHTGRAY badPngName: monstrous_demonspawn
-6BLUE badPngName: gelid_demonspawn
-6RED badPngName: infernal_demonspawn
-6MAGENTA badPngName: torturous_demonspawn
-4ETC_RANDOM badPngName: chaos_spawn
-8LIGHTRED badPngName: orange_statue
-8LIGHTGREY badPngName: statue
-*WHITE badPngName: orb_of_destruction
-*ETC_MAGIC badPngName: fulminant_prism
-dCOLOUR_UNDEF badPngName: tiamat
-dLIGHTBLUE badPngName: bai_suzhen
-DETC_FIRE badPngName: serpent_of_hell
-DETC_ICE badPngName: serpent_of_hell_cocytus
-DETC_IRON badPngName: serpent_of_hell_dis
-DETC_DEATH badPngName: serpent_of_hell_tartarus
-DETC_ELECTRICITY badPngName: bai_suzhen_dragon
-iLIGHTMAGENTA badPngName: the_enchantress
-{RED badPngName: sensed
-{GREEN badPngName: sensed_friendly
-{BLUE badPngName: sensed_trivial
-{LIGHTGRAY badPngName: sensed_easy
-{YELLOW badPngName: sensed_tough
-{LIGHTRED badPngName: sensed_nasty
+//COLOR REPLACEMENTS by name in log
+

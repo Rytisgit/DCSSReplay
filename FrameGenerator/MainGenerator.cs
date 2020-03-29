@@ -16,6 +16,7 @@ namespace FrameGenerator
     {
         Widow_Display display = new Widow_Display();
         private readonly Dictionary<string, string> _monsterdata;
+        private readonly List<NamedMonsterOverride> _namedMonsterOverrideData;
         private readonly Dictionary<string, string> _characterdata;
         private readonly Dictionary<string, string[]> _floorandwall;
         private readonly Dictionary<string, string> _features;
@@ -43,18 +44,18 @@ namespace FrameGenerator
             _itemdata = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\items.txt");
             
             _floorandwall = ReadFromFile.GetFloorAndWallNamesForDungeons(@"..\..\..\Extra\tilefloor.txt");
-            _monsterdata = ReadFromFile.GetMonsterData(gameLocation + @"\mon-data.h");
+            _monsterdata = ReadFromFile.GetMonsterData(gameLocation + @"\mon-data.h", @"..\..\..\Extra\monsteroverrides.txt");
+            _namedMonsterOverrideData = ReadFromFile.GetNamedMonsterOverrideData(@"..\..\..\Extra\namedmonsteroverrides.txt");
 
             _floorpng = ReadFromFile.GetBitmapDictionaryFromFolder(gameLocation + @"\rltiles\dngn\floor");
             _wallpng = ReadFromFile.GetBitmapDictionaryFromFolder(gameLocation + @"\rltiles\dngn\wall");
             _alldngnpng = ReadFromFile.GetBitmapDictionaryFromFolder(gameLocation + @"\rltiles\dngn");
             _alleffects = ReadFromFile.GetBitmapDictionaryFromFolder(gameLocation + @"\rltiles\effect");
             _miscallaneous = ReadFromFile.GetBitmapDictionaryFromFolder(gameLocation + @"\rltiles\misc");
+            _itempng = ReadFromFile.GetBitmapDictionaryFromFolder(gameLocation + @"\rltiles\items");
 
             _characterpng = ReadFromFile.GetCharacterPNG(gameLocation);
             _monsterpng = ReadFromFile.GetMonsterPNG(gameLocation);
-            _itempng = ReadFromFile.ItemsPNG(gameLocation);
-
         }
 
         public void GenerateImage(TerminalCharacter[,] chars)
@@ -95,6 +96,42 @@ namespace FrameGenerator
 
         }
 
+        private Dictionary<string, string> GetOverridesForFrame(MonsterData[] monsters, string location)
+        {
+            var finalOverrides = new Dictionary<string, string>();
+            foreach (var monsterLine in monsters)
+            {
+                if (!monsterLine.empty)
+                {
+                    var rules = _namedMonsterOverrideData.Where((o) => { 
+                        if (string.IsNullOrWhiteSpace(o.Name)) return false;
+                        else return monsterLine.MonsterTextRaw.Contains(o.Name.Substring(0, o.Name.Length - 2));
+                    });
+                    foreach (var rule in rules.ToList())
+                    {
+                        if(string.IsNullOrWhiteSpace(rule.Location) || rule.Location == location)
+                        {
+                            foreach (var tileOverride in rule.TileNameOverrides)
+                            {
+                                finalOverrides.Add(tileOverride.Key, tileOverride.Value);
+                            }
+                        }
+                    }
+                }
+            }
+            foreach (var rule in _namedMonsterOverrideData)//no monster name in rule
+            {
+                if (string.IsNullOrWhiteSpace(rule.Name) && rule.Location == location)
+                {
+                    foreach (var tileOverride in rule.TileNameOverrides)
+                    {
+                        finalOverrides.Add(tileOverride.Key, tileOverride.Value);
+                    }
+                }
+            }
+            return finalOverrides;
+        }
+
         private Bitmap DrawMap(Model model)
         {
             Bitmap bmp = new Bitmap(1602, 768, PixelFormat.Format32bppArgb);
@@ -110,8 +147,8 @@ namespace FrameGenerator
                         g.WriteCharacter(model.TileNames[j], font, x, y);
                         x += 20;
                     }
-
-                    DrawTiles(g, model, 0, 32, model.LineLength, resize: 1f);//draw the rest of the map
+                    var overrides = GetOverridesForFrame(model.MonsterData, model.Location);
+                    DrawTiles(g, model, 0, 32, model.LineLength, overrides);//draw the rest of the map
                 }
             }
 
@@ -156,11 +193,13 @@ namespace FrameGenerator
             {
                 g.Clear(Color.Black);
 
+                var overrides = GetOverridesForFrame(model.MonsterData, model.Location);
+
                 DrawSideDATA(g, model, prevHP);
 
-                DrawTiles(g, model, 0, 0, 0, resize: 1);
+                DrawTiles(g, model, 0, 0, 0, overrides);
 
-                DrawMonsterDisplay(g, model);
+                DrawMonsterDisplay(g, model, overrides);
 
                 DrawLogs(g, model);
             }
@@ -168,7 +207,7 @@ namespace FrameGenerator
             return newFrame;
         }
 
-        private void DrawMonsterDisplay(Graphics graphics, Model model)
+        private void DrawMonsterDisplay(Graphics g, Model model, Dictionary<string, string> overrides)
         {
             
             var sideOfTilesX = 32 * model.LineLength; var currentLineY = 300;
@@ -178,28 +217,29 @@ namespace FrameGenerator
                 var x = sideOfTilesX;
                 if (!monsterlist.empty)
                 {
+                    for (int i = 0; i < monsterlist.MonsterDisplay.Length; i++)
+                    {
+                        if (!g.TryDrawMonster(monsterlist.MonsterDisplay[i], monsterlist.MonsterBackground[i], _monsterdata, _monsterpng, overrides, x, currentLineY))
+                        {
+                            g.WriteCharacter(monsterlist.MonsterDisplay[i], font, x, currentLineY);//not found write as string
+                        }
+                        x += 32;
+                    }
                     foreach (var monster in monsterlist.MonsterDisplay)//draw all monsters in 1 line
                     {
-                        if (_monsterdata.TryGetValue(monster, out var tileName))
-                        {
-                            if (_monsterpng.TryGetValue(tileName, out var mnstr))
-                            {
-                                graphics.DrawImage(mnstr, x, currentLineY, mnstr.Width, mnstr.Height);
-                            }
-                            else graphics.WriteCharacter(monster, font, x, currentLineY);//not found write as string
-                            x += 32;
-                        }
+                        
+                        
                     }
                     var otherx = x;
                     foreach (var backgroundColor in monsterlist.MonsterBackground.Skip(monsterlist.MonsterDisplay.Length))
                     {
-                        graphics.PaintBackground(backgroundColor, font, otherx, currentLineY + 4);
+                        g.PaintBackground(backgroundColor, font, otherx, currentLineY + 4);
                         otherx += 12;
                     }
 
                     foreach (var coloredCharacter in monsterlist.MonsterText)//write all text in 1 line
                     {
-                        graphics.WriteCharacter(coloredCharacter, font, x, currentLineY + 4);
+                        g.WriteCharacter(coloredCharacter, font, x, currentLineY + 4);
                         x += 12;
                     }
 
@@ -289,7 +329,7 @@ namespace FrameGenerator
 
         }
 
-        public void DrawTiles(Graphics g, Model model, float startX, float startY, int startIndex, float resize)
+        public void DrawTiles(Graphics g, Model model, float startX, float startY, int startIndex, Dictionary<string, string> overrides)
 
         {
             var dict = new Dictionary<string, string>();//logging
@@ -304,19 +344,19 @@ namespace FrameGenerator
 
             var currentTileX = startX;
             var currentTileY = startY;
-            if (startIndex == 0) currentTileY -= 32 * resize;//since start of loop begins on a newline we back up one so it isn't one line too low.
+            if (startIndex == 0) currentTileY -= 32;//since start of loop begins on a newline we back up one so it isn't one line too low.
 
             for (int i = startIndex; i < model.TileNames.Length; i++)
             {
                 if (i % model.LineLength == 0)
                 {
                     currentTileX = 0;
-                    currentTileY += 32 * resize;
+                    currentTileY += 32;
                 }
                 else
-                    currentTileX += 32 * resize;
+                    currentTileX += 32;
                 //TODO if location is middle and tile name starts with @ draw character
-                DrawCurrentTile(g, model, dict, model.TileNames[i], model.HighlightColors[i], characterRace, wall, floor, currentTileX, currentTileY);
+                DrawCurrentTile(g, model, dict, model.TileNames[i], model.HighlightColors[i], characterRace, wall, floor, overrides, currentTileX, currentTileY);
             }
 
             if (dict.Count < 10)
@@ -335,11 +375,11 @@ namespace FrameGenerator
             }
         }
 
-        private void DrawCurrentTile(Graphics g, Model model, Dictionary<string, string> dict, string tile, string tileHighlight, string OnlyRace, Bitmap wall, Bitmap floor, float x, float y)
+        private void DrawCurrentTile(Graphics g, Model model, Dictionary<string, string> dict, string tile, string tileHighlight, string OnlyRace, Bitmap wall, Bitmap floor, Dictionary<string, string> overrides, float x, float y)
         {
             if (g.TryDrawWallOrFloor(tile, wall, floor, x, y)) return;
 
-            if (g.TryDrawMonster(tile, _monsterdata, _monsterpng, floor, x, y)) return;
+            if (g.TryDrawMonster(tile, tileHighlight, _monsterdata, _monsterpng, overrides, floor, x, y)) return;
 
             if (g.TryDrawFeature(tile, _features, _alldngnpng, floor, x, y)) return;
 
