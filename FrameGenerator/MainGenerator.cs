@@ -25,6 +25,7 @@ namespace FrameGenerator
         private readonly Dictionary<string, Bitmap> _itempng;
         private readonly Dictionary<string, Bitmap> _alldngnpng;
         private readonly Dictionary<string, Bitmap> _alleffects;
+        private readonly Dictionary<string, Bitmap> _miscallaneous;
         private readonly Dictionary<string, Bitmap> _floorpng;
         private readonly Dictionary<string, Bitmap> _wallpng;
         private Bitmap _lastframe = new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
@@ -47,6 +48,7 @@ namespace FrameGenerator
             _wallpng = ReadFromFile.GetBitmapDictionaryFromFolder(gameLocation + @"\rltiles\dngn\wall");
             _alldngnpng = ReadFromFile.GetBitmapDictionaryFromFolder(gameLocation + @"\rltiles\dngn");
             _alleffects = ReadFromFile.GetBitmapDictionaryFromFolder(gameLocation + @"\rltiles\effect");
+            _miscallaneous = ReadFromFile.GetBitmapDictionaryFromFolder(gameLocation + @"\rltiles\misc");
 
             _characterpng = ReadFromFile.GetCharacterPNG(gameLocation);
             _monsterpng = ReadFromFile.GetMonsterPNG(gameLocation);
@@ -313,7 +315,7 @@ namespace FrameGenerator
                 else
                     currentTileX += 32 * resize;
                 //TODO if location is middle and tile name starts with @ draw character
-                DrawCurrentTile(g, model, dict, characterRace, wall, floor, currentTileX, currentTileY, model.TileNames[i]);
+                DrawCurrentTile(g, model, dict, model.TileNames[i], model.HighlightColors[i], characterRace, wall, floor, currentTileX, currentTileY);
             }
 
             if (dict.Count < 10)
@@ -332,7 +334,7 @@ namespace FrameGenerator
             }
         }
 
-        private void DrawCurrentTile(Graphics g, Model model, Dictionary<string, string> dict, string OnlyRace, Bitmap wall, Bitmap floor, float x, float y, string tile)
+        private void DrawCurrentTile(Graphics g, Model model, Dictionary<string, string> dict, string tile, string tileHighlight, string OnlyRace, Bitmap wall, Bitmap floor, float x, float y)
         {
             if (g.TryDrawWallOrFloor(tile, wall, floor, x, y)) return;
 
@@ -344,7 +346,7 @@ namespace FrameGenerator
 
             if (g.TryDrawPlayer(tile, _characterdata, _characterpng, floor, OnlyRace, x, y)) return;//TODO player drawing should not be here any more
 
-            if (g.TryDrawItem(tile, _itemdata, _itempng, floor, x, y)) return;
+            if (g.TryDrawItem(tile, tileHighlight, _itemdata, _itempng, _miscallaneous, floor, model.Location, x, y)) return;
 
             else if (tile[0] != ' ')//unhandled tile, write it as a character instead
             {
