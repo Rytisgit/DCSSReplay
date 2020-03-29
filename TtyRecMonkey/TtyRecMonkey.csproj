@@ -75,8 +75,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SlimDX, Version=2.0.13.43, Culture=neutral, PublicKeyToken=b1b0c32fd1ffe4f9, processorArchitecture=x86">
-      <HintPath>..\packages\SlimDX.4.0.13.44\lib\NET20\SlimDX.dll</HintPath>
+    <Reference Include="SlimDX, Version=4.0.13.43, Culture=neutral, PublicKeyToken=b1b0c32fd1ffe4f9, processorArchitecture=x86">
+      <HintPath>..\packages\SlimDX.4.0.13.44\lib\NET40\SlimDX.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -86,9 +86,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ConfigurationForm.resx">
-      <DependentUpon>ConfigurationForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="FileOrderingForm.resx">
       <DependentUpon>FileOrderingForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -97,14 +94,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <Compile Include="Character.cs" />
     <Compile Include="Configuration.cs" />
-    <Compile Include="ConfigurationForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ConfigurationForm.Designer.cs">
-      <DependentUpon>ConfigurationForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="FileOrderingForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -140,9 +130,9 @@
       <Project>{6ECD1D84-437E-40A0-832D-C5D06762A6F0}</Project>
       <Name>PuttySharp</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ShinyConsole\ShinyConsole.csproj">
-      <Project>{B246C8EE-F963-403A-893E-530B08BA7261}</Project>
-      <Name>ShinyConsole</Name>
+    <ProjectReference Include="..\Window_Display\Window_Display.csproj">
+      <Project>{1c0525eb-8e42-41c0-9335-bc721e2225d0}</Project>
+      <Name>Window_Display</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

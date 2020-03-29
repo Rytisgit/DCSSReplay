@@ -136,7 +136,7 @@ namespace TtyRecMonkey
             {
                 var p = Packets[i];
                 if (p.DecodedCache != null) continue;
-                var weak = (p.DecodedCache == null) ? null : p.DecodedCacheWeak.Target;
+                var weak = (p.DecodedCache == null) ? null : p.DecodedCacheWeak.Target; 
 
                 if (weak != null)
                 {

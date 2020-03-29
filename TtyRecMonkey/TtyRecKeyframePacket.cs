@@ -21,8 +21,8 @@ namespace TtyRecMonkey
         public static IEnumerable<AnnotatedPacket> AnnotatePackets(int w, int h, IEnumerable<TtyRecPacket> packets, Func<bool> checkinterrupt)
         {
             var term = new Terminal(w, h);
-            var memory_budget3 = Configuration.Main.ChunksTargetMemoryMB * 1000 * 1000;
-            var time_budget = TimeSpan.FromMilliseconds(Configuration.Main.ChunksTargetLoadMS);
+            var memory_budget3 = 100 * 1000 * 1000;
+            var time_budget = TimeSpan.FromMilliseconds(10);
 
             var last_restart_position_time = DateTime.MinValue;
             var last_restart_memory_avail = memory_budget3 / 3;
