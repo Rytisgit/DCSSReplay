@@ -8,13 +8,12 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using Window;
 
 namespace FrameGenerator
 {
-    public class MainGenerator
+    public class MainGenerator 
     {
-        Widow_Display display = new Widow_Display();
+        public string Folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TtyRecMonkey");
         private readonly Dictionary<string, string> _monsterdata;
         private readonly Dictionary<string, string> _characterdata;
         private readonly Dictionary<string, string[]> _floorandwall;
@@ -34,7 +33,7 @@ namespace FrameGenerator
         public MainGenerator()
         {
 
-            string gameLocation = File.ReadAllLines(display.Folder + @"\config.ini").First();
+            string gameLocation = File.ReadAllLines(Folder + @"\config.ini").First();
 
             _characterdata = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\racepng.txt");
             _features = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\features.txt");
@@ -55,17 +54,17 @@ namespace FrameGenerator
 
         }
 
-        public void GenerateImage(TerminalCharacter[,] chars)
+        public Bitmap GenerateImage(TerminalCharacter[,] chars)
         {
             if (chars != null) {
                 var model = Parser.ParseData(chars);
 
                 var image = DrawFrame(model);
-
-                display.Update_Window_Image(image);
+               // display.Update_Window_Image(image);
                 GC.Collect();
+                return image;
             }
-            return;
+            return null;
         }
 
         private Bitmap DrawFrame(Model model)
@@ -323,11 +322,11 @@ namespace FrameGenerator
                 foreach (var item in dict)
                 {
                     if (!string.IsNullOrEmpty(item.Key)) written = true;
-                    Console.Write(item.Key + " ");
+                  //  Console.Write(item.Key + " ");
                 }
                 if (written)
                 {
-                    Console.WriteLine();
+                  //  Console.WriteLine();
                 }
 
             }

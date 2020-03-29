@@ -7,11 +7,15 @@ using SlimDX.Direct3D9;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace ShinyConsole
 {
+    using Blend = SlimDX.Direct3D9.Blend;
+    using Matrix = SlimDX.Matrix;
     using Vertex = BasicShinyConsoleFormVertex;
 
     struct BasicShinyConsoleFormVertex
@@ -25,10 +29,11 @@ namespace ShinyConsole
     }
 
     [System.ComponentModel.DesignerCategory("")]
-    public class BasicShinyConsoleForm<CC> : Form where CC : struct, IConsoleCharacter
+    public class BasicShinyConsoleForm<CC> : Form2 where CC : struct, IConsoleCharacter
     {
         static readonly Direct3D D3D = new Direct3D();
-
+       // Bitmap bitmap;
+        Rectangle cropRect = new Rectangle(0,0,1360,400);
         protected CC[,] Buffer;
         public new int Width { get { return Buffer.GetLength(0); } }
         public new int Height { get { return Buffer.GetLength(1); } }
@@ -42,8 +47,8 @@ namespace ShinyConsole
             get
             {
                 return new Size
-                    (Width * (GlyphSize.Width - GlyphOverlap.Width) * Zoom
-                    , Height * (GlyphSize.Height - GlyphOverlap.Height) * Zoom
+                    (pictureBox1.Width * Zoom
+                    , pictureBox1.Height * Zoom
                     );
             }
         }
@@ -130,11 +135,10 @@ namespace ShinyConsole
 
         public virtual void Redraw()
         {
-            if (Device == null) SetupDevice();
+           if (Device == null) SetupDevice();
 
             var w = Width;
             var h = Height;
-
             foreach (var fd in FontData.Values) fd.GlyphCount = 0;
 
             for (int y = 0; y < h; ++y)
@@ -235,9 +239,9 @@ namespace ShinyConsole
             Device.SetSamplerState(0, SamplerState.AddressV, TextureAddress.Clamp);
             Device.SetSamplerState(0, SamplerState.MinFilter, TextureFilter.GaussianQuad);
             Device.SetSamplerState(0, SamplerState.MagFilter, TextureFilter.GaussianQuad);
-            Device.SetTransform(TransformState.Projection, Matrix.OrthoOffCenterLH(0, ClientSize.Width, ClientSize.Height, 0, -1, +1));
+            Device.SetTransform(TransformState.Projection, Matrix.OrthoOffCenterLH(0, 1360, 400, 0, -1, +1));
             Device.SetTransform(TransformState.View, Matrix.Translation(-0.5f, -0.5f, 0f));
-            Device.SetTransform(TransformState.World, Matrix.Translation((int)-(ActiveSize.Width - ClientSize.Width) / 2, (int)-(ActiveSize.Height - ClientSize.Height) / 2, 0));
+            Device.SetTransform(TransformState.World, Matrix.Translation((int)-(0)/2 , (int)-(0)/2 , 0));
             Device.VertexFormat = Vertex.FVF;
 
             foreach (var fd in FontData)
@@ -250,8 +254,44 @@ namespace ShinyConsole
                 }
 
             Device.EndScene();
-
-            Device.Present();
+            //Device.Present();
+                Surface s = null;
+                s = Device.GetBackBuffer(0, 0);
+                Bitmap bitmap = new Bitmap(SlimDX.Direct3D9.Surface.ToStream(s, SlimDX.Direct3D9.ImageFileFormat.Bmp));
+                update(bitmap);
+                s.Dispose();
+            
+            GC.Collect();
         }
+
+      
+        public static Bitmap ResizeImage(Image image, int width, int height)
+        {
+            var destRect = new Rectangle(0, 0, width, height);
+            var destImage = new Bitmap(width, height);
+
+            destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
+
+            using (var graphics = Graphics.FromImage(destImage))
+            {
+                graphics.CompositingMode = CompositingMode.SourceCopy;
+                graphics.CompositingQuality = CompositingQuality.HighQuality;
+                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                graphics.SmoothingMode = SmoothingMode.HighQuality;
+                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+                using (var wrapMode = new ImageAttributes())
+                {
+                    wrapMode.SetWrapMode(WrapMode.TileFlipXY);
+                    graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
+                }
+            }
+
+            return destImage;
+        }
+
+
+
     }
+
 }

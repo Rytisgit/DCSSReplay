@@ -8,7 +8,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Character\Character.csproj" />
     <ProjectReference Include="..\InputParse\InputParse.csproj" />
-    <ProjectReference Include="..\Window\Window.csproj" />
   </ItemGroup>
 
 </Project>

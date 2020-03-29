@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using SlimDX.Windows;
+using System.Drawing.Imaging;
 
 namespace TtyRecMonkey
 {
@@ -47,6 +48,7 @@ namespace TtyRecMonkey
                 for (int x = 0; x < Width; ++x)
                 {
                     Buffer[x, y] = Prototype;
+                    Console.WriteLine(Prototype);
                 }
             savedFrame = new TerminalCharacter[80, 24];
             Visible = true;
@@ -81,10 +83,12 @@ namespace TtyRecMonkey
                     Buffer[x, y].ActualBackground = flipbg ? Buffer[x, y].Foreground : Buffer[x, y].Background;
                     Buffer[x, y].Font = Prototype.Font;
                 }
-
-            base.Redraw();
+            if (WindowState == FormWindowState.Normal || WindowState == FormWindowState.Maximized)
+            {
+                base.Redraw();
+            }
         }
-
+    
         void ResizeConsole(int w, int h)
         {
             var newbuffer = new Character[w, h];
@@ -100,7 +104,7 @@ namespace TtyRecMonkey
 
             Buffer = newbuffer;
         }
-
+     
         void Reconfigure()
         {
             var cfg = new ConfigurationForm();
@@ -190,6 +194,7 @@ namespace TtyRecMonkey
                 return File.OpenRead(f) as Stream;
             });
         }
+        Bitmap bmp = new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
 
         DateTime PreviousFrame = DateTime.Now;
         void MainLoop()
@@ -237,7 +242,8 @@ namespace TtyRecMonkey
                             {
                                 try
                                 {
-                                    generator.GenerateImage(savedFrame);
+                                    bmp = generator.GenerateImage(savedFrame);
+                                    update2(bmp);
                                     generating = false;
                                 }
                                 catch (Exception ex)
