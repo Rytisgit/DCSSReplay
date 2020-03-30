@@ -50,8 +50,8 @@ namespace Putty
         /// </summary>
         public void Dispose()
         {
-            if (!Disposed) DestroyPuttyTerminal(Handle);
-            Handle = IntPtr.Zero;
+           // if (!Disposed) DestroyPuttyTerminal(Handle);
+           // Handle = IntPtr.Zero;
         }
 
         /// <summary>

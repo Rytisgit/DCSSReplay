@@ -4,7 +4,6 @@
 
 using FrameGenerator;
 using Putty;
-using ShinyConsole;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -12,125 +11,39 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
-using SlimDX.Windows;
+using System.Drawing.Imaging;
+using Window_Display;
+using System.Threading.Tasks;
+using ICSharpCode.SharpZipLib.BZip2;
 
 namespace TtyRecMonkey
 {
     [System.ComponentModel.DesignerCategory("")]
-    public class PlayerForm : BasicShinyConsoleForm<Character>
+    public class PlayerForm : Form2
     {
 
         Point CursorPosition = new Point(0, 0);
         Point SavedCursorPosition = new Point(0, 0);
 
-        Character Prototype = new Character()
-        {
-            Foreground = 0xFFFFFFFFu
-            ,
-            Background = 0xFF000000u
-            ,
-            Glyph = ' '
-        };
+
         MainGenerator generator;
         bool generating = false;
         TerminalCharacter[,] savedFrame;
         MemoryStream output = new MemoryStream();
-        public PlayerForm() : base(80, 24)
-        {
-            Text = "TtyRecMonkey";
+        public PlayerForm() 
+        {          
             generator = new MainGenerator();
-            GlyphSize = new Size(6, 8);
-            GlyphOverlap = new Size(1, 1);
-            FitWindowToMetrics();
-
-            for (int y = 0; y < Height; ++y)
-                for (int x = 0; x < Width; ++x)
-                {
-                    Buffer[x, y] = Prototype;
-                }
             savedFrame = new TerminalCharacter[80, 24];
             Visible = true;
-            Configuration.Load(this);
-            AfterConfiguration();
+
+          
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-#if DEBUG // Temporary hack: Just leak shit on close instead of potentially blocking when we're quitting
-				using ( Decoder ) {} Decoder = null;
-#endif
-            }
-            base.Dispose(disposing);
-        }
-
-        public override void Redraw()
-        {
-            var now = DateTime.Now;
-            int w = Width, h = Height;
-
-            for (int y = 0; y < h; ++y)
-                for (int x = 0; x < w; ++x)
-                {
-                    //bool flipbg = (Mode.ScreenReverse!=Buffer[x,y].Reverse);
-                    //bool flipfg = (Buffer[x,y].Invisible || (Buffer[x,y].Blink && now.Millisecond<500) ) ? !flipbg : flipbg;
-                    bool flipbg = false, flipfg = false;
-
-                    Buffer[x, y].ActualForeground = flipfg ? Buffer[x, y].Background : Buffer[x, y].Foreground;
-                    Buffer[x, y].ActualBackground = flipbg ? Buffer[x, y].Foreground : Buffer[x, y].Background;
-                    Buffer[x, y].Font = Prototype.Font;
-                }
-
-            base.Redraw();
-        }
-
-        void ResizeConsole(int w, int h)
-        {
-            var newbuffer = new Character[w, h];
-
-            var ow = Width;
-            var oh = Height;
-
-            for (int y = 0; y < h; ++y)
-                for (int x = 0; x < w; ++x)
-                {
-                    newbuffer[x, y] = (x < ow && y < oh) ? Buffer[x, y] : Prototype;
-                }
-
-            Buffer = newbuffer;
-        }
-
-        void Reconfigure()
-        {
-            var cfg = new ConfigurationForm();
-            if (cfg.ShowDialog(this) == DialogResult.OK) AfterConfiguration();
-        }
-
-        void AfterConfiguration()
-        {
-            bool resize = (WindowState == FormWindowState.Normal) && (ClientSize == ActiveSize);
-            Prototype.Font = ShinyConsole.Font.FromBitmap(Configuration.Main.Font, Configuration.Main.Font.Width / 16, Configuration.Main.Font.Height / 16);
-            GlyphSize = new Size(Configuration.Main.Font.Width / 16, Configuration.Main.Font.Height / 16);
-            GlyphOverlap = new Size(Configuration.Main.FontOverlapX, Configuration.Main.FontOverlapY);
-            //ResizeConsole(Configuration.Main.DisplayConsoleSizeW, Configuration.Main.DisplayConsoleSizeH);
-
-            if (Decoder != null)
-            {
-                var oldc = Cursor;
-                Cursor = Cursors.WaitCursor;
-
-                Cursor = oldc;
-            }
-
-            if (resize) ClientSize = ActiveSize;
-        }
 
         public TtyRecKeyframeDecoder Decoder = null;
         double PlaybackSpeed, PausedSpeed;
         TimeSpan Seek;
         readonly List<DateTime> PreviousFrames = new List<DateTime>();
-
         void OpenFile()
         {
             Thread mt = new Thread(o =>
@@ -141,7 +54,7 @@ namespace TtyRecMonkey
 ,
                     DefaultExt = "ttyrec"
 ,
-                    Filter = "TtyRec Files|*.ttyrec|All Files|*"
+                    Filter = "TtyRec Files|*.ttyrec;*.bz2|All Files|*"
 ,
                     InitialDirectory = @"I:\home\media\ttyrecs\"
 ,
@@ -176,22 +89,33 @@ namespace TtyRecMonkey
             //    files = fof.FileOrder.ToArray();
             //    delay = TimeSpan.FromSeconds(fof.SecondsBetweenFiles);
             //}
+            
+        
             var streams = ttyrecToStream(files);
             var oldc = Cursor;
             Decoder = new TtyRecKeyframeDecoder(80, 24, streams, delay);
             PlaybackSpeed = +1;
             Seek = TimeSpan.Zero;
         }
-
+        public Stream stream = new MemoryStream();
         private IEnumerable<Stream> ttyrecToStream(string[] files)
         {
             return files.Select(f =>
             {
-                return File.OpenRead(f) as Stream;
+                Stream stream2 = File.OpenRead(f);
+                if (Path.GetExtension(f) == ".bz2")
+                {
+                    BZip2.Decompress(stream2, stream, false);
+                    return stream;
+                }
+                return  stream2;
             });
         }
+        Bitmap bmp = new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
 
         DateTime PreviousFrame = DateTime.Now;
+   
+
         void MainLoop()
         {
             var now = DateTime.Now;
@@ -206,9 +130,6 @@ namespace TtyRecMonkey
 
             Seek += TimeSpan.FromSeconds(dt * PlaybackSpeed);
 
-            var BufferW = Buffer.GetLength(0);
-            var BufferH = Buffer.GetLength(1);
-
             if (Decoder != null)
             {
                 Decoder.Seek(Seek);
@@ -217,16 +138,6 @@ namespace TtyRecMonkey
 
                 if (frame != null)
                 {
-
-                    for (int y = 0; y < BufferH; ++y)
-
-                        for (int x = 0; x < BufferW; ++x)
-                        {
-                            var ch = (x < frame.GetLength(0) && y < frame.GetLength(1)) ? frame[x, y] : default(TerminalCharacter);
-                            Buffer[x, y].Glyph = ch.Character;
-                            Buffer[x, y].Foreground = Palette.Default[ch.ForegroundPaletteIndex];
-                            Buffer[x, y].Background = Palette.Default[ch.BackgroundPaletteIndex];
-                        }
 
                     if (!generating)
                     {
@@ -237,7 +148,8 @@ namespace TtyRecMonkey
                             {
                                 try
                                 {
-                                    generator.GenerateImage(savedFrame);
+                                    bmp = generator.GenerateImage(savedFrame);
+                                    update2(bmp);
                                     generating = false;
                                 }
                                 catch (Exception ex)
@@ -277,16 +189,6 @@ namespace TtyRecMonkey
                     , " A / S     Zoom In/Out"
                     };
 
-                for (int y = 0; y < BufferH; ++y)
-                    for (int x = 0; x < BufferW; ++x)
-                    {
-                        var ch = (y < text.Length && x < text[y].Length) ? text[y][x] : ' ';
-
-                        Buffer[x, y].Glyph = ch;
-                        Buffer[x, y].Foreground = 0xFFFFFFFFu;
-                        Buffer[x, y].Background = 0xFF000000u;
-                        Buffer[x, y].Font = Prototype.Font;
-                    }
             }
 
 
@@ -301,19 +203,18 @@ namespace TtyRecMonkey
             //    , PlaybackSpeed
             //    , PrettyByteCount(GC.GetTotalMemory(false))
             //    );
-            Text = "Console";
-            Redraw();
+          // Text = "Console";
         }
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
-            bool resize = (WindowState == FormWindowState.Normal) && (ClientSize == ActiveSize);
+         //   bool resize = (WindowState == FormWindowState.Normal) && (ClientSize == ActiveSize);
 
             switch (e.KeyData)
             {
 
                 case Keys.Escape: using (Decoder) { } Decoder = null; break;
-                case Keys.Control | Keys.C: Reconfigure(); break;
+                //case Keys.Control | Keys.C: Reconfigure(); break;
                 case Keys.Control | Keys.O: OpenFile(); break;
                 case Keys.Alt | Keys.Enter:
                     if (FormBorderStyle == FormBorderStyle.None)
@@ -348,8 +249,8 @@ namespace TtyRecMonkey
                     else { PlaybackSpeed = PausedSpeed; } 
                     break;
 
-                case Keys.A: ++Zoom; if (resize) ClientSize = ActiveSize; break;
-                case Keys.S: if (Zoom > 1) --Zoom; if (resize) ClientSize = ActiveSize; break;
+               // case Keys.A: ++Zoom; if (resize) ClientSize = ActiveSize; break;
+              //  case Keys.S: if (Zoom > 1) --Zoom; if (resize) ClientSize = ActiveSize; break;
 
             }
             base.OnKeyDown(e);
@@ -378,14 +279,30 @@ namespace TtyRecMonkey
             return string.Format("{0:0,0}PB", bytes);
         }
 
+        void Loop()
+        {
+            while(true)
+            {
+                MainLoop();
+            }
+        }
+
         static void Main(string[] args)
         {
             using (var form = new PlayerForm())
             {
+                
                 if (args.Length > 0) form.DoOpenFiles(args);
                 else form.OpenFile();
-                MessagePump.Run(form, form.MainLoop);
+                Thread m_Thread = new Thread(() => form.Loop());
+                m_Thread.Start();
+                Application.Run(form);
             }
         }
-    }
+    
+     
+
+
+}
+    
 }
