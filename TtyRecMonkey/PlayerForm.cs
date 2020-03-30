@@ -14,6 +14,7 @@ using System.Windows.Forms;
 using System.Drawing.Imaging;
 using Window_Display;
 using System.Threading.Tasks;
+using ICSharpCode.SharpZipLib.BZip2;
 
 namespace TtyRecMonkey
 {
@@ -53,7 +54,7 @@ namespace TtyRecMonkey
 ,
                     DefaultExt = "ttyrec"
 ,
-                    Filter = "TtyRec Files|*.ttyrec|All Files|*"
+                    Filter = "TtyRec Files|*.ttyrec;*.bz2|All Files|*"
 ,
                     InitialDirectory = @"I:\home\media\ttyrecs\"
 ,
@@ -88,23 +89,33 @@ namespace TtyRecMonkey
             //    files = fof.FileOrder.ToArray();
             //    delay = TimeSpan.FromSeconds(fof.SecondsBetweenFiles);
             //}
+            
+        
             var streams = ttyrecToStream(files);
             var oldc = Cursor;
             Decoder = new TtyRecKeyframeDecoder(80, 24, streams, delay);
             PlaybackSpeed = +1;
             Seek = TimeSpan.Zero;
         }
-
+        public Stream stream = new MemoryStream();
         private IEnumerable<Stream> ttyrecToStream(string[] files)
         {
             return files.Select(f =>
             {
-                return File.OpenRead(f) as Stream;
+                Stream stream2 = File.OpenRead(f);
+                if (Path.GetExtension(f) == ".bz2")
+                {
+                    BZip2.Decompress(stream2, stream, false);
+                    return stream;
+                }
+                return  stream2;
             });
         }
         Bitmap bmp = new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
 
         DateTime PreviousFrame = DateTime.Now;
+   
+
         void MainLoop()
         {
             var now = DateTime.Now;
