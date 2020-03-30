@@ -8,13 +8,12 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using Window;
 
 namespace FrameGenerator
 {
-    public class MainGenerator
+    public class MainGenerator  
     {
-        Widow_Display display = new Widow_Display();
+        public string Folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TtyRecMonkey");
         private readonly Dictionary<string, string> _monsterdata;
         private readonly List<NamedMonsterOverride> _namedMonsterOverrideData;
         private readonly Dictionary<string, string> _characterdata;
@@ -36,7 +35,7 @@ namespace FrameGenerator
         public MainGenerator()
         {
 
-            string gameLocation = File.ReadAllLines(display.Folder + @"\config.ini").First();
+            string gameLocation = File.ReadAllLines(Folder + @"\config.ini").First();
 
             _characterdata = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\racepng.txt");
             _features = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\features.txt");
@@ -58,17 +57,17 @@ namespace FrameGenerator
             _monsterpng = ReadFromFile.GetMonsterPNG(gameLocation);
         }
 
-        public void GenerateImage(TerminalCharacter[,] chars)
+        public Bitmap GenerateImage(TerminalCharacter[,] chars)
         {
             if (chars != null) {
                 var model = Parser.ParseData(chars);
 
                 var image = DrawFrame(model);
-
-                display.Update_Window_Image(image);
+                //update2(image);
                 GC.Collect();
+                return image;
             }
-            return;
+            return null;
         }
 
         private Bitmap DrawFrame(Model model)
@@ -202,10 +201,35 @@ namespace FrameGenerator
                 DrawMonsterDisplay(g, model, overrides);
 
                 DrawLogs(g, model);
+
+                DrawConsole(g, model);
             }
 
             return newFrame;
         }
+
+        private void DrawConsole(Graphics g, Model model)
+        {
+            float currentTileY = 468;
+            float currentTileX = 1075;
+            var font2 = new Font("Courier New", 16);
+
+            for (var i = 0; i < model.TileNames.Length; i++)
+            {
+               
+                if (i % model.LineLength == 0)
+                {
+                    currentTileX = 1000;
+                    currentTileY += 17;
+                }       
+                else  currentTileX += 17;
+
+                g.WriteCharacter(model.TileNames[i], font2, currentTileX, currentTileY, model.HighlightColors[i]);
+
+
+            }
+        }
+   
 
         private void DrawMonsterDisplay(Graphics g, Model model, Dictionary<string, string> overrides)
         {
@@ -365,11 +389,11 @@ namespace FrameGenerator
                 foreach (var item in dict)
                 {
                     if (!string.IsNullOrEmpty(item.Key)) written = true;
-                    Console.Write(item.Key + " ");
+                  //  Console.Write(item.Key + " ");
                 }
                 if (written)
                 {
-                    Console.WriteLine();
+                  //  Console.WriteLine();
                 }
 
             }

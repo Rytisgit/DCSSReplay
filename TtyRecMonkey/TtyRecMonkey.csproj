@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TtyRecMonkey</RootNamespace>
     <AssemblyName>TtyRecMonkey</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -75,20 +75,20 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SlimDX, Version=2.0.13.43, Culture=neutral, PublicKeyToken=b1b0c32fd1ffe4f9, processorArchitecture=x86">
-      <HintPath>..\packages\SlimDX.4.0.13.44\lib\NET20\SlimDX.dll</HintPath>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=1.2.0.246, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.1.2.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Common, Version=4.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Drawing.Common.4.7.0\lib\net461\System.Drawing.Common.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ConfigurationForm.resx">
-      <DependentUpon>ConfigurationForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="FileOrderingForm.resx">
       <DependentUpon>FileOrderingForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -97,14 +97,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <Compile Include="Character.cs" />
     <Compile Include="Configuration.cs" />
-    <Compile Include="ConfigurationForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ConfigurationForm.Designer.cs">
-      <DependentUpon>ConfigurationForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="FileOrderingForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -125,11 +118,11 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Character\Character.csproj">
-      <Project>{86b588bf-9b47-4071-8162-3a2a29bb8fef}</Project>
+      <Project>{80423750-2b2a-4fe8-847c-f62ad5c86c0c}</Project>
       <Name>Character</Name>
     </ProjectReference>
     <ProjectReference Include="..\FrameGenerator\FrameGenerator.csproj">
-      <Project>{56debc93-b053-4652-996f-81e3bb120df8}</Project>
+      <Project>{30f98677-fea1-4f97-8031-efa331dccf08}</Project>
       <Name>FrameGenerator</Name>
     </ProjectReference>
     <ProjectReference Include="..\InputParse\InputParse.csproj">
@@ -137,12 +130,12 @@
       <Name>InputParse</Name>
     </ProjectReference>
     <ProjectReference Include="..\PuttySharp\PuttySharp.csproj">
-      <Project>{6ECD1D84-437E-40A0-832D-C5D06762A6F0}</Project>
+      <Project>{0d491035-af37-4f50-861f-fdf6a3248943}</Project>
       <Name>PuttySharp</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ShinyConsole\ShinyConsole.csproj">
-      <Project>{B246C8EE-F963-403A-893E-530B08BA7261}</Project>
-      <Name>ShinyConsole</Name>
+    <ProjectReference Include="..\Window_Display\Window_Display.csproj">
+      <Project>{1c0525eb-8e42-41c0-9335-bc721e2225d0}</Project>
+      <Name>Window_Display</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

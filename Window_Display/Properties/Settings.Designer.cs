@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Window.Properties {
+namespace Window_Display.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
