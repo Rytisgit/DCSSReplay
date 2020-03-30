@@ -231,7 +231,7 @@ namespace FrameGenerator
         }
    
 
-        private void DrawMonsterDisplay(Graphics graphics, Model model)
+        private void DrawMonsterDisplay(Graphics g, Model model, Dictionary<string, string> overrides)
         {
             
             var sideOfTilesX = 32 * model.LineLength; var currentLineY = 300;
