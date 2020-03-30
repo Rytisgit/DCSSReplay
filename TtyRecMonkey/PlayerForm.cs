@@ -25,7 +25,6 @@ namespace TtyRecMonkey
         Point CursorPosition = new Point(0, 0);
         Point SavedCursorPosition = new Point(0, 0);
 
-
         MainGenerator generator;
         bool generating = false;
         TerminalCharacter[,] savedFrame;
@@ -35,10 +34,7 @@ namespace TtyRecMonkey
             generator = new MainGenerator();
             savedFrame = new TerminalCharacter[80, 24];
             Visible = true;
-
-          
         }
-
 
         public TtyRecKeyframeDecoder Decoder = null;
         double PlaybackSpeed, PausedSpeed;
@@ -111,6 +107,7 @@ namespace TtyRecMonkey
                 return  stream2;
             });
         }
+
         Bitmap bmp = new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
 
         DateTime PreviousFrame = DateTime.Now;
@@ -214,7 +211,7 @@ namespace TtyRecMonkey
             {
 
                 case Keys.Escape: using (Decoder) { } Decoder = null; break;
-                //case Keys.Control | Keys.C: Reconfigure(); break;
+                case Keys.Control | Keys.C: Reconfigure(); break;
                 case Keys.Control | Keys.O: OpenFile(); break;
                 case Keys.Alt | Keys.Enter:
                     if (FormBorderStyle == FormBorderStyle.None)
@@ -254,6 +251,26 @@ namespace TtyRecMonkey
 
             }
             base.OnKeyDown(e);
+        }
+        PlayerSearchForm playerSearch;
+        private void Reconfigure()
+        {
+            playerSearch = new PlayerSearchForm();
+            playerSearch.Visible = true;
+            playerSearch.dataGridView1.CellDoubleClick += DownloadTTyRec;
+        }
+        private void DownloadTTyRec(object sender, DataGridViewCellEventArgs e)
+        {
+            Stream st = new MemoryStream();
+            Stream st3 = new MemoryStream();
+            st = playerSearch.DownloadFile(sender, e);
+            BZip2.Decompress(st, st3, false);
+            IEnumerable<Stream> st2 = new List<Stream>() { st3 };
+            var delay = TimeSpan.Zero;
+            var oldc = Cursor;
+            Decoder = new TtyRecKeyframeDecoder(80, 24, st2, delay);
+            PlaybackSpeed = +1;
+            Seek = TimeSpan.Zero;
         }
 
         static string PrettyTimeSpan(TimeSpan ts)
