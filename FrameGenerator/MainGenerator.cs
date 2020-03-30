@@ -181,7 +181,7 @@ namespace FrameGenerator
                 if (i % model.LineLength == 0)
                 {
                     currentTileX = 1000;
-                    currentTileY += 16;
+                    currentTileY += 17;
                 }       
                 else  currentTileX += 17;
 

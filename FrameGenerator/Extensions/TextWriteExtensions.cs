@@ -45,9 +45,9 @@ namespace FrameGenerator.Extensions
                     color = yellow;
                 }
                 int stringWidth = _MeasureDisplayStringWidth(g, coloredCharacter[0].ToString(), font);
-                Bitmap backgroundColorbmp = new Bitmap(stringWidth, font.Height);
+                Bitmap backgroundColorbmp = new Bitmap(stringWidth, (int)font.Size);
                 Graphics.FromImage(backgroundColorbmp).Clear(color);
-                g.DrawImage(backgroundColorbmp, x, y);
+                g.DrawImage(backgroundColorbmp, x, y+3);
             }
             g.DrawString(coloredCharacter[0].ToString(), font, brush, x, y);
         }
