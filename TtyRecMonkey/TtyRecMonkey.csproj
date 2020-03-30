@@ -75,6 +75,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="HtmlAgilityPack, Version=1.11.23.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.11.23\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=1.2.0.246, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpZipLib.1.2.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
@@ -86,11 +89,15 @@
       <HintPath>..\packages\System.Drawing.Common.4.7.0\lib\net461\System.Drawing.Common.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="FileOrderingForm.resx">
       <DependentUpon>FileOrderingForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PlayerSearchForm.resx">
+      <DependentUpon>PlayerSearchForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -103,6 +110,12 @@
     </Compile>
     <Compile Include="FileOrderingForm.Designer.cs">
       <DependentUpon>FileOrderingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PlayerSearchForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PlayerSearchForm.Designer.cs">
+      <DependentUpon>PlayerSearchForm.cs</DependentUpon>
     </Compile>
     <Compile Include="TtyRecKeyframePacket.cs" />
     <Compile Include="TtyRecPacket.cs" />
