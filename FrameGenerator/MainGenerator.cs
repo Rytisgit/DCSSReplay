@@ -8,12 +8,14 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using InputParser;
 
 namespace FrameGenerator
 {
     public class MainGenerator  
     {
         public string Folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TtyRecMonkey");
+        public bool isGeneratingFrame = false;
         private readonly Dictionary<string, string> _monsterdata;
         private readonly List<NamedMonsterOverride> _namedMonsterOverrideData;
         private readonly Dictionary<string, string> _characterdata;
@@ -63,8 +65,10 @@ namespace FrameGenerator
                 var model = Parser.ParseData(chars);
 
                 var image = DrawFrame(model);
-                //update2(image);
+
+#if false //Memory Limit Mode
                 GC.Collect();
+#endif
                 return image;
             }
             return null;

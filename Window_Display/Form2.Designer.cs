@@ -1,4 +1,4 @@
-﻿namespace Window_Display
+﻿namespace DisplayWindow
 {
     partial class Form2
     {

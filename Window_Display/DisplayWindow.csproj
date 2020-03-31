@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{1C0525EB-8E42-41C0-9335-BC721E2225D0}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Window_Display</RootNamespace>
-    <AssemblyName>Window_Display</AssemblyName>
+    <RootNamespace>DisplayWindow</RootNamespace>
+    <AssemblyName>DisplayWindow</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
