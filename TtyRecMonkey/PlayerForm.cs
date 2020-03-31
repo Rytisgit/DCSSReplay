@@ -3,7 +3,6 @@
 // See the file LICENSE.txt for copying permission.
 
 using FrameGenerator;
-using Putty;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -12,38 +11,29 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using System.Drawing.Imaging;
-using Window_Display;
-using System.Threading.Tasks;
 using ICSharpCode.SharpZipLib.BZip2;
+using DisplayWindow;
 
 namespace TtyRecMonkey
 {
     [System.ComponentModel.DesignerCategory("")]
     public class PlayerForm : Form2
     {
+        private readonly MainGenerator frameGenerator;
+        private TtyRecKeyframeDecoder ttyrecDecoder = null;
+        private double PlaybackSpeed, PausedSpeed;
+        private TimeSpan Seek;
+        private readonly List<DateTime> PreviousFrames = new List<DateTime>();
+        private Stream stream = new MemoryStream();
+        private Bitmap bmp = new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
+        private DateTime PreviousFrame = DateTime.Now;
 
-        Point CursorPosition = new Point(0, 0);
-        Point SavedCursorPosition = new Point(0, 0);
-
-
-        MainGenerator generator;
-        bool generating = false;
-        TerminalCharacter[,] savedFrame;
-        MemoryStream output = new MemoryStream();
         public PlayerForm() 
         {          
-            generator = new MainGenerator();
-            savedFrame = new TerminalCharacter[80, 24];
+            frameGenerator = new MainGenerator();
             Visible = true;
-
-          
         }
 
-
-        public TtyRecKeyframeDecoder Decoder = null;
-        double PlaybackSpeed, PausedSpeed;
-        TimeSpan Seek;
-        readonly List<DateTime> PreviousFrames = new List<DateTime>();
         void OpenFile()
         {
             Thread mt = new Thread(o =>
@@ -76,7 +66,6 @@ namespace TtyRecMonkey
             mt.Join();
         }
 
-
         void DoOpenFiles(string[] files)
         {
             var delay = TimeSpan.Zero;
@@ -89,15 +78,13 @@ namespace TtyRecMonkey
             //    files = fof.FileOrder.ToArray();
             //    delay = TimeSpan.FromSeconds(fof.SecondsBetweenFiles);
             //}
-            
         
             var streams = ttyrecToStream(files);
-            var oldc = Cursor;
-            Decoder = new TtyRecKeyframeDecoder(80, 24, streams, delay);
+            ttyrecDecoder = new TtyRecKeyframeDecoder(80, 24, streams, delay);
             PlaybackSpeed = +1;
             Seek = TimeSpan.Zero;
         }
-        public Stream stream = new MemoryStream();
+        
         private IEnumerable<Stream> ttyrecToStream(string[] files)
         {
             return files.Select(f =>
@@ -110,11 +97,7 @@ namespace TtyRecMonkey
                 }
                 return  stream2;
             });
-        }
-        Bitmap bmp = new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
-
-        DateTime PreviousFrame = DateTime.Now;
-   
+        }   
 
         void MainLoop()
         {
@@ -130,38 +113,38 @@ namespace TtyRecMonkey
 
             Seek += TimeSpan.FromSeconds(dt * PlaybackSpeed);
 
-            if (Decoder != null)
+            if (ttyrecDecoder != null)
             {
-                Decoder.Seek(Seek);
+                ttyrecDecoder.Seek(Seek);
 
-                var frame = Decoder.CurrentFrame.Data;
+                var frame = ttyrecDecoder.CurrentFrame.Data;
 
                 if (frame != null)
                 {
 
-                    if (!generating)
+                    if (!frameGenerator.isGeneratingFrame)
                     {
-                        generating = true;
-                        Array.Copy(frame, 0, savedFrame, 0, frame.Length);
+                        frameGenerator.isGeneratingFrame = true;
 #if true
                         ThreadPool.QueueUserWorkItem(o =>
                             {
                                 try
                                 {
-                                    bmp = generator.GenerateImage(savedFrame);
+                                    bmp = frameGenerator.GenerateImage(frame);
                                     update2(bmp);
-                                    generating = false;
+                                    frameGenerator.isGeneratingFrame = false;
                                 }
                                 catch (Exception ex)
                                 {
                                     Console.WriteLine(ex.Message);
                                     //generator.GenerateImage(savedFrame);
-                                    generating = false;
+                                    frameGenerator.isGeneratingFrame = false;
                                 }
                             });
 #else //non threaded image generation (slow)
                             generator.GenerateImage(savedFrame);
-                            generating = false;
+                            update2(bmp);
+                            frameGenerator.isGeneratingFrame = false;
 #endif
                     }
                 }
@@ -213,7 +196,7 @@ namespace TtyRecMonkey
             switch (e.KeyData)
             {
 
-                case Keys.Escape: using (Decoder) { } Decoder = null; break;
+                case Keys.Escape: using (ttyrecDecoder) { } ttyrecDecoder = null; break;
                 //case Keys.Control | Keys.C: Reconfigure(); break;
                 case Keys.Control | Keys.O: OpenFile(); break;
                 case Keys.Alt | Keys.Enter:
@@ -299,10 +282,5 @@ namespace TtyRecMonkey
                 Application.Run(form);
             }
         }
-    
-     
-
-
-}
-    
+    } 
 }
