@@ -50,8 +50,7 @@
             this.Controls.Add(this.pictureBox2);
             this.Name = "Form2";
             this.Text = "Form2";
-          //  this.Shown += new System.EventHandler(this.Form_Shown);
-          //  this.ResizeEnd += new System.EventHandler(this.OnResize);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form2_FormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
 
