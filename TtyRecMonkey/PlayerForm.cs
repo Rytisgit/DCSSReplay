@@ -281,7 +281,7 @@ namespace TtyRecMonkey
 
         void Loop()
         {
-            while(true)
+            while(run)
             {
                 MainLoop();
             }
@@ -296,6 +296,7 @@ namespace TtyRecMonkey
                 else form.OpenFile();
                 Thread m_Thread = new Thread(() => form.Loop());
                 m_Thread.Start();
+
                 Application.Run(form);
             }
         }
