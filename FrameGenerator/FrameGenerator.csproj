@@ -9,8 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Character\Character.csproj" />
-    <ProjectReference Include="..\InputParse\InputParse.csproj" />
+    <ProjectReference Include="..\InputParse\InputParser.csproj" />
   </ItemGroup>
 
 </Project>
