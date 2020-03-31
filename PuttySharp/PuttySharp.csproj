@@ -5,8 +5,4 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Character\Character.csproj" />
-  </ItemGroup>
-
 </Project>

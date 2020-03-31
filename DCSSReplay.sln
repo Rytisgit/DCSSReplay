@@ -27,13 +27,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extra", "Extra", "{46E43B1B
 		Extra\unknown_potion.png = Extra\unknown_potion.png
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Window_Display", "Window_Display\Window_Display.csproj", "{1C0525EB-8E42-41C0-9335-BC721E2225D0}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Character", "Character\Character.csproj", "{80423750-2B2A-4FE8-847C-F62AD5C86C0C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisplayWindow", "Window_Display\DisplayWindow.csproj", "{1C0525EB-8E42-41C0-9335-BC721E2225D0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FrameGenerator", "FrameGenerator\FrameGenerator.csproj", "{30F98677-FEA1-4F97-8031-EFA331DCCF08}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InputParse", "InputParse\InputParse.csproj", "{84DFB055-AACF-4744-8B11-E88379C161D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InputParser", "InputParse\InputParser.csproj", "{84DFB055-AACF-4744-8B11-E88379C161D7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PuttySharp", "PuttySharp\PuttySharp.csproj", "{0D491035-AF37-4F50-861F-FDF6A3248943}"
 EndProject
@@ -102,24 +100,6 @@ Global
 		{1C0525EB-8E42-41C0-9335-BC721E2225D0}.Release|x64.Build.0 = Release|Any CPU
 		{1C0525EB-8E42-41C0-9335-BC721E2225D0}.Release|x86.ActiveCfg = Release|Any CPU
 		{1C0525EB-8E42-41C0-9335-BC721E2225D0}.Release|x86.Build.0 = Release|Any CPU
-		{80423750-2B2A-4FE8-847C-F62AD5C86C0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{80423750-2B2A-4FE8-847C-F62AD5C86C0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{80423750-2B2A-4FE8-847C-F62AD5C86C0C}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{80423750-2B2A-4FE8-847C-F62AD5C86C0C}.Debug|x64.Build.0 = Debug|Any CPU
-		{80423750-2B2A-4FE8-847C-F62AD5C86C0C}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{80423750-2B2A-4FE8-847C-F62AD5C86C0C}.Debug|x86.Build.0 = Debug|Any CPU
-		{80423750-2B2A-4FE8-847C-F62AD5C86C0C}.PuttyDllDebug|Any CPU.ActiveCfg = Debug|Any CPU
-		{80423750-2B2A-4FE8-847C-F62AD5C86C0C}.PuttyDllDebug|Any CPU.Build.0 = Debug|Any CPU
-		{80423750-2B2A-4FE8-847C-F62AD5C86C0C}.PuttyDllDebug|x64.ActiveCfg = Debug|Any CPU
-		{80423750-2B2A-4FE8-847C-F62AD5C86C0C}.PuttyDllDebug|x64.Build.0 = Debug|Any CPU
-		{80423750-2B2A-4FE8-847C-F62AD5C86C0C}.PuttyDllDebug|x86.ActiveCfg = Debug|Any CPU
-		{80423750-2B2A-4FE8-847C-F62AD5C86C0C}.PuttyDllDebug|x86.Build.0 = Debug|Any CPU
-		{80423750-2B2A-4FE8-847C-F62AD5C86C0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{80423750-2B2A-4FE8-847C-F62AD5C86C0C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{80423750-2B2A-4FE8-847C-F62AD5C86C0C}.Release|x64.ActiveCfg = Release|Any CPU
-		{80423750-2B2A-4FE8-847C-F62AD5C86C0C}.Release|x64.Build.0 = Release|Any CPU
-		{80423750-2B2A-4FE8-847C-F62AD5C86C0C}.Release|x86.ActiveCfg = Release|Any CPU
-		{80423750-2B2A-4FE8-847C-F62AD5C86C0C}.Release|x86.Build.0 = Release|Any CPU
 		{30F98677-FEA1-4F97-8031-EFA331DCCF08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{30F98677-FEA1-4F97-8031-EFA331DCCF08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30F98677-FEA1-4F97-8031-EFA331DCCF08}.Debug|x64.ActiveCfg = Debug|Any CPU
