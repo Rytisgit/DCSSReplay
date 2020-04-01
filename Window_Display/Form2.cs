@@ -52,8 +52,16 @@ namespace Window_Display
 
             public void update2(Bitmap frame)
             {
-              
-            pictureBox2.Image = frame;
+            if (pictureBox2.InvokeRequired)
+            {
+                var d = new SafeCallDelegate(update2);
+                pictureBox2.Invoke(d, new object[] { frame });
+            }
+            else
+            {
+                pictureBox2.Image = frame;
+            }
+
         }
         }
     
