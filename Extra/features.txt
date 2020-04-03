@@ -67,7 +67,7 @@ malign_gateway
 \LIGHTBLUE
 malign_gateway
 ≈RED
-lava
+lava08
 ≈BLUE
 deep_water
 ≈CYAN

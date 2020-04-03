@@ -223,10 +223,10 @@ namespace FrameGenerator
                
                 if (i % model.LineLength == 0)
                 {
-                    currentTileX = 1000;
-                    currentTileY += 17;
+                    currentTileX = 1065;
+                    currentTileY += 16;
                 }       
-                else  currentTileX += 17;
+                else  currentTileX += 16;
 
                 g.WriteCharacter(model.TileNames[i], font2, currentTileX, currentTileY, model.HighlightColors[i]);
 
@@ -386,21 +386,22 @@ namespace FrameGenerator
                 //TODO if location is middle and tile name starts with @ draw character
                 DrawCurrentTile(g, model, dict, model.TileNames[i], model.HighlightColors[i], characterRace, wall, floor, overrides, currentTileX, currentTileY);
             }
-
+#if DEBUG
             if (dict.Count < 10)
             {
                 bool written = false;
                 foreach (var item in dict)
                 {
                     if (!string.IsNullOrEmpty(item.Key)) written = true;
-                  //  Console.Write(item.Key + " ");
+
+                    Console.Write(item.Key + " ");
                 }
                 if (written)
                 {
-                  //  Console.WriteLine();
+                    Console.WriteLine();
                 }
-
             }
+#endif
         }
 
         private void DrawCurrentTile(Graphics g, Model model, Dictionary<string, string> dict, string tile, string tileHighlight, string OnlyRace, Bitmap wall, Bitmap floor, Dictionary<string, string> overrides, float x, float y)
