@@ -42,11 +42,11 @@ namespace FrameGenerator.Extensions
                 int stringWidth = _MeasureDisplayStringWidth(g, coloredCharacter[0].ToString(), font);
                 Bitmap backgroundColorbmp = new Bitmap(stringWidth, (int)font.Size);
                 Graphics.FromImage(backgroundColorbmp).Clear(color);
-                g.DrawImage(backgroundColorbmp, x, y+3);
+                g.DrawImage(backgroundColorbmp, x, y + 3);
             }
             g.DrawString(coloredCharacter[0].ToString(), font, brush, x, y);
         }
-       
+
         public static void PaintBackground(this Graphics g, string backgroundColor, Font font, float x, float y)
         {
             var black = ColorList.GetColor("BLACK");

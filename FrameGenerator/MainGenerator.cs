@@ -1,6 +1,7 @@
-﻿using FrameGenerator.FileReading;
-using FrameGenerator.Extensions;
+﻿using FrameGenerator.Extensions;
+using FrameGenerator.FileReading;
 using InputParse;
+using InputParser;
 using Putty;
 using System;
 using System.Collections.Generic;
@@ -8,11 +9,10 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using InputParser;
 
 namespace FrameGenerator
 {
-    public class MainGenerator  
+    public class MainGenerator
     {
         public string Folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "DCSSReplay");
         public bool isGeneratingFrame = false;
@@ -43,7 +43,7 @@ namespace FrameGenerator
             _features = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\features.txt");
             _cloudtiles = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\clouds.txt");
             _itemdata = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\items.txt");
-            
+
             _floorandwall = ReadFromFile.GetFloorAndWallNamesForDungeons(@"..\..\..\Extra\tilefloor.txt");
             _monsterdata = ReadFromFile.GetMonsterData(gameLocation + @"\mon-data.h", @"..\..\..\Extra\monsteroverrides.txt");
             _namedMonsterOverrideData = ReadFromFile.GetNamedMonsterOverrideData(@"..\..\..\Extra\namedmonsteroverrides.txt");
@@ -61,7 +61,8 @@ namespace FrameGenerator
 
         public Bitmap GenerateImage(TerminalCharacter[,] chars)
         {
-            if (chars != null) {
+            if (chars != null)
+            {
                 var model = Parser.ParseData(chars);
 
                 var image = DrawFrame(model);
@@ -106,13 +107,14 @@ namespace FrameGenerator
             {
                 if (!monsterLine.Empty)
                 {
-                    var rules = _namedMonsterOverrideData.Where((o) => { 
+                    var rules = _namedMonsterOverrideData.Where((o) =>
+                    {
                         if (string.IsNullOrWhiteSpace(o.Name)) return false;
                         else return monsterLine.MonsterTextRaw.Contains(o.Name.Substring(0, o.Name.Length - 2));
                     });
                     foreach (var rule in rules.ToList())
                     {
-                        if(string.IsNullOrWhiteSpace(rule.Location) || rule.Location == location)
+                        if (string.IsNullOrWhiteSpace(rule.Location) || rule.Location == location)
                         {
                             foreach (var tileOverride in rule.TileNameOverrides)
                             {
@@ -138,7 +140,7 @@ namespace FrameGenerator
         private Bitmap DrawMap(Model model)
         {
             Bitmap bmp = new Bitmap(1602, 768, PixelFormat.Format32bppArgb);
-           
+
             using (Graphics g = Graphics.FromImage(bmp))
             {
                 using (var font = new Font("Courier New", 22))
@@ -220,24 +222,24 @@ namespace FrameGenerator
 
             for (var i = 0; i < model.TileNames.Length; i++)
             {
-               
+
                 if (i % model.LineLength == 0)
                 {
                     currentTileX = 1065;
                     currentTileY += 16;
-                }       
-                else  currentTileX += 16;
+                }
+                else currentTileX += 16;
 
                 g.WriteCharacter(model.TileNames[i], font2, currentTileX, currentTileY, model.HighlightColors[i]);
 
 
             }
         }
-   
+
 
         private void DrawMonsterDisplay(Graphics g, Model model, Dictionary<string, string> overrides)
         {
-            
+
             var sideOfTilesX = 32 * model.LineLength; var currentLineY = 300;
             var font = new Font("Courier New", 16);
             foreach (var monsterlist in model.MonsterData)
@@ -255,8 +257,8 @@ namespace FrameGenerator
                     }
                     foreach (var monster in monsterlist.MonsterDisplay)//draw all monsters in 1 line
                     {
-                        
-                        
+
+
                     }
                     var otherx = x;
                     foreach (var backgroundColor in monsterlist.MonsterBackground.Skip(monsterlist.MonsterDisplay.Length))
@@ -284,10 +286,11 @@ namespace FrameGenerator
             {
                 if (!model.LogData[i].Empty)
                 {
-                    for(int charIndex = 0; charIndex < model.LogData[i].LogTextRaw.Length; charIndex++) { 
+                    for (int charIndex = 0; charIndex < model.LogData[i].LogTextRaw.Length; charIndex++)
+                    {
                         g.WriteCharacter(model.LogData[i].LogText[charIndex], font, charIndex * 12, y);
                     }
-                }                
+                }
                 y += 32;
             }
         }
