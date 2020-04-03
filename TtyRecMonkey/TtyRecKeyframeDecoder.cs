@@ -94,9 +94,9 @@ namespace TtyRecMonkey
             while (before_seek > 0 && Packets[before_seek].RestartPosition == null) --before_seek;
 
 #if DEBUG
-			var reference_before_seek = Packets.FindLastIndex( ap => ap.RestartPosition!=null && ap.SinceStart <= seektarget );
-			if ( reference_before_seek == -1 ) reference_before_seek = 0;
-			//debug.assert( before_seek == reference_before_seek );
+            var reference_before_seek = Packets.FindLastIndex(ap => ap.RestartPosition != null && ap.SinceStart <= seektarget);
+            if (reference_before_seek == -1) reference_before_seek = 0;
+            //debug.assert( before_seek == reference_before_seek );
 #endif
 
             var after_seek = Packets.FindIndex(before_seek + 1, ap => ap.RestartPosition != null && ap.SinceStart > seektarget);
@@ -136,7 +136,7 @@ namespace TtyRecMonkey
             {
                 var p = Packets[i];
                 if (p.DecodedCache != null) continue;
-                var weak = (p.DecodedCache == null) ? null : p.DecodedCacheWeak.Target; 
+                var weak = (p.DecodedCache == null) ? null : p.DecodedCacheWeak.Target;
 
                 if (weak != null)
                 {
@@ -250,7 +250,7 @@ namespace TtyRecMonkey
             var buffer = new List<AnnotatedPacket>();
 
 #if DEBUG
-			Thread.Sleep(1000); // make sure everything can handle having 0 packets in the buffer for a bit
+            Thread.Sleep(1000); // make sure everything can handle having 0 packets in the buffer for a bit
 #endif
 
             foreach (var ap in annotated)

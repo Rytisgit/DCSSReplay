@@ -14,17 +14,15 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PuttyDLL", "Putty\WINDOWS\V
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extra", "Extra", "{46E43B1B-7F91-48E6-9D5F-166C41B210A5}"
 	ProjectSection(SolutionItems) = preProject
+		Extra\cloud rules.txt = Extra\cloud rules.txt
 		Extra\clouds.txt = Extra\clouds.txt
 		Extra\features.txt = Extra\features.txt
 		Extra\items.txt = Extra\items.txt
-		monsteroverrides.txt = monsteroverrides.txt
-		namedmonsteroverrides.txt = namedmonsteroverrides.txt
-		Extra\neg_tloc_hybrid.png = Extra\neg_tloc_hybrid.png
+		Extra\monsteroverrides.txt = Extra\monsteroverrides.txt
+		Extra\namedmonsteroverrides.txt = Extra\namedmonsteroverrides.txt
 		Extra\racepng.txt = Extra\racepng.txt
-		SameMonsterRules.txt = SameMonsterRules.txt
+		Extra\SameMonsterRules.txt = Extra\SameMonsterRules.txt
 		Extra\tilefloor.txt = Extra\tilefloor.txt
-		Extra\unknown_altar.png = Extra\unknown_altar.png
-		Extra\unknown_potion.png = Extra\unknown_potion.png
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisplayWindow", "Window_Display\DisplayWindow.csproj", "{1C0525EB-8E42-41C0-9335-BC721E2225D0}"

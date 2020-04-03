@@ -1,10 +1,7 @@
 ﻿using InputParser;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 
 namespace FrameGenerator.Extensions
 {
@@ -40,7 +37,7 @@ namespace FrameGenerator.Extensions
                 return true;
             }
 
-             if (tile == "*BLUE")
+            if (tile == "*BLUE")
             {
                 g.DrawImage(wall, x, y, wall.Width, wall.Height);
                 var blueTint = new SolidBrush(Color.FromArgb(40, 30, 30, 200));
@@ -94,8 +91,9 @@ namespace FrameGenerator.Extensions
             if (tile.StartsWith("@BL")) return false;//player tile draw override TODO
             var isHighlighted = FixHighlight(tile, background, out var correctTile);
             string pngName;
-            if (!overrides.TryGetValue(correctTile, out pngName)) { 
-                if (!monsterData.TryGetValue(correctTile, out pngName)) return false; 
+            if (!overrides.TryGetValue(correctTile, out pngName))
+            {
+                if (!monsterData.TryGetValue(correctTile, out pngName)) return false;
             }
             if (!monsterPng.TryGetValue(pngName, out Bitmap png)) return false;
 
@@ -129,11 +127,13 @@ namespace FrameGenerator.Extensions
 
         private static bool FixHighlight(string tile, string backgroundColor, out string correctTile)//if highlighted, returns fixed string
         {
-            if (backgroundColor.Equals(Enum.GetName(typeof(ColorList2), ColorList2.BLACK))) { 
-                correctTile = tile; 
-                return false; 
+            if (backgroundColor.Equals(Enum.GetName(typeof(ColorList2), ColorList2.BLACK)))
+            {
+                correctTile = tile;
+                return false;
             }
-            else { 
+            else
+            {
                 correctTile = tile[0] + backgroundColor;
             }
             return true;
@@ -147,12 +147,12 @@ namespace FrameGenerator.Extensions
             if (!itemData.TryGetValue(correctTile, out var pngName)) return false;
 
             g.DrawImage(floor, x, y, floor.Width, floor.Height);
-            
-            var demonicWeaponLocations = new List<string>() { "Hell", "Dis", "Gehenna", "Cocytus", "Tartarus", "Vaults", "Depths"};
 
-            if (correctTile.Substring(1).Equals(Enum.GetName(typeof(ColorList2), ColorList2.LIGHTRED)) && demonicWeaponLocations.Contains(location)) 
+            var demonicWeaponLocations = new List<string>() { "Hell", "Dis", "Gehenna", "Cocytus", "Tartarus", "Vaults", "Depths" };
+
+            if (correctTile.Substring(1).Equals(Enum.GetName(typeof(ColorList2), ColorList2.LIGHTRED)) && demonicWeaponLocations.Contains(location))
             {
-                if (itemPngs.TryGetValue("demon_blade2", out Bitmap demonBlade)) 
+                if (itemPngs.TryGetValue("demon_blade2", out Bitmap demonBlade))
                 {
                     g.DrawImage(demonBlade, x, y, demonBlade.Width, demonBlade.Height);
 
@@ -162,10 +162,10 @@ namespace FrameGenerator.Extensions
             }
 
             if (!itemPngs.TryGetValue(pngName, out Bitmap png)) return false;
-            
+
             g.DrawImage(png, x, y, png.Width, png.Height);
 
-            if(isHighlighted && miscPngs.TryGetValue("something_under", out underneathIcon)) g.DrawImage(underneathIcon, x, y, underneathIcon.Width, underneathIcon.Height);
+            if (isHighlighted && miscPngs.TryGetValue("something_under", out underneathIcon)) g.DrawImage(underneathIcon, x, y, underneathIcon.Width, underneathIcon.Height);
             return true;
         }
 
@@ -199,16 +199,16 @@ namespace FrameGenerator.Extensions
                 {
                     if (effectPngs.TryGetValue("tornado1", out var bmp))
                     {
-                        g.DrawImage(bmp, x, y, bmp.Width , bmp.Height );
+                        g.DrawImage(bmp, x, y, bmp.Width, bmp.Height);
                         return true;
                     }
                 }
-                
+
                 if (t2Colors.Contains(tileColor))
                 {
                     if (effectPngs.TryGetValue("tornado2", out Bitmap bmp))
                     {
-                        g.DrawImage(bmp, x, y, bmp.Width , bmp.Height );
+                        g.DrawImage(bmp, x, y, bmp.Width, bmp.Height);
                         return true;
                     }
                 }
@@ -216,7 +216,7 @@ namespace FrameGenerator.Extensions
 
             if (sideData.Place.Contains("Salt"))
             {
-                var colors = new List<string>() { 
+                var colors = new List<string>() {
                     Enum.GetName(typeof(ColorList2), ColorList2.LIGHTGREY),
                     Enum.GetName(typeof(ColorList2), ColorList2.WHITE) };
 
@@ -226,7 +226,7 @@ namespace FrameGenerator.Extensions
                     {
                         if (effectPngs.TryGetValue("cloud_grey_smoke", out Bitmap bmp))
                         {
-                            g.DrawImage(bmp, x, y, bmp.Width , bmp.Height );
+                            g.DrawImage(bmp, x, y, bmp.Width, bmp.Height);
                             return true;
                         }
                     }
@@ -236,7 +236,7 @@ namespace FrameGenerator.Extensions
             if (sideData.Race.Contains("of Qazlal"))
             {
 
-                var stormColors = new List<string>() { 
+                var stormColors = new List<string>() {
                     Enum.GetName(typeof(ColorList2), ColorList2.LIGHTGREY),
                     Enum.GetName(typeof(ColorList2), ColorList2.DARKGREY) };
 
@@ -246,7 +246,7 @@ namespace FrameGenerator.Extensions
                     {
                         if (effectPngs.TryGetValue("cloud_storm2", out Bitmap bmp))
                         {
-                            g.DrawImage(bmp, x, y, bmp.Width , bmp.Height );
+                            g.DrawImage(bmp, x, y, bmp.Width, bmp.Height);
                             return true;
                         }
                     }
@@ -256,7 +256,7 @@ namespace FrameGenerator.Extensions
                 {
                     if (effectPngs.TryGetValue("cloud_dust" + durationLength[tile[0]], out Bitmap bmp))
                     {
-                        g.DrawImage(bmp, x, y, bmp.Width , bmp.Height );
+                        g.DrawImage(bmp, x, y, bmp.Width, bmp.Height);
                         return true;
                     }
                 }
@@ -269,7 +269,7 @@ namespace FrameGenerator.Extensions
                 {
                     if (effectPngs.TryGetValue("cloud_calc_dust2", out Bitmap bmp))
                     {
-                        g.DrawImage(bmp, x, y, bmp.Width , bmp.Height );
+                        g.DrawImage(bmp, x, y, bmp.Width, bmp.Height);
                         return true;
                     }
 
@@ -282,7 +282,7 @@ namespace FrameGenerator.Extensions
                 {
                     if (effectPngs.TryGetValue("ink_full", out Bitmap bmp))
                     {
-                        g.DrawImage(bmp, x, y, bmp.Width , bmp.Height );
+                        g.DrawImage(bmp, x, y, bmp.Width, bmp.Height);
                         return true;
                     }
                 }
@@ -294,7 +294,7 @@ namespace FrameGenerator.Extensions
                 {
                     if (effectPngs.TryGetValue("cloud_yellow_smoke", out Bitmap bmp))
                     {
-                        g.DrawImage(bmp, x, y, bmp.Width , bmp.Height );
+                        g.DrawImage(bmp, x, y, bmp.Width, bmp.Height);
                         return true;
                     }
 
@@ -303,7 +303,7 @@ namespace FrameGenerator.Extensions
 
             if (sideData.Statuses1.Contains("Storm") || sideData.Statuses2.Contains("Storm"))//wu jian heavenly storm
             {
-                var stormColors = new List<string>() { 
+                var stormColors = new List<string>() {
                     Enum.GetName(typeof(ColorList2), ColorList2.WHITE),
                     Enum.GetName(typeof(ColorList2), ColorList2.YELLOW)};
 
@@ -311,7 +311,7 @@ namespace FrameGenerator.Extensions
                 {
                     if (effectPngs.TryGetValue("cloud_gold_dust" + durationLength[tile[0]], out Bitmap bmp))
                     {
-                        g.DrawImage(bmp, x, y, bmp.Width , bmp.Height );
+                        g.DrawImage(bmp, x, y, bmp.Width, bmp.Height);
                         return true;
                     }
                 }
