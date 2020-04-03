@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace FrameGenerator
+namespace FrameGenerator.Models
 {
     public class NamedMonsterOverride
     {
