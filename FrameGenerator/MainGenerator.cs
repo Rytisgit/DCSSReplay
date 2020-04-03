@@ -1,6 +1,7 @@
-﻿using FrameGenerator.FileReading;
-using FrameGenerator.Extensions;
-using InputParse;
+﻿using FrameGenerator.Extensions;
+using FrameGenerator.FileReading;
+using FrameGenerator.Models;
+using InputParser;
 using Putty;
 using System;
 using System.Collections.Generic;
@@ -8,13 +9,12 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using InputParser;
 
 namespace FrameGenerator
 {
-    public class MainGenerator  
+    public class MainGenerator
     {
-        public string Folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TtyRecMonkey");
+        public string Folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "DCSSReplay");
         public bool isGeneratingFrame = false;
         private readonly Dictionary<string, string> _monsterdata;
         private readonly List<NamedMonsterOverride> _namedMonsterOverrideData;
@@ -37,13 +37,13 @@ namespace FrameGenerator
         public MainGenerator()
         {
 
-            string gameLocation = File.ReadAllLines(Folder + @"\config.ini").First();
+            string gameLocation = @"..\..\..\Extra";
 
             _characterdata = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\racepng.txt");
             _features = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\features.txt");
             _cloudtiles = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\clouds.txt");
             _itemdata = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\items.txt");
-            
+
             _floorandwall = ReadFromFile.GetFloorAndWallNamesForDungeons(@"..\..\..\Extra\tilefloor.txt");
             _monsterdata = ReadFromFile.GetMonsterData(gameLocation + @"\mon-data.h", @"..\..\..\Extra\monsteroverrides.txt");
             _namedMonsterOverrideData = ReadFromFile.GetNamedMonsterOverrideData(@"..\..\..\Extra\namedmonsteroverrides.txt");
@@ -61,7 +61,8 @@ namespace FrameGenerator
 
         public Bitmap GenerateImage(TerminalCharacter[,] chars)
         {
-            if (chars != null) {
+            if (chars != null)
+            {
                 var model = Parser.ParseData(chars);
 
                 var image = DrawFrame(model);
@@ -104,15 +105,16 @@ namespace FrameGenerator
             var finalOverrides = new Dictionary<string, string>();
             foreach (var monsterLine in monsters)
             {
-                if (!monsterLine.empty)
+                if (!monsterLine.Empty)
                 {
-                    var rules = _namedMonsterOverrideData.Where((o) => { 
+                    var rules = _namedMonsterOverrideData.Where((o) =>
+                    {
                         if (string.IsNullOrWhiteSpace(o.Name)) return false;
                         else return monsterLine.MonsterTextRaw.Contains(o.Name.Substring(0, o.Name.Length - 2));
                     });
                     foreach (var rule in rules.ToList())
                     {
-                        if(string.IsNullOrWhiteSpace(rule.Location) || rule.Location == location)
+                        if (string.IsNullOrWhiteSpace(rule.Location) || rule.Location == location)
                         {
                             foreach (var tileOverride in rule.TileNameOverrides)
                             {
@@ -138,21 +140,19 @@ namespace FrameGenerator
         private Bitmap DrawMap(Model model)
         {
             Bitmap bmp = new Bitmap(1602, 768, PixelFormat.Format32bppArgb);
-           
+
             using (Graphics g = Graphics.FromImage(bmp))
             {
-                using (var font = new Font("Courier New", 22))
+                using var font = new Font("Courier New", 22);
+                float x = 0;
+                float y = 0;
+                for (int j = 0; j < model.LineLength; j++)//write out first line as text
                 {
-                    float x = 0;
-                    float y = 0;
-                    for (int j = 0; j < model.LineLength; j++)//write out first line as text
-                    {
-                        g.WriteCharacter(model.TileNames[j], font, x, y);
-                        x += 20;
-                    }
-                    var overrides = GetOverridesForFrame(model.MonsterData, model.Location);
-                    DrawTiles(g, model, 0, 32, model.LineLength, overrides);//draw the rest of the map
+                    g.WriteCharacter(model.TileNames[j], font, x, y);
+                    x += 20;
                 }
+                var overrides = GetOverridesForFrame(model.MonsterData, model.Location);
+                DrawTiles(g, model, 0, 32, model.LineLength, overrides);//draw the rest of the map
             }
 
             return bmp;
@@ -164,25 +164,23 @@ namespace FrameGenerator
 
             using (Graphics g = Graphics.FromImage(overlayImage))
             {
-                using (var font = new Font("Courier New", 12))
-                {
-                    var darkPen = new Pen(new SolidBrush(Color.FromArgb(255, 125, 98, 60)), 2);
-                    Rectangle rect2 = new Rectangle(25, 25, 1000, 430);
-                    g.DrawRectangle(darkPen, rect2);
-                    g.FillRectangle(new SolidBrush(Color.Black), rect2);
+                using var font = new Font("Courier New", 12);
+                var darkPen = new Pen(new SolidBrush(Color.FromArgb(255, 125, 98, 60)), 2);
+                Rectangle rect2 = new Rectangle(25, 25, 1000, 430);
+                g.DrawRectangle(darkPen, rect2);
+                g.FillRectangle(new SolidBrush(Color.Black), rect2);
 
-                    float x = 50;
-                    float y = 34;
-                    for (int i = 0; i < model.TileNames.Length; i++)
+                float x = 50;
+                float y = 34;
+                for (int i = 0; i < model.TileNames.Length; i++)
+                {
+                    if (i % model.LineLength == 0)//next line
                     {
-                        if (i % model.LineLength == 0)//next line
-                        {
-                            x = 50;
-                            y += 16;
-                        }
-                        g.WriteCharacter(model.TileNames[i], font, x, y);
-                        x += 12;
+                        x = 50;
+                        y += 16;
                     }
+                    g.WriteCharacter(model.TileNames[i], font, x, y);
+                    x += 12;
                 }
             }
 
@@ -216,34 +214,34 @@ namespace FrameGenerator
         {
             float currentTileY = 468;
             float currentTileX = 1075;
-            var font2 = new Font("Courier New", 16);
+            using var font2 = new Font("Courier New", 16);
 
             for (var i = 0; i < model.TileNames.Length; i++)
             {
-               
+
                 if (i % model.LineLength == 0)
                 {
-                    currentTileX = 1000;
-                    currentTileY += 17;
-                }       
-                else  currentTileX += 17;
+                    currentTileX = 1065;
+                    currentTileY += 16;
+                }
+                else currentTileX += 16;
 
                 g.WriteCharacter(model.TileNames[i], font2, currentTileX, currentTileY, model.HighlightColors[i]);
 
 
             }
         }
-   
+
 
         private void DrawMonsterDisplay(Graphics g, Model model, Dictionary<string, string> overrides)
         {
-            
+
             var sideOfTilesX = 32 * model.LineLength; var currentLineY = 300;
-            var font = new Font("Courier New", 16);
+            using var font = new Font("Courier New", 16);
             foreach (var monsterlist in model.MonsterData)
             {
                 var x = sideOfTilesX;
-                if (!monsterlist.empty)
+                if (!monsterlist.Empty)
                 {
                     for (int i = 0; i < monsterlist.MonsterDisplay.Length; i++)
                     {
@@ -255,8 +253,8 @@ namespace FrameGenerator
                     }
                     foreach (var monster in monsterlist.MonsterDisplay)//draw all monsters in 1 line
                     {
-                        
-                        
+
+
                     }
                     var otherx = x;
                     foreach (var backgroundColor in monsterlist.MonsterBackground.Skip(monsterlist.MonsterDisplay.Length))
@@ -279,15 +277,16 @@ namespace FrameGenerator
         private static void DrawLogs(Graphics g, Model model)
         {
             int y = 544;
-            var font = new Font("Courier New", 16);
+            using var font = new Font("Courier New", 16);
             for (int i = 0; i < model.LogData.Length; i++)
             {
-                if (!model.LogData[i].empty)
+                if (!model.LogData[i].Empty)
                 {
-                    for(int charIndex = 0; charIndex < model.LogData[i].LogTextRaw.Length; charIndex++) { 
+                    for (int charIndex = 0; charIndex < model.LogData[i].LogTextRaw.Length; charIndex++)
+                    {
                         g.WriteCharacter(model.LogData[i].LogText[charIndex], font, charIndex * 12, y);
                     }
-                }                
+                }
                 y += 32;
             }
         }
@@ -295,65 +294,61 @@ namespace FrameGenerator
         public static void DrawSideDATA(Graphics g, Model model, int prevHP)
 
         {
-            using (Font font = new Font("Courier New", 16))
+            using Font font = new Font("Courier New", 16);
+            var yellow = new SolidBrush(Color.FromArgb(252, 233, 79));
+            var gray = new SolidBrush(Color.FromArgb(186, 189, 182));
+
+            var lineCount = 0;
+            var lineHeight = 20;
+
+            g.DrawString(model.SideData.Name, font, yellow, 32 * model.LineLength, lineCount * lineHeight);
+            lineCount++;
+            g.DrawString(model.SideData.Race, font, yellow, 32 * model.LineLength, lineCount * lineHeight);
+            lineCount++;
+            g.WriteSideDataInfo("Health: ", model.SideData.Health.ToString() + '/' + model.SideData.MaxHealth.ToString(), font, 32 * model.LineLength, lineCount * lineHeight)
+            .DrawPercentageBar(model.SideData.Health, model.SideData.MaxHealth, Color.Green, 32 * (model.LineLength + 8), lineCount * lineHeight);
+            lineCount++;
+            g.WriteSideDataInfo("Mana: ", model.SideData.Magic.ToString() + '/' + model.SideData.MaxMagic.ToString(), font, 32 * model.LineLength, lineCount * lineHeight)
+            .DrawPercentageBar(model.SideData.Magic, model.SideData.MaxMagic, Color.Blue, 32 * (model.LineLength + 8), lineCount * lineHeight);
+            lineCount++;
+            g.WriteSideDataInfo("AC: ", model.SideData.ArmourClass, font, 32 * model.LineLength, lineCount * lineHeight)
+            .WriteSideDataInfo("Str: ", model.SideData.Strength, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
+            lineCount++;
+            g.WriteSideDataInfo("EV: ", model.SideData.Evasion, font, 32 * model.LineLength, lineCount * lineHeight)
+            .WriteSideDataInfo("Int: ", model.SideData.Inteligence, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
+            lineCount++;
+            g.WriteSideDataInfo("SH: ", model.SideData.Shield, font, 32 * model.LineLength, lineCount * lineHeight)
+            .WriteSideDataInfo("Dex: ", model.SideData.Dexterity, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
+            lineCount++;
+            g.WriteSideDataInfo("XL: ", model.SideData.ExperienceLevel, font, 32 * model.LineLength, lineCount * lineHeight)
+            .WriteSideDataInfo(" Next: ", model.SideData.ExperienceLevel, font, 32 * model.LineLength + g.MeasureString("XL: " + model.SideData.ExperienceLevel, font).Width, lineCount * lineHeight)
+            .WriteSideDataInfo("Place: ", model.SideData.Place, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
+            lineCount++;
+            g.WriteSideDataInfo("Noise:", "noise here", font, 32 * model.LineLength, lineCount * lineHeight)
+            .WriteSideDataInfo("Time: ", model.SideData.Time, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
+            lineCount++;
+
+            g.WriteSideDataInfo("Wp: ", model.SideData.Weapon.Substring(0, 35), font, 32 * model.LineLength, lineCount * lineHeight);
+            lineCount++;
+            if (model.SideData.Weapon.Length > 39)
             {
-
-                var yellow = new SolidBrush(Color.FromArgb(252, 233, 79));
-                var gray = new SolidBrush(Color.FromArgb(186, 189, 182));
-
-                var lineCount = 0;
-                var lineHeight = 20;
-
-                g.DrawString(model.SideData.Name, font, yellow, 32 * model.LineLength, lineCount * lineHeight);
+                g.DrawString(model.SideData.Weapon.Substring(35), font, gray, 32 * model.LineLength + g.MeasureString("Wp: ", font).Width, lineCount * lineHeight);
                 lineCount++;
-                g.DrawString(model.SideData.Race, font, yellow, 32 * model.LineLength, lineCount * lineHeight);
-                lineCount++;
-                g.WriteSideDataInfo("Health: ", model.SideData.Health.ToString() + '/' + model.SideData.MaxHealth.ToString(), font, 32 * model.LineLength, lineCount * lineHeight)
-                .DrawPercentageBar(model.SideData.Health, model.SideData.MaxHealth, Color.Green, 32 * (model.LineLength + 8), lineCount * lineHeight);
-                lineCount++;
-                g.WriteSideDataInfo("Mana: ", model.SideData.Magic.ToString() + '/' + model.SideData.MaxMagic.ToString(), font, 32 * model.LineLength, lineCount * lineHeight)
-                .DrawPercentageBar(model.SideData.Magic, model.SideData.MaxMagic, Color.Blue, 32 * (model.LineLength + 8), lineCount * lineHeight);
-                lineCount++;
-                g.WriteSideDataInfo("AC: ", model.SideData.ArmourClass, font, 32 * model.LineLength, lineCount * lineHeight)
-                .WriteSideDataInfo("Str: ", model.SideData.Strength, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
-                lineCount++;
-                g.WriteSideDataInfo("EV: ", model.SideData.Evasion, font, 32 * model.LineLength, lineCount * lineHeight)
-                .WriteSideDataInfo("Int: ", model.SideData.Inteligence, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
-                lineCount++;
-                g.WriteSideDataInfo("SH: ", model.SideData.Shield, font, 32 * model.LineLength, lineCount * lineHeight)
-                .WriteSideDataInfo("Dex: ", model.SideData.Dexterity, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
-                lineCount++;
-                g.WriteSideDataInfo("XL: ", model.SideData.ExperienceLevel, font, 32 * model.LineLength, lineCount * lineHeight)
-                .WriteSideDataInfo(" Next: ", model.SideData.ExperienceLevel, font, 32 * model.LineLength + g.MeasureString("XL: " + model.SideData.ExperienceLevel, font).Width, lineCount * lineHeight)
-                .WriteSideDataInfo("Place: ", model.SideData.Place, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
-                lineCount++;
-                g.WriteSideDataInfo("Noise:", "noise here", font, 32 * model.LineLength, lineCount * lineHeight)
-                .WriteSideDataInfo("Time: ", model.SideData.Time, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
-                lineCount++;
-
-                g.WriteSideDataInfo("Wp: ", model.SideData.Weapon.Substring(0, 35), font, 32 * model.LineLength, lineCount * lineHeight);
-                lineCount++;
-                if (model.SideData.Weapon.Length > 39)
-                {
-                    g.DrawString(model.SideData.Weapon.Substring(35), font, gray, 32 * model.LineLength + g.MeasureString("Wp: ", font).Width, lineCount * lineHeight);
-                    lineCount++;
-                }
-
-                g.WriteSideDataInfo("Qv: ", model.SideData.Quiver.Substring(0, 35), font, 32 * model.LineLength, lineCount * lineHeight);
-                lineCount++;
-                if (model.SideData.Quiver.Length > 39)
-                {
-                    g.DrawString(model.SideData.Quiver.Substring(35), font, gray, 32 * model.LineLength + g.MeasureString("Qv: ", font).Width, lineCount * lineHeight);
-                    lineCount++;
-                }
-
-                // TODO better status writing
-                g.DrawString(model.SideData.Statuses1, font, gray, 32 * model.LineLength, lineCount * lineHeight);
-                lineCount++;
-                g.DrawString(model.SideData.Statuses2, font, gray, 32 * model.LineLength, lineCount * lineHeight);
-                lineCount++;
-
             }
+
+            g.WriteSideDataInfo("Qv: ", model.SideData.Quiver.Substring(0, 35), font, 32 * model.LineLength, lineCount * lineHeight);
+            lineCount++;
+            if (model.SideData.Quiver.Length > 39)
+            {
+                g.DrawString(model.SideData.Quiver.Substring(35), font, gray, 32 * model.LineLength + g.MeasureString("Qv: ", font).Width, lineCount * lineHeight);
+                lineCount++;
+            }
+
+            // TODO better status writing
+            g.DrawString(model.SideData.Statuses1, font, gray, 32 * model.LineLength, lineCount * lineHeight);
+            lineCount++;
+            g.DrawString(model.SideData.Statuses2, font, gray, 32 * model.LineLength, lineCount * lineHeight);
+            lineCount++;
 
         }
 
@@ -386,21 +381,22 @@ namespace FrameGenerator
                 //TODO if location is middle and tile name starts with @ draw character
                 DrawCurrentTile(g, model, dict, model.TileNames[i], model.HighlightColors[i], characterRace, wall, floor, overrides, currentTileX, currentTileY);
             }
-
+#if DEBUG
             if (dict.Count < 10)
             {
                 bool written = false;
                 foreach (var item in dict)
                 {
                     if (!string.IsNullOrEmpty(item.Key)) written = true;
-                  //  Console.Write(item.Key + " ");
+
+                    Console.Write(item.Key + " ");
                 }
                 if (written)
                 {
-                  //  Console.WriteLine();
+                    Console.WriteLine();
                 }
-
             }
+#endif
         }
 
         private void DrawCurrentTile(Graphics g, Model model, Dictionary<string, string> dict, string tile, string tileHighlight, string OnlyRace, Bitmap wall, Bitmap floor, Dictionary<string, string> overrides, float x, float y)

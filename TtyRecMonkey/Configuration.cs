@@ -24,7 +24,7 @@ namespace TtyRecMonkey
 
         public ConfigurationData1()
         {
-            FillOptionals(default(StreamingContext));
+            FillOptionals(default);
         }
 
         [OnDeserialized]
@@ -36,7 +36,7 @@ namespace TtyRecMonkey
 
     static class Configuration
     {
-        static readonly string Folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TtyRecMonkey");
+        static readonly string Folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "DCSSReplay");
         static readonly string DataFile = Path.Combine(Folder, "data.cfg");
 
         private static ConfigurationData1 Defaults = new ConfigurationData1();
@@ -58,7 +58,8 @@ namespace TtyRecMonkey
             Main = new ConfigurationData1();
             try
             {
-                using (var data = File.OpenRead(DataFile)) Main = Load(data);
+                using var data = File.OpenRead(DataFile);
+                Main = Load(data);
             }
             catch (FileNotFoundException)
             {
