@@ -73,24 +73,23 @@ namespace InputParse
         {
             if (chars == null) throw new ArgumentNullException("TerminalCharacter array is null");
 
-            switch (GetLayoutType(chars, out var location))
+            return (GetLayoutType(chars, out var location)) switch
             {
-                case LayoutType.Normal:
-                    return parseNormalLayout(chars, location);
-                case LayoutType.TextOnly:
-                    return parseTextLayout(chars);
-                case LayoutType.MapOnly:
-                    return parseMapLayout(chars, location);
-            }
-            return new Model();
+                LayoutType.Normal => ParseNormalLayout(chars, location),
+                LayoutType.TextOnly => ParseTextLayout(chars),
+                LayoutType.MapOnly => ParseMapLayout(chars, location),
+                _ => new Model(),
+            };
         }
 
-        private static Model parseNormalLayout(Putty.TerminalCharacter[,] characters, string location)
+        private static Model ParseNormalLayout(Putty.TerminalCharacter[,] characters, string location)
         {
-            Model model = new Model();
-            model.Location = location;
-            model.Layout = LayoutType.Normal;
-            model.LineLength = GameViewWidth;
+            Model model = new Model
+            {
+                Location = location,
+                Layout = LayoutType.Normal,
+                LineLength = GameViewWidth
+            };
             var coloredStrings = new string[GameViewWidth * GameViewHeight];
             var highlightColorStrings = new string[GameViewWidth * GameViewHeight];
             var curentChar = 0;
@@ -142,7 +141,7 @@ namespace InputParse
                 line.LogTextRaw = logLine.ToString();
                 if (line.LogTextRaw.Length > 0)
                 {
-                    line.empty = false;
+                    line.Empty = false;
                     for (int i = 0; i < line.LogTextRaw.Length; i++)
                     {
                         logText.Add(GetColoredCharacter(characters[i, loglineRow]));
@@ -194,7 +193,7 @@ namespace InputParse
             var chars = new char[] { ' ' };
             var split = monsterLine.ToString().Split(chars, count: 2);
             return new MonsterData() { 
-                empty = false,
+                Empty = false,
                 MonsterTextRaw = split[1],
                 MonsterDisplay = monsterLineColored.Take(split[0].Length).ToArray(),
                 MonsterText = monsterLineColored.Skip(split[0].Length).ToArray(),
@@ -202,12 +201,14 @@ namespace InputParse
             };
         }
 
-        private static Model parseMapLayout(Putty.TerminalCharacter[,] characters, string location)
+        private static Model ParseMapLayout(Putty.TerminalCharacter[,] characters, string location)
         {
-            Model model = new Model();
-            model.Location = location;
-            model.Layout = LayoutType.MapOnly;
-            model.LineLength = FullWidth;
+            Model model = new Model
+            {
+                Location = location,
+                Layout = LayoutType.MapOnly,
+                LineLength = FullWidth
+            };
             var coloredStrings = new string[FullWidth * FullHeight];
             var highlightColorStrings = new string[FullWidth * FullHeight];
             var curentChar = 0;
@@ -225,8 +226,10 @@ namespace InputParse
                 model.TileNames = coloredStrings;
                 model.HighlightColors = highlightColorStrings;
 
-                model.SideData = new SideData();
-                model.SideData.Place = location;
+                model.SideData = new SideData
+                {
+                    Place = location
+                };
 
             }
             catch (Exception)
@@ -241,11 +244,13 @@ namespace InputParse
             return model;
         }
 
-        private static Model parseTextLayout(Putty.TerminalCharacter[,] characters)
+        private static Model ParseTextLayout(Putty.TerminalCharacter[,] characters)
         {
-            Model model = new Model();
-            model.Layout = LayoutType.TextOnly;
-            model.LineLength = FullWidth;
+            Model model = new Model
+            {
+                Layout = LayoutType.TextOnly,
+                LineLength = FullWidth
+            };
             var coloredStrings = new string[FullWidth * FullHeight];
             var curentChar = 0;
             try

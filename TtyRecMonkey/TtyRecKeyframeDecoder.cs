@@ -9,7 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 
-namespace TtyRecMonkey
+namespace DCSSReplay
 {
     public struct TtyRecFrame
     {

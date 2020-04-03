@@ -6,7 +6,7 @@ using Putty;
 using System;
 using System.Collections.Generic;
 
-namespace TtyRecMonkey
+namespace DCSSReplay
 {
     class AnnotatedPacket
     {
