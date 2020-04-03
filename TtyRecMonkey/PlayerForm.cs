@@ -14,7 +14,7 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace DCSSReplay
+namespace TtyRecMonkey
 {
     [System.ComponentModel.DesignerCategory("")]
     public class PlayerForm : Form2

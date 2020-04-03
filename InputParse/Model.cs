@@ -82,7 +82,6 @@ namespace InputParser
         }
     }
 
-
     public class Model
     {
         public LayoutType Layout { get; set; } = LayoutType.Normal;
