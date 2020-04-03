@@ -24,7 +24,7 @@ namespace TtyRecMonkey
 
         public ConfigurationData1()
         {
-            FillOptionals(default(StreamingContext));
+            FillOptionals(default);
         }
 
         [OnDeserialized]
@@ -58,7 +58,8 @@ namespace TtyRecMonkey
             Main = new ConfigurationData1();
             try
             {
-                using (var data = File.OpenRead(DataFile)) Main = Load(data);
+                using var data = File.OpenRead(DataFile);
+                Main = Load(data);
             }
             catch (FileNotFoundException)
             {

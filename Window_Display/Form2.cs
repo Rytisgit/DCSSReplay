@@ -22,7 +22,7 @@ namespace DisplayWindow
                 
             }
 
-            public void update(Bitmap frame)
+            public void Update(Bitmap frame)
             {
                /* if (pictureBox1.InvokeRequired)
                 {
@@ -50,7 +50,7 @@ namespace DisplayWindow
                 pictureBox1.Location = new System.Drawing.Point((int)(ClientSize.Width * 0.65), (int)(0.7 * ClientSize.Height));
             }*/
 
-            public void update2(Bitmap frame)
+            public void Update2(Bitmap frame)
             {
               
             pictureBox2.Image = frame;
