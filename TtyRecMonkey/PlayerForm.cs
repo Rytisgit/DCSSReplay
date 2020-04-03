@@ -24,7 +24,7 @@ namespace TtyRecMonkey
         private double PlaybackSpeed, PausedSpeed;
         private TimeSpan Seek;
         private readonly List<DateTime> PreviousFrames = new List<DateTime>();
-        private Stream stream = new MemoryStream();
+        private readonly Stream stream = new MemoryStream();
         private Bitmap bmp = new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
         private DateTime PreviousFrame = DateTime.Now;
 
@@ -79,13 +79,13 @@ namespace TtyRecMonkey
             //    delay = TimeSpan.FromSeconds(fof.SecondsBetweenFiles);
             //}
         
-            var streams = ttyrecToStream(files);
+            var streams = TtyrecToStream(files);
             ttyrecDecoder = new TtyRecKeyframeDecoder(80, 24, streams, delay);
             PlaybackSpeed = +1;
             Seek = TimeSpan.Zero;
         }
         
-        private IEnumerable<Stream> ttyrecToStream(string[] files)
+        private IEnumerable<Stream> TtyrecToStream(string[] files)
         {
             return files.Select(f =>
             {
@@ -131,7 +131,7 @@ namespace TtyRecMonkey
                                 try
                                 {
                                     bmp = frameGenerator.GenerateImage(frame);
-                                    update2(bmp);
+                                    Update2(bmp);
                                     frameGenerator.isGeneratingFrame = false;
                                 }
                                 catch (Exception ex)
@@ -272,17 +272,14 @@ namespace TtyRecMonkey
 
         static void Main(string[] args)
         {
-            using (var form = new PlayerForm())
-            {
-                
-                if (args.Length > 0) form.DoOpenFiles(args);
-                else form.OpenFile();
-                Thread m_Thread = new Thread(() => form.Loop());
-                m_Thread.Start();
+            using var form = new PlayerForm();
+            if (args.Length > 0) form.DoOpenFiles(args);
+            else form.OpenFile();
+            Thread m_Thread = new Thread(() => form.Loop());
+            m_Thread.Start();
 
-                Application.Run(form);
-                m_Thread.Abort();
-            }
+            Application.Run(form);
+            m_Thread.Abort();
         }
     } 
 }

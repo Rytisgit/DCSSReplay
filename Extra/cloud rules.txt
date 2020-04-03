@@ -20,13 +20,9 @@ TORNADO:
 tornado1 LIGHTRED  LIGHTCYAN LIGHTBLUE  WHITE 
 tornado2 RED CYAN BLUE LIGHTGREY
 
+
 split into paths for different tiles
 test of type by function / enum into the correct path
-
-add tiles to instalation
-
-
-check some types by current monsters
 
 magical condensation random clouds - caused by ood, maybe should change when orb spiders on screen
 
@@ -34,16 +30,8 @@ add lost health indicator per turn/ its in but somehow buggy lol
 
 P - plant
 
-fix leftover bad a's
-
 add held weapon?
-
-make mapping between color object and enum of color
 
 map is offset sometimes
 
 recolor tiles based on background color (selectors, travels paths, bolts)
-
-Wrong tiles in zot
-
-rename project

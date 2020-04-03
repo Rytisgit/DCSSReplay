@@ -36,6 +36,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
+    <LangVersion>latest</LangVersion>
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
