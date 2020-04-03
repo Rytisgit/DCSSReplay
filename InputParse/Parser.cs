@@ -1,8 +1,8 @@
-﻿using System;
-using System.Text;
-using System.Linq;
+﻿using InputParser;
+using System;
 using System.Collections.Generic;
-using InputParser;
+using System.Linq;
+using System.Text;
 
 namespace InputParse
 {
@@ -108,8 +108,8 @@ namespace InputParse
                 model.HighlightColors = highlightColorStrings;
 
                 model.SideData = ParseSideData(characters);
-                
-                model.LogData = ParseLogLines(characters); 
+
+                model.LogData = ParseLogLines(characters);
 
                 model.MonsterData = ParseMonsterDisplay(characters);
             }
@@ -192,7 +192,8 @@ namespace InputParse
             }
             var chars = new char[] { ' ' };
             var split = monsterLine.ToString().Split(chars, count: 2);
-            return new MonsterData() { 
+            return new MonsterData()
+            {
                 Empty = false,
                 MonsterTextRaw = split[1],
                 MonsterDisplay = monsterLineColored.Take(split[0].Length).ToArray(),
@@ -313,7 +314,7 @@ namespace InputParse
                 ev.Append(GetCharacter(characters[i, 5]));
                 sh.Append(GetCharacter(characters[i, 6]));
                 xl.Append(GetCharacter(characters[i, 7]));
-                next.Append(GetCharacter(characters[i+10, 7]));
+                next.Append(GetCharacter(characters[i + 10, 7]));
             }
             for (int i = 59; i < 63; i++)
             {
@@ -382,7 +383,7 @@ namespace InputParse
                     break;
                 }
             }
-            if (found && parsed.Length>1)
+            if (found && parsed.Length > 1)
             {
                 sideData.Place += ":" + parsed[1];
             }

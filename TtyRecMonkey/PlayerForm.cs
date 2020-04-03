@@ -2,17 +2,17 @@
 //
 // See the file LICENSE.txt for copying permission.
 
+using DisplayWindow;
 using FrameGenerator;
+using ICSharpCode.SharpZipLib.BZip2;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
-using System.Drawing.Imaging;
-using ICSharpCode.SharpZipLib.BZip2;
-using DisplayWindow;
 
 namespace DCSSReplay
 {
@@ -28,8 +28,8 @@ namespace DCSSReplay
         private Bitmap bmp = new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
         private DateTime PreviousFrame = DateTime.Now;
 
-        public PlayerForm() 
-        {          
+        public PlayerForm()
+        {
             frameGenerator = new MainGenerator();
             Visible = true;
         }
@@ -78,13 +78,13 @@ namespace DCSSReplay
             //    files = fof.FileOrder.ToArray();
             //    delay = TimeSpan.FromSeconds(fof.SecondsBetweenFiles);
             //}
-        
+
             var streams = TtyrecToStream(files);
             ttyrecDecoder = new TtyRecKeyframeDecoder(80, 24, streams, delay);
             PlaybackSpeed = +1;
             Seek = TimeSpan.Zero;
         }
-        
+
         private IEnumerable<Stream> TtyrecToStream(string[] files)
         {
             return files.Select(f =>
@@ -95,9 +95,9 @@ namespace DCSSReplay
                     BZip2.Decompress(stream2, stream, false);
                     return stream;
                 }
-                return  stream2;
+                return stream2;
             });
-        }   
+        }
 
         void MainLoop()
         {
@@ -166,7 +166,7 @@ namespace DCSSReplay
                     , ""
                     , "   F       Decrease speed by 1"
                     , "   G       Increase speed by 1"
-                    , ""                    
+                    , ""
                     , " Space     Play / Pause"
                     , ""
                     , " A / S     Zoom In/Out"
@@ -191,7 +191,7 @@ namespace DCSSReplay
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
-         //   bool resize = (WindowState == FormWindowState.Normal) && (ClientSize == ActiveSize);
+            //   bool resize = (WindowState == FormWindowState.Normal) && (ClientSize == ActiveSize);
 
             switch (e.KeyData)
             {
@@ -227,13 +227,13 @@ namespace DCSSReplay
                 case Keys.H: PlaybackSpeed += 0.2; break;
 
                 case Keys.V://Play / Pause
-                case Keys.Space: 
+                case Keys.Space:
                     if (PlaybackSpeed != 0) { PausedSpeed = PlaybackSpeed; PlaybackSpeed = 0; }
-                    else { PlaybackSpeed = PausedSpeed; } 
+                    else { PlaybackSpeed = PausedSpeed; }
                     break;
 
-               // case Keys.A: ++Zoom; if (resize) ClientSize = ActiveSize; break;
-              //  case Keys.S: if (Zoom > 1) --Zoom; if (resize) ClientSize = ActiveSize; break;
+                    // case Keys.A: ++Zoom; if (resize) ClientSize = ActiveSize; break;
+                    //  case Keys.S: if (Zoom > 1) --Zoom; if (resize) ClientSize = ActiveSize; break;
 
             }
             base.OnKeyDown(e);
@@ -264,7 +264,7 @@ namespace DCSSReplay
 
         void Loop()
         {
-            while(run)
+            while (run)
             {
                 MainLoop();
             }
@@ -281,5 +281,5 @@ namespace DCSSReplay
             Application.Run(form);
             m_Thread.Abort();
         }
-    } 
+    }
 }

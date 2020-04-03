@@ -35,7 +35,8 @@ namespace FrameGenerator.FileReading
                     tokens[2] = tokens[2].Replace(" ", "");
                     tokens[0] = tokens[0].Replace("MONS_", "").Replace(" ", "").ToLower();
                     //if(!Enum.TryParse(tokens[2], out ColorList2 res)) Console.WriteLine(tokens[1] + tokens[2] + " badly colored: " + tokens[0]);
-                    if(monster.TryGetValue(tokens[1] + tokens[2], out var existing)) { 
+                    if (monster.TryGetValue(tokens[1] + tokens[2], out var existing))
+                    {
                         //Console.WriteLine(tokens[1] + tokens[2] + "exist: " + existing + " new: " + tokens[0]); 
                     }
                     else monster[tokens[1] + tokens[2]] = tokens[0];
@@ -69,13 +70,14 @@ namespace FrameGenerator.FileReading
 
             for (var i = 0; i < lines.Length; i++)
             {
-                if (string.IsNullOrWhiteSpace(lines[i])) {
+                if (string.IsNullOrWhiteSpace(lines[i]))
+                {
                     monster.Add(new NamedMonsterOverride(name, location, tileNameOverrides));
                     name = "";
                     location = "";
                     tileNameOverrides = new Dictionary<string, string>(20);
-                    pngParse = false; 
-                    continue; 
+                    pngParse = false;
+                    continue;
                 }
                 if (pngParse)
                 {
@@ -111,7 +113,7 @@ namespace FrameGenerator.FileReading
 
             return floorandwall;
         }
-        
+
         public static Dictionary<string, Bitmap> GetBitmapDictionaryFromFolder(string folder)
         {
             var dict = new Dictionary<string, Bitmap>();
@@ -126,7 +128,7 @@ namespace FrameGenerator.FileReading
             }
             return dict;
         }
-    
+
         public static Dictionary<string, Bitmap> GetCharacterPNG(string gameLocation)
         {
 
