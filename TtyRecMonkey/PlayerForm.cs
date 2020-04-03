@@ -14,7 +14,7 @@ using System.Drawing.Imaging;
 using ICSharpCode.SharpZipLib.BZip2;
 using DisplayWindow;
 
-namespace TtyRecMonkey
+namespace DCSSReplay
 {
     [System.ComponentModel.DesignerCategory("")]
     public class PlayerForm : Form2
@@ -155,7 +155,7 @@ namespace TtyRecMonkey
                 var text = new[]
                     { "           PLACEHOLDER CONTROLS"
                     , ""
-                    , "Ctrl+C     Reconfigure TtyRecMonkey"
+                    , "Ctrl+C     Reconfigure DCSSReplay"
                     , "Ctrl+O     Open a ttyrec"
                     , "Escape     Close ttyrec and return here"
                     , "Alt+Enter  Toggle fullscreen"
@@ -176,7 +176,7 @@ namespace TtyRecMonkey
 
 
             //Text = string.Format
-            //    ("TtyRecMonkey -- {0} FPS -- {1} @ {2} of {3} ({4} keyframes {5} packets) -- Speed {6} -- GC recognized memory: {7}"
+            //    ("DCSSReplay -- {0} FPS -- {1} @ {2} of {3} ({4} keyframes {5} packets) -- Speed {6} -- GC recognized memory: {7}"
             //    , PreviousFrames.Count
             //    , PrettyTimeSpan(Seek)
             //    , Decoder == null ? "N/A" : PrettyTimeSpan(Decoder.CurrentFrame.SinceStart)
@@ -186,7 +186,7 @@ namespace TtyRecMonkey
             //    , PlaybackSpeed
             //    , PrettyByteCount(GC.GetTotalMemory(false))
             //    );
-          // Text = "Console";
+            // Text = "Console";
         }
 
         protected override void OnKeyDown(KeyEventArgs e)
@@ -220,11 +220,11 @@ namespace TtyRecMonkey
                 case Keys.N: PlaybackSpeed = +10; break;
                 case Keys.M: PlaybackSpeed += +100; break;
 
-                case Keys.F: PlaybackSpeed = PlaybackSpeed - 1; break;//progresive increase/decrease
-                case Keys.G: PlaybackSpeed = PlaybackSpeed + 1; break;
+                case Keys.F: PlaybackSpeed -= 1; break;//progresive increase/decrease
+                case Keys.G: PlaybackSpeed += 1; break;
 
-                case Keys.D: PlaybackSpeed = PlaybackSpeed - 0.2; break;//progresive increase/decrease
-                case Keys.H: PlaybackSpeed = PlaybackSpeed + 0.2; break;
+                case Keys.D: PlaybackSpeed -= 0.2; break;//progresive increase/decrease
+                case Keys.H: PlaybackSpeed += 0.2; break;
 
                 case Keys.V://Play / Pause
                 case Keys.Space: 

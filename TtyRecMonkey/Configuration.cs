@@ -9,7 +9,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
 
-namespace TtyRecMonkey
+namespace DCSSReplay
 {
     [Serializable]
     class ConfigurationData1
@@ -36,7 +36,7 @@ namespace TtyRecMonkey
 
     static class Configuration
     {
-        static readonly string Folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TtyRecMonkey");
+        static readonly string Folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "DCSSReplay");
         static readonly string DataFile = Path.Combine(Folder, "data.cfg");
 
         private static ConfigurationData1 Defaults = new ConfigurationData1();

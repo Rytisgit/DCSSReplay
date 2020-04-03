@@ -14,7 +14,7 @@ namespace FrameGenerator
 {
     public class MainGenerator  
     {
-        public string Folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TtyRecMonkey");
+        public string Folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "DCSSReplay");
         public bool isGeneratingFrame = false;
         private readonly Dictionary<string, string> _monsterdata;
         private readonly List<NamedMonsterOverride> _namedMonsterOverrideData;
@@ -37,7 +37,7 @@ namespace FrameGenerator
         public MainGenerator()
         {
 
-            string gameLocation = File.ReadAllLines(Folder + @"\config.ini").First();
+            string gameLocation = @"..\..\..\Extra";
 
             _characterdata = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\racepng.txt");
             _features = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\features.txt");
@@ -104,7 +104,7 @@ namespace FrameGenerator
             var finalOverrides = new Dictionary<string, string>();
             foreach (var monsterLine in monsters)
             {
-                if (!monsterLine.empty)
+                if (!monsterLine.Empty)
                 {
                     var rules = _namedMonsterOverrideData.Where((o) => { 
                         if (string.IsNullOrWhiteSpace(o.Name)) return false;
@@ -243,7 +243,7 @@ namespace FrameGenerator
             foreach (var monsterlist in model.MonsterData)
             {
                 var x = sideOfTilesX;
-                if (!monsterlist.empty)
+                if (!monsterlist.Empty)
                 {
                     for (int i = 0; i < monsterlist.MonsterDisplay.Length; i++)
                     {
@@ -282,7 +282,7 @@ namespace FrameGenerator
             var font = new Font("Courier New", 16);
             for (int i = 0; i < model.LogData.Length; i++)
             {
-                if (!model.LogData[i].empty)
+                if (!model.LogData[i].Empty)
                 {
                     for(int charIndex = 0; charIndex < model.LogData[i].LogTextRaw.Length; charIndex++) { 
                         g.WriteCharacter(model.LogData[i].LogText[charIndex], font, charIndex * 12, y);
