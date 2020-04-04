@@ -7,9 +7,7 @@
 
 ## [Click Here to see the latest Releases](https://github.com/Rytisgit/DCSSReplay/releases)
 
-## Placeholder Controls
-
-### The window that accepts controls is the ASCII window, it needs to have focus
+## Keyboard Shortcuts
 
 ```
 ZXCVBNM    Alter Playback speed (-100x, -10x, -1x, Pause/Resume, 1x, 10x, 100x)
