@@ -150,7 +150,9 @@ namespace FrameGenerator.Extensions
 
             var demonicWeaponLocations = new List<string>() { "Hell", "Dis", "Gehenna", "Cocytus", "Tartarus", "Vaults", "Depths" };
 
-            if (correctTile.Substring(1).Equals(Enum.GetName(typeof(ColorList2), ColorList2.LIGHTRED)) && demonicWeaponLocations.Contains(location))
+            if (correctTile[0] == ')' //is weapon
+                && correctTile.Substring(1).Equals(Enum.GetName(typeof(ColorList2), ColorList2.LIGHTRED)) //is lightred
+                && demonicWeaponLocations.Contains(location)) // is in a location with a lot of demon weapons
             {
                 if (itemPngs.TryGetValue("demon_blade2", out Bitmap demonBlade))
                 {
