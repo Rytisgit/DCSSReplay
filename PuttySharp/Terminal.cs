@@ -12,7 +12,7 @@ namespace Putty
 {
     public class Terminal : IDisposable
     {
-        IntPtr Handle;
+        readonly IntPtr Handle;
 
         [DllImport(@"PuttyDLL.dll", CallingConvention = CallingConvention.Cdecl)] static extern IntPtr CreatePuttyTerminal(int width, int height);
         [DllImport(@"PuttyDLL.dll", CallingConvention = CallingConvention.Cdecl)] static extern void DestroyPuttyTerminal(IntPtr terminal);
@@ -50,8 +50,8 @@ namespace Putty
         /// </summary>
         public void Dispose()
         {
-            if (!Disposed) DestroyPuttyTerminal(Handle);
-            Handle = IntPtr.Zero;
+            // if (!Disposed) DestroyPuttyTerminal(Handle);
+            // Handle = IntPtr.Zero;
         }
 
         /// <summary>

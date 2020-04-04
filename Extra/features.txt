@@ -67,7 +67,7 @@ malign_gateway
 \LIGHTBLUE
 malign_gateway
 ≈RED
-lava
+lava08
 ≈BLUE
 deep_water
 ≈CYAN
@@ -206,3 +206,11 @@ tree1
 tree1
 ♣BROWN
 tree1
+}RED
+blood_fountain
+}BLUE
+blue_fountain2
+}LIGHTGREY
+dry_fountain
+}LIGHTBLUE
+sparkling_fountain

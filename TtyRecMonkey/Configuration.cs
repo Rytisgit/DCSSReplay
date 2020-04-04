@@ -8,7 +8,6 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
-using TtyRecMonkey.Properties;
 
 namespace TtyRecMonkey
 {
@@ -20,13 +19,12 @@ namespace TtyRecMonkey
         public int ChunksTargetLoadMS = 10; // per chunk
         public int FontOverlapX = 1;
         public int FontOverlapY = 1;
-        public Bitmap Font = Resources.Font2;
 
         [OptionalField] public Font GdiFont;
 
         public ConfigurationData1()
         {
-            FillOptionals(default(StreamingContext));
+            FillOptionals(default);
         }
 
         [OnDeserialized]
@@ -38,7 +36,7 @@ namespace TtyRecMonkey
 
     static class Configuration
     {
-        static readonly string Folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TtyRecMonkey");
+        static readonly string Folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "DCSSReplay");
         static readonly string DataFile = Path.Combine(Folder, "data.cfg");
 
         private static ConfigurationData1 Defaults = new ConfigurationData1();
@@ -60,7 +58,8 @@ namespace TtyRecMonkey
             Main = new ConfigurationData1();
             try
             {
-                using (var data = File.OpenRead(DataFile)) Main = Load(data);
+                using var data = File.OpenRead(DataFile);
+                Main = Load(data);
             }
             catch (FileNotFoundException)
             {

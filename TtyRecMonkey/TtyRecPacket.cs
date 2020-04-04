@@ -26,34 +26,36 @@ namespace TtyRecMonkey
 
                 stream.Position = 0;
 
-                var reader = new BinaryReader(stream);
-                int first_sec = int.MinValue;
-                int first_usec = int.MinValue;
-
-                while (stream.Position < stream.Length)
+                using (var reader = new BinaryReader(stream))
                 {
-                    bool first_packet_of_stream = stream.Position == 0;
-                    int sec = reader.ReadInt32();
-                    int usec = reader.ReadInt32();
-                    int len = reader.ReadInt32();
+                    int first_sec = int.MinValue;
+                    int first_usec = int.MinValue;
 
-                    if (first_packet_of_stream)
+                    while (stream.Position < stream.Length)
                     {
-                        first_sec = sec;
-                        first_usec = usec;
+                        bool first_packet_of_stream = stream.Position == 0;
+                        int sec = reader.ReadInt32();
+                        int usec = reader.ReadInt32();
+                        int len = reader.ReadInt32();
 
-                        if (!first_stream) yield return new TtyRecPacket() { SinceStart = BaseDelay, Payload = null }; // force a restart
-                        first_stream = false;
+                        if (first_packet_of_stream)
+                        {
+                            first_sec = sec;
+                            first_usec = usec;
+
+                            if (!first_stream) yield return new TtyRecPacket() { SinceStart = BaseDelay, Payload = null }; // force a restart
+                            first_stream = false;
+                        }
+
+                        var since_start = TimeSpan.FromSeconds(sec - first_sec) + TimeSpan.FromMilliseconds((usec - first_usec) / 1000);
+
+                        yield return new TtyRecPacket()
+                        {
+                            SinceStart = LastPacketSS = BaseDelay + since_start
+                            ,
+                            Payload = reader.ReadBytes(len)
+                        };
                     }
-
-                    var since_start = TimeSpan.FromSeconds(sec - first_sec) + TimeSpan.FromMilliseconds((usec - first_usec) / 1000);
-
-                    yield return new TtyRecPacket()
-                    {
-                        SinceStart = LastPacketSS = BaseDelay + since_start
-                        ,
-                        Payload = reader.ReadBytes(len)
-                    };
                 }
 
                 BaseDelay = LastPacketSS + delay_between_streams;

@@ -1,33 +1,28 @@
-# DCSSReplay - WIP tiles player
-## It's not perfect, but it's the best we got.
+# DCSSReplay - A visual TtyRec player for DCSS
+## We've entered Beta but theres still so much left to do.
 
-Still quite a few things to be improved but at least its something.
+![Screenshot](https://github.com/Rytisgit/DCSSReplay/blob/master/.projnfo/screenshots/Beta.png)
 
-![Screenshot](https://github.com/Rytisgit/DCSSReplay/blob/master/.projnfo/screenshots/Untitled.png)
+# FOR DOWNLOADS
 
-# Downloads
+## [Click Here to see the latest Releases](https://github.com/Rytisgit/DCSSReplay/releases)
 
-## [See the latest Releases](https://github.com/Rytisgit/DCSSReplay/releases)
-
-## Placeholder Controls
-
-### The window that accepts controls is the ASCII window, it needs to have focus
+## Keyboard Shortcuts
 
 ```
-ZXCVBNM    Alter playback speed (-100x, -10x, -1x, Pause/Resume, 1x, 10x, 100x)
+ZXCVBNM    Alter Playback speed (-100x, -10x, -1x, Pause/Resume, 1x, 10x, 100x)
 M          Increase Playback speed by +100, stacks
 SPACE      Pause/Resume
-FG         Increase/Decrease PLayback speed (-1x, +1x)
-DH         Increase/Decrease PLayback speed (-0.2x, +0.2x)
-Ctrl+C     Reconfigure TtyRecMonkey
-Ctrl+O     Open a ttyrec
+FG         Increase/Decrease Playback speed by 1 (-1x, +1x)
+DH         Increase/Decrease Playback speed by 0.2 (-0.2x, +0.2x)
+Ctrl+O     Open a ttyrec file from your computer environment 
 ```
 
 ## Contact
 
 - The author can be contacted in Discord as Sentei#5306
 - Those who prefer slower communication can send emails to petronisrytis@gmail.com
-- You can file github issues as well
+- You can file github issues as well, in fact I encourage it!
 
 # Development
 
@@ -35,7 +30,7 @@ Ctrl+O     Open a ttyrec
 
 I Used VS 2019 Enterprise, should work for older versions as well
 
-- Open TtyRecMonkey.sln
+- Open DCSSReplay.sln
 - Select the project TtyRecMonkey and make it your startup project before running.
 - configuration to release, cpu to x86
 - restore nuget packages
@@ -56,6 +51,7 @@ Key differences:
 - _*_SECURE_NO_DEPRECATE have been added to supress warning spam from standard library functions
 - export.c has been added which exposes methods for PuttySharp (C#) to PInvoke
 - Other source files may be modified to expose more to export.c -- should be mostly cosmetic/making availbe outside the TU
+- Overrided encoding check, to always output UTF-8, since DCSS TtyRecs are in that format
 
 
 ### PuttySharp - MaulingMonkey
@@ -65,28 +61,37 @@ PuttySharp is a C# library which wraps the methods exposed by PuttyDLL for easie
 It is currently small enough that it ended up well commented and designed.  This probably won't last very long.
 
 
-### ShinyConsole - MaulingMonkey
-
-ShinyConsole is a C# program which provides and tests SlimDX/D3D9 based console text rendering
-
-It is crufty and in need of sanitization.
-
-It is used as a library by TtyPlayer, despite being a program.
-
-
-### TtyRecMonkey - MaulingMonkey, Rytisgit
+### TtyRecMonkey - MaulingMonkey, Rytisgit, Aspectus
 
 TtyRecMonkey is the main C# program which is the point of this project.  It is not well written.
 
 It currently handles:
 
 - Parsing (to be spin off?) of TtyRecs
-- Basic playback of TtyRecs
+- Controlling the threading for individual frame generation
+- Updating the main display window 
+- Inputs from user
 
-### InputParse - Rytisgit -TODO description
-### FrameGenerator - Aspectus, Rytisgit -TODO description
-### Character - Rytisgit -TODO description
-### Window - Aspectus -TODO description
+### InputParser - Rytisgit
 
-### Installer - Rytisgit https://github.com/Rytisgit/DCSSReplayInstaller
+Contains a Model that is used for frame Generation. 
+
+Parser fills the Model with data before every frame from the terminal Character array that is passed to it.
+
+### FrameGenerator - Aspectus, Rytisgit
+
+The Big One - Takes all the custom rules along with the Model for each frame and tries to make an image that resembles what the screen would look like on a real DCSS game in that moment. 
+
+Looks similar quite often.
+
+Was a really big mess before the big refactoring, now is just a bit of a mess, but its getting better.
+
+### DisplayWindow - Aspectus 
+
+Barebones WinForms window, that is used to display the images from FrameGenerator
+
+### Installer - Rytisgit 
+- Creates .msi installers for releases.
+- Has seperate repository
+- https://github.com/Rytisgit/DCSSReplayInstaller
 

@@ -79,24 +79,24 @@ namespace TtyRecMonkey
             return -1;
         }
 
-        static int BinarySearchIndexBefore<T>(IList<T> list, Func<T, bool> cond)
+        static int BinarySearchIndexFrame<T>(IList<T> list, Func<T, bool> cond, int offset = 0)
         {
             int i = BinarySearchIndex(list, cond);
             if (i == -1) return list.Count - 1;
             if (i == 0) return -1;
-            return i - 1;
+            return i - offset;
         }
 
         void DumpChunksAround(TimeSpan seektarget)
         {
-            var before_seek = BinarySearchIndexBefore(Packets, ap => ap.SinceStart > seektarget);
+            var before_seek = BinarySearchIndexFrame(Packets, ap => ap.SinceStart > seektarget, 1);
             if (before_seek == -1) before_seek = 0;
             while (before_seek > 0 && Packets[before_seek].RestartPosition == null) --before_seek;
 
 #if DEBUG
-			var reference_before_seek = Packets.FindLastIndex( ap => ap.RestartPosition!=null && ap.SinceStart <= seektarget );
-			if ( reference_before_seek == -1 ) reference_before_seek = 0;
-			//debug.assert( before_seek == reference_before_seek );
+            var reference_before_seek = Packets.FindLastIndex(ap => ap.RestartPosition != null && ap.SinceStart <= seektarget);
+            if (reference_before_seek == -1) reference_before_seek = 0;
+            //debug.assert( before_seek == reference_before_seek );
 #endif
 
             var after_seek = Packets.FindIndex(before_seek + 1, ap => ap.RestartPosition != null && ap.SinceStart > seektarget);
@@ -191,7 +191,7 @@ namespace TtyRecMonkey
             if (Packets.Count <= 0) return;
 
             DumpChunksAround(when);
-            var i = BinarySearchIndexBefore(Packets, ap => ap.SinceStart >= when);
+            var i = BinarySearchIndexFrame(Packets, ap => ap.SinceStart >= when);
             if (i == -1) i = 0;
             //debug.assert(Packets[i].DecodedCache!=null);
             CurrentFrame.SinceStart = Packets[i].SinceStart;
@@ -250,7 +250,7 @@ namespace TtyRecMonkey
             var buffer = new List<AnnotatedPacket>();
 
 #if DEBUG
-			Thread.Sleep(1000); // make sure everything can handle having 0 packets in the buffer for a bit
+            Thread.Sleep(1000); // make sure everything can handle having 0 packets in the buffer for a bit
 #endif
 
             foreach (var ap in annotated)
