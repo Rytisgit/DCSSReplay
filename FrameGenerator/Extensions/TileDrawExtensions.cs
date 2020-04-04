@@ -127,7 +127,7 @@ namespace FrameGenerator.Extensions
 
         private static bool FixHighlight(string tile, string backgroundColor, out string correctTile)//if highlighted, returns fixed string
         {
-            if (backgroundColor.Equals(Enum.GetName(typeof(ColorList2), ColorList2.BLACK)))
+            if (backgroundColor.Equals(Enum.GetName(typeof(ColorList2), ColorList2.BLACK)) || !tile.Substring(1).Equals(Enum.GetName(typeof(ColorList2), ColorList2.BLACK)))
             {
                 correctTile = tile;
                 return false;
