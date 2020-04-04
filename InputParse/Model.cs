@@ -77,7 +77,7 @@ namespace InputParser
                 "LIGHTMAGENTA" => Color.FromArgb(255, 128, 255),
                 "LIGHTCYAN" => Color.FromArgb(64, 255, 255),
                 "WHITE" => Color.FromArgb(255, 255, 255),
-                _ => throw new ArgumentException("No Color like that is defined"),
+                _ => throw new ArgumentException($"No Color with name: {name} is defined"),
             };
         }
     }
