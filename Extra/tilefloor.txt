@@ -35,7 +35,7 @@ DIS
 zot_blue0
 iron0
 GEHENNA
-zot_blue0
+zot_red0
 rough_red0
 COCYTUS
 ice_wall0
