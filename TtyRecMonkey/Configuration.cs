@@ -8,7 +8,6 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
-using TtyRecMonkey.Properties;
 
 namespace TtyRecMonkey
 {
@@ -20,7 +19,6 @@ namespace TtyRecMonkey
         public int ChunksTargetLoadMS = 10; // per chunk
         public int FontOverlapX = 1;
         public int FontOverlapY = 1;
-        public Bitmap Font = Resources.Font2;
 
         [OptionalField] public Font GdiFont;
 

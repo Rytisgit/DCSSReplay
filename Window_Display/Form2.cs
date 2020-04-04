@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Window_Display
+namespace DisplayWindow
 {
    
         public partial class Form2 : Form
@@ -63,6 +63,11 @@ namespace Window_Display
             }
 
         }
+        public bool run = true;
+        private void Form2_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            run = false;
         }
+    }
     
 }
