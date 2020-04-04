@@ -15,7 +15,7 @@ M          Increase Playback speed by +100, stacks
 SPACE      Pause/Resume
 FG         Increase/Decrease Playback speed by 1 (-1x, +1x)
 DH         Increase/Decrease Playback speed by 0.2 (-0.2x, +0.2x)
-Ctrl+O     Open a ttyrec from local environment 
+Ctrl+O     Open a ttyrec file from your computer environment 
 ```
 
 ## Contact
