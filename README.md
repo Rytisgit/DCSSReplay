@@ -32,7 +32,6 @@ I Used VS 2019 Enterprise, should work for older versions as well
 
 - Open DCSSReplay.sln
 - Select the project TtyRecMonkey and make it your startup project before running.
-- configuration to release, cpu to x86
 - restore nuget packages
 - rebuild the solution
 - it should now work
