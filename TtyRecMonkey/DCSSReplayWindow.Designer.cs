@@ -1,6 +1,6 @@
 ﻿namespace DisplayWindow
 {
-    partial class Form2
+    partial class DCSSReplayWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -42,14 +42,14 @@
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
             // 
-            // Form2
+            // DCSSReplay
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1602, 759);
             this.Controls.Add(this.pictureBox2);
-            this.Name = "Form2";
-            this.Text = "Form2";
+            this.Name = "DCSSReplay";
+            this.Text = "DCSSReplay";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form2_FormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
