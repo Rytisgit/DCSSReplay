@@ -18,7 +18,7 @@ using TtyRecDecoder;
 namespace TtyRecMonkey
 {
     [System.ComponentModel.DesignerCategory("")]
-    public class PlayerForm : Form2
+    public class PlayerForm : DCSSReplayWindow
     {
         private readonly MainGenerator frameGenerator;
         private TtyRecKeyframeDecoder ttyrecDecoder = null;

@@ -4,12 +4,12 @@ using System.Windows.Forms;
 namespace DisplayWindow
 {
 
-    public partial class Form2 : Form
+    public partial class DCSSReplayWindow : Form
     {
         private delegate void SafeCallDelegate(Bitmap frame);
         private delegate void SafeCallDelegate2(Bitmap frame);
 
-        public Form2()
+        public DCSSReplayWindow()
         {
             InitializeComponent();
 
