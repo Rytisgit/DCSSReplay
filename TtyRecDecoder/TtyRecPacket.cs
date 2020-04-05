@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace TtyRecMonkey
+namespace TtyRecDecoder
 {
     struct TtyRecPacket
     {
@@ -51,8 +51,7 @@ namespace TtyRecMonkey
 
                         yield return new TtyRecPacket()
                         {
-                            SinceStart = LastPacketSS = BaseDelay + since_start
-                            ,
+                            SinceStart = LastPacketSS = BaseDelay + since_start,
                             Payload = reader.ReadBytes(len)
                         };
                     }

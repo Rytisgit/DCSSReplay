@@ -82,7 +82,7 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>dcssreplay.ico</ApplicationIcon>
+    <ApplicationIcon>Files\dcssreplay.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -93,12 +93,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration.cs" />
-    <Compile Include="TtyRecKeyframePacket.cs" />
-    <Compile Include="TtyRecPacket.cs" />
+    <Compile Include="Form2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form2.Designer.cs">
+      <DependentUpon>Form2.cs</DependentUpon>
+    </Compile>
     <Compile Include="PlayerForm.cs">
     </Compile>
-    <Compile Include="TtyRecKeyframeDecoder.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FrameGenerator\FrameGenerator.csproj">
@@ -109,9 +112,9 @@
       <Project>{0D491035-AF37-4F50-861F-FDF6A3248943}</Project>
       <Name>PuttySharp</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Window_Display\DisplayWindow.csproj">
-      <Project>{1c0525eb-8e42-41c0-9335-bc721e2225d0}</Project>
-      <Name>DisplayWindow</Name>
+    <ProjectReference Include="..\TtyRecDecoder\TtyRecDecoder.csproj">
+      <Project>{519acc71-26b1-4312-ad42-231965817f20}</Project>
+      <Name>TtyRecDecoder</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -125,11 +128,14 @@
       <Version>4.7.0</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Properties\" />
+    <Content Include="Files\dcssreplay.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="dcssreplay.ico" />
+    <EmbeddedResource Include="Form2.resx">
+      <DependentUpon>Form2.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
