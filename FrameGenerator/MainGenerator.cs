@@ -232,7 +232,6 @@ namespace FrameGenerator
             }
         }
 
-
         private void DrawMonsterDisplay(Graphics g, Model model, Dictionary<string, string> overrides)
         {
 
