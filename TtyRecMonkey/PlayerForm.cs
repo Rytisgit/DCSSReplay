@@ -13,11 +13,12 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using TtyRecDecoder;
 
 namespace TtyRecMonkey
 {
     [System.ComponentModel.DesignerCategory("")]
-    public class PlayerForm : Form2
+    public class PlayerForm : DCSSReplayWindow
     {
         private readonly MainGenerator frameGenerator;
         private TtyRecKeyframeDecoder ttyrecDecoder = null;
@@ -102,8 +103,6 @@ namespace TtyRecMonkey
         void MainLoop()
         {
             var now = DateTime.Now;
-            Dictionary<int, string> myTable = new Dictionary<int, string>();
-            Dictionary<int, string> myTable2 = new Dictionary<int, string>();
 
             PreviousFrames.Add(now);
             PreviousFrames.RemoveAll(f => f.AddSeconds(1) < now);
@@ -231,10 +230,6 @@ namespace TtyRecMonkey
                     if (PlaybackSpeed != 0) { PausedSpeed = PlaybackSpeed; PlaybackSpeed = 0; }
                     else { PlaybackSpeed = PausedSpeed; }
                     break;
-
-                    // case Keys.A: ++Zoom; if (resize) ClientSize = ActiveSize; break;
-                    //  case Keys.S: if (Zoom > 1) --Zoom; if (resize) ClientSize = ActiveSize; break;
-
             }
             base.OnKeyDown(e);
         }
