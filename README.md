@@ -59,6 +59,9 @@ PuttySharp is a C# library which wraps the methods exposed by PuttyDLL for easie
 
 It is currently small enough that it ended up well commented and designed.  This probably won't last very long.
 
+### TtyRecDecoder - MaulingMonkey, Rytisgit
+
+Parses Ttyrec files, prepares for feeding the data to Putty
 
 ### TtyRecMonkey - MaulingMonkey, Rytisgit, Aspectus
 
@@ -66,7 +69,6 @@ TtyRecMonkey is the main C# program which is the point of this project.  It is n
 
 It currently handles:
 
-- Parsing (to be spin off?) of TtyRecs
 - Controlling the threading for individual frame generation
 - Updating the main display window 
 - Inputs from user
@@ -84,10 +86,6 @@ The Big One - Takes all the custom rules along with the Model for each frame and
 Looks similar quite often.
 
 Was a really big mess before the big refactoring, now is just a bit of a mess, but its getting better.
-
-### DisplayWindow - Aspectus 
-
-Barebones WinForms window, that is used to display the images from FrameGenerator
 
 ### Installer - Rytisgit 
 - Creates .msi installers for releases.
