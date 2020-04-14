@@ -360,7 +360,7 @@ namespace FrameGenerator
         }
 
 
-        public bool isWallOrFloor(string tilename) => tilename[0] == '#' || tilename[0] == '.' || tilename[0] == ',' || tilename[0] == '*';
+        public bool isWallOrFloor(string tilename) => tilename[0] == '#' || tilename[0] == '.' || tilename[0] == ',' || tilename[0] == '*' || tilename[0] == '≈';
 
         public void DrawTiles(Graphics g, Model model, float startX, float startY, int startIndex, Dictionary<string, string> overrides)
 
