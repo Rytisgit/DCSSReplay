@@ -35,6 +35,7 @@ namespace FrameGenerator
         private Bitmap _lastframe = new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
         private int previousHP = 0;
         public static Bitmap CharacterBitmap = new Bitmap(32, 32, PixelFormat.Format32bppArgb);
+        string CharacterLocationRecognition;
 
         public MainGenerator()
         {
@@ -155,7 +156,7 @@ namespace FrameGenerator
                     x += 20;
                 }
                 var overrides = GetOverridesForFrame(model.MonsterData, model.Location);
-                DrawTiles(g, model, 0, 32, model.LineLength, overrides);//draw the rest of the map
+                DrawTiles(g, model, 0, 32, model.LineLength, overrides, true);//draw the rest of the map
             }
 
             return bmp;
@@ -201,7 +202,7 @@ namespace FrameGenerator
 
                 DrawSideDATA(g, model, prevHP);
 
-                DrawTiles(g, model, 0, 0, 0, overrides);
+                DrawTiles(g, model, 0, 0, 0, overrides, false);
 
                 DrawMonsterDisplay(g, model, overrides);
 
@@ -355,7 +356,7 @@ namespace FrameGenerator
 
         }
 
-        public void DrawTiles(Graphics g, Model model, float startX, float startY, int startIndex, Dictionary<string, string> overrides)
+        public void DrawTiles(Graphics g, Model model, float startX, float startY, int startIndex, Dictionary<string, string> overrides, bool ForMap)
 
         {
             var dict = new Dictionary<string, string>();//logging
@@ -384,12 +385,16 @@ namespace FrameGenerator
                 }
                 else
                     currentTileX += 32;
-                //TODO if location is middle and tile name starts with @ draw character
-                DrawCurrentTile(g, model, dict, model.TileNames[i], model.HighlightColors[i], characterRace, wall, floor, overrides, currentTileX, currentTileY);
-            }
-            Console.WriteLine(model.SideData.Statuses1 + "WOW" + model.SideData.Statuses1);
 
-            g.TryDrawPlayer(_characterdata, _characterpng, floor, characterRace, 32 * 17, 32 * 9, _weaponpng, model.SideData.Weapon, ref CharacterBitmap, model.SideData.Statuses1.ToLower());
+                DrawCurrentTile(g, model, dict, model.TileNames[i], model.HighlightColors[i], characterRace, wall, floor, overrides, currentTileX, currentTileY);
+                if (ForMap)
+                {
+                    //Drawing character for map todoc
+                  //  g.DrawImage(CharacterBitmap, currentTileX, currentTileY, CharacterBitmap.Width, CharacterBitmap.Height);
+                   // Console.WriteLine(CharacterLocationRecognition+"WOWOW");
+                }
+            }
+           if(!ForMap) g.TryDrawPlayer(model.TileNames[280],ref CharacterLocationRecognition, _characterdata, _characterpng, floor, characterRace, 32 * 16, 32 * 8, _weaponpng, model.SideData.Weapon.ToLower(), ref CharacterBitmap, model.SideData.Statuses1.ToLower());
 #if DEBUG
             if (dict.Count < 10)
             {
