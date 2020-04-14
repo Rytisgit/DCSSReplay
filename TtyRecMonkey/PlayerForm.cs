@@ -19,6 +19,7 @@ namespace TtyRecMonkey
     [System.ComponentModel.DesignerCategory("")]
     public class PlayerForm : Form2
     {
+        PlayerSearchForm playerSearch;
         private readonly MainGenerator frameGenerator;
         private TtyRecKeyframeDecoder ttyrecDecoder = null;
         private double PlaybackSpeed, PausedSpeed;
@@ -197,7 +198,7 @@ namespace TtyRecMonkey
             {
 
                 case Keys.Escape: using (ttyrecDecoder) { } ttyrecDecoder = null; break;
-                //case Keys.Control | Keys.C: Reconfigure(); break;
+                case Keys.Control | Keys.C: Reconfigure(); break;
                 case Keys.Control | Keys.O: OpenFile(); break;
                 case Keys.Alt | Keys.Enter:
                     if (FormBorderStyle == FormBorderStyle.None)
@@ -238,7 +239,7 @@ namespace TtyRecMonkey
             }
             base.OnKeyDown(e);
         }
-        PlayerSearchForm playerSearch;
+
         private void Reconfigure()
         {
             playerSearch = new PlayerSearchForm();
@@ -254,7 +255,7 @@ namespace TtyRecMonkey
             IEnumerable<Stream> st2 = new List<Stream>() { st3 };
             var delay = TimeSpan.Zero;
             var oldc = Cursor;
-            Decoder = new TtyRecKeyframeDecoder(80, 24, st2, delay);
+            ttyrecDecoder = new TtyRecKeyframeDecoder(80, 24, st2, delay);
             PlaybackSpeed = +1;
             Seek = TimeSpan.Zero;
         }
@@ -298,9 +299,7 @@ namespace TtyRecMonkey
                 else form.OpenFile();
                 Thread m_Thread = new Thread(() => form.Loop());
                 m_Thread.Start();
-
                 Application.Run(form);
-                m_Thread.Abort();
             }
         }
     } 

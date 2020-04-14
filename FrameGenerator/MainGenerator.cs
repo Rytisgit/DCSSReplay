@@ -216,7 +216,7 @@ namespace FrameGenerator
         {
             float currentTileY = 468;
             float currentTileX = 1075;
-            var font2 = new Font("Courier New", 16);
+            var font2 = new Font("Courier New", 14);
 
             for (var i = 0; i < model.TileNames.Length; i++)
             {
