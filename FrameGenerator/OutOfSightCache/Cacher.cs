@@ -13,7 +13,7 @@ namespace FrameGenerator.OutOfSightCache
         {
             OutofSightCache = new Dictionary<char, Bitmap>();
         }
-
+        //TODO DUMP Cahce on new level
         public void UpdateCache(List<Tuple<string, Bitmap>> lastDrawnFrameKeyValues)
         {
             var orderedList = lastDrawnFrameKeyValues
