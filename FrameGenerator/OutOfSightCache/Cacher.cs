@@ -5,11 +5,16 @@ using System.Linq;
 
 namespace FrameGenerator.OutOfSightCache
 {
+    public class DrawnBMP
+    {
+        public bool DrawFloor { get; set; }
+        public Bitmap Image { get; set; }
+    }
     public class Cacher
     {
-        private Dictionary<char, Bitmap> OutofSightCache { get; set; }
+        private Dictionary<char, DrawnBMP> OutofSightCache { get; set; }
 
-        public void UpdateCache(List<Tuple<string, Bitmap>> lastDrawnFrameKeyValues)
+        public void UpdateCache(List<Tuple<string, DrawnBMP>> lastDrawnFrameKeyValues)
         {
             lastDrawnFrameKeyValues
                 .OrderBy((tile) => tile.Item1[0])
@@ -18,7 +23,7 @@ namespace FrameGenerator.OutOfSightCache
                 .First()
                 .Select((mostCommonKeyvalueForChar) => OutofSightCache[mostCommonKeyvalueForChar.Item1[0]] = mostCommonKeyvalueForChar.Item2);               
         }
-        public bool TryGetLastSeenBitmapByChar(char key, out Bitmap lastSeen)
+        public bool TryGetLastSeenBitmapByChar(char key, out DrawnBMP lastSeen)
         {
             return OutofSightCache.TryGetValue(key, out lastSeen);
         }

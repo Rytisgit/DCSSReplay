@@ -1,6 +1,7 @@
 ﻿using FrameGenerator.Extensions;
 using FrameGenerator.FileReading;
 using FrameGenerator.Models;
+using FrameGenerator.OutOfSightCache;
 using InputParser;
 using Putty;
 using System;
@@ -24,6 +25,7 @@ namespace FrameGenerator
         private readonly Dictionary<string, string> _cloudtiles;
         private readonly Dictionary<string, string> _itemdata;
         private readonly Dictionary<string, Bitmap> _monsterpng;
+        private readonly Cacher _outOfSightCache;
         private readonly Dictionary<string, Bitmap> _characterpng;
         private readonly Dictionary<string, Bitmap> _itempng;
         private readonly Dictionary<string, Bitmap> _alldngnpng;
@@ -57,6 +59,8 @@ namespace FrameGenerator
 
             _characterpng = ReadFromFile.GetCharacterPNG(gameLocation);
             _monsterpng = ReadFromFile.GetMonsterPNG(gameLocation);
+
+            _outOfSightCache = new Cacher();
         }
 
         public Bitmap GenerateImage(TerminalCharacter[,] chars)
@@ -398,29 +402,33 @@ namespace FrameGenerator
 #endif
         }
 
-        private void DrawCurrentTile(Graphics g, Model model, Dictionary<string, string> dict, string tile, string tileHighlight, string OnlyRace, Bitmap wall, Bitmap floor, Dictionary<string, string> overrides, float x, float y)
+        private bool DrawCurrentTile(Graphics g, Model model, Dictionary<string, string> dict, string tile, string tileHighlight, string OnlyRace, Bitmap wall, Bitmap floor, Dictionary<string, string> overrides, float x, float y, out Bitmap drawnTile)
         {
-            if (g.TryDrawWallOrFloor(tile, wall, floor, x, y)) return;
-
-            if (g.TryDrawMonster(tile, tileHighlight, _monsterdata, _monsterpng, overrides, floor, x, y)) return;
-
-            if (g.TryDrawFeature(tile, _features, _alldngnpng, floor, x, y)) return;
-
-            if (g.TryDrawCloud(tile, _cloudtiles, _alleffects, floor, model.SideData, model.MonsterData, x, y)) return;
-
-            if (g.TryDrawPlayer(tile, _characterdata, _characterpng, floor, OnlyRace, x, y)) return;//TODO player drawing should not be here any more
-
-            if (g.TryDrawItem(tile, tileHighlight, _itemdata, _itempng, _miscallaneous, floor, model.Location, x, y)) return;
-
-            else if (tile[0] != ' ')//unhandled tile, write it as a character instead
-            {
-                if (!dict.ContainsKey(tile))
-                {
-                    dict.Add(tile, "");
-                }
-
-                g.WriteCharacter(tile, new Font("Courier New", 16), x, y);
+            if (tile[0] != ' ' && tileHighlight == Enum.GetName(typeof(ColorList2), ColorList2.BLACK)) { 
+                drawnTile = null; 
+                return false;
             }
+
+            if (g.TryDrawWallOrFloor(tile, wall, floor, x, y, out drawnTile)) return true;
+
+            if (g.TryDrawMonster(tile, tileHighlight, _monsterdata, _monsterpng, overrides, floor, x, y, out drawnTile)) return true;
+
+            if (g.TryDrawFeature(tile, _features, _alldngnpng, floor, x, y, out drawnTile)) return true;
+
+            if (g.TryDrawCloud(tile, _cloudtiles, _alleffects, floor, model.SideData, model.MonsterData, x, y, out drawnTile)) return true;
+
+            if (g.TryDrawPlayer(tile, _characterdata, _characterpng, floor, OnlyRace, x, y, out drawnTile)) return true;//TODO player drawing should not be here any more
+
+            if (g.TryDrawItem(tile, tileHighlight, _itemdata, _itempng, _miscallaneous, floor, model.Location, x, y, out drawnTile)) return true;
+
+            if (!dict.ContainsKey(tile))
+            {
+                dict.Add(tile, "");
+            }
+
+            g.WriteCharacter(tile, new Font("Courier New", 16), x, y);//unhandled tile, write it as a character instead
+
+            return false;
         }
     }
 }

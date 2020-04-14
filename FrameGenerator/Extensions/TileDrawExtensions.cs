@@ -1,4 +1,5 @@
-﻿using InputParser;
+﻿using FrameGenerator.OutOfSightCache;
+using InputParser;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -7,13 +8,14 @@ namespace FrameGenerator.Extensions
 {
     public static class TileDrawExtensions
     {
-        public static bool TryDrawWallOrFloor(this Graphics g, string tile, Bitmap wall, Bitmap floor, float x, float y)
+        public static bool TryDrawWallOrFloor(this Graphics g, string tile, Bitmap wall, Bitmap floor, float x, float y, out DrawnBMP drawnTile)
         {
             if (tile == "#BLUE")
             {
                 g.DrawImage(wall, x, y, wall.Width, wall.Height);
                 var blueTint = new SolidBrush(Color.FromArgb(150, 0, 0, 0));
                 g.FillRectangle(blueTint, x, y, wall.Width, wall.Height);
+                drawnTile = 
                 return true;
             }
 
