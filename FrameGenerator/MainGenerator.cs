@@ -1,6 +1,7 @@
 ﻿using FrameGenerator.Extensions;
 using FrameGenerator.FileReading;
 using FrameGenerator.Models;
+using FrameGenerator.OutOfSightCache;
 using InputParser;
 using Putty;
 using System;
@@ -24,6 +25,7 @@ namespace FrameGenerator
         private readonly Dictionary<string, string> _cloudtiles;
         private readonly Dictionary<string, string> _itemdata;
         private readonly Dictionary<string, Bitmap> _monsterpng;
+        private readonly Cacher _outOfSightCache;
         private readonly Dictionary<string, Bitmap> _characterpng;
         private readonly Dictionary<string, Bitmap> _itempng;
         private readonly Dictionary<string, Bitmap> _alldngnpng;
@@ -57,6 +59,8 @@ namespace FrameGenerator
 
             _characterpng = ReadFromFile.GetCharacterPNG(gameLocation);
             _monsterpng = ReadFromFile.GetMonsterPNG(gameLocation);
+
+            _outOfSightCache = new Cacher();
         }
 
         public Bitmap GenerateImage(TerminalCharacter[,] chars)
@@ -244,7 +248,11 @@ namespace FrameGenerator
                 {
                     for (int i = 0; i < monsterlist.MonsterDisplay.Length; i++)
                     {
-                        if (!g.TryDrawMonster(monsterlist.MonsterDisplay[i], monsterlist.MonsterBackground[i], _monsterdata, _monsterpng, overrides, x, currentLineY))
+                        if (monsterlist.MonsterDisplay[i].TryDrawMonster(monsterlist.MonsterBackground[i], _monsterdata, _monsterpng, overrides, out Bitmap tileToDraw))
+                        {
+                            g.DrawImage(tileToDraw, x, currentLineY);
+                        }
+                        else
                         {
                             g.WriteCharacter(monsterlist.MonsterDisplay[i], font, x, currentLineY);//not found write as string
                         }
@@ -351,10 +359,14 @@ namespace FrameGenerator
 
         }
 
+
+        public bool isWallOrFloor(string tilename) => tilename[0] == '#' || tilename[0] == '.' || tilename[0] == ',' || tilename[0] == '*' || tilename[0] == '≈';
+
         public void DrawTiles(Graphics g, Model model, float startX, float startY, int startIndex, Dictionary<string, string> overrides)
 
         {
             var dict = new Dictionary<string, string>();//logging
+            var BitmapList = new List<Tuple<string, Bitmap>>(model.TileNames.Length);
 
             string characterRace = model.SideData.Race.Substring(0, 6);
             string[] location = model.SideData.Place.Split(':');
@@ -378,8 +390,15 @@ namespace FrameGenerator
                 else
                     currentTileX += 32;
                 //TODO if location is middle and tile name starts with @ draw character
-                DrawCurrentTile(g, model, dict, model.TileNames[i], model.HighlightColors[i], characterRace, wall, floor, overrides, currentTileX, currentTileY);
+                DrawCurrentTile(g, model, dict, model.TileNames[i], model.HighlightColors[i], characterRace, wall, floor, overrides, currentTileX, currentTileY, out Bitmap drawnTile);
+
+                if (!isWallOrFloor(model.TileNames[i]))
+                {
+                    BitmapList.Add(new Tuple<string, Bitmap>(model.TileNames[i], drawnTile));
+                }
+                
             }
+            _outOfSightCache.UpdateCache(BitmapList);
 #if DEBUG
             if (dict.Count < 10)
             {
@@ -398,29 +417,42 @@ namespace FrameGenerator
 #endif
         }
 
-        private void DrawCurrentTile(Graphics g, Model model, Dictionary<string, string> dict, string tile, string tileHighlight, string OnlyRace, Bitmap wall, Bitmap floor, Dictionary<string, string> overrides, float x, float y)
+        private bool DrawCurrentTile(Graphics g, Model model, Dictionary<string, string> dict, string tile, string tileHighlight, string OnlyRace, Bitmap wall, Bitmap floor, Dictionary<string, string> overrides, float x, float y, out Bitmap drawnTile)
         {
-            if (g.TryDrawWallOrFloor(tile, wall, floor, x, y)) return;
-
-            if (g.TryDrawMonster(tile, tileHighlight, _monsterdata, _monsterpng, overrides, floor, x, y)) return;
-
-            if (g.TryDrawFeature(tile, _features, _alldngnpng, floor, x, y)) return;
-
-            if (g.TryDrawCloud(tile, _cloudtiles, _alleffects, floor, model.SideData, model.MonsterData, x, y)) return;
-
-            if (g.TryDrawPlayer(tile, _characterdata, _characterpng, floor, OnlyRace, x, y)) return;//TODO player drawing should not be here any more
-
-            if (g.TryDrawItem(tile, tileHighlight, _itemdata, _itempng, _miscallaneous, floor, model.Location, x, y)) return;
-
-            else if (tile[0] != ' ')//unhandled tile, write it as a character instead
-            {
-                if (!dict.ContainsKey(tile))
-                {
-                    dict.Add(tile, "");
-                }
-
-                g.WriteCharacter(tile, new Font("Courier New", 16), x, y);
+            if (tile[0] == ' ' && (tileHighlight == Enum.GetName(typeof(ColorList2), ColorList2.LIGHTGREY) || tileHighlight == Enum.GetName(typeof(ColorList2), ColorList2.BLACK))) { 
+                drawnTile = null; 
+                return false;
             }
+
+            //if blue its cache time
+            if(tile.Substring(1) == Enum.GetName(typeof(ColorList2), ColorList2.BLUE) && _outOfSightCache.TryGetLastSeenBitmapByChar(tile[0], out var lastSeen))
+            {
+                drawnTile = lastSeen;
+                g.DrawImage(lastSeen, x, y);
+                var outOfSightTint = new SolidBrush(Color.FromArgb(150, 0, 0, 0));
+                g.FillRectangle(outOfSightTint, 0, 0, lastSeen.Width, lastSeen.Height);
+                return true;
+            }
+
+            if (tile.TryDrawWallOrFloor(wall, floor, out drawnTile) ||
+                tile.TryDrawMonster(tileHighlight, _monsterdata, _monsterpng, overrides, floor, out drawnTile) ||
+                tile.TryDrawFeature(_features, _alldngnpng, floor, out drawnTile) ||
+                tile.TryDrawCloud(_cloudtiles, _alleffects, floor, model.SideData, model.MonsterData, out drawnTile) ||
+                tile.TryDrawPlayer(_characterdata, _characterpng, floor, OnlyRace, out drawnTile) ||
+                tile.TryDrawItem(tileHighlight, _itemdata, _itempng, _miscallaneous, floor, model.Location, out drawnTile)) 
+            {
+                g.DrawImage(drawnTile, x, y);
+                return true; 
+            }
+
+            if (!dict.ContainsKey(tile))
+            {
+                dict.Add(tile, "");
+            }
+
+            g.WriteCharacter(tile, new Font("Courier New", 16), x, y);//unhandled tile, write it as a character instead
+
+            return false;
         }
     }
 }
