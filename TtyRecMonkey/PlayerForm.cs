@@ -25,7 +25,6 @@ namespace TtyRecMonkey
         private double PlaybackSpeed, PausedSpeed;
         private TimeSpan Seek;
         private readonly List<DateTime> PreviousFrames = new List<DateTime>();
-        private readonly Stream stream = new MemoryStream();
         private Bitmap bmp = new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
         private DateTime PreviousFrame = DateTime.Now;
 
@@ -93,6 +92,7 @@ namespace TtyRecMonkey
                 Stream stream2 = File.OpenRead(f);
                 if (Path.GetExtension(f) == ".bz2")
                 {
+                    Stream stream = new MemoryStream();
                     BZip2.Decompress(stream2, stream, false);
                     return stream;
                 }

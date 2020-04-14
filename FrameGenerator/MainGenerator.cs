@@ -25,6 +25,7 @@ namespace FrameGenerator
         private readonly Dictionary<string, string> _itemdata;
         private readonly Dictionary<string, Bitmap> _monsterpng;
         private readonly Dictionary<string, Bitmap> _characterpng;
+        private readonly Dictionary<string, Bitmap> _weaponpng;
         private readonly Dictionary<string, Bitmap> _itempng;
         private readonly Dictionary<string, Bitmap> _alldngnpng;
         private readonly Dictionary<string, Bitmap> _alleffects;
@@ -33,6 +34,7 @@ namespace FrameGenerator
         private readonly Dictionary<string, Bitmap> _wallpng;
         private Bitmap _lastframe = new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
         private int previousHP = 0;
+        public static Bitmap CharacterBitmap = new Bitmap(32, 32, PixelFormat.Format32bppArgb);
 
         public MainGenerator()
         {
@@ -57,6 +59,7 @@ namespace FrameGenerator
 
             _characterpng = ReadFromFile.GetCharacterPNG(gameLocation);
             _monsterpng = ReadFromFile.GetMonsterPNG(gameLocation);
+            _weaponpng = ReadFromFile.GetWeaponPNG(gameLocation);
         }
 
         public Bitmap GenerateImage(TerminalCharacter[,] chars)
@@ -205,6 +208,7 @@ namespace FrameGenerator
                 DrawLogs(g, model);
 
                 DrawConsole(g, model);
+
             }
 
             return newFrame;
@@ -366,6 +370,9 @@ namespace FrameGenerator
 
             var currentTileX = startX;
             var currentTileY = startY;
+
+           
+
             if (startIndex == 0) currentTileY -= 32;//since start of loop begins on a newline we back up one so it isn't one line too low.
 
             for (int i = startIndex; i < model.TileNames.Length; i++)
@@ -380,6 +387,9 @@ namespace FrameGenerator
                 //TODO if location is middle and tile name starts with @ draw character
                 DrawCurrentTile(g, model, dict, model.TileNames[i], model.HighlightColors[i], characterRace, wall, floor, overrides, currentTileX, currentTileY);
             }
+            Console.WriteLine(model.SideData.Statuses1 + "WOW" + model.SideData.Statuses1);
+
+            g.TryDrawPlayer(_characterdata, _characterpng, floor, characterRace, 32 * 17, 32 * 9, _weaponpng, model.SideData.Weapon, ref CharacterBitmap, model.SideData.Statuses1.ToLower());
 #if DEBUG
             if (dict.Count < 10)
             {
@@ -407,8 +417,6 @@ namespace FrameGenerator
             if (g.TryDrawFeature(tile, _features, _alldngnpng, floor, x, y)) return;
 
             if (g.TryDrawCloud(tile, _cloudtiles, _alleffects, floor, model.SideData, model.MonsterData, x, y)) return;
-
-            if (g.TryDrawPlayer(tile, _characterdata, _characterpng, floor, OnlyRace, x, y)) return;//TODO player drawing should not be here any more
 
             if (g.TryDrawItem(tile, tileHighlight, _itemdata, _itempng, _miscallaneous, floor, model.Location, x, y)) return;
 

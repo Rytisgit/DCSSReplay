@@ -165,5 +165,24 @@ namespace FrameGenerator.FileReading
             monsterPNG["roxanne"] = bmp;
             return monsterPNG;
         }
+        public static Dictionary<string, Bitmap> GetWeaponPNG(string gameLocation)
+        {
+
+            var GetWeaponPNG = new Dictionary<string, Bitmap>();
+
+            List<string> allpngfiles = Directory.GetFiles(gameLocation + @"\rltiles\player\hand1", "*.png*", SearchOption.AllDirectories).ToList();
+            allpngfiles.AddRange(Directory.GetFiles(gameLocation + @"\rltiles\player\transform", "*.png*", SearchOption.AllDirectories).ToList());
+            foreach (var file in allpngfiles)
+            {
+                FileInfo info = new FileInfo(file);
+                Bitmap bitmap = new Bitmap(file);
+
+
+                GetWeaponPNG[info.Name.Replace(".png", "")] = bitmap;
+
+            }
+            return GetWeaponPNG;
+        }
     }
+
 }
