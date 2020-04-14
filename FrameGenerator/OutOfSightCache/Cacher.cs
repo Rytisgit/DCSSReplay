@@ -5,25 +5,35 @@ using System.Linq;
 
 namespace FrameGenerator.OutOfSightCache
 {
-    public class DrawnBMP
-    {
-        public bool DrawFloor { get; set; }
-        public Bitmap Image { get; set; }
-    }
     public class Cacher
     {
-        private Dictionary<char, DrawnBMP> OutofSightCache { get; set; }
+        public Dictionary<char, Bitmap> OutofSightCache { get; set; }
 
-        public void UpdateCache(List<Tuple<string, DrawnBMP>> lastDrawnFrameKeyValues)
+        public Cacher()
         {
-            lastDrawnFrameKeyValues
+            OutofSightCache = new Dictionary<char, Bitmap>();
+        }
+
+        public void UpdateCache(List<Tuple<string, Bitmap>> lastDrawnFrameKeyValues)
+        {
+            var orderedList = lastDrawnFrameKeyValues
                 .OrderBy((tile) => tile.Item1[0])
                 .ThenBy((tile) => tile.Item1)
                 .GroupBy((tile) => tile.Item1[0])
-                .First()
-                .Select((mostCommonKeyvalueForChar) => OutofSightCache[mostCommonKeyvalueForChar.Item1[0]] = mostCommonKeyvalueForChar.Item2);               
+                .Select((mostCommonKeyvalueForChar) => {
+                    var firstFromGroup = mostCommonKeyvalueForChar.First();
+                    return new Tuple<char, Bitmap>(firstFromGroup.Item1[0], firstFromGroup.Item2);
+                    }
+                );
+            foreach (var lastSeenImage in orderedList)
+            {
+                if (lastSeenImage.Item2 != null)
+                {
+                    OutofSightCache[lastSeenImage.Item1] = lastSeenImage.Item2;
+                }
+            }
         }
-        public bool TryGetLastSeenBitmapByChar(char key, out DrawnBMP lastSeen)
+        public bool TryGetLastSeenBitmapByChar(char key, out Bitmap lastSeen)
         {
             return OutofSightCache.TryGetValue(key, out lastSeen);
         }
