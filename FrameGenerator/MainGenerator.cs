@@ -430,7 +430,7 @@ namespace FrameGenerator
                 drawnTile = lastSeen;
                 g.DrawImage(lastSeen, x, y);
                 var outOfSightTint = new SolidBrush(Color.FromArgb(150, 0, 0, 0));
-                g.FillRectangle(outOfSightTint, 0, 0, lastSeen.Width, lastSeen.Height);
+                g.FillRectangle(outOfSightTint, x, y, lastSeen.Width, lastSeen.Height);
                 return true;
             }
 
