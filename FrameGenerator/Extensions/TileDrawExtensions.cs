@@ -8,6 +8,7 @@ namespace FrameGenerator.Extensions
 {
     public static class TileDrawExtensions
     {
+        
         static string[] BasicStatusArray = { "bat", "dragon", "ice", "mushroom", "pig", "shadow", "spider" };
         static string[] CompStatusArray = { "lich", "statue" };
         public static bool TryDrawWallOrFloor(this Graphics g, string tile, Bitmap wall, Bitmap floor, float x, float y)
@@ -115,72 +116,36 @@ namespace FrameGenerator.Extensions
             return true;
         }
 
-        public static string ParseBasicWeaponName(string fullstring)
+
+
+        public static bool TryDrawPlayer(this Graphics g, string tileName,ref string CharacterLocationRecognition, Dictionary<string, string> characterData, Dictionary<string, Bitmap> characterPngs, Bitmap floor, string race, float x, float y, Dictionary<string, Bitmap> weaponpng, string WeaponData,ref Bitmap CharacterBitmap, string StatusData)
         {
-         
-            bool onlyonce = true;
-            int start = 0;
-            int end = 0;
-            for(int i=3; i<35; i++)
-            {
-                if (fullstring[i] == '{' || fullstring[i] == '(' || fullstring[i] == '\0') break;
-                if (char.IsLetter(fullstring[i])&&onlyonce)
-                {
-                    start = i;
-                    onlyonce = false;
-                }
-                else if(char.IsLetter(fullstring[i]))
-                {
-                    end = i;
-                }
-
-            }
-
-            if (fullstring.Contains("staff of")) return "staff_sceptre";
-
-            string parsedstring = fullstring.Substring(start, end-start+1).Replace(' ', '_');
-            
-            return parsedstring;
-        }
-
-        public static bool TryDrawPlayer(this Graphics g,  Dictionary<string, string> characterData, Dictionary<string, Bitmap> characterPngs, Bitmap floor, string race, float x, float y, Dictionary<string, Bitmap> weaponpng, string WeaponData,ref Bitmap CharacterBitmap, string StatusData)
-        {
+            //Console.WriteLine(ParseBasicWeaponName("    '''''  pair of quick blades \"Gyre\" and \"Gimble\""));
+            //CharacterLocationRecognition = tileName;
             if (!characterData.TryGetValue(race, out var pngName)) return false;
             if (!characterPngs.TryGetValue(pngName, out Bitmap png)) return false;
-
             using (Graphics characterg = Graphics.FromImage(CharacterBitmap))
             {
                 characterg.DrawImage(floor, 0, 0, floor.Width, floor.Height);
 
                 foreach (string status in BasicStatusArray)
                 {
-                    if (StatusData.Contains(status) && weaponpng.TryGetValue(status + "_form", out png))
-                    {
-                        characterg.DrawImage(png, 0, 0, png.Width, png.Height);
-                        g.DrawImage(CharacterBitmap, x, y, CharacterBitmap.Width, CharacterBitmap.Height);
-                        return true;
-                    }
+                    if (StatusData.Contains(status) && weaponpng.TryGetValue(status + "_form", out png)) break;
                 }
+
                 foreach (string status in CompStatusArray)
                 {
-                    if (StatusData.Contains(status) )
+                    if (StatusData.Contains(status))
                     {
                         if (!weaponpng.TryGetValue(status + "_form_" + race.ToLower(), out png)) weaponpng.TryGetValue(status + "_form_humanoid", out png);
-                        characterg.DrawImage(png, 0, 0, png.Width, png.Height);
-                        g.DrawImage(CharacterBitmap, x, y, CharacterBitmap.Width, CharacterBitmap.Height);
-                        return true;
-                    }
-
-                }            
+                    }     
+                }
+                                      
                 characterg.DrawImage(png, 0, 0, png.Width, png.Height);
-                string ParsedWeaponData = ParseBasicWeaponName(WeaponData);
-                if(weaponpng.TryGetValue(ParsedWeaponData, out png))  characterg.DrawImage(png, 0, 0, png.Width, png.Height);
+                if(weaponpng.TryGetValue(WeaponData.ParseBasicWeaponName(), out png))  characterg.DrawImage(png, 0, 0, png.Width, png.Height);
                 g.DrawImage(CharacterBitmap, x, y, CharacterBitmap.Width, CharacterBitmap.Height);
                 return true;
             }
-           
-
-
         }
 
         private static bool FixHighlight(string tile, string backgroundColor, out string correctTile)//if highlighted, returns fixed string
