@@ -411,7 +411,7 @@ namespace FrameGenerator
             }
             _outOfSightCache.UpdateCache(BitmapList);
 
-           if(!ForMap) g.TryDrawPlayer(model.TileNames[280],ref CharacterLocationRecognition, _characterdata, _characterpng, floor, characterRace, 32 * 16, 32 * 8, _weaponpng, model.SideData.Weapon.ToLower(), ref CharacterBitmap, model.SideData.Statuses1.ToLower(), _weapondata);
+           if(!ForMap) g.TryDrawPlayer( _characterdata, _characterpng, floor, characterRace, 32 * 16, 32 * 8, _weaponpng, model.SideData.Weapon.ToLower(), ref CharacterBitmap, model.SideData.Statuses1.ToLower(), _weapondata);
 #if DEBUG
             if (dict.Count < 10)
             {

@@ -89,7 +89,7 @@ sling
 quarterstaff 
 quarterstaff
 staff
-elemental_staff
+staff_organic
 lajatang
 lajatang1
 dart
