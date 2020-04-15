@@ -25,7 +25,6 @@ namespace TtyRecMonkey
         private double PlaybackSpeed, PausedSpeed;
         private TimeSpan Seek;
         private readonly List<DateTime> PreviousFrames = new List<DateTime>();
-        private readonly Stream stream = new MemoryStream();
         private Bitmap bmp = new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
         private DateTime PreviousFrame = DateTime.Now;
 
@@ -79,13 +78,13 @@ namespace TtyRecMonkey
             //    files = fof.FileOrder.ToArray();
             //    delay = TimeSpan.FromSeconds(fof.SecondsBetweenFiles);
             //}
-
+            
+         
             var streams = TtyrecToStream(files);
             ttyrecDecoder = new TtyRecKeyframeDecoder(80, 24, streams, delay);
             PlaybackSpeed = +1;
             Seek = TimeSpan.Zero;
         }
-
         private IEnumerable<Stream> TtyrecToStream(string[] files)
         {
             return files.Select(f =>
@@ -93,7 +92,15 @@ namespace TtyRecMonkey
                 Stream stream2 = File.OpenRead(f);
                 if (Path.GetExtension(f) == ".bz2")
                 {
-                    BZip2.Decompress(stream2, stream, false);
+                    Stream stream = new MemoryStream();
+                    try
+                    {
+                        BZip2.Decompress(stream2, stream, false);
+                    }
+                    catch 
+                    {
+                        System.Windows.Forms.MessageBox.Show("The file is corrupted or not supported");
+                    }
                     return stream;
                 }
                 return stream2;
