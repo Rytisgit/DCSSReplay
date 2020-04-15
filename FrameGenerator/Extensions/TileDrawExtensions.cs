@@ -137,7 +137,7 @@ namespace FrameGenerator.Extensions
 
 
 
-        public static bool TryDrawPlayer(this Graphics g, string tileName,ref string CharacterLocationRecognition, Dictionary<string, string> characterData, Dictionary<string, Bitmap> characterPngs, Bitmap floor, string race, float x, float y, Dictionary<string, Bitmap> weaponpng, string WeaponData,ref Bitmap CharacterBitmap, string StatusData, Dictionary<string, string> weapondata)
+        public static bool TryDrawPlayer(this Graphics g, Dictionary<string, string> characterData, Dictionary<string, Bitmap> characterPngs, Bitmap floor, string race, float x, float y, Dictionary<string, Bitmap> weaponpng, string WeaponData,ref Bitmap CharacterBitmap, string StatusData, Dictionary<string, string> weapondata)
         {
             //Console.WriteLine(ParseBasicWeaponName("    '''''  pair of quick blades \"Gyre\" and \"Gimble\""));
             //CharacterLocationRecognition = tileName;
@@ -159,9 +159,13 @@ namespace FrameGenerator.Extensions
                         if (!weaponpng.TryGetValue(status + "_form_" + race.ToLower(), out png)) weaponpng.TryGetValue(status + "_form_humanoid", out png);
                     }     
                 }
+
                 characterg.DrawImage(png, 0, 0, png.Width, png.Height);
+
                 if(weaponpng.TryGetValue(WeaponData.ParseUniqueWeaponName(), out png))  characterg.DrawImage(png, 0, 0, png.Width, png.Height);
+
                 else if (weaponpng.TryGetValue(WeaponData.GetNonUniqueWeaponName(weapondata), out png)) characterg.DrawImage(png, 0, 0, png.Width, png.Height);
+
                 g.DrawImage(CharacterBitmap, x, y, CharacterBitmap.Width, CharacterBitmap.Height);
                 return true;
             }
