@@ -56,6 +56,20 @@ namespace FrameGenerator.FileReading
 
             return monster;
         }
+        public static Dictionary<string, string> GetWeaponData(string file)
+        {
+            var weapon = new Dictionary<string, string>();
+
+            string[] lines = File.ReadAllLines(file);
+
+            for (var i = 0; i < lines.Length; i+=2)
+            {
+
+                weapon[lines[i]] = lines[i+1];
+                
+            }
+            return weapon;
+        }
 
         public static List<NamedMonsterOverride> GetNamedMonsterOverrideData(string monsterOverrideFile)
         {
@@ -165,5 +179,24 @@ namespace FrameGenerator.FileReading
             monsterPNG["roxanne"] = bmp;
             return monsterPNG;
         }
+        public static Dictionary<string, Bitmap> GetWeaponPNG(string gameLocation)
+        {
+
+            var GetWeaponPNG = new Dictionary<string, Bitmap>();
+
+            List<string> allpngfiles = Directory.GetFiles(gameLocation + @"\rltiles\player\hand1", "*.png*", SearchOption.AllDirectories).ToList();
+            allpngfiles.AddRange(Directory.GetFiles(gameLocation + @"\rltiles\player\transform", "*.png*", SearchOption.AllDirectories).ToList());
+            foreach (var file in allpngfiles)
+            {
+                FileInfo info = new FileInfo(file);
+                Bitmap bitmap = new Bitmap(file);
+
+
+                GetWeaponPNG[info.Name.Replace(".png", "")] = bitmap;
+
+            }
+            return GetWeaponPNG;
+        }
     }
+
 }

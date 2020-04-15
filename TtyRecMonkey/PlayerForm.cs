@@ -93,6 +93,7 @@ namespace TtyRecMonkey
                 if (Path.GetExtension(f) == ".bz2")
                 {
                     Stream stream = new MemoryStream();
+
                     try
                     {
                         BZip2.Decompress(stream2, stream, false);
@@ -101,6 +102,7 @@ namespace TtyRecMonkey
                     {
                         System.Windows.Forms.MessageBox.Show("The file is corrupted or not supported");
                     }
+
                     return stream;
                 }
                 return stream2;
