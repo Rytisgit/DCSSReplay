@@ -78,13 +78,13 @@ namespace TtyRecMonkey
             //    files = fof.FileOrder.ToArray();
             //    delay = TimeSpan.FromSeconds(fof.SecondsBetweenFiles);
             //}
-
+            
+         
             var streams = TtyrecToStream(files);
             ttyrecDecoder = new TtyRecKeyframeDecoder(80, 24, streams, delay);
             PlaybackSpeed = +1;
             Seek = TimeSpan.Zero;
         }
-
         private IEnumerable<Stream> TtyrecToStream(string[] files)
         {
             return files.Select(f =>
@@ -93,7 +93,16 @@ namespace TtyRecMonkey
                 if (Path.GetExtension(f) == ".bz2")
                 {
                     Stream stream = new MemoryStream();
-                    BZip2.Decompress(stream2, stream, false);
+
+                    try
+                    {
+                        BZip2.Decompress(stream2, stream, false);
+                    }
+                    catch 
+                    {
+                        System.Windows.Forms.MessageBox.Show("The file is corrupted or not supported");
+                    }
+
                     return stream;
                 }
                 return stream2;
