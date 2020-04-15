@@ -9,6 +9,9 @@ namespace FrameGenerator.Extensions
 {
     public static class TileDrawExtensions
     {
+        
+        static string[] BasicStatusArray = { "bat", "dragon", "ice", "mushroom", "pig", "shadow", "spider" };
+        static string[] CompStatusArray = { "lich", "statue" };
         public static bool TryDrawWallOrFloor(this string tile, Bitmap wall, Bitmap floor, out Bitmap tileToDraw)
         {
             tileToDraw = new Bitmap(32, 32, PixelFormat.Format32bppArgb);
@@ -132,20 +135,40 @@ namespace FrameGenerator.Extensions
             return true;
         }
 
-        public static bool TryDrawPlayer(this string tile, Dictionary<string, string> characterData, Dictionary<string, Bitmap> characterPngs, Bitmap floor, string race, out Bitmap tileToDraw)
+
+
+        public static bool TryDrawPlayer(this Graphics g, Dictionary<string, string> characterData, Dictionary<string, Bitmap> characterPngs, Bitmap floor, string race, float x, float y, Dictionary<string, Bitmap> weaponpng, string WeaponData,ref Bitmap CharacterBitmap, string StatusData, Dictionary<string, string> weapondata)
         {
-            tileToDraw = new Bitmap(32, 32, PixelFormat.Format32bppArgb);
-
-            using (Graphics g = Graphics.FromImage(tileToDraw))
+            //Console.WriteLine(ParseBasicWeaponName("    '''''  pair of quick blades \"Gyre\" and \"Gimble\""));
+            //CharacterLocationRecognition = tileName;
+            if (!characterData.TryGetValue(race, out var pngName)) return false;
+            if (!characterPngs.TryGetValue(pngName, out Bitmap png)) return false;
+            using (Graphics characterg = Graphics.FromImage(CharacterBitmap))
             {
-                if (tile[0] != '@') return false;
-                if (!characterData.TryGetValue(race, out var pngName)) return false;
-                if (!characterPngs.TryGetValue(pngName, out Bitmap png)) return false;
+                characterg.DrawImage(floor, 0, 0, floor.Width, floor.Height);
 
-                g.DrawImage(floor, 0, 0, floor.Width, floor.Height);
-                g.DrawImage(png, 0, 0, png.Width, png.Height);
+                foreach (string status in BasicStatusArray)
+                {
+                    if (StatusData.Contains(status) && weaponpng.TryGetValue(status + "_form", out png)) break;
+                }
+
+                foreach (string status in CompStatusArray)
+                {
+                    if (StatusData.Contains(status))
+                    {
+                        if (!weaponpng.TryGetValue(status + "_form_" + race.ToLower(), out png)) weaponpng.TryGetValue(status + "_form_humanoid", out png);
+                    }     
+                }
+
+                characterg.DrawImage(png, 0, 0, png.Width, png.Height);
+
+                if(weaponpng.TryGetValue(WeaponData.ParseUniqueWeaponName(), out png))  characterg.DrawImage(png, 0, 0, png.Width, png.Height);
+
+                else if (weaponpng.TryGetValue(WeaponData.GetNonUniqueWeaponName(weapondata), out png)) characterg.DrawImage(png, 0, 0, png.Width, png.Height);
+
+                g.DrawImage(CharacterBitmap, x, y, CharacterBitmap.Width, CharacterBitmap.Height);
+                return true;
             }
-            return true;
         }
 
         private static bool FixHighlight(string tile, string backgroundColor, out string correctTile)//if highlighted, returns fixed string

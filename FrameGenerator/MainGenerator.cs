@@ -24,9 +24,11 @@ namespace FrameGenerator
         private readonly Dictionary<string, string> _features;
         private readonly Dictionary<string, string> _cloudtiles;
         private readonly Dictionary<string, string> _itemdata;
+        private readonly Dictionary<string, string> _weapondata;
         private readonly Dictionary<string, Bitmap> _monsterpng;
         private readonly Cacher _outOfSightCache;
         private readonly Dictionary<string, Bitmap> _characterpng;
+        private readonly Dictionary<string, Bitmap> _weaponpng;
         private readonly Dictionary<string, Bitmap> _itempng;
         private readonly Dictionary<string, Bitmap> _alldngnpng;
         private readonly Dictionary<string, Bitmap> _alleffects;
@@ -35,6 +37,8 @@ namespace FrameGenerator
         private readonly Dictionary<string, Bitmap> _wallpng;
         private Bitmap _lastframe = new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
         private int previousHP = 0;
+        public static Bitmap CharacterBitmap = new Bitmap(32, 32, PixelFormat.Format32bppArgb);
+        string CharacterLocationRecognition;
 
         public MainGenerator()
         {
@@ -45,6 +49,7 @@ namespace FrameGenerator
             _features = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\features.txt");
             _cloudtiles = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\clouds.txt");
             _itemdata = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\items.txt");
+            _weapondata = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\weapons.txt");
 
             _floorandwall = ReadFromFile.GetFloorAndWallNamesForDungeons(@"..\..\..\Extra\tilefloor.txt");
             _monsterdata = ReadFromFile.GetMonsterData(gameLocation + @"\mon-data.h", @"..\..\..\Extra\monsteroverrides.txt");
@@ -61,6 +66,7 @@ namespace FrameGenerator
             _monsterpng = ReadFromFile.GetMonsterPNG(gameLocation);
 
             _outOfSightCache = new Cacher();
+            _weaponpng = ReadFromFile.GetWeaponPNG(gameLocation);
         }
 
         public Bitmap GenerateImage(TerminalCharacter[,] chars)
@@ -156,7 +162,7 @@ namespace FrameGenerator
                     x += 20;
                 }
                 var overrides = GetOverridesForFrame(model.MonsterData, model.Location);
-                DrawTiles(g, model, 0, 32, model.LineLength, overrides);//draw the rest of the map
+                DrawTiles(g, model, 0, 32, model.LineLength, overrides, true);//draw the rest of the map
             }
 
             return bmp;
@@ -202,13 +208,14 @@ namespace FrameGenerator
 
                 DrawSideDATA(g, model, prevHP);
 
-                DrawTiles(g, model, 0, 0, 0, overrides);
+                DrawTiles(g, model, 0, 0, 0, overrides, false);
 
                 DrawMonsterDisplay(g, model, overrides);
 
                 DrawLogs(g, model);
 
                 DrawConsole(g, model);
+
             }
 
             return newFrame;
@@ -359,10 +366,11 @@ namespace FrameGenerator
 
         }
 
+        
 
         public bool isWallOrFloor(string tilename) => tilename[0] == '#' || tilename[0] == '.' || tilename[0] == ',' || tilename[0] == '*' || tilename[0] == '≈';
 
-        public void DrawTiles(Graphics g, Model model, float startX, float startY, int startIndex, Dictionary<string, string> overrides)
+        public void DrawTiles(Graphics g, Model model, float startX, float startY, int startIndex, Dictionary<string, string> overrides, bool ForMap)
 
         {
             var dict = new Dictionary<string, string>();//logging
@@ -378,6 +386,9 @@ namespace FrameGenerator
 
             var currentTileX = startX;
             var currentTileY = startY;
+
+           
+
             if (startIndex == 0) currentTileY -= 32;//since start of loop begins on a newline we back up one so it isn't one line too low.
 
             for (int i = startIndex; i < model.TileNames.Length; i++)
@@ -399,6 +410,8 @@ namespace FrameGenerator
                 
             }
             _outOfSightCache.UpdateCache(BitmapList);
+
+           if(!ForMap) g.TryDrawPlayer( _characterdata, _characterpng, floor, characterRace, 32 * 16, 32 * 8, _weaponpng, model.SideData.Weapon.ToLower(), ref CharacterBitmap, model.SideData.Statuses1.ToLower(), _weapondata);
 #if DEBUG
             if (dict.Count < 10)
             {
@@ -438,7 +451,6 @@ namespace FrameGenerator
                 tile.TryDrawMonster(tileHighlight, _monsterdata, _monsterpng, overrides, floor, out drawnTile) ||
                 tile.TryDrawFeature(_features, _alldngnpng, floor, out drawnTile) ||
                 tile.TryDrawCloud(_cloudtiles, _alleffects, floor, model.SideData, model.MonsterData, out drawnTile) ||
-                tile.TryDrawPlayer(_characterdata, _characterpng, floor, OnlyRace, out drawnTile) ||
                 tile.TryDrawItem(tileHighlight, _itemdata, _itempng, _miscallaneous, floor, model.Location, out drawnTile)) 
             {
                 g.DrawImage(drawnTile, x, y);
