@@ -1,4 +1,5 @@
 ﻿using InputParser;
+using System.Collections.Generic;
 
 namespace FrameGenerator.Extensions
 {
@@ -11,7 +12,7 @@ namespace FrameGenerator.Extensions
             !monsterData[3].Empty && monsterData[3].MonsterTextRaw.Contains(MonsterName);
 
 
-        public static string ParseBasicWeaponName(this string fullstring)
+        public static string ParseUniqueWeaponName(this string fullstring)
         {
 
             string parsedstring = fullstring.Replace("\'", "");
@@ -37,13 +38,29 @@ namespace FrameGenerator.Extensions
                 {
                     end = i;
                 }
-
             }
-            if (fullstring.Contains("staff of")) return parsedstring.Substring(9 + start, end - 8 - start).Replace(' ', '_');
+
+            if (fullstring.Contains("sword of power"))
+            {
+                return "sword_of_power";
+            }
+            if (fullstring.Contains("thermic engine"))
+            {
+                return "maxwells_thermic_engine";
+            }
+
 
             parsedstring = parsedstring.Substring(start, end - start + 1).Replace(' ', '_').Split('\"')[0];
-
             return parsedstring;
+        }
+        public static string GetNonUniqueWeaponName(this string fullstring, Dictionary<string, string> weapondata)
+        {
+            foreach (KeyValuePair<string, string> entry in weapondata)
+            {
+                if (fullstring.Contains(entry.Key)) return entry.Value;
+            }
+
+            return fullstring;
         }
     }
 }

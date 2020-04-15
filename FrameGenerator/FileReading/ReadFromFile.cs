@@ -56,6 +56,20 @@ namespace FrameGenerator.FileReading
 
             return monster;
         }
+        public static Dictionary<string, string> GetWeaponData(string file)
+        {
+            var weapon = new Dictionary<string, string>();
+
+            string[] lines = File.ReadAllLines(file);
+
+            for (var i = 0; i < lines.Length; i+=2)
+            {
+
+                weapon[lines[i]] = lines[i+1];
+                
+            }
+            return weapon;
+        }
 
         public static List<NamedMonsterOverride> GetNamedMonsterOverrideData(string monsterOverrideFile)
         {
