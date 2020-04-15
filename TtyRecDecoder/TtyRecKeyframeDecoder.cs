@@ -211,7 +211,7 @@ namespace TtyRecDecoder
 
         public int Width { get; private set; }
         public int Height { get; private set; }
-        public TtyRecKeyframeDecoder(int w, int h, IEnumerable<Stream> streams, TimeSpan between_stream_delay)
+        public TtyRecKeyframeDecoder(int w, int h, IEnumerable<Stream> streams, TimeSpan between_stream_delay, TimeSpan between_packets_delay)
         {
             Width = w;
             Height = h;
@@ -219,6 +219,7 @@ namespace TtyRecDecoder
             LoadThread = new Thread(() => DoBackgroundLoad());
             LoadStreams = streams;
             LoadBetweenStreamDelay = between_stream_delay;
+            LoadBetweenPacketsDelay = between_packets_delay;
             LoadThread.Start();
 
             if (Packets.Count <= 0) return;
@@ -240,11 +241,13 @@ namespace TtyRecDecoder
         Thread LoadThread;
         IEnumerable<Stream> LoadStreams;
         TimeSpan LoadBetweenStreamDelay;
+        TimeSpan LoadBetweenPacketsDelay;
         volatile bool LoadCancel;
+
 
         void DoBackgroundLoad()
         {
-            var decoded = TtyRecPacket.DecodePackets(LoadStreams, LoadBetweenStreamDelay, () => LoadCancel);
+            var decoded = TtyRecPacket.DecodePackets(LoadStreams, LoadBetweenStreamDelay, LoadBetweenPacketsDelay, () => LoadCancel);
             var annotated = AnnotatedPacket.AnnotatePackets(Width, Height, decoded, () => LoadCancel);
 
             var buffer = new List<AnnotatedPacket>();
