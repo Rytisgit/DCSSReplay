@@ -71,7 +71,6 @@ namespace FrameGenerator.Extensions
 
             using (Graphics g = Graphics.FromImage(tileToDraw))
             {
-                if (tile.StartsWith("@BL")) return false;//player tile draw override TODO
                 var isHighlighted = FixHighlight(tile, background, out var correctTile);
                 string pngName;
                 if (!overrides.TryGetValue(correctTile, out pngName))
