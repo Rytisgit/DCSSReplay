@@ -23,6 +23,7 @@ namespace FrameGenerator
         private readonly Dictionary<string, string> _features;
         private readonly Dictionary<string, string> _cloudtiles;
         private readonly Dictionary<string, string> _itemdata;
+        private readonly Dictionary<string, string> _weapondata;
         private readonly Dictionary<string, Bitmap> _monsterpng;
         private readonly Dictionary<string, Bitmap> _characterpng;
         private readonly Dictionary<string, Bitmap> _weaponpng;
@@ -46,6 +47,7 @@ namespace FrameGenerator
             _features = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\features.txt");
             _cloudtiles = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\clouds.txt");
             _itemdata = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\items.txt");
+            _weapondata = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\weapons.txt");
 
             _floorandwall = ReadFromFile.GetFloorAndWallNamesForDungeons(@"..\..\..\Extra\tilefloor.txt");
             _monsterdata = ReadFromFile.GetMonsterData(gameLocation + @"\mon-data.h", @"..\..\..\Extra\monsteroverrides.txt");
@@ -394,7 +396,7 @@ namespace FrameGenerator
                    // Console.WriteLine(CharacterLocationRecognition+"WOWOW");
                 }
             }
-           if(!ForMap) g.TryDrawPlayer(model.TileNames[280],ref CharacterLocationRecognition, _characterdata, _characterpng, floor, characterRace, 32 * 16, 32 * 8, _weaponpng, model.SideData.Weapon.ToLower(), ref CharacterBitmap, model.SideData.Statuses1.ToLower());
+           if(!ForMap) g.TryDrawPlayer(model.TileNames[280],ref CharacterLocationRecognition, _characterdata, _characterpng, floor, characterRace, 32 * 16, 32 * 8, _weaponpng, model.SideData.Weapon.ToLower(), ref CharacterBitmap, model.SideData.Statuses1.ToLower(), _weapondata);
 #if DEBUG
             if (dict.Count < 10)
             {
