@@ -27,6 +27,7 @@ namespace TtyRecMonkey
         private readonly List<DateTime> PreviousFrames = new List<DateTime>();
         private Bitmap bmp = new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
         private DateTime PreviousFrame = DateTime.Now;
+        private TimeSpan MaxDelayBetweenPackets = new TimeSpan(0,0,0,0,500);//millisecondss
 
         public PlayerForm()
         {
@@ -81,7 +82,7 @@ namespace TtyRecMonkey
             
          
             var streams = TtyrecToStream(files);
-            ttyrecDecoder = new TtyRecKeyframeDecoder(80, 24, streams, delay);
+            ttyrecDecoder = new TtyRecKeyframeDecoder(80, 24, streams, delay, MaxDelayBetweenPackets);
             PlaybackSpeed = +1;
             Seek = TimeSpan.Zero;
         }
