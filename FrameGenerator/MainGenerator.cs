@@ -379,6 +379,8 @@ namespace FrameGenerator
             string characterRace = model.SideData.Race.Substring(0, 6);
             string[] location = model.SideData.Place.Split(':');
 
+            _outOfSightCache.DumpDataOnLocationChange(model.SideData.Place);
+
             if (!_floorandwall.TryGetValue(location[0].ToUpper(), out var CurrentLocationFloorAndWallName)) return;
 
             if (!_wallpng.TryGetValue(CurrentLocationFloorAndWallName[0], out var wall)) return;
