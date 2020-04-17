@@ -19,8 +19,33 @@ namespace TtyRecDecoder
         public int Index;
     }
 
+
     public class TtyRecKeyframeDecoder : IDisposable
     {
+        private readonly Queue<IEnumerable<AnnotatedPacket>> LoadPacketBuffer = new Queue<IEnumerable<AnnotatedPacket>>();
+        private Thread LoadThread;
+        private IEnumerable<Stream> LoadStreams;
+        private TimeSpan LoadBetweenStreamDelay;
+        private TimeSpan LoadBetweenPacketsDelay;
+        private volatile bool LoadCancel;
+
+        private readonly List<AnnotatedPacket> Packets = new List<AnnotatedPacket>();
+        public int PacketCount { get { return Packets.Count; } }
+        public TimeSpan Length
+        {
+            get
+            {
+                return Packets.Count > 0 ? Packets.Last().SinceStart : TimeSpan.Zero;
+            }
+        }
+        public int Keyframes { get; private set; }
+        public int Width { get; private set; }
+        public int Height { get; private set; }
+
+        public TtyRecFrame CurrentFrame;
+        private int LastActiveRangeStart = int.MaxValue;
+        private int LastActiveRangeEnd = int.MinValue;
+         
         public void Dispose()
         {
             // n.b. Resize uses this -- we may need to refactor if we need to do something permanent
@@ -123,8 +148,6 @@ namespace TtyRecDecoder
             SetActiveRange(before_seek, after_seek);
         }
 
-        int LastActiveRangeStart = int.MaxValue;
-        int LastActiveRangeEnd = int.MinValue;
         void SetActiveRange(int start, int end)
         {
             Debug.Assert(start < end);
@@ -225,19 +248,6 @@ namespace TtyRecDecoder
             CurrentFrame.Index = i;
         }
 
-        public TimeSpan Length
-        {
-            get
-            {
-                return Packets.Count > 0 ? Packets.Last().SinceStart : TimeSpan.Zero;
-            }
-        }
-
-        readonly List<AnnotatedPacket> Packets = new List<AnnotatedPacket>();
-        public TtyRecFrame CurrentFrame;
-
-        public int Width { get; private set; }
-        public int Height { get; private set; }
         public TtyRecKeyframeDecoder(int w, int h, IEnumerable<Stream> streams, TimeSpan between_stream_delay, TimeSpan between_packets_delay)
         {
             Width = w;
@@ -264,14 +274,6 @@ namespace TtyRecDecoder
             LoadThread.Start();
         }
 
-        readonly Queue<IEnumerable<AnnotatedPacket>> LoadPacketBuffer = new Queue<IEnumerable<AnnotatedPacket>>();
-        Thread LoadThread;
-        IEnumerable<Stream> LoadStreams;
-        TimeSpan LoadBetweenStreamDelay;
-        TimeSpan LoadBetweenPacketsDelay;
-        volatile bool LoadCancel;
-
-
         void DoBackgroundLoad()
         {
             var decoded = TtyRecPacket.DecodePackets(LoadStreams, LoadBetweenStreamDelay, LoadBetweenPacketsDelay, () => LoadCancel);
@@ -296,8 +298,5 @@ namespace TtyRecDecoder
             lock (LoadPacketBuffer) LoadPacketBuffer.Enqueue(buffer);
             buffer = null;
         }
-
-        public int Keyframes { get; private set; }
-        public int PacketCount { get { return Packets.Count; } }
     }
 }
