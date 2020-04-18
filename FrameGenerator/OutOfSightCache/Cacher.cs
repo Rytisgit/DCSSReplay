@@ -7,11 +7,13 @@ namespace FrameGenerator.OutOfSightCache
 {
     public class Cacher
     {
+        private string LocationOfCache { get; set; }
         public Dictionary<char, Bitmap> OutofSightCache { get; set; }
 
         public Cacher()
         {
             OutofSightCache = new Dictionary<char, Bitmap>();
+            LocationOfCache = "";
         }
         //TODO DUMP Cahce on new level
         public void UpdateCache(List<Tuple<string, Bitmap>> lastDrawnFrameKeyValues)
@@ -36,6 +38,15 @@ namespace FrameGenerator.OutOfSightCache
         public bool TryGetLastSeenBitmapByChar(char key, out Bitmap lastSeen)
         {
             return OutofSightCache.TryGetValue(key, out lastSeen);
+        }
+
+        public void DumpDataOnLocationChange(string currentLocation)
+        {
+            if (!LocationOfCache.Equals(currentLocation))
+            {
+                LocationOfCache = currentLocation;
+                OutofSightCache.Clear();
+            }
         }
     }
 }
