@@ -134,12 +134,9 @@ namespace FrameGenerator.Extensions
             return true;
         }
 
-
-
-        public static bool TryDrawPlayer(this Graphics g, Dictionary<string, string> characterData, Dictionary<string, Bitmap> characterPngs, Bitmap floor, string race, float x, float y, Dictionary<string, Bitmap> weaponpng, string WeaponData,ref Bitmap CharacterBitmap, string StatusData, Dictionary<string, string> weapondata)
+        public static bool TryDrawPlayer(this Graphics g, Dictionary<string, string> characterData, Dictionary<string, Bitmap> characterPngs, Dictionary<string, string> weapondata, Dictionary<string, Bitmap> weaponpng, SideData sideData, Bitmap floor, string race, float x, float y, float resize = 1)
         {
-            //Console.WriteLine(ParseBasicWeaponName("    '''''  pair of quick blades \"Gyre\" and \"Gimble\""));
-            //CharacterLocationRecognition = tileName;
+            var CharacterBitmap = new Bitmap(32, 32, PixelFormat.Format32bppArgb);
             if (!characterData.TryGetValue(race, out var pngName)) return false;
             if (!characterPngs.TryGetValue(pngName, out Bitmap png)) return false;
             using (Graphics characterg = Graphics.FromImage(CharacterBitmap))
@@ -148,12 +145,12 @@ namespace FrameGenerator.Extensions
 
                 foreach (string status in BasicStatusArray)
                 {
-                    if (StatusData.Contains(status) && weaponpng.TryGetValue(status + "_form", out png)) break;
+                    if (sideData.Statuses1.Contains(status) && weaponpng.TryGetValue(status + "_form", out png)) break;
                 }
 
                 foreach (string status in CompStatusArray)
                 {
-                    if (StatusData.Contains(status))
+                    if (sideData.Statuses1.Contains(status))
                     {
                         if (!weaponpng.TryGetValue(status + "_form_" + race.ToLower(), out png)) weaponpng.TryGetValue(status + "_form_humanoid", out png);
                     }     
@@ -161,11 +158,12 @@ namespace FrameGenerator.Extensions
 
                 characterg.DrawImage(png, 0, 0, png.Width, png.Height);
 
-                if(weaponpng.TryGetValue(WeaponData.ParseUniqueWeaponName(), out png))  characterg.DrawImage(png, 0, 0, png.Width, png.Height);
+                if(weaponpng.TryGetValue(sideData.Weapon.ParseUniqueWeaponName(), out png))  characterg.DrawImage(png, 0, 0, png.Width, png.Height);
 
-                else if (weaponpng.TryGetValue(WeaponData.GetNonUniqueWeaponName(weapondata), out png)) characterg.DrawImage(png, 0, 0, png.Width, png.Height);
+                else if (weaponpng.TryGetValue(sideData.Weapon.GetNonUniqueWeaponName(weapondata), out png)) characterg.DrawImage(png, 0, 0, png.Width, png.Height);
 
-                g.DrawImage(CharacterBitmap, x, y, CharacterBitmap.Width, CharacterBitmap.Height);
+                g.DrawImage(CharacterBitmap, x, y, CharacterBitmap.Width * resize, CharacterBitmap.Height * resize);
+
                 return true;
             }
         }

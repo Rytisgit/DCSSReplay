@@ -15,6 +15,8 @@ namespace FrameGenerator
 {
     public class MainGenerator
     {
+        private const int BottomRightStartX = 1065;
+        private const int BottomRightStartY = 468;
         public string Folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "DCSSReplay");
         public bool isGeneratingFrame = false;
         private readonly Dictionary<string, string> _monsterdata;
@@ -38,11 +40,9 @@ namespace FrameGenerator
         private Bitmap _lastframe = new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
         private int previousHP = 0;
         public static Bitmap CharacterBitmap = new Bitmap(32, 32, PixelFormat.Format32bppArgb);
-        string CharacterLocationRecognition;
 
         public MainGenerator()
         {
-
             string gameLocation = @"..\..\..\Extra";
 
             _characterdata = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\racepng.txt");
@@ -69,11 +69,18 @@ namespace FrameGenerator
             _weaponpng = ReadFromFile.GetWeaponPNG(gameLocation);
         }
 
-        public Bitmap GenerateImage(TerminalCharacter[,] chars)
+        public Bitmap GenerateImage(TerminalCharacter[,] chars, int consoleLevel = 1)
         {
             if (chars != null)
             {
-                var model = Parser.ParseData(chars);
+
+                var model = consoleLevel != 3 ? Parser.ParseData(chars) : Parser.ParseData(chars, true);
+
+                if (model.Layout == LayoutType.Normal && consoleLevel == 2)
+                {
+                    model.Layout = LayoutType.ConsoleSwitch;
+                }
+                
 
                 var image = DrawFrame(model);
 
@@ -82,7 +89,7 @@ namespace FrameGenerator
 #endif
                 return image;
             }
-            return null;
+                return null;
         }
 
         private Bitmap DrawFrame(Model model)
@@ -96,11 +103,19 @@ namespace FrameGenerator
                     _lastframe = currentFrame;
                     previousHP = model.SideData.Health;
                     break;
+                case LayoutType.ConsoleSwitch:
+                    currentFrame = DrawConsoleSwitch(model, previousHP);
+                    _lastframe = currentFrame;
+                    previousHP = model.SideData.Health;
+                    break;
                 case LayoutType.TextOnly:
                     currentFrame = DrawTextBox(model, _lastframe);
                     break;
                 case LayoutType.MapOnly:
                     currentFrame = DrawMap(model);
+                    break;
+                case LayoutType.ConsoleFull:
+                    currentFrame = DrawConsoleFull(model);
                     break;
                 default:
                     break;
@@ -214,30 +229,67 @@ namespace FrameGenerator
 
                 DrawLogs(g, model);
 
-                DrawConsole(g, model);
+                DrawConsole(g, model, BottomRightStartX, BottomRightStartY);
 
             }
 
             return newFrame;
         }
 
-        private void DrawConsole(Graphics g, Model model)
+        private Bitmap DrawConsoleSwitch(Model model, int prevHP)
         {
-            float currentTileY = 468;
-            float currentTileX = 1075;
-            using var font2 = new Font("Courier New", 16);
+            Bitmap newFrame = new Bitmap(1602, 768, PixelFormat.Format32bppArgb);
+            using (Graphics g = Graphics.FromImage(newFrame))
+            {
+                g.Clear(Color.Black);
+
+                var overrides = GetOverridesForFrame(model.MonsterData, model.Location);
+
+                DrawSideDATA(g, model, prevHP);
+
+                DrawTiles(g, model, BottomRightStartX, BottomRightStartY, 0, overrides, false, 0.5f);
+
+                DrawMonsterDisplay(g, model, overrides);
+
+                DrawLogs(g, model);
+
+                DrawConsole(g, model, 0, 0, 2f, 16, 2f, 24);
+
+            }
+
+            return newFrame;
+        }
+
+        private Bitmap DrawConsoleFull(Model model)
+        {
+            Bitmap newFrame = new Bitmap(1602, 768, PixelFormat.Format32bppArgb);
+            using (Graphics g = Graphics.FromImage(newFrame))
+            {
+                g.Clear(Color.Black);
+
+                DrawConsole(g, model, 0, 0, 1.27f, 16, 2f, 20);
+
+            }
+
+            return newFrame;
+        }
+
+        private void DrawConsole(Graphics g, Model model, float startX, float startY, float xResize = 1, float yWidth = 16, float yResize = 1, float fontSize = 16)
+        {
+            var currentX = startX;
+            var currentY = startY - yWidth * yResize;
+            using var font2 = new Font("Courier New", fontSize);
 
             for (var i = 0; i < model.TileNames.Length; i++)
             {
-
                 if (i % model.LineLength == 0)
                 {
-                    currentTileX = 1065;
-                    currentTileY += 16;
+                    currentX = startX;
+                    currentY += yWidth * yResize;
                 }
-                else currentTileX += 16;
+                else currentX += yWidth * xResize;
 
-                g.WriteCharacter(model.TileNames[i], font2, currentTileX, currentTileY, model.HighlightColors[i]);
+                g.WriteCharacter(model.TileNames[i], font2, currentX, currentY, model.HighlightColors[i], 0);
 
 
             }
@@ -245,7 +297,6 @@ namespace FrameGenerator
 
         private void DrawMonsterDisplay(Graphics g, Model model, Dictionary<string, string> overrides)
         {
-
             var sideOfTilesX = 32 * model.LineLength; var currentLineY = 300;
             using var font = new Font("Courier New", 16);
             foreach (var monsterlist in model.MonsterData)
@@ -306,7 +357,6 @@ namespace FrameGenerator
         }
 
         public static void DrawSideDATA(Graphics g, Model model, int prevHP)
-
         {
             using Font font = new Font("Courier New", 16);
             var yellow = new SolidBrush(Color.FromArgb(252, 233, 79));
@@ -368,12 +418,9 @@ namespace FrameGenerator
 
         }
 
-        
-
         public bool isWallOrFloor(string tilename) => tilename[0] == '#' || tilename[0] == '.' || tilename[0] == ',' || tilename[0] == '*' || tilename[0] == '≈';
 
-        public void DrawTiles(Graphics g, Model model, float startX, float startY, int startIndex, Dictionary<string, string> overrides, bool ForMap)
-
+        public void DrawTiles(Graphics g, Model model, float startX, float startY, int startIndex, Dictionary<string, string> overrides, bool ForMap, float resize = 1)
         {
             var dict = new Dictionary<string, string>();//logging
             var BitmapList = new List<Tuple<string, Bitmap>>(model.TileNames.Length);
@@ -393,19 +440,19 @@ namespace FrameGenerator
 
            
 
-            if (startIndex == 0) currentTileY -= 32;//since start of loop begins on a newline we back up one so it isn't one line too low.
+            if (startIndex == 0) currentTileY -= 32 * resize;//since start of loop begins on a newline we back up one so it isn't one line too low.
 
             for (int i = startIndex; i < model.TileNames.Length; i++)
             {
                 if (i % model.LineLength == 0)
                 {
-                    currentTileX = 0;
-                    currentTileY += 32;
+                    currentTileX = startX;
+                    currentTileY += 32 * resize;
                 }
                 else
-                    currentTileX += 32;
+                    currentTileX += 32 * resize;
                 //TODO if location is middle and tile name starts with @ draw character
-                DrawCurrentTile(g, model, dict, model.TileNames[i], model.HighlightColors[i], wall, floor, overrides, currentTileX, currentTileY, out Bitmap drawnTile);
+                DrawCurrentTile(g, model, dict, model.TileNames[i], model.HighlightColors[i], characterRace, wall, floor, overrides, currentTileX, currentTileY, resize, out Bitmap drawnTile);
 
                 if (!isWallOrFloor(model.TileNames[i]))
                 {
@@ -415,7 +462,10 @@ namespace FrameGenerator
             }
             _outOfSightCache.UpdateCache(BitmapList);
 
-           if(!ForMap) g.TryDrawPlayer( _characterdata, _characterpng, floor, characterRace, 32 * 16, 32 * 8, _weaponpng, model.SideData.Weapon.ToLower(), ref CharacterBitmap, model.SideData.Statuses1.ToLower(), _weapondata);
+            var middleX = startX + (32 * 16 * resize);
+            var middleY = startY + (32 * 8  * resize);
+
+           if (!ForMap) g.TryDrawPlayer(_characterdata, _characterpng, _weapondata, _weaponpng, model.SideData, floor, characterRace, middleX, middleY, resize);
 #if DEBUG
             if (dict.Count < 10)
             {
@@ -434,7 +484,7 @@ namespace FrameGenerator
 #endif
         }
 
-        private bool DrawCurrentTile(Graphics g, Model model, Dictionary<string, string> dict, string tile, string tileHighlight, Bitmap wall, Bitmap floor, Dictionary<string, string> overrides, float x, float y, out Bitmap drawnTile)
+        private bool DrawCurrentTile(Graphics g, Model model, Dictionary<string, string> dict, string tile, string tileHighlight, string OnlyRace, Bitmap wall, Bitmap floor, Dictionary<string, string> overrides, float x, float y, float resize, out Bitmap drawnTile)
         {
             if (tile[0] == ' ' && (tileHighlight == Enum.GetName(typeof(ColorList2), ColorList2.LIGHTGREY) || tileHighlight == Enum.GetName(typeof(ColorList2), ColorList2.BLACK)) || tile.StartsWith("@BL")) { 
                 drawnTile = null; 
@@ -445,9 +495,9 @@ namespace FrameGenerator
             if(tile.Substring(1) == Enum.GetName(typeof(ColorList2), ColorList2.BLUE) && _outOfSightCache.TryGetLastSeenBitmapByChar(tile[0], out var lastSeen))
             {
                 drawnTile = lastSeen;
-                g.DrawImage(lastSeen, x, y);
+                g.DrawImage(lastSeen, x, y, lastSeen.Width * resize, lastSeen.Height * resize);
                 var outOfSightTint = new SolidBrush(Color.FromArgb(150, 0, 0, 0));
-                g.FillRectangle(outOfSightTint, x, y, lastSeen.Width, lastSeen.Height);
+                g.FillRectangle(outOfSightTint, x, y, lastSeen.Width * resize, lastSeen.Height * resize);
                 return true;
             }
 
@@ -457,7 +507,7 @@ namespace FrameGenerator
                 tile.TryDrawCloud(_cloudtiles, _alleffects, floor, model.SideData, model.MonsterData, out drawnTile) ||
                 tile.TryDrawItem(tileHighlight, _itemdata, _itempng, _miscallaneous, floor, model.Location, out drawnTile)) 
             {
-                g.DrawImage(drawnTile, x, y);
+                g.DrawImage(drawnTile, x, y, drawnTile.Width * resize, drawnTile.Height * resize);
                 return true; 
             }
 
@@ -466,12 +516,9 @@ namespace FrameGenerator
                 dict.Add(tile, "");
             }
 
-            g.WriteCharacter(tile, new Font("Courier New", 16), x, y);//unhandled tile, write it as a character instead
+            g.WriteCharacter(tile, new Font("Courier New", 16 * resize), x, y);//unhandled tile, write it as a character instead
 
             return false;
         }
     }
 }
-
-
-
