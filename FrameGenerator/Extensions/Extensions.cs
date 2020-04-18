@@ -62,5 +62,7 @@ namespace FrameGenerator.Extensions
 
             return fullstring;
         }
+
+        public static bool IsWallOrFloor(this string tilename) => tilename[0] == '#' || tilename[0] == '.' || tilename[0] == ',' || tilename[0] == '*' || tilename[0] == '≈';
     }
 }
