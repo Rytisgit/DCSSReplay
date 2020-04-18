@@ -8,7 +8,9 @@ namespace InputParser
     {
         Normal,
         TextOnly,
-        MapOnly
+        MapOnly,
+        ConsoleSwitch,
+        ConsoleFull
     }
     public enum ColorList2
     {
