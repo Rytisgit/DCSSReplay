@@ -248,13 +248,13 @@ namespace FrameGenerator
 
                 DrawSideDATA(g, model, prevHP);
 
-                DrawTiles(g, model, BottomRightStartX, BottomRightStartY, 0, overrides, false, 0.55f);
+                DrawTiles(g, model, BottomRightStartX, BottomRightStartY, 0, overrides, false, 0.5f);
 
                 DrawMonsterDisplay(g, model, overrides);
 
                 DrawLogs(g, model);
 
-                DrawConsole(g, model, 0, 0, 1.9f);
+                DrawConsole(g, model, 0, 0, 2f, 16, 2f, 24);
 
             }
 
@@ -268,30 +268,29 @@ namespace FrameGenerator
             {
                 g.Clear(Color.Black);
 
-                DrawConsole(g, model, 0, 0, 1.9f);
+                DrawConsole(g, model, 0, 0, 1.27f, 16, 2f, 20);
 
             }
 
             return newFrame;
         }
 
-        private void DrawConsole(Graphics g, Model model, float startX, float startY, float resize = 1)
+        private void DrawConsole(Graphics g, Model model, float startX, float startY, float xResize = 1, float yWidth = 16, float yResize = 1, float fontSize = 16)
         {
             var currentX = startX;
-            var currentY = startY - 16 * resize;
-            using var font2 = new Font("Courier New", 16 * resize);
+            var currentY = startY - yWidth * yResize;
+            using var font2 = new Font("Courier New", fontSize);
 
             for (var i = 0; i < model.TileNames.Length; i++)
             {
-
                 if (i % model.LineLength == 0)
                 {
                     currentX = startX;
-                    currentY += 16 * resize;
+                    currentY += yWidth * yResize;
                 }
-                else currentX += 16 * resize;
+                else currentX += yWidth * xResize;
 
-                g.WriteCharacter(model.TileNames[i], font2, currentX, currentY, model.HighlightColors[i], 2);
+                g.WriteCharacter(model.TileNames[i], font2, currentX, currentY, model.HighlightColors[i], 0);
 
 
             }
@@ -441,7 +440,7 @@ namespace FrameGenerator
 
            
 
-            if (startIndex == 0) currentTileY -= 32;//since start of loop begins on a newline we back up one so it isn't one line too low.
+            if (startIndex == 0) currentTileY -= 32 * resize;//since start of loop begins on a newline we back up one so it isn't one line too low.
 
             for (int i = startIndex; i < model.TileNames.Length; i++)
             {
