@@ -394,17 +394,19 @@ namespace FrameGenerator
 
             g.WriteSideDataInfo("Wp: ", model.SideData.Weapon.Substring(0, 35), font, 32 * model.LineLength, lineCount * lineHeight);
             lineCount++;
-            if (model.SideData.Weapon.Length > 39)
+            var substring = model.SideData.Weapon.Substring(35);
+            if (!string.IsNullOrWhiteSpace(substring))
             {
-                g.DrawString(model.SideData.Weapon.Substring(35), font, gray, 32 * model.LineLength + g.MeasureString("Wp: ", font).Width, lineCount * lineHeight);
+                g.DrawString(substring, font, gray, 32 * model.LineLength + g.MeasureString("Wp: ", font).Width, lineCount * lineHeight);
                 lineCount++;
             }
 
             g.WriteSideDataInfo("Qv: ", model.SideData.Quiver.Substring(0, 35), font, 32 * model.LineLength, lineCount * lineHeight);
             lineCount++;
-            if (model.SideData.Quiver.Length > 39)
+            substring = model.SideData.Quiver.Substring(35);
+            if (!string.IsNullOrWhiteSpace(substring))
             {
-                g.DrawString(model.SideData.Quiver.Substring(35), font, gray, 32 * model.LineLength + g.MeasureString("Qv: ", font).Width, lineCount * lineHeight);
+                g.DrawString(substring, font, gray, 32 * model.LineLength + g.MeasureString("Qv: ", font).Width, lineCount * lineHeight);
                 lineCount++;
             }
 
@@ -425,6 +427,8 @@ namespace FrameGenerator
 
             string characterRace = model.SideData.Race.Substring(0, 6);
             string[] location = model.SideData.Place.Split(':');
+
+            _outOfSightCache.DumpDataOnLocationChange(model.SideData.Place);
 
             if (!_floorandwall.TryGetValue(location[0].ToUpper(), out var CurrentLocationFloorAndWallName)) return;
 
@@ -482,7 +486,7 @@ namespace FrameGenerator
 
         private bool DrawCurrentTile(Graphics g, Model model, Dictionary<string, string> dict, string tile, string tileHighlight, string OnlyRace, Bitmap wall, Bitmap floor, Dictionary<string, string> overrides, float x, float y, float resize, out Bitmap drawnTile)
         {
-            if (tile[0] == ' ' && (tileHighlight == Enum.GetName(typeof(ColorList2), ColorList2.LIGHTGREY) || tileHighlight == Enum.GetName(typeof(ColorList2), ColorList2.BLACK))) { 
+            if (tile[0] == ' ' && (tileHighlight == Enum.GetName(typeof(ColorList2), ColorList2.LIGHTGREY) || tileHighlight == Enum.GetName(typeof(ColorList2), ColorList2.BLACK)) || tile.StartsWith("@BL")) { 
                 drawnTile = null; 
                 return false;
             }
