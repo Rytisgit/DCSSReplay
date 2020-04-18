@@ -177,7 +177,7 @@ namespace FrameGenerator
                     x += 20;
                 }
                 var overrides = GetOverridesForFrame(model.MonsterData, model.Location);
-                DrawTiles(g, model, 0, 32, model.LineLength, overrides, true);//draw the rest of the map
+                DrawTiles(g, model, 0, 32, model.LineLength, overrides);//draw the rest of the map
             }
 
             return bmp;
@@ -223,7 +223,9 @@ namespace FrameGenerator
 
                 DrawSideDATA(g, model, prevHP);
 
-                DrawTiles(g, model, 0, 0, 0, overrides, false);
+                DrawTiles(g, model, 0, 0, 0, overrides);
+
+                DrawPlayer(g, model, 0 + (32 * 16), 0 + (32 * 8));
 
                 DrawMonsterDisplay(g, model, overrides);
 
@@ -247,7 +249,9 @@ namespace FrameGenerator
 
                 DrawSideDATA(g, model, prevHP);
 
-                DrawTiles(g, model, BottomRightStartX, BottomRightStartY, 0, overrides, false, 0.5f);
+                DrawTiles(g, model, BottomRightStartX, BottomRightStartY, 0, overrides, 0.5f);
+
+                DrawPlayer(g, model, BottomRightStartX + (32 * 16) * 0.5f, BottomRightStartY + (32 * 8) * 0.5f, 0.5f);
 
                 DrawMonsterDisplay(g, model, overrides);
 
@@ -418,9 +422,55 @@ namespace FrameGenerator
 
         }
 
-        public bool isWallOrFloor(string tilename) => tilename[0] == '#' || tilename[0] == '.' || tilename[0] == ',' || tilename[0] == '*' || tilename[0] == '≈';
+        public bool DrawPlayer(Graphics g, Model model, float x, float y, float resize = 1)
+        {
 
-        public void DrawTiles(Graphics g, Model model, float startX, float startY, int startIndex, Dictionary<string, string> overrides, bool ForMap, float resize = 1)
+            string[] BasicStatusArray = { "bat", "dragon", "ice", "mushroom", "pig", "shadow", "spider" };
+            string[] CompStatusArray = { "lich", "statue" };
+
+            string characterRace = model.SideData.Race.Substring(0, 6);
+            
+
+            var CharacterBitmap = new Bitmap(32, 32, PixelFormat.Format32bppArgb);
+            if (!_characterdata.TryGetValue(characterRace, out var pngName)) return false;
+            if (!_characterpng.TryGetValue(pngName, out Bitmap png)) return false;
+
+            string[] location = model.SideData.Place.Split(':'); //TODO add floor is lava and water based on status
+            if (!_floorandwall.TryGetValue(location[0].ToUpper(), out var CurrentLocationFloorAndWallName)) return false;
+
+            if (!_wallpng.TryGetValue(CurrentLocationFloorAndWallName[0], out var wall)) return false;
+            if (!_floorpng.TryGetValue(CurrentLocationFloorAndWallName[1], out var floor)) return false;
+
+            using (Graphics characterg = Graphics.FromImage(CharacterBitmap))
+            {
+                characterg.DrawImage(floor, 0, 0, floor.Width, floor.Height);
+
+                foreach (string status in BasicStatusArray)
+                {
+                    if (model.SideData.Statuses1.Contains(status) && _weaponpng.TryGetValue(status + "_form", out png)) break;
+                }
+
+                foreach (string status in CompStatusArray)
+                {
+                    if (model.SideData.Statuses1.Contains(status))
+                    {
+                        if (!_weaponpng.TryGetValue(status + "_form_" + characterRace.ToLower(), out png)) _weaponpng.TryGetValue(status + "_form_humanoid", out png);
+                    }
+                }
+
+                characterg.DrawImage(png, 0, 0, png.Width, png.Height);
+
+                if (_weaponpng.TryGetValue(model.SideData.Weapon.ParseUniqueWeaponName(), out png)) characterg.DrawImage(png, 0, 0, png.Width, png.Height);
+
+                else if (_weaponpng.TryGetValue(model.SideData.Weapon.GetNonUniqueWeaponName(_weapondata), out png)) characterg.DrawImage(png, 0, 0, png.Width, png.Height);
+
+                g.DrawImage(CharacterBitmap, x, y, CharacterBitmap.Width * resize, CharacterBitmap.Height * resize);
+
+                return true;
+            }
+        }
+
+        public void DrawTiles(Graphics g, Model model, float startX, float startY, int startIndex, Dictionary<string, string> overrides, float resize = 1)
         {
             var dict = new Dictionary<string, string>();//logging
             var BitmapList = new List<Tuple<string, Bitmap>>(model.TileNames.Length);
@@ -438,8 +488,6 @@ namespace FrameGenerator
             var currentTileX = startX;
             var currentTileY = startY;
 
-           
-
             if (startIndex == 0) currentTileY -= 32 * resize;//since start of loop begins on a newline we back up one so it isn't one line too low.
 
             for (int i = startIndex; i < model.TileNames.Length; i++)
@@ -451,10 +499,10 @@ namespace FrameGenerator
                 }
                 else
                     currentTileX += 32 * resize;
-                //TODO if location is middle and tile name starts with @ draw character
-                DrawCurrentTile(g, model, dict, model.TileNames[i], model.HighlightColors[i], characterRace, wall, floor, overrides, currentTileX, currentTileY, resize, out Bitmap drawnTile);
 
-                if (!isWallOrFloor(model.TileNames[i]))
+                var tileDrawn = DrawCurrentTile(g, model, dict, model.TileNames[i], model.HighlightColors[i], wall, floor, overrides, currentTileX, currentTileY, resize, out Bitmap drawnTile);
+
+                if (tileDrawn && !model.TileNames[i].IsWallOrFloor())
                 {
                     BitmapList.Add(new Tuple<string, Bitmap>(model.TileNames[i], drawnTile));
                 }
@@ -462,11 +510,7 @@ namespace FrameGenerator
             }
             _outOfSightCache.UpdateCache(BitmapList);
 
-            var middleX = startX + (32 * 16 * resize);
-            var middleY = startY + (32 * 8  * resize);
-
-           if (!ForMap) g.TryDrawPlayer(_characterdata, _characterpng, _weapondata, _weaponpng, model.SideData, floor, characterRace, middleX, middleY, resize);
-#if DEBUG
+#if DEBUG //log unknown characters
             if (dict.Count < 10)
             {
                 bool written = false;
@@ -484,7 +528,7 @@ namespace FrameGenerator
 #endif
         }
 
-        private bool DrawCurrentTile(Graphics g, Model model, Dictionary<string, string> dict, string tile, string tileHighlight, string OnlyRace, Bitmap wall, Bitmap floor, Dictionary<string, string> overrides, float x, float y, float resize, out Bitmap drawnTile)
+        private bool DrawCurrentTile(Graphics g, Model model, Dictionary<string, string> dict, string tile, string tileHighlight, Bitmap wall, Bitmap floor, Dictionary<string, string> overrides, float x, float y, float resize, out Bitmap drawnTile)
         {
             if (tile[0] == ' ' && (tileHighlight == Enum.GetName(typeof(ColorList2), ColorList2.LIGHTGREY) || tileHighlight == Enum.GetName(typeof(ColorList2), ColorList2.BLACK)) || tile.StartsWith("@BL")) { 
                 drawnTile = null; 
@@ -516,7 +560,7 @@ namespace FrameGenerator
                 dict.Add(tile, "");
             }
 
-            g.WriteCharacter(tile, new Font("Courier New", 16 * resize), x, y);//unhandled tile, write it as a character instead
+            g.WriteCharacter(tile, new Font("Courier New", 24 * resize), x, y, tileHighlight);//unhandled tile, write it as a character instead
 
             return false;
         }

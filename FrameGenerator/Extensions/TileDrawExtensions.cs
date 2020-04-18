@@ -9,9 +9,6 @@ namespace FrameGenerator.Extensions
 {
     public static class TileDrawExtensions
     {
-        
-        static string[] BasicStatusArray = { "bat", "dragon", "ice", "mushroom", "pig", "shadow", "spider" };
-        static string[] CompStatusArray = { "lich", "statue" };
         public static bool TryDrawWallOrFloor(this string tile, Bitmap wall, Bitmap floor, out Bitmap tileToDraw)
         {
             tileToDraw = new Bitmap(32, 32, PixelFormat.Format32bppArgb);
@@ -132,40 +129,6 @@ namespace FrameGenerator.Extensions
                 g.DrawImage(png, 0, 0, png.Width, png.Height);
             }
             return true;
-        }
-
-        public static bool TryDrawPlayer(this Graphics g, Dictionary<string, string> characterData, Dictionary<string, Bitmap> characterPngs, Dictionary<string, string> weapondata, Dictionary<string, Bitmap> weaponpng, SideData sideData, Bitmap floor, string race, float x, float y, float resize = 1)
-        {
-            var CharacterBitmap = new Bitmap(32, 32, PixelFormat.Format32bppArgb);
-            if (!characterData.TryGetValue(race, out var pngName)) return false;
-            if (!characterPngs.TryGetValue(pngName, out Bitmap png)) return false;
-            using (Graphics characterg = Graphics.FromImage(CharacterBitmap))
-            {
-                characterg.DrawImage(floor, 0, 0, floor.Width, floor.Height);
-
-                foreach (string status in BasicStatusArray)
-                {
-                    if (sideData.Statuses1.Contains(status) && weaponpng.TryGetValue(status + "_form", out png)) break;
-                }
-
-                foreach (string status in CompStatusArray)
-                {
-                    if (sideData.Statuses1.Contains(status))
-                    {
-                        if (!weaponpng.TryGetValue(status + "_form_" + race.ToLower(), out png)) weaponpng.TryGetValue(status + "_form_humanoid", out png);
-                    }     
-                }
-
-                characterg.DrawImage(png, 0, 0, png.Width, png.Height);
-
-                if(weaponpng.TryGetValue(sideData.Weapon.ParseUniqueWeaponName(), out png))  characterg.DrawImage(png, 0, 0, png.Width, png.Height);
-
-                else if (weaponpng.TryGetValue(sideData.Weapon.GetNonUniqueWeaponName(weapondata), out png)) characterg.DrawImage(png, 0, 0, png.Width, png.Height);
-
-                g.DrawImage(CharacterBitmap, x, y, CharacterBitmap.Width * resize, CharacterBitmap.Height * resize);
-
-                return true;
-            }
         }
 
         private static bool FixHighlight(string tile, string backgroundColor, out string correctTile)//if highlighted, returns fixed string
