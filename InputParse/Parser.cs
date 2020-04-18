@@ -68,9 +68,11 @@ namespace InputParser
             return LayoutType.TextOnly;
         }
 
-        public static Model ParseData(Putty.TerminalCharacter[,] chars)
+        public static Model ParseData(Putty.TerminalCharacter[,] chars, bool consoleFull = false)
         {
             if (chars == null) throw new ArgumentNullException("TerminalCharacter array is null");
+
+            if (consoleFull) return ParseConsoleLayout(chars);
 
             return (GetLayoutType(chars, out var location)) switch
             {
@@ -263,6 +265,40 @@ namespace InputParser
                     }
                 model.TileNames = coloredStrings;
 
+            }
+            catch (Exception)
+            {
+                foreach (var item in characters)
+                {
+                    if (item.ForegroundPaletteIndex > 15) Console.WriteLine(item.ForegroundPaletteIndex + item.ForegroundPaletteIndex);
+                }
+
+                return new Model();
+            }
+            return model;
+        }
+
+        private static Model ParseConsoleLayout(Putty.TerminalCharacter[,] characters)
+        {
+            Model model = new Model
+            {
+                Layout = LayoutType.ConsoleFull,
+                LineLength = FullWidth
+            };
+            var coloredStrings = new string[FullWidth * FullHeight];
+            var highlight = new string[FullWidth * FullHeight];
+            var curentChar = 0;
+            try
+            {
+                for (int j = 0; j < FullHeight; j++)
+                    for (int i = 0; i < FullWidth; i++)
+                    {
+                        coloredStrings[curentChar] = GetColoredCharacter(characters[i, j]);
+                        highlight[curentChar] = GetBackgroundColor(characters[i, j]);
+                        curentChar++;
+                    }
+                model.TileNames = coloredStrings;
+                model.HighlightColors = highlight;
             }
             catch (Exception)
             {
