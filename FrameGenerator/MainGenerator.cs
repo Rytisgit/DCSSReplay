@@ -43,7 +43,6 @@ namespace FrameGenerator
 
         public MainGenerator()
         {
-
             string gameLocation = @"..\..\..\Extra";
 
             _characterdata = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\racepng.txt");
@@ -93,7 +92,7 @@ namespace FrameGenerator
                 return null;
         }
 
-            private Bitmap DrawFrame(Model model)
+        private Bitmap DrawFrame(Model model)
         {
             Bitmap currentFrame = new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
 
@@ -298,7 +297,6 @@ namespace FrameGenerator
 
         private void DrawMonsterDisplay(Graphics g, Model model, Dictionary<string, string> overrides)
         {
-
             var sideOfTilesX = 32 * model.LineLength; var currentLineY = 300;
             using var font = new Font("Courier New", 16);
             foreach (var monsterlist in model.MonsterData)
@@ -359,7 +357,6 @@ namespace FrameGenerator
         }
 
         public static void DrawSideDATA(Graphics g, Model model, int prevHP)
-
         {
             using Font font = new Font("Courier New", 16);
             var yellow = new SolidBrush(Color.FromArgb(252, 233, 79));
@@ -422,7 +419,6 @@ namespace FrameGenerator
         public bool isWallOrFloor(string tilename) => tilename[0] == '#' || tilename[0] == '.' || tilename[0] == ',' || tilename[0] == '*' || tilename[0] == '≈';
 
         public void DrawTiles(Graphics g, Model model, float startX, float startY, int startIndex, Dictionary<string, string> overrides, bool ForMap, float resize = 1)
-
         {
             var dict = new Dictionary<string, string>();//logging
             var BitmapList = new List<Tuple<string, Bitmap>>(model.TileNames.Length);
