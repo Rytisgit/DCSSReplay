@@ -240,7 +240,7 @@ namespace TtyRecDecoder
             var nextFrameTime = Packets[nextFrameIndex > 0 ? nextFrameIndex : 0].SinceStart;
 
             DumpChunksAround(nextFrameTime);
-            var i = BinarySearchIndexFrame(Packets, ap => ap.SinceStart >= nextFrameTime);
+            var i = nextFrameTime == CurrentFrame.SinceStart ? BinarySearchIndexFrame(Packets, ap => ap.SinceStart > nextFrameTime): BinarySearchIndexFrame(Packets, ap => ap.SinceStart >= nextFrameTime);
             if (i == -1) i = 0;
             Debug.Assert(Packets[i].DecodedCache != null);
             CurrentFrame.SinceStart = Packets[i].SinceStart;
