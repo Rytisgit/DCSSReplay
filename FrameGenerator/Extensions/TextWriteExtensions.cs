@@ -25,7 +25,7 @@ namespace FrameGenerator.Extensions
 
             return (int)(rect.Right);
         }
-        public static void WriteCharacter(this Graphics g, string coloredCharacter, Font font, float x, float y, string backgroundColor)
+        public static void WriteCharacter(this Graphics g, string coloredCharacter, Font font, float x, float y, string backgroundColor, float OffsetY = 3)
         {
             var black = ColorList.GetColor("BLACK");
             var yellow = ColorList.GetColor("YELLOW");
@@ -41,7 +41,7 @@ namespace FrameGenerator.Extensions
                 int stringWidth = g.MeasureDisplayStringWidth(coloredCharacter[0].ToString(), font);
                 Bitmap backgroundColorbmp = new Bitmap(stringWidth, (int)font.Size);
                 Graphics.FromImage(backgroundColorbmp).Clear(color);
-                g.DrawImage(backgroundColorbmp, x, y + 3);
+                g.DrawImage(backgroundColorbmp, x, y + OffsetY);
             }
             g.DrawString(coloredCharacter[0].ToString(), font, brush, x, y);
         }

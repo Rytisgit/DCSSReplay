@@ -28,7 +28,8 @@ namespace TtyRecMonkey
         private Bitmap bmp = new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
         private DateTime PreviousFrame = DateTime.Now;
         private TimeSpan MaxDelayBetweenPackets = new TimeSpan(0,0,0,0,500);//millisecondss
-        public int FrameStepCount;
+        private int FrameStepCount;
+        private int ConsoleSwitchLevel = 1;
 
         public PlayerForm()
         {
@@ -87,6 +88,7 @@ namespace TtyRecMonkey
             PlaybackSpeed = +1;
             Seek = TimeSpan.Zero;
         }
+
         private IEnumerable<Stream> TtyrecToStream(string[] files)
         {
             return files.Select(f =>
@@ -122,7 +124,7 @@ namespace TtyRecMonkey
             PreviousFrame = now;
 
             Seek += TimeSpan.FromSeconds(dt * PlaybackSpeed);
-            Console.WriteLine(dt);
+
             if (ttyrecDecoder != null)
             {
                 if (FrameStepCount != 0)
@@ -149,7 +151,7 @@ namespace TtyRecMonkey
                             {
                                 try
                                 {
-                                    bmp = frameGenerator.GenerateImage(frame);
+                                    bmp = frameGenerator.GenerateImage(frame, ConsoleSwitchLevel);
                                     Update2(bmp);
                                     frameGenerator.isGeneratingFrame = false;
                                 }
@@ -255,6 +257,15 @@ namespace TtyRecMonkey
                 case Keys.OemPeriod:
                     if (PlaybackSpeed != 0) { PausedSpeed = PlaybackSpeed; PlaybackSpeed = 0; }//pause when frame stepping
                     FrameStepCount += 1; //FrameStep +1
+                    break;
+
+
+                case Keys.A:
+                    ConsoleSwitchLevel = ConsoleSwitchLevel != 2 ? 2 : 1;//switch console and tile windows around when in normal layout mode
+                    break;
+
+                case Keys.S:
+                    ConsoleSwitchLevel = ConsoleSwitchLevel != 3 ? 3 : 1;//switch to full console mode ound when in normal layout mode
                     break;
 
                 case Keys.V://Play / Pause
