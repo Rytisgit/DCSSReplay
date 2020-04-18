@@ -344,17 +344,19 @@ namespace FrameGenerator
 
             g.WriteSideDataInfo("Wp: ", model.SideData.Weapon.Substring(0, 35), font, 32 * model.LineLength, lineCount * lineHeight);
             lineCount++;
-            if (model.SideData.Weapon.Length > 39)
+            var substring = model.SideData.Weapon.Substring(35);
+            if (!string.IsNullOrWhiteSpace(substring))
             {
-                g.DrawString(model.SideData.Weapon.Substring(35), font, gray, 32 * model.LineLength + g.MeasureString("Wp: ", font).Width, lineCount * lineHeight);
+                g.DrawString(substring, font, gray, 32 * model.LineLength + g.MeasureString("Wp: ", font).Width, lineCount * lineHeight);
                 lineCount++;
             }
 
             g.WriteSideDataInfo("Qv: ", model.SideData.Quiver.Substring(0, 35), font, 32 * model.LineLength, lineCount * lineHeight);
             lineCount++;
-            if (model.SideData.Quiver.Length > 39)
+            substring = model.SideData.Quiver.Substring(35);
+            if (!string.IsNullOrWhiteSpace(substring))
             {
-                g.DrawString(model.SideData.Quiver.Substring(35), font, gray, 32 * model.LineLength + g.MeasureString("Qv: ", font).Width, lineCount * lineHeight);
+                g.DrawString(substring, font, gray, 32 * model.LineLength + g.MeasureString("Qv: ", font).Width, lineCount * lineHeight);
                 lineCount++;
             }
 
