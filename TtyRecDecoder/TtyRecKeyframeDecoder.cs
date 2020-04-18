@@ -16,6 +16,7 @@ namespace TtyRecDecoder
     {
         public TimeSpan SinceStart;
         public TerminalCharacter[,] Data;
+        public int Index;
     }
 
     public class TtyRecKeyframeDecoder : IDisposable
@@ -196,6 +197,32 @@ namespace TtyRecDecoder
             Debug.Assert(Packets[i].DecodedCache != null);
             CurrentFrame.SinceStart = Packets[i].SinceStart;
             CurrentFrame.Data = Packets[i].DecodedCache;
+            CurrentFrame.Index = i;
+        }
+
+        public void FrameStep(int frameCount)
+        {
+            lock (LoadPacketBuffer)
+            {
+                while (LoadPacketBuffer.Count > 0)
+                {
+                    var apr = LoadPacketBuffer.Dequeue();
+                    Keyframes += apr.Count(ap => ap.IsKeyframe);
+                    Packets.AddRange(apr);
+                }
+            }
+            if (Packets.Count <= 0) return;
+
+            var nextFrameIndex = CurrentFrame.Index + frameCount;
+            var nextFrameTime = Packets[nextFrameIndex > 0 ? nextFrameIndex : 0].SinceStart;
+
+            DumpChunksAround(nextFrameTime);
+            var i = BinarySearchIndexFrame(Packets, ap => ap.SinceStart >= nextFrameTime);
+            if (i == -1) i = 0;
+            Debug.Assert(Packets[i].DecodedCache != null);
+            CurrentFrame.SinceStart = Packets[i].SinceStart;
+            CurrentFrame.Data = Packets[i].DecodedCache;
+            CurrentFrame.Index = i;
         }
 
         public TimeSpan Length

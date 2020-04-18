@@ -28,6 +28,7 @@ namespace TtyRecMonkey
         private Bitmap bmp = new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
         private DateTime PreviousFrame = DateTime.Now;
         private TimeSpan MaxDelayBetweenPackets = new TimeSpan(0,0,0,0,500);//millisecondss
+        public int FrameStepCount;
 
         public PlayerForm()
         {
@@ -121,11 +122,20 @@ namespace TtyRecMonkey
             PreviousFrame = now;
 
             Seek += TimeSpan.FromSeconds(dt * PlaybackSpeed);
-
+            Console.WriteLine(dt);
             if (ttyrecDecoder != null)
             {
-                ttyrecDecoder.Seek(Seek);
-
+                if (FrameStepCount != 0)
+                {
+                    ttyrecDecoder.FrameStep(FrameStepCount); //step frame index by count
+                    Seek = ttyrecDecoder.CurrentFrame.SinceStart;
+                    FrameStepCount = 0;
+                }
+                else
+                {
+                    ttyrecDecoder.Seek(Seek);
+                }
+                
                 var frame = ttyrecDecoder.CurrentFrame.Data;
 
                 if (frame != null)
@@ -176,6 +186,8 @@ namespace TtyRecMonkey
                     , "   F       Decrease speed by 1"
                     , "   G       Increase speed by 1"
                     , ""
+                    , "   , (Comma)  Frame Step Back 1"
+                    , "   . (Dot)    Frame Step Back 1"
                     , " Space     Play / Pause"
                     , ""
                     , " A / S     Zoom In/Out"
@@ -234,6 +246,16 @@ namespace TtyRecMonkey
 
                 case Keys.D: PlaybackSpeed -= 0.2; break;//progresive increase/decrease
                 case Keys.H: PlaybackSpeed += 0.2; break;
+
+                case Keys.Oemcomma: 
+                    if (PlaybackSpeed != 0) { PausedSpeed = PlaybackSpeed; PlaybackSpeed = 0; } //pause when frame stepping
+                    FrameStepCount -= 1;//FrameStep -1 
+                    break;
+
+                case Keys.OemPeriod:
+                    if (PlaybackSpeed != 0) { PausedSpeed = PlaybackSpeed; PlaybackSpeed = 0; }//pause when frame stepping
+                    FrameStepCount += 1; //FrameStep +1
+                    break;
 
                 case Keys.V://Play / Pause
                 case Keys.Space:
