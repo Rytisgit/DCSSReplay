@@ -33,6 +33,7 @@ namespace TtyRecMonkey
 
         public PlayerForm()
         {
+            this.Icon = Properties.Resource1.dcssreplay;
             frameGenerator = new MainGenerator();
             Visible = true;
         }
