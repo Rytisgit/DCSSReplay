@@ -80,7 +80,10 @@ namespace InputParser
                 "LIGHTCYAN" => Color.FromArgb(64, 255, 255),
                 "WHITE" => Color.FromArgb(255, 255, 255),
                 "WHITE2" => Color.FromArgb(255, 255, 255),
+                null => Color.FromArgb(0, 0, 0),
+                "" => Color.FromArgb(0, 0, 0),
                 _ => throw new ArgumentException($"No Color with name: {name} is defined"),
+                
             };
         }
     }
