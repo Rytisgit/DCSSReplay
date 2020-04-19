@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 namespace InputParser
 {
     public class Model
@@ -11,6 +13,7 @@ namespace InputParser
         public LogData[] LogData { get; set; } = new LogData[6] { new LogData(), new LogData(), new LogData(), new LogData(), new LogData(), new LogData() };
         public MonsterData[] MonsterData { get; set; } = new MonsterData[4] { new MonsterData(), new MonsterData(), new MonsterData(), new MonsterData() };
         public SideData SideData { get; set; } = new SideData();
+        public SideDataColored SideDataColored { get; set; } = new SideDataColored();
         public ColorList ColorList { get; set; } = new ColorList();
     }
 
@@ -54,6 +57,12 @@ namespace InputParser
         public string Time { get; set; } = "9999999 (25.0)";
         public string Statuses1 { get; set; } = "Slow Agi Might Haste Para";
         public string Statuses2 { get; set; } = "Tree -Tele ";
+
+    };
+    public class SideDataColored
+    {
+        public List<string> Statuses1 { get; set; } = new List<string>();
+        public List<string> Statuses2 { get; set; } = new List<string>();
 
     };
 }

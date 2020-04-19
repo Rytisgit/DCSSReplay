@@ -415,10 +415,19 @@ namespace FrameGenerator
             }
 
             // TODO better status writing
-            g.DrawString(model.SideData.Statuses1, font, gray, 32 * model.LineLength, lineCount * lineHeight);
+            var x = 32 * model.LineLength;
+            foreach (var coloredChar in model.SideDataColored.Statuses1)
+            {
+                g.WriteCharacter(coloredChar, font, x, lineCount * lineHeight);
+                x += 8;
+            }
             lineCount++;
-            g.DrawString(model.SideData.Statuses2, font, gray, 32 * model.LineLength, lineCount * lineHeight);
-            lineCount++;
+            x = 32 * model.LineLength;
+            foreach (var coloredChar in model.SideDataColored.Statuses2)
+            {
+                g.WriteCharacter(coloredChar, font, 32 * model.LineLength, lineCount * lineHeight);
+                x += 8;
+            }
 
         }
 
