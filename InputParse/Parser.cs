@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Putty;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,11 +14,11 @@ namespace InputParser
         const int GameViewWidth = 33;
         const int GameViewHeight = 17;
 
-        private static char GetCharacter(Putty.TerminalCharacter character) => character.Character == 55328 ? ' ' : character.Character;
-        private static string GetColoredCharacter(Putty.TerminalCharacter character) => GetCharacter(character) + Enum.GetName(typeof(ColorList2), character.ForegroundPaletteIndex);
-        private static string GetBackgroundColor(Putty.TerminalCharacter character) => Enum.GetName(typeof(ColorList2), character.BackgroundPaletteIndex);
+        private static char GetCharacter(TerminalCharacter character) => character.Character == 55328 ? ' ' : character.Character;
+        private static string GetColoredCharacter(TerminalCharacter character) => GetCharacter(character) + Enum.GetName(typeof(ColorList2), character.ForegroundPaletteIndex);
+        private static string GetBackgroundColor(TerminalCharacter character) => Enum.GetName(typeof(ColorList2), character.BackgroundPaletteIndex);
 
-        private static LayoutType GetLayoutType(Putty.TerminalCharacter[,] characters, out string newlocation)
+        private static LayoutType GetLayoutType(TerminalCharacter[,] characters, out string newlocation)
         {
             StringBuilder place = new StringBuilder();
             bool found = false;
@@ -68,7 +69,7 @@ namespace InputParser
             return LayoutType.TextOnly;
         }
 
-        public static Model ParseData(Putty.TerminalCharacter[,] chars, bool consoleFull = false)
+        public static Model ParseData(TerminalCharacter[,] chars, bool consoleFull = false)
         {
             if (chars == null) throw new ArgumentNullException("TerminalCharacter array is null");
 
@@ -83,7 +84,7 @@ namespace InputParser
             };
         }
 
-        private static Model ParseNormalLayout(Putty.TerminalCharacter[,] characters, string location)
+        private static Model ParseNormalLayout(TerminalCharacter[,] characters, string location)
         {
             Model model = new Model
             {
@@ -110,6 +111,8 @@ namespace InputParser
 
                 model.SideData = ParseSideData(characters);
 
+                model.SideDataColored = ParseColoredSideData(characters);
+
                 model.LogData = ParseLogLines(characters);
 
                 model.MonsterData = ParseMonsterDisplay(characters);
@@ -126,7 +129,7 @@ namespace InputParser
             return model;
         }
 
-        private static LogData[] ParseLogLines(Putty.TerminalCharacter[,] characters)
+        private static LogData[] ParseLogLines(TerminalCharacter[,] characters)
         {
             var loglines = new LogData[6] { new LogData(), new LogData(), new LogData(), new LogData(), new LogData(), new LogData() };
             StringBuilder logLine = new StringBuilder();
@@ -159,7 +162,7 @@ namespace InputParser
             return loglines;
         }
 
-        private static MonsterData[] ParseMonsterDisplay(Putty.TerminalCharacter[,] characters)
+        private static MonsterData[] ParseMonsterDisplay(TerminalCharacter[,] characters)
         {
             List<MonsterData> monsterDataList = new List<MonsterData>(4);
             StringBuilder monsterLine = new StringBuilder();
@@ -203,7 +206,7 @@ namespace InputParser
             };
         }
 
-        private static Model ParseMapLayout(Putty.TerminalCharacter[,] characters, string location)
+        private static Model ParseMapLayout(TerminalCharacter[,] characters, string location)
         {
             Model model = new Model
             {
@@ -246,7 +249,7 @@ namespace InputParser
             return model;
         }
 
-        private static Model ParseTextLayout(Putty.TerminalCharacter[,] characters)
+        private static Model ParseTextLayout(TerminalCharacter[,] characters)
         {
             Model model = new Model
             {
@@ -278,7 +281,7 @@ namespace InputParser
             return model;
         }
 
-        private static Model ParseConsoleLayout(Putty.TerminalCharacter[,] characters)
+        private static Model ParseConsoleLayout(TerminalCharacter[,] characters)
         {
             Model model = new Model
             {
@@ -312,8 +315,18 @@ namespace InputParser
             return model;
         }
 
+        private static SideDataColored ParseColoredSideData(TerminalCharacter[,] characters)
+        {
+            var coloredSideData = new SideDataColored();
+            for (int i = 37; i < 75; i++)
+            {
+                coloredSideData.Statuses1.Add(GetColoredCharacter(characters[i, 11]));
+                coloredSideData.Statuses1.Add(GetColoredCharacter(characters[i, 12]));
+            }
+            return coloredSideData;
+        }
 
-        private static SideData ParseSideData(Putty.TerminalCharacter[,] characters)
+        private static SideData ParseSideData(TerminalCharacter[,] characters)
         {
             var sideData = new SideData();
             StringBuilder name = new StringBuilder();
@@ -334,6 +347,7 @@ namespace InputParser
             StringBuilder place = new StringBuilder();
             StringBuilder time = new StringBuilder();
             StringBuilder next = new StringBuilder();
+
             for (int i = 37; i < 75; i++)
             {
                 name.Append(GetCharacter(characters[i, 0]));
