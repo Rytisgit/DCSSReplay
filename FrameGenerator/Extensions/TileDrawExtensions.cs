@@ -86,12 +86,6 @@ namespace FrameGenerator.Extensions
 
                 g.DrawImage(floor, 0, 0, floor.Width, floor.Height);
                 g.DrawImage(png, 0, 0, png.Width, png.Height);
-
-                if (pngName == "roxanne")//make out of sight statues (which look like roxanne) and tint blue since out of sight, bad implementation currently
-                {
-                    var blueTint = new SolidBrush(Color.FromArgb(200, 0, 0, 0));
-                    g.FillRectangle(blueTint, 0, 0, floor.Width, floor.Height);
-                }
             }
             return true;
         }
