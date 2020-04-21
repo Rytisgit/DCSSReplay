@@ -20,6 +20,7 @@ namespace TtyRecMonkey
     [System.ComponentModel.DesignerCategory("")]
     public class PlayerForm : DCSSReplayWindow
     {
+        private const int TimeStepLengthMS = 5000;
         private readonly MainGenerator frameGenerator;
         private TtyRecKeyframeDecoder ttyrecDecoder = null;
         private double PlaybackSpeed, PausedSpeed;
@@ -189,11 +190,13 @@ namespace TtyRecMonkey
                     , "   F       Decrease speed by 1"
                     , "   G       Increase speed by 1"
                     , ""
-                    , "   , (Comma)  Frame Step Back 1"
-                    , "   . (Dot)    Frame Step Back 1"
+                    , "   , (Comma)     Frame Step Back 1"
+                    , "   . (Dot)       Frame Step Back 1"
+                    , "   Left Arrow    Time Backward 5 Seconds"
+                    , "   Right Arrow   Time Forward 5 Seconds"
                     , " Space     Play / Pause"
                     , ""
-                    , " A / S     Zoom In/Out"
+                    , " A / S     Switch Tile to console / Full Console Mode"
                     };
 
             }
@@ -260,6 +263,13 @@ namespace TtyRecMonkey
                     FrameStepCount += 1; //FrameStep +1
                     break;
 
+                case Keys.Left:
+                    Seek -= Seek - TimeSpan.FromMilliseconds(TimeStepLengthMS) > TimeSpan.Zero ? TimeSpan.FromMilliseconds(TimeStepLengthMS) : TimeSpan.Zero;
+                    break;
+
+                case Keys.Right:
+                    Seek += Seek + TimeSpan.FromMilliseconds(TimeStepLengthMS) < ttyrecDecoder.Length ? TimeSpan.FromMilliseconds(TimeStepLengthMS) : ttyrecDecoder.Length;
+                    break;
 
                 case Keys.A:
                     ConsoleSwitchLevel = ConsoleSwitchLevel != 2 ? 2 : 1;//switch console and tile windows around when in normal layout mode
