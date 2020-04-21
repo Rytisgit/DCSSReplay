@@ -15,7 +15,8 @@ namespace FrameGenerator.OutOfSightCache
             OutofSightCache = new Dictionary<char, Bitmap>();
             LocationOfCache = "";
         }
-        //TODO DUMP Cahce on new level
+
+
         public void UpdateCache(List<Tuple<string, Bitmap>> lastDrawnFrameKeyValues)
         {
             var orderedList = lastDrawnFrameKeyValues
@@ -37,6 +38,7 @@ namespace FrameGenerator.OutOfSightCache
         }
         public bool TryGetLastSeenBitmapByChar(char key, out Bitmap lastSeen)
         {
+            //TODO Track Cache Hits
             return OutofSightCache.TryGetValue(key, out lastSeen);
         }
 
