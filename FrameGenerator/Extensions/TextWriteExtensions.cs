@@ -76,7 +76,7 @@ namespace FrameGenerator.Extensions
             return g;
         }
 
-        public static Graphics DrawPercentageBar(this Graphics g, int amount, int maxAmount, Color barColor, float x, float y)
+        public static Graphics DrawPercentageBar(this Graphics g, int amount, int maxAmount, int previousAmount, Color barColor, Color LostAmmountColor, float x, float y)
         {
             Bitmap bar = new Bitmap(250, 16);
             Graphics temp = Graphics.FromImage(bar);
@@ -90,13 +90,13 @@ namespace FrameGenerator.Extensions
                 temp = Graphics.FromImage(bar);
                 temp.Clear(barColor);
                 g.DrawImage(bar, x, y);
-                //if (barLength != 250 && prevHP - sideData.Health > 0)
-                //{
-                //    int prevBarLength = (int)(250 * ((float)(prevHP - sideData.Health) / sideData.Health));
-                //    Bitmap losthealthbar = new Bitmap(prevBarLength, 16);
-                //    Graphics.FromImage(losthealthbar).Clear(Color.Red);
-                //    g.DrawImage(losthealthbar, x + barLength, 40);
-                //}
+                if (barLength != 250 && previousAmount - amount > 0)
+                {
+                    int prevBarLength = (int)(250 * ((float)(previousAmount - amount) / maxAmount)) + 1;
+                    Bitmap losthealthbar = new Bitmap(prevBarLength, 16);
+                    Graphics.FromImage(losthealthbar).Clear(LostAmmountColor);
+                    g.DrawImage(losthealthbar, x + barLength, y);
+                }
             }
 
             return g;
