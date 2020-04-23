@@ -54,6 +54,7 @@ namespace InputParser
         public string Dexterity { get; set; } = "9999";
         public string Inteligence { get; set; } = "9999";
         public string Place { get; set; } = "Dungeon:1";
+        public string NoisyGold { get; set; } = "===---";
         public string Time { get; set; } = "9999999 (25.0)";
         public string Statuses1 { get; set; } = "Slow Agi Might Haste Para";
         public string Statuses2 { get; set; } = "Tree -Tele ";

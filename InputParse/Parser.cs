@@ -345,6 +345,7 @@ namespace InputParser
             StringBuilder hp = new StringBuilder();
             StringBuilder mp = new StringBuilder();
             StringBuilder place = new StringBuilder();
+            StringBuilder noiseOrGold = new StringBuilder();
             StringBuilder time = new StringBuilder();
             StringBuilder next = new StringBuilder();
 
@@ -376,6 +377,7 @@ namespace InputParser
             {
                 hp.Append(GetCharacter(characters[i + 1, 2]));
                 mp.Append(GetCharacter(characters[i, 3]));
+                noiseOrGold.Append(GetCharacter(characters[i, 8]));
 
             }
             for (int i = 60; i < 75; i++)
@@ -420,6 +422,9 @@ namespace InputParser
             sideData.Place = place.ToString().Trim();
             sideData.Time = time.ToString();
             sideData.NextLevel = next.ToString();
+
+            var split = noiseOrGold.ToString().Split(':');
+            sideData.NoisyGold = split.Length > 1 ? split[1] : "noise here"; 
 
             var parsed = sideData.Place.Split(':');
             bool found = false;
