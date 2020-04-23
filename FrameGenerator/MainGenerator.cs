@@ -392,7 +392,9 @@ namespace FrameGenerator
             .WriteSideDataInfo(" Next: ", model.SideData.ExperienceLevel, font, 32 * model.LineLength + g.MeasureString("XL: " + model.SideData.ExperienceLevel, font).Width, lineCount * lineHeight)
             .WriteSideDataInfo("Place: ", model.SideData.Place, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
             lineCount++;
-            g.WriteSideDataInfo("Noise:", "noise here", font, 32 * model.LineLength, lineCount * lineHeight)
+            (int.TryParse(model.SideData.NoisyGold, out _) ? 
+                g.WriteSideDataInfo("Gold:", model.SideData.NoisyGold, font, 32 * model.LineLength, lineCount * lineHeight) :
+                g.WriteSideDataInfo("Noise:", model.SideData.NoisyGold, font, 32 * model.LineLength, lineCount * lineHeight))
             .WriteSideDataInfo("Time: ", model.SideData.Time, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
             lineCount++;
 
@@ -414,19 +416,18 @@ namespace FrameGenerator
                 lineCount++;
             }
 
-            // TODO better status writing
             var x = 32 * model.LineLength;
             foreach (var coloredChar in model.SideDataColored.Statuses1)
             {
                 g.WriteCharacter(coloredChar, font, x, lineCount * lineHeight);
-                x += 8;
+                x += 6;
             }
             lineCount++;
             x = 32 * model.LineLength;
             foreach (var coloredChar in model.SideDataColored.Statuses2)
             {
                 g.WriteCharacter(coloredChar, font, 32 * model.LineLength, lineCount * lineHeight);
-                x += 8;
+                x += 6;
             }
 
         }
