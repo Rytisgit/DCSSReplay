@@ -564,7 +564,35 @@ namespace FrameGenerator
                 g.FillRectangle(outOfSightTint, x, y, lastSeen.Width * resize, lastSeen.Height * resize);
                 return true;
             }
-
+            //TODO cache into main flow? wall/floor then prioritymonsters by side display, then cacher, then all other monsters, tehn the rest
+            /*  dBLUE:black_draconian
+                qBLUE:draconian_monk
+                hBLUE:black_bear
+                kBLUE:rime_drake
+                lBLUE:iguana
+                pBLUE:servant_of_whispers
+                rBLUE:porcupine
+                sBLUE:death_scarab
+                DBLUE:steam_dragon
+                NBLUE:naga_warrior
+                QBLUE:tengu_conjurer
+                SBLUE:black_mamba
+                WBLUE:phantom
+                XBLUE:starcursed_mass
+                YBLUE:dire_elephant
+                6BLUE:gelid_demonspawn
+                2BLUE:lorocyproca
+                *BLUE:battlesphere
+                eBLUE:duvessa
+                gBLUE:ijyb
+                KBLUE:pikel
+                5BLUE:grinder
+                8BLUE:roxanne
+                @BLUE:donald
+                {BLUE:sensed_trivial
+                EBLUE:water_elemental
+                bBLUE:butterfly9
+           */
             if (tile.TryDrawWallOrFloor(wall, floor, out drawnTile) ||
                 tile.TryDrawMonster(tileHighlight, _monsterdata, _monsterpng, overrides, floor, out drawnTile) ||
                 tile.TryDrawFeature(_features, _alldngnpng, floor, out drawnTile) ||
