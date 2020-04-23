@@ -39,7 +39,11 @@ namespace FrameGenerator
         private readonly Dictionary<string, Bitmap> _wallpng;
         private Bitmap _lastframe = new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
         private int previousHP = 0;
+        private int previousMP = 0;
+        private int _lostHpCheckpoint = 0;
+        private int _lostMpCheckpoint = 0;
         public static Bitmap CharacterBitmap = new Bitmap(32, 32, PixelFormat.Format32bppArgb);
+        
 
         public MainGenerator()
         {
@@ -99,14 +103,20 @@ namespace FrameGenerator
             switch (model.Layout)
             {
                 case LayoutType.Normal:
-                    currentFrame = DrawNormal(model, previousHP);
+                    currentFrame = DrawNormal(model);
                     _lastframe = currentFrame;
+                    _lostHpCheckpoint = model.SideData.Health > previousHP ? 0 : model.SideData.Health == previousHP ? _lostHpCheckpoint : previousHP;
+                    _lostMpCheckpoint = model.SideData.Magic > previousMP ? 0 : model.SideData.Magic == previousMP ? _lostMpCheckpoint : previousMP;
                     previousHP = model.SideData.Health;
+                    previousMP = model.SideData.Magic;
                     break;
                 case LayoutType.ConsoleSwitch:
-                    currentFrame = DrawConsoleSwitch(model, previousHP);
+                    currentFrame = DrawConsoleSwitch(model);
                     _lastframe = currentFrame;
+                    _lostHpCheckpoint = model.SideData.Health > previousHP ? 0 : model.SideData.Health;
+                    _lostMpCheckpoint = model.SideData.Magic > previousMP ? 0 : model.SideData.Magic;
                     previousHP = model.SideData.Health;
+                    previousMP = model.SideData.Magic;
                     break;
                 case LayoutType.TextOnly:
                     currentFrame = DrawTextBox(model, _lastframe);
@@ -212,7 +222,7 @@ namespace FrameGenerator
             return overlayImage;
         }
 
-        private Bitmap DrawNormal(Model model, int prevHP)
+        private Bitmap DrawNormal(Model model)
         {
             Bitmap newFrame = new Bitmap(1602, 768, PixelFormat.Format32bppArgb);
             using (Graphics g = Graphics.FromImage(newFrame))
@@ -221,7 +231,7 @@ namespace FrameGenerator
 
                 var overrides = GetOverridesForFrame(model.MonsterData, model.Location);
 
-                DrawSideDATA(g, model, prevHP);
+                DrawSideDATA(g, model, _lostHpCheckpoint, _lostMpCheckpoint);
 
                 DrawTiles(g, model, 0, 0, 0, overrides);
 
@@ -238,7 +248,7 @@ namespace FrameGenerator
             return newFrame;
         }
 
-        private Bitmap DrawConsoleSwitch(Model model, int prevHP)
+        private Bitmap DrawConsoleSwitch(Model model)
         {
             Bitmap newFrame = new Bitmap(1602, 768, PixelFormat.Format32bppArgb);
             using (Graphics g = Graphics.FromImage(newFrame))
@@ -247,7 +257,7 @@ namespace FrameGenerator
 
                 var overrides = GetOverridesForFrame(model.MonsterData, model.Location);
 
-                DrawSideDATA(g, model, prevHP);
+                DrawSideDATA(g, model, _lostHpCheckpoint, _lostMpCheckpoint);
 
                 DrawTiles(g, model, BottomRightStartX, BottomRightStartY, 0, overrides, 0.5f);
 
@@ -360,7 +370,7 @@ namespace FrameGenerator
             }
         }
 
-        public static void DrawSideDATA(Graphics g, Model model, int prevHP)
+        public static void DrawSideDATA(Graphics g, Model model, int prevHP, int prevMP)
         {
             using Font font = new Font("Courier New", 16);
             var yellow = new SolidBrush(Color.FromArgb(252, 233, 79));
@@ -374,10 +384,10 @@ namespace FrameGenerator
             g.DrawString(model.SideData.Race, font, yellow, 32 * model.LineLength, lineCount * lineHeight);
             lineCount++;
             g.WriteSideDataInfo("Health: ", model.SideData.Health.ToString() + '/' + model.SideData.MaxHealth.ToString(), font, 32 * model.LineLength, lineCount * lineHeight)
-            .DrawPercentageBar(model.SideData.Health, model.SideData.MaxHealth, Color.Green, 32 * (model.LineLength + 8), lineCount * lineHeight);
+            .DrawPercentageBar(model.SideData.Health, model.SideData.MaxHealth, prevHP, Color.Green, Color.Red, 32 * (model.LineLength + 8), lineCount * lineHeight);
             lineCount++;
             g.WriteSideDataInfo("Mana: ", model.SideData.Magic.ToString() + '/' + model.SideData.MaxMagic.ToString(), font, 32 * model.LineLength, lineCount * lineHeight)
-            .DrawPercentageBar(model.SideData.Magic, model.SideData.MaxMagic, Color.Blue, 32 * (model.LineLength + 8), lineCount * lineHeight);
+            .DrawPercentageBar(model.SideData.Magic, model.SideData.MaxMagic, prevMP, Color.Blue, Color.BlueViolet, 32 * (model.LineLength + 8), lineCount * lineHeight);
             lineCount++;
             g.WriteSideDataInfo("AC: ", model.SideData.ArmourClass, font, 32 * model.LineLength, lineCount * lineHeight)
             .WriteSideDataInfo("Str: ", model.SideData.Strength, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
@@ -392,7 +402,9 @@ namespace FrameGenerator
             .WriteSideDataInfo(" Next: ", model.SideData.ExperienceLevel, font, 32 * model.LineLength + g.MeasureString("XL: " + model.SideData.ExperienceLevel, font).Width, lineCount * lineHeight)
             .WriteSideDataInfo("Place: ", model.SideData.Place, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
             lineCount++;
-            g.WriteSideDataInfo("Noise:", "noise here", font, 32 * model.LineLength, lineCount * lineHeight)
+            (int.TryParse(model.SideData.NoisyGold, out _) ? 
+                g.WriteSideDataInfo("Gold:", model.SideData.NoisyGold, font, 32 * model.LineLength, lineCount * lineHeight) :
+                g.WriteSideDataInfo("Noise:", model.SideData.NoisyGold, font, 32 * model.LineLength, lineCount * lineHeight))
             .WriteSideDataInfo("Time: ", model.SideData.Time, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
             lineCount++;
 
@@ -414,19 +426,18 @@ namespace FrameGenerator
                 lineCount++;
             }
 
-            // TODO better status writing
             var x = 32 * model.LineLength;
             foreach (var coloredChar in model.SideDataColored.Statuses1)
             {
                 g.WriteCharacter(coloredChar, font, x, lineCount * lineHeight);
-                x += 8;
+                x += 6;
             }
             lineCount++;
             x = 32 * model.LineLength;
             foreach (var coloredChar in model.SideDataColored.Statuses2)
             {
                 g.WriteCharacter(coloredChar, font, 32 * model.LineLength, lineCount * lineHeight);
-                x += 8;
+                x += 6;
             }
 
         }
