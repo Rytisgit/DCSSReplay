@@ -557,18 +557,18 @@ namespace FrameGenerator
 
             bool cached = false;
             if (tile.TryDrawWallOrFloor(wall, floor, out drawnTile) ||
-                tile.TryDrawMonster(tileHighlight, overrides, _monsterpng, floor, out drawnTile) ||//first try drawing overrides, that incluse blue color monsters, and monsters in sight
+                tile.TryDrawMonster(tileHighlight, overrides, _monsterpng, floor, out drawnTile) ||//first try drawing overrides, that include blue color monsters, and monsters in sight
                 tile.TryDrawCachedTile(_outOfSightCache, out drawnTile, out cached) ||//add highlight check?
                 tile.TryDrawMonster(tileHighlight, _monsterdata, _monsterpng, floor, out drawnTile) ||//draw the rest of the monsters
                 tile.TryDrawFeature(_features, _alldngnpng, floor, out drawnTile) ||
                 tile.TryDrawCloud(_cloudtiles, _alleffects, floor, model.SideData, model.MonsterData, out drawnTile) ||
                 tile.TryDrawItem(tileHighlight, _itemdata, _itempng, _miscallaneous, floor, model.Location, out drawnTile)) 
             {
+                g.DrawImage(drawnTile, x, y, drawnTile.Width * resize, drawnTile.Height * resize);
                 if (cached)//darken to match out of sight
                 {
                     g.FillRectangle(new SolidBrush(Color.FromArgb(150, 0, 0, 0)), x, y, drawnTile.Width * resize, drawnTile.Height * resize);
                 }
-                g.DrawImage(drawnTile, x, y, drawnTile.Width * resize, drawnTile.Height * resize);
                 return true; 
             }
 
