@@ -62,18 +62,30 @@ namespace FrameGenerator.Extensions
             return false;
         }
 
-        public static bool TryDrawMonster(this string tile, string background, Dictionary<string, string> monsterData, Dictionary<string, Bitmap> monsterPng, Dictionary<string, string> overrides, Bitmap floor, out Bitmap tileToDraw)
+        public static bool TryDrawCachedTile(this string tile, Cacher outOfSightCache, out Bitmap lastSeen, out bool Cached)
+        {
+            //add highlight check?
+            if (tile.Substring(1) == Enum.GetName(typeof(ColorList2), ColorList2.BLUE) && outOfSightCache.TryGetLastSeenBitmapByChar(tile[0], out lastSeen))
+            {
+                Cached = true;
+                return true;
+            }
+            Cached = false;
+            lastSeen = null;
+            return false;
+        }
+        
+
+        public static bool TryDrawMonster(this string tile, string background, Dictionary<string, string> monsterData, Dictionary<string, Bitmap> monsterPng, Bitmap floor, out Bitmap tileToDraw)
         {
             tileToDraw = new Bitmap(32, 32, PixelFormat.Format32bppArgb);
 
             using (Graphics g = Graphics.FromImage(tileToDraw))
             {
                 var isHighlighted = FixHighlight(tile, background, out var correctTile);
-                string pngName;
-                if (!overrides.TryGetValue(correctTile, out pngName))
-                {
-                    if (!monsterData.TryGetValue(correctTile, out pngName)) return false;
-                }
+
+                if (!monsterData.TryGetValue(correctTile, out var pngName)) return false;
+
                 //foreach (var item in monsterData)
                 //{
                 //    if (item.Key[0] == '*') Console.WriteLine(item.Key);
