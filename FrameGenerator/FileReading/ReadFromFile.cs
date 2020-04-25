@@ -175,8 +175,6 @@ namespace FrameGenerator.FileReading
                 monsterPNG[info.Name.Replace(".png", "")] = bitmap;
 
             }
-            Bitmap bmp = new Bitmap(gameLocation + @"\rltiles\dngn\statues\statue_triangle.png");
-            monsterPNG["roxanne"] = bmp;
             return monsterPNG;
         }
         public static Dictionary<string, Bitmap> GetWeaponPNG(string gameLocation)
