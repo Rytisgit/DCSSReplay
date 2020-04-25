@@ -555,50 +555,19 @@ namespace FrameGenerator
                 return false;
             }
 
-            //if blue its cache time
-            if(tile.Substring(1) == Enum.GetName(typeof(ColorList2), ColorList2.BLUE) && _outOfSightCache.TryGetLastSeenBitmapByChar(tile[0], out var lastSeen))
-            {
-                drawnTile = lastSeen;
-                g.DrawImage(lastSeen, x, y, lastSeen.Width * resize, lastSeen.Height * resize);
-                var outOfSightTint = new SolidBrush(Color.FromArgb(150, 0, 0, 0));
-                g.FillRectangle(outOfSightTint, x, y, lastSeen.Width * resize, lastSeen.Height * resize);
-                return true;
-            }
-            //TODO cache into main flow? wall/floor then prioritymonsters by side display, then cacher, then all other monsters, tehn the rest
-            /*  dBLUE:black_draconian
-                qBLUE:draconian_monk
-                hBLUE:black_bear
-                kBLUE:rime_drake
-                lBLUE:iguana
-                pBLUE:servant_of_whispers
-                rBLUE:porcupine
-                sBLUE:death_scarab
-                DBLUE:steam_dragon
-                NBLUE:naga_warrior
-                QBLUE:tengu_conjurer
-                SBLUE:black_mamba
-                WBLUE:phantom
-                XBLUE:starcursed_mass
-                YBLUE:dire_elephant
-                6BLUE:gelid_demonspawn
-                2BLUE:lorocyproca
-                *BLUE:battlesphere
-                eBLUE:duvessa
-                gBLUE:ijyb
-                KBLUE:pikel
-                5BLUE:grinder
-                8BLUE:roxanne
-                @BLUE:donald
-                {BLUE:sensed_trivial
-                EBLUE:water_elemental
-                bBLUE:butterfly9
-           */
+            bool cached = false;
             if (tile.TryDrawWallOrFloor(wall, floor, out drawnTile) ||
-                tile.TryDrawMonster(tileHighlight, _monsterdata, _monsterpng, overrides, floor, out drawnTile) ||
+                tile.TryDrawMonster(tileHighlight, overrides, _monsterpng, floor, out drawnTile) ||//first try drawing overrides, that incluse blue color monsters, and monsters in sight
+                tile.TryDrawCachedTile(_outOfSightCache, out drawnTile, out cached) ||//add highlight check?
+                tile.TryDrawMonster(tileHighlight, _monsterdata, _monsterpng, floor, out drawnTile) ||//draw the rest of the monsters
                 tile.TryDrawFeature(_features, _alldngnpng, floor, out drawnTile) ||
                 tile.TryDrawCloud(_cloudtiles, _alleffects, floor, model.SideData, model.MonsterData, out drawnTile) ||
                 tile.TryDrawItem(tileHighlight, _itemdata, _itempng, _miscallaneous, floor, model.Location, out drawnTile)) 
             {
+                if (cached)//darken to match out of sight
+                {
+                    g.FillRectangle(new SolidBrush(Color.FromArgb(150, 0, 0, 0)), x, y, drawnTile.Width * resize, drawnTile.Height * resize);
+                }
                 g.DrawImage(drawnTile, x, y, drawnTile.Width * resize, drawnTile.Height * resize);
                 return true; 
             }
