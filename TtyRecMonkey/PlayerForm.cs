@@ -125,10 +125,14 @@ namespace TtyRecMonkey
             var dt = Math.Max(0, Math.Min(0.1, (now - PreviousFrame).TotalSeconds));
             PreviousFrame = now;
 
-            Seek += TimeSpan.FromSeconds(dt * PlaybackSpeed);
-
             if (ttyrecDecoder != null)
             {
+                ShowControls(false);
+                if (Seek + TimeSpan.FromSeconds(dt * PlaybackSpeed) <= ttyrecDecoder.Length)
+                {
+                    Seek += TimeSpan.FromSeconds(dt * PlaybackSpeed);
+                }
+
                 if (FrameStepCount != 0)
                 {
                     ttyrecDecoder.FrameStep(FrameStepCount); //step frame index by count
@@ -175,45 +179,21 @@ namespace TtyRecMonkey
             }
             else
             {
-                var text = new[]
-                    { "           PLACEHOLDER CONTROLS"
-                    , ""
-                    , "Ctrl+C     Reconfigure DCSSReplay"
-                    , "Ctrl+O     Open a ttyrec"
-                    , "Escape     Close ttyrec and return here"
-                    , "Alt+Enter  Toggle fullscreen"
-                    , ""
-                    , "ZXC        Play backwards at x100, x10, or x1 speed"
-                    , "   V       Play / Pause"
-                    , "    BNM    Play forwards at 1x, x10, or x100 speed"
-                    , ""
-                    , "   F       Decrease speed by 1"
-                    , "   G       Increase speed by 1"
-                    , ""
-                    , "   , (Comma)     Frame Step Back 1"
-                    , "   . (Dot)       Frame Step Back 1"
-                    , "   Left Arrow    Time Backward 5 Seconds"
-                    , "   Right Arrow   Time Forward 5 Seconds"
-                    , " Space     Play / Pause"
-                    , ""
-                    , " A / S     Switch Tile to console / Full Console Mode"
-                    };
+                ShowControls(true);
+                Update2(null);
 
             }
+            UpdateTitle(string.Format
+                 ("DCSSReplay -- {0} FPS -- {1} @ {2} of {3} ({4} keyframes {5} packets) -- Speed {6}",
+                 PreviousFrames.Count, 
+                 PrettyTimeSpan(Seek), 
+                 ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.CurrentFrame.SinceStart)
+                 , ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.Length)
+                 , ttyrecDecoder == null ? "N/A" : ttyrecDecoder.Keyframes.ToString()
+                 , ttyrecDecoder == null ? "N/A" : ttyrecDecoder.PacketCount.ToString()
+                 , PlaybackSpeed
+                 ));
 
-
-            //Text = string.Format
-            //    ("DCSSReplay -- {0} FPS -- {1} @ {2} of {3} ({4} keyframes {5} packets) -- Speed {6} -- GC recognized memory: {7}"
-            //    , PreviousFrames.Count
-            //    , PrettyTimeSpan(Seek)
-            //    , Decoder == null ? "N/A" : PrettyTimeSpan(Decoder.CurrentFrame.SinceStart)
-            //    , Decoder == null ? "N/A" : PrettyTimeSpan(Decoder.Length)
-            //    , Decoder == null ? "N/A" : Decoder.Keyframes.ToString()
-            //    , Decoder == null ? "N/A" : Decoder.PacketCount.ToString()
-            //    , PlaybackSpeed
-            //    , PrettyByteCount(GC.GetTotalMemory(false))
-            //    );
-            // Text = "Console";
         }
 
         protected override void OnKeyDown(KeyEventArgs e)
