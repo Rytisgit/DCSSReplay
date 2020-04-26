@@ -53,7 +53,7 @@ namespace FrameGenerator.FileReading
                 var keyValue = line.Split(' ');
                 monster[keyValue[0]] = keyValue[1];
             }
-
+            monster.Remove("8BLUE");//remove roxanne impersonating statue
             return monster;
         }
         public static Dictionary<string, string> GetWeaponData(string file)
