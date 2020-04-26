@@ -51,7 +51,7 @@ namespace FrameGenerator.Extensions
 
 
             parsedstring = parsedstring.Substring(start, end - start + 1).Replace(' ', '_').Split('\"')[0];
-            return parsedstring;
+            return parsedstring.ToLower();
         }
         public static string GetNonUniqueWeaponName(this string fullstring, Dictionary<string, string> weapondata)
         {
