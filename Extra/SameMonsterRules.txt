@@ -11,11 +11,6 @@ PCOLOUR_UNDEF bcolored: toadstool
 (COLOUR_UNDEF bcolored: dancing_weapon
 &COLOUR_UNDEF bcolored: pandemonium_lord
 
-
-uCOLOUR_UNDEF bcolored: ugly_thing
-uCOLOUR_UNDEF bcolored: very_ugly_thing
-
-
 //tentacles
 //if Forest STatus: 
 *LIGHTGREEN vine_segment_E_NW
