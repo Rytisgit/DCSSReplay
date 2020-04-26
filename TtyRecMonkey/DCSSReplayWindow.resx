@@ -120,4 +120,29 @@
   <metadata name="folderBrowserDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="label1.Text" xml:space="preserve">
+    <value>            CONTROLS
+Ctrl+O     Open a ttyrec
+Escape     Close ttyrec and return here
+Alt+Enter  Toggle fullscreen
+ZXC               Play backwards at x100, x10, or x1 speed
+V,SPACE    Play / Pause"
+BNM    Play forwards at 1x, x10, or x100 speed
+M can stack repeatedly to go forward in time
+
+F       Decrease speed by 1
+G       Increase speed by 1
+
+D       Decrease speed by 0.2
+H       Increase speed by 0.2
+
+
+, (Comma)     Frame Step Back 1
+. (Dot)       Frame Step Back 1
+
+Left Arrow    Time Backward 5 Seconds
+Right Arrow   Time Forward 5 Seconds
+                  
+A / S     Switch Tile to console / Full Console Mode</value>
+  </data>
 </root>
