@@ -276,6 +276,101 @@ namespace FrameGenerator
                             finalOverrides.Add(monstertileName, "crazy_yiuf");
                         }
                     }
+                    if (monsterLine.MonsterTextRaw.Contains("slime"))
+                    {
+                        if (monsterLine.MonsterTextRaw.Contains("large"))
+                        {
+                            if (monsterLine.MonsterTextRaw.Contains("very"))
+                            {
+                                foreach (var monstertileName in monsterLine.MonsterDisplay)
+                                {
+                                    finalOverrides.Add(monstertileName, "slime_creature3");
+                                }
+                            }
+                            else
+                            {
+                                foreach (var monstertileName in monsterLine.MonsterDisplay)
+                                {
+                                    finalOverrides.Add(monstertileName, "slime_creature2");
+                                }
+                            }
+                        }
+                        if (monsterLine.MonsterTextRaw.Contains("enorm"))
+                        {
+                            foreach (var monstertileName in monsterLine.MonsterDisplay)
+                            {
+                                finalOverrides.Add(monstertileName, "slime_creature4");
+                            }
+                        }
+                        if (monsterLine.MonsterTextRaw.Contains("titan"))
+                        {
+                            foreach (var monstertileName in monsterLine.MonsterDisplay)
+                            {
+                                finalOverrides.Add(monstertileName, "slime_creature5");
+                            }
+                        }
+
+                    }
+                    if (monsterLine.MonsterTextRaw.Contains("ugly") && monsterLine.MonsterDisplay[0][0] == 'u')
+                    {
+                        if (monsterLine.MonsterTextRaw.Contains("very"))
+                        {
+                            foreach (var monstertileName in monsterLine.MonsterDisplay)//can be maelstron on screen and vortex not in list of monster, but ehhh
+                            {
+                                var pngName = "";
+                                switch (monstertileName.Substring(1))
+                                {
+                                    case "BLACK": pngName = "very_ugly_thing"; break;
+                                    case "RED": pngName = "very_ugly_thing"; break;
+                                    case "GREEN": pngName = "very_ugly_thing2"; break;
+                                    case "BROWN": pngName = "very_ugly_thing1"; break;
+                                    case "BLUE": pngName = "very_ugly_thing3"; break;
+                                    case "MAGENTA": pngName = "very_ugly_thing4"; break;
+                                    case "CYAN": pngName = "very_ugly_thing3"; break;
+                                    case "LIGHTGREY": pngName = "very_ugly_thing5"; break;
+                                    case "DARKGREY": pngName = "very_ugly_thing1"; break;
+                                    case "LIGHTRED": pngName = "very_ugly_thing"; break;
+                                    case "LIGHTGREEN": pngName = "very_ugly_thing2"; break;
+                                    case "YELLOW": pngName = "very_ugly_thing1"; break;
+                                    case "LIGHTBLUE": pngName = "very_ugly_thing3"; break;
+                                    case "LIGHTMAGENTA": pngName = "very_ugly_thing4"; break;
+                                    case "LIGHTCYAN": pngName = "very_ugly_thing3"; break;
+                                    case "WHITE": pngName = "very_ugly_thing5"; break;
+                                    default: pngName = "very_ugly_thing5"; break;
+                                }
+                                finalOverrides.Add(monstertileName, pngName);
+                            }
+                        }
+                        else
+                        {
+                            foreach (var monstertileName in monsterLine.MonsterDisplay)//can be maelstron on screen and vortex not in list of monster, but ehhh
+                            {
+                                var pngName = "";
+                                switch (monstertileName.Substring(1))
+                                {
+                                    case "BLACK": pngName = "ugly_thing"; break;
+                                    case "RED": pngName = "ugly_thing"; break;
+                                    case "GREEN": pngName = "ugly_thing2"; break;
+                                    case "BROWN": pngName = "ugly_thing1"; break;
+                                    case "BLUE": pngName = "ugly_thing3"; break;
+                                    case "MAGENTA": pngName = "ugly_thing4"; break;
+                                    case "CYAN": pngName = "ugly_thing3"; break;
+                                    case "LIGHTGREY": pngName = "ugly_thing5"; break;
+                                    case "DARKGREY": pngName = "ugly_thing1"; break;
+                                    case "LIGHTRED": pngName = "ugly_thing"; break;
+                                    case "LIGHTGREEN": pngName = "ugly_thing2"; break;
+                                    case "YELLOW": pngName = "ugly_thing1"; break;
+                                    case "LIGHTBLUE": pngName = "ugly_thing3"; break;
+                                    case "LIGHTMAGENTA": pngName = "ugly_thing4"; break;
+                                    case "LIGHTCYAN": pngName = "ugly_thing3"; break;
+                                    case "WHITE": pngName = "ugly_thing5"; break;
+                                    default: pngName = "ugly_thing5"; break;
+                                }
+                                finalOverrides.Add(monstertileName, pngName);
+                            }
+                        }
+
+                    }
                 }
             }
             foreach (var rule in _namedMonsterOverrideData)//no monster name in rule
@@ -422,7 +517,7 @@ namespace FrameGenerator
                 }
                 else currentX += yWidth * xResize;
 
-                g.WriteCharacter(model.TileNames[i], font2, currentX, currentY, model.HighlightColors[i], 0);
+                g.WriteCharacter(model.TileNames[i], font2, currentX, currentY, model.HighlightColors[i], 5);
 
 
             }
