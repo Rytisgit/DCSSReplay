@@ -45,20 +45,14 @@ namespace TtyRecMonkey
             {
                 var open = new OpenFileDialog()
                 {
-                    CheckFileExists = true
-,
-                    DefaultExt = "ttyrec"
-,
-                    Filter = "TtyRec Files|*.ttyrec;*.bz2|All Files|*"
-,
-                    InitialDirectory = @"I:\home\media\ttyrecs\"
-,
-                    Multiselect = false
-,
-                    RestoreDirectory = true
-,
+                    CheckFileExists = true,
+                    DefaultExt = "ttyrec",
+                    Filter = "TtyRec Files|*.ttyrec;*.bz2|All Files|*",
+                    Multiselect = false,
+                    RestoreDirectory = true,
                     Title = "Select a TtyRec to play"
                 };//TODO: bring back multiselect?
+
                 if (open.ShowDialog() != DialogResult.OK) return;
 
                 var files = open.FileNames;
@@ -128,7 +122,7 @@ namespace TtyRecMonkey
             if (ttyrecDecoder != null)
             {
                 ShowControls(false);
-                if (Seek + TimeSpan.FromSeconds(dt * PlaybackSpeed) <= ttyrecDecoder.Length)
+                if (Seek + TimeSpan.FromSeconds(dt * PlaybackSpeed) <= ttyrecDecoder.Length && Seek + TimeSpan.FromSeconds(dt * PlaybackSpeed) >= TimeSpan.Zero)
                 {
                     Seek += TimeSpan.FromSeconds(dt * PlaybackSpeed);
                 }
@@ -183,17 +177,16 @@ namespace TtyRecMonkey
                 Update2(null);
 
             }
-            UpdateTitle(string.Format
-                 ("DCSSReplay -- {0} FPS -- {1} @ {2} of {3} ({4} keyframes {5} packets) -- Speed {6}",
-                 PreviousFrames.Count, 
-                 PrettyTimeSpan(Seek), 
-                 ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.CurrentFrame.SinceStart)
-                 , ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.Length)
-                 , ttyrecDecoder == null ? "N/A" : ttyrecDecoder.Keyframes.ToString()
-                 , ttyrecDecoder == null ? "N/A" : ttyrecDecoder.PacketCount.ToString()
-                 , PlaybackSpeed
-                 ));
 
+            UpdateTitle(string.Format("DCSSReplay -- {0} FPS -- {1} @ {2} of {3} ({4} keyframes {5} packets) -- Speed {6}",
+                 PreviousFrames.Count,
+                 PrettyTimeSpan(Seek),
+                 ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.CurrentFrame.SinceStart),
+                 ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.Length),
+                 ttyrecDecoder == null ? "N/A" : ttyrecDecoder.Keyframes.ToString(),
+                 ttyrecDecoder == null ? "N/A" : ttyrecDecoder.PacketCount.ToString(),
+                 PlaybackSpeed)
+            );
         }
 
         protected override void OnKeyDown(KeyEventArgs e)
