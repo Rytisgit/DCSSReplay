@@ -157,33 +157,24 @@ namespace FrameGenerator
                             }
                         }
                     }
-                    if (monsterLine.MonsterTextRaw.Contains("klown"))
+                    if (monsterLine.MonsterTextRaw.Contains("Klown"))
                     {
-                        foreach (var monstertileName in monsterLine.MonsterDisplay)
-                        {
-                            var pngName = "";
-                            switch (monstertileName.Substring(1))
-                            {
-                                case "BLACK": pngName = "killer_klown_yellow"; break;
-                                case "RED": pngName = "killer_klown_red"; break;
-                                case "GREEN": pngName = "killer_klown_green"; break;
-                                case "BROWN": pngName = "killer_klown_yellow"; break;
-                                case "BLUE": pngName = "killer_klown_blue"; break;
-                                case "MAGENTA": pngName = "killer_klown_purple"; break;
-                                case "CYAN": pngName = "killer_klown_blue"; break;
-                                case "LIGHTGREY": pngName = "killer_klown_green"; break;
-                                case "DARKGREY": pngName = "killer_klown_yellow"; break;
-                                case "LIGHTRED": pngName = "killer_klown_red"; break;
-                                case "LIGHTGREEN": pngName = "killer_klown_green"; break;
-                                case "YELLOW": pngName = "killer_klown_yellow"; break;
-                                case "LIGHTBLUE": pngName = "killer_klown_blue"; break;
-                                case "LIGHTMAGENTA": pngName = "killer_klown_purple"; break;
-                                case "LIGHTCYAN": pngName = "killer_klown_blue"; break;
-                                case "WHITE": pngName = "killer_klown_purple"; break;
-                                default: pngName = "killer_klown_yellow"; break;
-                            }
-                            finalOverrides.Add(monstertileName, pngName);
-                        }
+                            finalOverrides.Add("pBLACK","killer_klown_yellow");
+                            finalOverrides.Add("pRED","killer_klown_red");
+                            finalOverrides.Add("pGREEN","killer_klown_green");
+                            finalOverrides.Add("pBROWN","killer_klown_yellow");
+                            finalOverrides.Add("pBLUE","killer_klown_blue");
+                            finalOverrides.Add("pMAGENTA","killer_klown_purple");
+                            finalOverrides.Add("pCYAN","killer_klown_blue");
+                            finalOverrides.Add("pLIGHTGREY","killer_klown_green");
+                            finalOverrides.Add("pDARKGREY","killer_klown_yellow");
+                            finalOverrides.Add("pLIGHTRED","killer_klown_red");
+                            finalOverrides.Add("pLIGHTGREEN","killer_klown_green");
+                            finalOverrides.Add("pYELLOW","killer_klown_yellow");
+                            finalOverrides.Add("pLIGHTBLUE","killer_klown_blue");
+                            finalOverrides.Add("pLIGHTMAGENTA","killer_klown_purple");
+                            finalOverrides.Add("pLIGHTCYAN","killer_klown_blue");
+                            finalOverrides.Add("pWHITE","killer_klown_purple");
                     }
                     if (monsterLine.MonsterTextRaw.Contains("chaos"))
                     {
@@ -680,12 +671,12 @@ namespace FrameGenerator
 
                 foreach (string status in BasicStatusArray)
                 {
-                    if (model.SideData.Statuses1.Contains(status) && _weaponpng.TryGetValue(status + "_form", out png)) break;
+                    if (model.SideData.Statuses1.ToLowerInvariant().Contains(status) && _weaponpng.TryGetValue(status + "_form", out png)) break;
                 }
 
                 foreach (string status in CompStatusArray)
                 {
-                    if (model.SideData.Statuses1.Contains(status))
+                    if (model.SideData.Statuses1.ToLowerInvariant().Contains(status))
                     {
                         if (!_weaponpng.TryGetValue(status + "_form_" + characterRace.ToLower(), out png)) _weaponpng.TryGetValue(status + "_form_humanoid", out png);
                     }
