@@ -6,17 +6,18 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace TtyRecMonkey
+namespace TtyRecDecoder
 {
     struct TtyRecPacket
     {
         public TimeSpan SinceStart;
         public byte[] Payload;
 
-        public static IEnumerable<TtyRecPacket> DecodePackets(IEnumerable<Stream> streams, TimeSpan delay_between_streams, Func<bool> checkinterrupt)
+        public static IEnumerable<TtyRecPacket> DecodePackets(IEnumerable<Stream> streams, TimeSpan delay_between_streams, TimeSpan delay_between_Packets, Func<bool> checkinterrupt)
         {
             TimeSpan BaseDelay = TimeSpan.Zero;
             TimeSpan LastPacketSS = TimeSpan.Zero;
+            TimeSpan SavedTime = TimeSpan.Zero;
 
             bool first_stream = true;
 
@@ -47,12 +48,19 @@ namespace TtyRecMonkey
                             first_stream = false;
                         }
 
-                        var since_start = TimeSpan.FromSeconds(sec - first_sec) + TimeSpan.FromMilliseconds((usec - first_usec) / 1000);
+                        var since_start = TimeSpan.FromSeconds(sec - first_sec) + TimeSpan.FromMilliseconds((usec - first_usec) / 1000) - SavedTime;
+
+                        var timeDiff = since_start - LastPacketSS;
+
+                        if (timeDiff > delay_between_Packets)
+                        {
+                            SavedTime += timeDiff - delay_between_Packets;
+                            since_start = LastPacketSS + delay_between_Packets;
+                        }
 
                         yield return new TtyRecPacket()
                         {
-                            SinceStart = LastPacketSS = BaseDelay + since_start
-                            ,
+                            SinceStart = LastPacketSS = BaseDelay + since_start,
                             Payload = reader.ReadBytes(len)
                         };
                     }

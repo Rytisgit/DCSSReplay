@@ -3,25 +3,18 @@
 //todo 8ETC_ICE bcolored: block_of_ice //glaciate 8BLUE block_of_ice
 
 
-if Forest STatus: *LIGHTGREEN vine_segment_E_NW
-pETC_RANDOM bcolored: killer_klown
-vETC_RANDOM bcolored: spatial_vortex //if chaotic malstrom or spacial vortex in log
-PETC_RANDOM bcolored: demonic_plant //where do demonic plants spawn
-4ETC_RANDOM bcolored: chaos_spawn
-
 //get colour from visible monster list, insert override for that color
+PETC_RANDOM bcolored: demonic_plant //where do demonic plants spawn
+
+//undefines
 PCOLOUR_UNDEF bcolored: toadstool
 (COLOUR_UNDEF bcolored: dancing_weapon
+&COLOUR_UNDEF bcolored: pandemonium_lord
+
+//tentacles
+//if Forest STatus: 
+*LIGHTGREEN vine_segment_E_NW
+
+//undefines
 wCOLOUR_UNDEF bcolored: eldritch_tentacle_S
 *COLOUR_UNDEF bcolored: eldritch_tentacle_segment_E_S
-&COLOUR_UNDEF bcolored: pandemonium_lord
-dCOLOUR_UNDEF bcolored: tiamat
-gCOLOUR_UNDEF bcolored: crazy_yiuf
-
-
-uCOLOUR_UNDEF bcolored: ugly_thing
-uCOLOUR_UNDEF bcolored: very_ugly_thing
-
-
-//COLOR REPLACEMENTS by name in log
-

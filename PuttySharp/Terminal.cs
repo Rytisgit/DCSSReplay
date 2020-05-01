@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 
@@ -83,8 +84,8 @@ namespace Putty
         {
             if (Disposed) throw new ObjectDisposedException("This terminal has already been disposed");
             fixed (byte* pinned = payload) SendPuttyTerminal(Handle, 0, pinned, payload.Length);
-            ////debug.assert( Width  == GetPuttyTerminalWidth (Handle) );
-            ////debug.assert( Height == GetPuttyTerminalHeight(Handle) );
+            Debug.Assert(Width == GetPuttyTerminalWidth(Handle));
+            Debug.Assert(Height == GetPuttyTerminalHeight(Handle));
         }
 
         /// <summary>
@@ -102,7 +103,7 @@ namespace Putty
             var buffer = new List<TerminalCharacter>(w);
             var src = GetPuttyTerminalLine(Handle, row);
             for (int x = 0; x < w; ++x) buffer.Add(src[x]);
-            ////debug.assert(buffer.Count==w);
+            Debug.Assert(buffer.Count == w);
             return buffer.AsReadOnly();
         }
     }

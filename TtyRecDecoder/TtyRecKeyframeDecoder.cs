@@ -5,20 +5,47 @@
 using Putty;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
 
-namespace TtyRecMonkey
+namespace TtyRecDecoder
 {
     public struct TtyRecFrame
     {
         public TimeSpan SinceStart;
         public TerminalCharacter[,] Data;
+        public int Index;
     }
+
 
     public class TtyRecKeyframeDecoder : IDisposable
     {
+        private readonly Queue<IEnumerable<AnnotatedPacket>> LoadPacketBuffer = new Queue<IEnumerable<AnnotatedPacket>>();
+        private Thread LoadThread;
+        private IEnumerable<Stream> LoadStreams;
+        private TimeSpan LoadBetweenStreamDelay;
+        private TimeSpan LoadBetweenPacketsDelay;
+        private volatile bool LoadCancel;
+
+        private readonly List<AnnotatedPacket> Packets = new List<AnnotatedPacket>();
+        public int PacketCount { get { return Packets.Count; } }
+        public TimeSpan Length
+        {
+            get
+            {
+                return Packets.Count > 0 ? Packets.Last().SinceStart : TimeSpan.Zero;
+            }
+        }
+        public int Keyframes { get; private set; }
+        public int Width { get; private set; }
+        public int Height { get; private set; }
+
+        public TtyRecFrame CurrentFrame;
+        private int LastActiveRangeStart = int.MaxValue;
+        private int LastActiveRangeEnd = int.MinValue;
+         
         public void Dispose()
         {
             // n.b. Resize uses this -- we may need to refactor if we need to do something permanent
@@ -28,7 +55,7 @@ namespace TtyRecMonkey
             foreach (var ap in Packets) using (ap.RestartPosition) { }
             Packets.Clear();
 
-            //debug.assert( !LoadThread.IsAlive ); // We assert this...
+            Debug.Assert(!LoadThread.IsAlive); // We assert this...
             LoadPacketBuffer.Clear(); // ... because we're not locking this.
         }
 
@@ -39,8 +66,7 @@ namespace TtyRecMonkey
 
             var frame = new TtyRecFrame()
             {
-                Data = new TerminalCharacter[w, h]
-                ,
+                Data = new TerminalCharacter[w, h],
                 SinceStart = since_start
             };
 
@@ -72,10 +98,10 @@ namespace TtyRecMonkey
                 }
             }
 
-            if (begin > 0) //debug.assert(!cond(list[begin-1]));
-                if (end < list.Count) //debug.assert(cond(list[end]));
+            if (begin > 0) Debug.Assert(!cond(list[begin - 1]));
+            if (end < list.Count) Debug.Assert(cond(list[end]));
 
-                    for (int i = begin; i < end; ++i) if (cond(list[i])) return i;
+            for (int i = begin; i < end; ++i) if (cond(list[i])) return i;
             return -1;
         }
 
@@ -96,7 +122,7 @@ namespace TtyRecMonkey
 #if DEBUG
             var reference_before_seek = Packets.FindLastIndex(ap => ap.RestartPosition != null && ap.SinceStart <= seektarget);
             if (reference_before_seek == -1) reference_before_seek = 0;
-            //debug.assert( before_seek == reference_before_seek );
+            Debug.Assert(before_seek == reference_before_seek);
 #endif
 
             var after_seek = Packets.FindIndex(before_seek + 1, ap => ap.RestartPosition != null && ap.SinceStart > seektarget);
@@ -114,7 +140,7 @@ namespace TtyRecMonkey
             }
             else
             {
-                //debug.assert( after_seek<Packets.Count-1 );
+                Debug.Assert(after_seek < Packets.Count - 1);
                 after_seek = Packets.FindIndex(after_seek + 1, ap => ap.RestartPosition != null);
                 if (after_seek == -1) after_seek = Packets.Count;
             }
@@ -122,12 +148,10 @@ namespace TtyRecMonkey
             SetActiveRange(before_seek, after_seek);
         }
 
-        int LastActiveRangeStart = int.MaxValue;
-        int LastActiveRangeEnd = int.MinValue;
         void SetActiveRange(int start, int end)
         {
-            //debug.assert( start<end );
-            //debug.assert( Packets[start].RestartPosition != null );
+            Debug.Assert(start < end);
+            Debug.Assert(Packets[start].RestartPosition != null);
 
             bool need_decode = false;
 
@@ -193,25 +217,38 @@ namespace TtyRecMonkey
             DumpChunksAround(when);
             var i = BinarySearchIndexFrame(Packets, ap => ap.SinceStart >= when);
             if (i == -1) i = 0;
-            //debug.assert(Packets[i].DecodedCache!=null);
+            Debug.Assert(Packets[i].DecodedCache != null);
             CurrentFrame.SinceStart = Packets[i].SinceStart;
             CurrentFrame.Data = Packets[i].DecodedCache;
+            CurrentFrame.Index = i;
         }
 
-        public TimeSpan Length
+        public void FrameStep(int frameCount)
         {
-            get
+            lock (LoadPacketBuffer)
             {
-                return Packets.Count > 0 ? Packets.Last().SinceStart : TimeSpan.Zero;
+                while (LoadPacketBuffer.Count > 0)
+                {
+                    var apr = LoadPacketBuffer.Dequeue();
+                    Keyframes += apr.Count(ap => ap.IsKeyframe);
+                    Packets.AddRange(apr);
+                }
             }
+            if (Packets.Count <= 0) return;
+
+            var nextFrameIndex = CurrentFrame.Index + frameCount;
+            var nextFrameTime = Packets[nextFrameIndex > 0 ? nextFrameIndex : 0].SinceStart;
+
+            DumpChunksAround(nextFrameTime);
+            var i = nextFrameTime == CurrentFrame.SinceStart ? BinarySearchIndexFrame(Packets, ap => ap.SinceStart > nextFrameTime): BinarySearchIndexFrame(Packets, ap => ap.SinceStart >= nextFrameTime);
+            if (i == -1) i = 0;
+            Debug.Assert(Packets[i].DecodedCache != null);
+            CurrentFrame.SinceStart = Packets[i].SinceStart;
+            CurrentFrame.Data = Packets[i].DecodedCache;
+            CurrentFrame.Index = i;
         }
 
-        readonly List<AnnotatedPacket> Packets = new List<AnnotatedPacket>();
-        public TtyRecFrame CurrentFrame;
-
-        public int Width { get; private set; }
-        public int Height { get; private set; }
-        public TtyRecKeyframeDecoder(int w, int h, IEnumerable<Stream> streams, TimeSpan between_stream_delay)
+        public TtyRecKeyframeDecoder(int w, int h, IEnumerable<Stream> streams, TimeSpan between_stream_delay, TimeSpan between_packets_delay)
         {
             Width = w;
             Height = h;
@@ -219,6 +256,7 @@ namespace TtyRecMonkey
             LoadThread = new Thread(() => DoBackgroundLoad());
             LoadStreams = streams;
             LoadBetweenStreamDelay = between_stream_delay;
+            LoadBetweenPacketsDelay = between_packets_delay;
             LoadThread.Start();
 
             if (Packets.Count <= 0) return;
@@ -236,15 +274,9 @@ namespace TtyRecMonkey
             LoadThread.Start();
         }
 
-        readonly Queue<IEnumerable<AnnotatedPacket>> LoadPacketBuffer = new Queue<IEnumerable<AnnotatedPacket>>();
-        Thread LoadThread;
-        IEnumerable<Stream> LoadStreams;
-        TimeSpan LoadBetweenStreamDelay;
-        volatile bool LoadCancel;
-
         void DoBackgroundLoad()
         {
-            var decoded = TtyRecPacket.DecodePackets(LoadStreams, LoadBetweenStreamDelay, () => LoadCancel);
+            var decoded = TtyRecPacket.DecodePackets(LoadStreams, LoadBetweenStreamDelay, LoadBetweenPacketsDelay, () => LoadCancel);
             var annotated = AnnotatedPacket.AnnotatePackets(Width, Height, decoded, () => LoadCancel);
 
             var buffer = new List<AnnotatedPacket>();
@@ -266,8 +298,5 @@ namespace TtyRecMonkey
             lock (LoadPacketBuffer) LoadPacketBuffer.Enqueue(buffer);
             buffer = null;
         }
-
-        public int Keyframes { get; private set; }
-        public int PacketCount { get { return Packets.Count; } }
     }
 }
