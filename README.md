@@ -1,7 +1,7 @@
 # DCSSReplay - A visual TtyRec player for DCSS
 ## We've entered Beta but theres still so much left to do.
 
-![Screenshot](https://github.com/Rytisgit/DCSSReplay/blob/Develop/.projnfo/screenshots/thumbnail0.7.png)
+![Screenshot](https://github.com/Rytisgit/DCSSReplay/blob/0.7.0/.projnfo/screenshots/thumbnail0.7.png?raw=true)
 
 # FOR DOWNLOADS
 
