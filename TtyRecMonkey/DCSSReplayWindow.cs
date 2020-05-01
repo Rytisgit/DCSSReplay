@@ -35,32 +35,44 @@ namespace DisplayWindow
 
         public void UpdateTitle(string text)
         {
-            if (Text != text && InvokeRequired)
+            try
             {
-                var d = new SafeCallDelegateTitle(UpdateTitle);
-                this.Invoke(d, new object[] { text });
+                if (Text != text && InvokeRequired)
+                {
+                    var d = new SafeCallDelegateTitle(UpdateTitle);
+                    this.Invoke(d, new object[] { text });
+                }
+                else
+                {
+                    Text = text;
+                }
             }
-            else
+            catch (System.Exception)
             {
-                Text = text;
             }
+
         }
 
         public void ShowControls(bool shouldShow)
         {
-            if (shouldShow != label1.Visible)
+            try
             {
-                if (InvokeRequired)
+                if (shouldShow != label1.Visible)
                 {
-                    var d = new SafeCallDelegateToggleControls(ShowControls);
-                    this.Invoke(d, new object[] { shouldShow });
-                }
-                else
-                {
-                    label1.Visible = shouldShow;
+                    if (InvokeRequired)
+                    {
+                        var d = new SafeCallDelegateToggleControls(ShowControls);
+                        this.Invoke(d, new object[] { shouldShow });
+                    }
+                    else
+                    {
+                        label1.Visible = shouldShow;
+                    }
                 }
             }
-            
+            catch (System.Exception)
+            {
+            }
         }
 
         /* private void OnResize(object sender, System.EventArgs e)
