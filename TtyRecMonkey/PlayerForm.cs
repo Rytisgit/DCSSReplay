@@ -122,9 +122,16 @@ namespace TtyRecMonkey
             if (ttyrecDecoder != null)
             {
                 ShowControls(false);
-                if (Seek + TimeSpan.FromSeconds(dt * PlaybackSpeed) <= ttyrecDecoder.Length && Seek + TimeSpan.FromSeconds(dt * PlaybackSpeed) >= TimeSpan.Zero)
+
+                Seek += TimeSpan.FromSeconds(dt * PlaybackSpeed);
+
+                if (Seek > ttyrecDecoder.Length)
                 {
-                    Seek += TimeSpan.FromSeconds(dt * PlaybackSpeed);
+                    Seek = ttyrecDecoder.Length;
+                }
+                if (Seek < TimeSpan.Zero)
+                {
+                    Seek = TimeSpan.Zero;
                 }
 
                 if (FrameStepCount != 0)
