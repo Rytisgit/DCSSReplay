@@ -36,3 +36,5 @@ bLIGHTRED butterfly2
 bYELLOW butterfly7
 bLIGHTGREEN butterfly6
 bLIGHTBLUE butterfly2
+PGREEN plant_11
+PBLACK plant_11

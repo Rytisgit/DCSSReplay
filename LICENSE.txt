@@ -9,6 +9,8 @@ TtyRecMonkey is copyright 2010 Michael B. Edwin Rickert.
 
 SlimDX is copyright (c) 2007-2011 SlimDX Group
 
+DCSSReplay is copyright 2020 Rytis Petronis.
+
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation files
 (the "Software"), to deal in the Software without restriction,

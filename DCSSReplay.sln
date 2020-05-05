@@ -14,26 +14,25 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PuttyDLL", "Putty\WINDOWS\V
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extra", "Extra", "{46E43B1B-7F91-48E6-9D5F-166C41B210A5}"
 	ProjectSection(SolutionItems) = preProject
+		Extra\cloud rules.txt = Extra\cloud rules.txt
 		Extra\clouds.txt = Extra\clouds.txt
 		Extra\features.txt = Extra\features.txt
 		Extra\items.txt = Extra\items.txt
-		monsteroverrides.txt = monsteroverrides.txt
-		namedmonsteroverrides.txt = namedmonsteroverrides.txt
-		Extra\neg_tloc_hybrid.png = Extra\neg_tloc_hybrid.png
+		Extra\monsteroverrides.txt = Extra\monsteroverrides.txt
+		Extra\namedmonsteroverrides.txt = Extra\namedmonsteroverrides.txt
 		Extra\racepng.txt = Extra\racepng.txt
-		SameMonsterRules.txt = SameMonsterRules.txt
+		Extra\SameMonsterRules.txt = Extra\SameMonsterRules.txt
 		Extra\tilefloor.txt = Extra\tilefloor.txt
-		Extra\unknown_altar.png = Extra\unknown_altar.png
-		Extra\unknown_potion.png = Extra\unknown_potion.png
+		Extra\weapons.txt = Extra\weapons.txt
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisplayWindow", "Window_Display\DisplayWindow.csproj", "{1C0525EB-8E42-41C0-9335-BC721E2225D0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FrameGenerator", "FrameGenerator\FrameGenerator.csproj", "{30F98677-FEA1-4F97-8031-EFA331DCCF08}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InputParser", "InputParse\InputParser.csproj", "{84DFB055-AACF-4744-8B11-E88379C161D7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PuttySharp", "PuttySharp\PuttySharp.csproj", "{0D491035-AF37-4F50-861F-FDF6A3248943}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TtyRecDecoder", "TtyRecDecoder\TtyRecDecoder.csproj", "{519ACC71-26B1-4312-AD42-231965817F20}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,24 +80,6 @@ Global
 		{8F44624A-D188-4188-B9AA-5F99F20723E1}.Release|x64.Build.0 = Release|Win32
 		{8F44624A-D188-4188-B9AA-5F99F20723E1}.Release|x86.ActiveCfg = Release|Win32
 		{8F44624A-D188-4188-B9AA-5F99F20723E1}.Release|x86.Build.0 = Release|Win32
-		{1C0525EB-8E42-41C0-9335-BC721E2225D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1C0525EB-8E42-41C0-9335-BC721E2225D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1C0525EB-8E42-41C0-9335-BC721E2225D0}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{1C0525EB-8E42-41C0-9335-BC721E2225D0}.Debug|x64.Build.0 = Debug|Any CPU
-		{1C0525EB-8E42-41C0-9335-BC721E2225D0}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{1C0525EB-8E42-41C0-9335-BC721E2225D0}.Debug|x86.Build.0 = Debug|Any CPU
-		{1C0525EB-8E42-41C0-9335-BC721E2225D0}.PuttyDllDebug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1C0525EB-8E42-41C0-9335-BC721E2225D0}.PuttyDllDebug|Any CPU.Build.0 = Debug|Any CPU
-		{1C0525EB-8E42-41C0-9335-BC721E2225D0}.PuttyDllDebug|x64.ActiveCfg = Debug|Any CPU
-		{1C0525EB-8E42-41C0-9335-BC721E2225D0}.PuttyDllDebug|x64.Build.0 = Debug|Any CPU
-		{1C0525EB-8E42-41C0-9335-BC721E2225D0}.PuttyDllDebug|x86.ActiveCfg = Debug|Any CPU
-		{1C0525EB-8E42-41C0-9335-BC721E2225D0}.PuttyDllDebug|x86.Build.0 = Debug|Any CPU
-		{1C0525EB-8E42-41C0-9335-BC721E2225D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1C0525EB-8E42-41C0-9335-BC721E2225D0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1C0525EB-8E42-41C0-9335-BC721E2225D0}.Release|x64.ActiveCfg = Release|Any CPU
-		{1C0525EB-8E42-41C0-9335-BC721E2225D0}.Release|x64.Build.0 = Release|Any CPU
-		{1C0525EB-8E42-41C0-9335-BC721E2225D0}.Release|x86.ActiveCfg = Release|Any CPU
-		{1C0525EB-8E42-41C0-9335-BC721E2225D0}.Release|x86.Build.0 = Release|Any CPU
 		{30F98677-FEA1-4F97-8031-EFA331DCCF08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{30F98677-FEA1-4F97-8031-EFA331DCCF08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30F98677-FEA1-4F97-8031-EFA331DCCF08}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -153,6 +134,24 @@ Global
 		{0D491035-AF37-4F50-861F-FDF6A3248943}.Release|x64.Build.0 = Release|Any CPU
 		{0D491035-AF37-4F50-861F-FDF6A3248943}.Release|x86.ActiveCfg = Release|Any CPU
 		{0D491035-AF37-4F50-861F-FDF6A3248943}.Release|x86.Build.0 = Release|Any CPU
+		{519ACC71-26B1-4312-AD42-231965817F20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{519ACC71-26B1-4312-AD42-231965817F20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{519ACC71-26B1-4312-AD42-231965817F20}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{519ACC71-26B1-4312-AD42-231965817F20}.Debug|x64.Build.0 = Debug|Any CPU
+		{519ACC71-26B1-4312-AD42-231965817F20}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{519ACC71-26B1-4312-AD42-231965817F20}.Debug|x86.Build.0 = Debug|Any CPU
+		{519ACC71-26B1-4312-AD42-231965817F20}.PuttyDllDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{519ACC71-26B1-4312-AD42-231965817F20}.PuttyDllDebug|Any CPU.Build.0 = Debug|Any CPU
+		{519ACC71-26B1-4312-AD42-231965817F20}.PuttyDllDebug|x64.ActiveCfg = Debug|Any CPU
+		{519ACC71-26B1-4312-AD42-231965817F20}.PuttyDllDebug|x64.Build.0 = Debug|Any CPU
+		{519ACC71-26B1-4312-AD42-231965817F20}.PuttyDllDebug|x86.ActiveCfg = Debug|Any CPU
+		{519ACC71-26B1-4312-AD42-231965817F20}.PuttyDllDebug|x86.Build.0 = Debug|Any CPU
+		{519ACC71-26B1-4312-AD42-231965817F20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{519ACC71-26B1-4312-AD42-231965817F20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{519ACC71-26B1-4312-AD42-231965817F20}.Release|x64.ActiveCfg = Release|Any CPU
+		{519ACC71-26B1-4312-AD42-231965817F20}.Release|x64.Build.0 = Release|Any CPU
+		{519ACC71-26B1-4312-AD42-231965817F20}.Release|x86.ActiveCfg = Release|Any CPU
+		{519ACC71-26B1-4312-AD42-231965817F20}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

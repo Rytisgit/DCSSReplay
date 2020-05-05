@@ -6,7 +6,7 @@ using Putty;
 using System;
 using System.Collections.Generic;
 
-namespace TtyRecMonkey
+namespace TtyRecDecoder
 {
     class AnnotatedPacket
     {
@@ -33,10 +33,7 @@ namespace TtyRecMonkey
 
                 var now = DateTime.Now;
 
-                bool need_restart
-                    = (last_restart_position_time + time_budget < now)
-                    || (last_restart_memory_avail <= 1000)
-                    ;
+                bool need_restart = (last_restart_position_time + time_budget < now) || (last_restart_memory_avail <= 1000);
 
                 if (packet.Payload == null)
                 {
@@ -47,10 +44,8 @@ namespace TtyRecMonkey
 
                 yield return new AnnotatedPacket()
                 {
-                    SinceStart = packet.SinceStart
-                    ,
-                    Payload = packet.Payload
-                    ,
+                    SinceStart = packet.SinceStart,
+                    Payload = packet.Payload,
                     RestartPosition = need_restart ? new Terminal(term) : null
                 };
 
