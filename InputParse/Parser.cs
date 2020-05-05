@@ -1,10 +1,10 @@
-﻿using System;
-using System.Text;
-using System.Linq;
+﻿using Putty;
+using System;
 using System.Collections.Generic;
-using InputParser;
+using System.Linq;
+using System.Text;
 
-namespace InputParse
+namespace InputParser
 {
     public class Parser
     {
@@ -14,11 +14,11 @@ namespace InputParse
         const int GameViewWidth = 33;
         const int GameViewHeight = 17;
 
-        private static char GetCharacter(Putty.TerminalCharacter character) => character.Character == 55328 ? ' ' : character.Character;
-        private static string GetColoredCharacter(Putty.TerminalCharacter character) => GetCharacter(character) + Enum.GetName(typeof(ColorList2), character.ForegroundPaletteIndex);
-        private static string GetBackgroundColor(Putty.TerminalCharacter character) => Enum.GetName(typeof(ColorList2), character.BackgroundPaletteIndex);
+        private static char GetCharacter(TerminalCharacter character) => character.Character == 55328 ? ' ' : character.Character;
+        private static string GetColoredCharacter(TerminalCharacter character) => GetCharacter(character) + Enum.GetName(typeof(ColorList2), character.ForegroundPaletteIndex);
+        private static string GetBackgroundColor(TerminalCharacter character) => Enum.GetName(typeof(ColorList2), character.BackgroundPaletteIndex);
 
-        private static LayoutType GetLayoutType(Putty.TerminalCharacter[,] characters, out string newlocation)
+        private static LayoutType GetLayoutType(TerminalCharacter[,] characters, out string newlocation)
         {
             StringBuilder place = new StringBuilder();
             bool found = false;
@@ -69,28 +69,29 @@ namespace InputParse
             return LayoutType.TextOnly;
         }
 
-        public static Model ParseData(Putty.TerminalCharacter[,] chars)
+        public static Model ParseData(TerminalCharacter[,] chars, bool consoleFull = false)
         {
             if (chars == null) throw new ArgumentNullException("TerminalCharacter array is null");
 
-            switch (GetLayoutType(chars, out var location))
+            if (consoleFull) return ParseConsoleLayout(chars);
+
+            return (GetLayoutType(chars, out var location)) switch
             {
-                case LayoutType.Normal:
-                    return parseNormalLayout(chars, location);
-                case LayoutType.TextOnly:
-                    return parseTextLayout(chars);
-                case LayoutType.MapOnly:
-                    return parseMapLayout(chars, location);
-            }
-            return new Model();
+                LayoutType.Normal => ParseNormalLayout(chars, location),
+                LayoutType.TextOnly => ParseTextLayout(chars),
+                LayoutType.MapOnly => ParseMapLayout(chars, location),
+                _ => new Model(),
+            };
         }
 
-        private static Model parseNormalLayout(Putty.TerminalCharacter[,] characters, string location)
+        private static Model ParseNormalLayout(TerminalCharacter[,] characters, string location)
         {
-            Model model = new Model();
-            model.Location = location;
-            model.Layout = LayoutType.Normal;
-            model.LineLength = GameViewWidth;
+            Model model = new Model
+            {
+                Location = location,
+                Layout = LayoutType.Normal,
+                LineLength = GameViewWidth
+            };
             var coloredStrings = new string[GameViewWidth * GameViewHeight];
             var highlightColorStrings = new string[GameViewWidth * GameViewHeight];
             var curentChar = 0;
@@ -109,8 +110,10 @@ namespace InputParse
                 model.HighlightColors = highlightColorStrings;
 
                 model.SideData = ParseSideData(characters);
-                
-                model.LogData = ParseLogLines(characters); 
+
+                model.SideDataColored = ParseColoredSideData(characters);
+
+                model.LogData = ParseLogLines(characters);
 
                 model.MonsterData = ParseMonsterDisplay(characters);
             }
@@ -126,7 +129,7 @@ namespace InputParse
             return model;
         }
 
-        private static LogData[] ParseLogLines(Putty.TerminalCharacter[,] characters)
+        private static LogData[] ParseLogLines(TerminalCharacter[,] characters)
         {
             var loglines = new LogData[6] { new LogData(), new LogData(), new LogData(), new LogData(), new LogData(), new LogData() };
             StringBuilder logLine = new StringBuilder();
@@ -142,7 +145,7 @@ namespace InputParse
                 line.LogTextRaw = logLine.ToString();
                 if (line.LogTextRaw.Length > 0)
                 {
-                    line.empty = false;
+                    line.Empty = false;
                     for (int i = 0; i < line.LogTextRaw.Length; i++)
                     {
                         logText.Add(GetColoredCharacter(characters[i, loglineRow]));
@@ -159,7 +162,7 @@ namespace InputParse
             return loglines;
         }
 
-        private static MonsterData[] ParseMonsterDisplay(Putty.TerminalCharacter[,] characters)
+        private static MonsterData[] ParseMonsterDisplay(TerminalCharacter[,] characters)
         {
             List<MonsterData> monsterDataList = new List<MonsterData>(4);
             StringBuilder monsterLine = new StringBuilder();
@@ -193,8 +196,9 @@ namespace InputParse
             }
             var chars = new char[] { ' ' };
             var split = monsterLine.ToString().Split(chars, count: 2);
-            return new MonsterData() { 
-                empty = false,
+            return new MonsterData()
+            {
+                Empty = false,
                 MonsterTextRaw = split[1],
                 MonsterDisplay = monsterLineColored.Take(split[0].Length).ToArray(),
                 MonsterText = monsterLineColored.Skip(split[0].Length).ToArray(),
@@ -202,12 +206,14 @@ namespace InputParse
             };
         }
 
-        private static Model parseMapLayout(Putty.TerminalCharacter[,] characters, string location)
+        private static Model ParseMapLayout(TerminalCharacter[,] characters, string location)
         {
-            Model model = new Model();
-            model.Location = location;
-            model.Layout = LayoutType.MapOnly;
-            model.LineLength = FullWidth;
+            Model model = new Model
+            {
+                Location = location,
+                Layout = LayoutType.MapOnly,
+                LineLength = FullWidth
+            };
             var coloredStrings = new string[FullWidth * FullHeight];
             var highlightColorStrings = new string[FullWidth * FullHeight];
             var curentChar = 0;
@@ -225,8 +231,10 @@ namespace InputParse
                 model.TileNames = coloredStrings;
                 model.HighlightColors = highlightColorStrings;
 
-                model.SideData = new SideData();
-                model.SideData.Place = location;
+                model.SideData = new SideData
+                {
+                    Place = location
+                };
 
             }
             catch (Exception)
@@ -241,11 +249,13 @@ namespace InputParse
             return model;
         }
 
-        private static Model parseTextLayout(Putty.TerminalCharacter[,] characters)
+        private static Model ParseTextLayout(TerminalCharacter[,] characters)
         {
-            Model model = new Model();
-            model.Layout = LayoutType.TextOnly;
-            model.LineLength = FullWidth;
+            Model model = new Model
+            {
+                Layout = LayoutType.TextOnly,
+                LineLength = FullWidth
+            };
             var coloredStrings = new string[FullWidth * FullHeight];
             var curentChar = 0;
             try
@@ -271,8 +281,52 @@ namespace InputParse
             return model;
         }
 
+        private static Model ParseConsoleLayout(TerminalCharacter[,] characters)
+        {
+            Model model = new Model
+            {
+                Layout = LayoutType.ConsoleFull,
+                LineLength = FullWidth
+            };
+            var coloredStrings = new string[FullWidth * FullHeight];
+            var highlight = new string[FullWidth * FullHeight];
+            var curentChar = 0;
+            try
+            {
+                for (int j = 0; j < FullHeight; j++)
+                    for (int i = 0; i < FullWidth; i++)
+                    {
+                        coloredStrings[curentChar] = GetColoredCharacter(characters[i, j]);
+                        highlight[curentChar] = GetBackgroundColor(characters[i, j]);
+                        curentChar++;
+                    }
+                model.TileNames = coloredStrings;
+                model.HighlightColors = highlight;
+            }
+            catch (Exception)
+            {
+                foreach (var item in characters)
+                {
+                    if (item.ForegroundPaletteIndex > 15) Console.WriteLine(item.ForegroundPaletteIndex + item.ForegroundPaletteIndex);
+                }
 
-        private static SideData ParseSideData(Putty.TerminalCharacter[,] characters)
+                return new Model();
+            }
+            return model;
+        }
+
+        private static SideDataColored ParseColoredSideData(TerminalCharacter[,] characters)
+        {
+            var coloredSideData = new SideDataColored();
+            for (int i = 37; i < 75; i++)
+            {
+                coloredSideData.Statuses1.Add(GetColoredCharacter(characters[i, 11]));
+                coloredSideData.Statuses1.Add(GetColoredCharacter(characters[i, 12]));
+            }
+            return coloredSideData;
+        }
+
+        private static SideData ParseSideData(TerminalCharacter[,] characters)
         {
             var sideData = new SideData();
             StringBuilder name = new StringBuilder();
@@ -291,8 +345,10 @@ namespace InputParse
             StringBuilder hp = new StringBuilder();
             StringBuilder mp = new StringBuilder();
             StringBuilder place = new StringBuilder();
+            StringBuilder noiseOrGold = new StringBuilder();
             StringBuilder time = new StringBuilder();
             StringBuilder next = new StringBuilder();
+
             for (int i = 37; i < 75; i++)
             {
                 name.Append(GetCharacter(characters[i, 0]));
@@ -308,7 +364,7 @@ namespace InputParse
                 ev.Append(GetCharacter(characters[i, 5]));
                 sh.Append(GetCharacter(characters[i, 6]));
                 xl.Append(GetCharacter(characters[i, 7]));
-                next.Append(GetCharacter(characters[i+10, 7]));
+                next.Append(GetCharacter(characters[i + 10, 7]));
             }
             for (int i = 59; i < 63; i++)
             {
@@ -321,6 +377,7 @@ namespace InputParse
             {
                 hp.Append(GetCharacter(characters[i + 1, 2]));
                 mp.Append(GetCharacter(characters[i, 3]));
+                noiseOrGold.Append(GetCharacter(characters[i, 8]));
 
             }
             for (int i = 60; i < 75; i++)
@@ -366,6 +423,9 @@ namespace InputParse
             sideData.Time = time.ToString();
             sideData.NextLevel = next.ToString();
 
+            var split = noiseOrGold.ToString().Split(':');
+            sideData.NoisyGold = split.Length > 1 ? split[1] : "noise here"; 
+
             var parsed = sideData.Place.Split(':');
             bool found = false;
             foreach (var location in Locations.locations)
@@ -377,7 +437,7 @@ namespace InputParse
                     break;
                 }
             }
-            if (found && parsed.Length>1)
+            if (found && parsed.Length > 1)
             {
                 sideData.Place += ":" + parsed[1];
             }

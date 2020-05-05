@@ -1,2 +1,6 @@
 Putty/** linguist-vendored=true
+Putty/WINDOWS/MSVC/** linguist-vendored=false
+Putty/TERMINAL.C linguist-vendored=false
+Putty/WINDOWS/VS2012/** linguist-vendored=false
+Putty/WINDOWS/VS2010/** linguist-vendored=false
 Extra/** linguist-vendored=true
