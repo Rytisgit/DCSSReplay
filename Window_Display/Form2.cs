@@ -62,7 +62,7 @@ namespace DisplayWindow
                 pictureBox2.Image = frame;
             }
 
-        }
+            }
         public bool run = true;
         private void Form2_FormClosed(object sender, FormClosedEventArgs e)
         {
