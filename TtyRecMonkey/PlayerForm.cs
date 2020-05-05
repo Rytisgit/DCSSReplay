@@ -256,7 +256,7 @@ namespace TtyRecMonkey
             {
 
                 case Keys.Escape: using (ttyrecDecoder) { } ttyrecDecoder = null; break;
-                case Keys.Control | Keys.C: Reconfigure(); break;
+                case Keys.Control | Keys.C: PlayerDownloadWindow(); break;
                 case Keys.Control | Keys.O: OpenFile(); break;
                 case Keys.Alt | Keys.Enter:
                     if (FormBorderStyle == FormBorderStyle.None)
@@ -298,7 +298,7 @@ namespace TtyRecMonkey
             base.OnKeyDown(e);
         }
 
-        private void Reconfigure()
+        private void PlayerDownloadWindow()
         {
             playerSearch = new PlayerSearchForm();
             playerSearch.Visible = true;
