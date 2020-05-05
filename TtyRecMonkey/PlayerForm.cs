@@ -24,9 +24,6 @@ namespace TtyRecMonkey
         private const int TimeStepLengthMS = 5000;
         PlayerSearchForm playerSearch;
         private readonly MainGenerator frameGenerator;
-        private TtyRecKeyframeDecoder ttyrecDecoder = null;
-        private double PlaybackSpeed, PausedSpeed;
-        private TimeSpan Seek;
         private readonly List<DateTime> PreviousFrames = new List<DateTime>();
         private Bitmap bmp = new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
         private DateTime PreviousFrame = DateTime.Now;
@@ -234,15 +231,19 @@ namespace TtyRecMonkey
 
             }
 
-            UpdateTitle(string.Format("DCSSReplay -- {0} FPS -- {1} @ {2} of {3} ({4} keyframes {5} packets) -- Speed {6}",
-                 PreviousFrames.Count,
-                 PrettyTimeSpan(Seek),
-                 ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.CurrentFrame.SinceStart),
-                 ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.Length),
-                 ttyrecDecoder == null ? "N/A" : ttyrecDecoder.Keyframes.ToString(),
-                 ttyrecDecoder == null ? "N/A" : ttyrecDecoder.PacketCount.ToString(),
-                 PlaybackSpeed)
-            );
+    
+                UpdateTitle(string.Format("DCSSReplay -- {0} FPS -- {1} @ {2} of {3} ({4} keyframes {5} packets) -- Speed {6}",
+                     PreviousFrames.Count,
+                     PrettyTimeSpan(Seek),
+                     ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.CurrentFrame.SinceStart),
+                     ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.Length),
+                     ttyrecDecoder == null ? "N/A" : ttyrecDecoder.Keyframes.ToString(),
+                     ttyrecDecoder == null ? "N/A" : ttyrecDecoder.PacketCount.ToString(),
+                     PlaybackSpeed)
+                );
+                UpdateTime(ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.CurrentFrame.SinceStart),
+                      ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.Length));
+            
         }
 
         protected override void OnKeyDown(KeyEventArgs e)
@@ -310,8 +311,7 @@ namespace TtyRecMonkey
 
                 case Keys.V://Play / Pause
                 case Keys.Space:
-                    if (PlaybackSpeed != 0) { PausedSpeed = PlaybackSpeed; PlaybackSpeed = 0; }
-                    else { PlaybackSpeed = PausedSpeed; }
+                    PlayButton_Click(new object(), e);
                     break;
             }
             base.OnKeyDown(e);
@@ -324,6 +324,8 @@ namespace TtyRecMonkey
             playerSearch.dataGridView1.CellDoubleClick += DownloadTTyRec;
             playerSearch.DownloadButton.Click += DownloadTTyRec;
         }
+
+
         
         private async void DownloadTTyRec(object sender, EventArgs e)
         {

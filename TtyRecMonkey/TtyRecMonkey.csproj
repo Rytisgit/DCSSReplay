@@ -85,9 +85,11 @@
     <ApplicationIcon>Files\dcssreplay.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Forms.DataVisualization" />
@@ -109,7 +111,12 @@
     <Compile Include="PlayerSearchForm.Designer.cs">
       <DependentUpon>PlayerSearchForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ProgressBar.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="VisualDesigns\ProgressBar.cs" />
     <Compile Include="PlayerForm.cs">
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -118,6 +125,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource1.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FrameGenerator\FrameGenerator.csproj">
