@@ -142,9 +142,11 @@ namespace TtyRecMonkey
                 }
                 else
                 {
+
                     ttyrecDecoder.Seek(Seek);
+
                 }
-                
+
                 var frame = ttyrecDecoder.CurrentFrame.Data;
 
                 if (frame != null)
@@ -153,14 +155,15 @@ namespace TtyRecMonkey
                     if (!frameGenerator.isGeneratingFrame)
                     {
                         frameGenerator.isGeneratingFrame = true;
-#if true
-                        ThreadPool.QueueUserWorkItem(o =>
+#if true                
+                        ThreadPool.UnsafeQueueUserWorkItem(o =>
                             {
                                 try
                                 {
                                     bmp = frameGenerator.GenerateImage(frame, ConsoleSwitchLevel);
                                     Update2(bmp);
                                     frameGenerator.isGeneratingFrame = false;
+                                    frame = null;
                                 }
                                 catch (Exception ex)
                                 {
@@ -168,7 +171,7 @@ namespace TtyRecMonkey
                                     //generator.GenerateImage(savedFrame);
                                     frameGenerator.isGeneratingFrame = false;
                                 }
-                            });
+                            }, null);
 #else //non threaded image generation (slow)
                             generator.GenerateImage(savedFrame);
                             update2(bmp);
