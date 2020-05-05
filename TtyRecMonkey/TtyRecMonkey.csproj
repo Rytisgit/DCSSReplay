@@ -94,6 +94,7 @@
     <Compile Include="PlayerSearchForm.Designer.cs">
       <DependentUpon>PlayerSearchForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ProgressBar.cs" />
     <Compile Include="TtyRecKeyframePacket.cs" />
     <Compile Include="TtyRecPacket.cs" />
     <Compile Include="PlayerForm.cs">

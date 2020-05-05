@@ -12,6 +12,7 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Drawing.Imaging;
 using ICSharpCode.SharpZipLib.BZip2;
+using ICSharpCode.SharpZipLib.GZip;
 using DisplayWindow;
 
 namespace TtyRecMonkey
@@ -80,25 +81,82 @@ namespace TtyRecMonkey
             //    delay = TimeSpan.FromSeconds(fof.SecondsBetweenFiles);
             //}
         
-            var streams = ttyrecToStream(files);
+            var streams = TtyrecToStream(files);
             ttyrecDecoder = new TtyRecKeyframeDecoder(80, 24, streams, delay);
             PlaybackSpeed = +1;
             Seek = TimeSpan.Zero;
         }
-        
-        private IEnumerable<Stream> ttyrecToStream(string[] files)
+
+        private IEnumerable<Stream> TtyrecToStream(string[] files)
         {
             return files.Select(f =>
             {
-                Stream stream2 = File.OpenRead(f);
+               
+                if (Path.GetExtension(f) == ".ttyrec") return File.OpenRead(f);
+                Stream streamCompressed = File.OpenRead(f);
+                Stream streamUncompressed = new MemoryStream();
                 if (Path.GetExtension(f) == ".bz2")
                 {
-                    BZip2.Decompress(stream2, stream, false);
-                    return stream;
+                   try
+                    {
+                        BZip2.Decompress(streamCompressed, streamUncompressed, false);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("The file is corrupted or not supported");
+                    }
+                    return streamUncompressed;
                 }
-                return  stream2;
+                if (Path.GetExtension(f) == ".gz")
+                { 
+                    try
+                    {
+                        GZip.Decompress(streamCompressed, streamUncompressed, false);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("The file is corrupted or not supported");
+                    }
+                    return streamUncompressed;
+                }
+                return null;
             });
-        }   
+        }
+        private IEnumerable<Stream> TtyrecToStream(Dictionary<string, Stream> s)
+        {
+            return s.Select(f =>
+            {
+
+                if (f.Key=="ttyrec") return f.Value;
+                Stream streamCompressed = f.Value;
+                Stream streamUncompressed = new MemoryStream();
+                if (f.Key == "bz2")
+                {
+                    try
+                    {
+                        BZip2.Decompress(streamCompressed, streamUncompressed, false);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("The file is corrupted or not supported");
+                    }
+                    return streamUncompressed;
+                }
+                if (f.Key == "gz")
+                {
+                    try
+                    {
+                        GZip.Decompress(streamCompressed, streamUncompressed, false);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("The file is corrupted or not supported");
+                    }
+                    return streamUncompressed;
+                }
+                return null;
+            });
+        }
 
         void MainLoop()
         {
@@ -245,20 +303,20 @@ namespace TtyRecMonkey
             playerSearch = new PlayerSearchForm();
             playerSearch.Visible = true;
             playerSearch.dataGridView1.CellDoubleClick += DownloadTTyRec;
+            playerSearch.DownloadButton.Click += DownloadTTyRec;
         }
-        private void DownloadTTyRec(object sender, DataGridViewCellEventArgs e)
+        
+        private async void DownloadTTyRec(object sender, EventArgs e)
         {
-            Stream st = new MemoryStream();
-            Stream st3 = new MemoryStream();
-            st = playerSearch.DownloadFile(sender, e);
-            BZip2.Decompress(st, st3, false);
-            IEnumerable<Stream> st2 = new List<Stream>() { st3 };
+            await playerSearch.DownloadFileAsync(sender, e); 
+            var streams = TtyrecToStream(playerSearch.ext);
+
             var delay = TimeSpan.Zero;
-            var oldc = Cursor;
-            ttyrecDecoder = new TtyRecKeyframeDecoder(80, 24, st2, delay);
+            ttyrecDecoder = new TtyRecKeyframeDecoder(80, 24, streams, delay);
             PlaybackSpeed = +1;
             Seek = TimeSpan.Zero;
         }
+   
 
         static string PrettyTimeSpan(TimeSpan ts)
         {
