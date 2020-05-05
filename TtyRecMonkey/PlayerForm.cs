@@ -230,8 +230,6 @@ namespace TtyRecMonkey
                 Update2(null);
 
             }
-
-    
                 UpdateTitle(string.Format("DCSSReplay -- {0} FPS -- {1} @ {2} of {3} ({4} keyframes {5} packets) -- Speed {6}",
                      PreviousFrames.Count,
                      PrettyTimeSpan(Seek),
@@ -243,7 +241,6 @@ namespace TtyRecMonkey
                 );
                 UpdateTime(ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.CurrentFrame.SinceStart),
                       ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.Length));
-            
         }
 
         protected override void OnKeyDown(KeyEventArgs e)
@@ -378,6 +375,7 @@ namespace TtyRecMonkey
             Thread m_Thread = new Thread(() => form.Loop());
             m_Thread.Start();
             Application.Run(form);
+            
         }
     }
 }

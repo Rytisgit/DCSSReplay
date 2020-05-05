@@ -36,11 +36,11 @@
             this.DownloadButton = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Progress = new Sample.DataGridViewProgressColumn();
             this.dataGridViewProgressColumn1 = new Sample.DataGridViewProgressColumn();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.Filter = new System.Windows.Forms.TextBox();
-            this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Progress = new Sample.DataGridViewProgressColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -95,7 +95,6 @@
             "crawl.develz.org",
             "crawl.xtahua.com",
             "crawl.kelbi.org",
-            "crawl.project357",
             "lazy-life.ddo.jp"});
             this.comboBox1.Location = new System.Drawing.Point(159, 40);
             this.comboBox1.Name = "comboBox1";
@@ -136,6 +135,20 @@
             this.dataGridView1.TabIndex = 3;
             this.dataGridView1.Visible = false;
             // 
+            // Date
+            // 
+            this.Date.DataPropertyName = "Date";
+            this.Date.HeaderText = "Date";
+            this.Date.Name = "Date";
+            this.Date.ReadOnly = true;
+            // 
+            // Progress
+            // 
+            this.Progress.DataPropertyName = "Progress";
+            this.Progress.HeaderText = "Progress";
+            this.Progress.Name = "Progress";
+            this.Progress.ReadOnly = true;
+            // 
             // dataGridViewProgressColumn1
             // 
             this.dataGridViewProgressColumn1.DataPropertyName = "Progress";
@@ -157,20 +170,6 @@
             this.Filter.Size = new System.Drawing.Size(127, 20);
             this.Filter.TabIndex = 10;
             this.Filter.TextChanged += new System.EventHandler(this.Filter_TextChanged);
-            // 
-            // Date
-            // 
-            this.Date.DataPropertyName = "Date";
-            this.Date.HeaderText = "Date";
-            this.Date.Name = "Date";
-            this.Date.ReadOnly = true;
-            // 
-            // Progress
-            // 
-            this.Progress.DataPropertyName = "Progress";
-            this.Progress.HeaderText = "Progress";
-            this.Progress.Name = "Progress";
-            this.Progress.ReadOnly = true;
             // 
             // PlayerSearchForm
             // 
