@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Reflection;
+using System.Threading;
 using System.Timers;
 using System.Windows.Forms;
 using TtyRecDecoder;
@@ -10,7 +11,8 @@ namespace DisplayWindow
 
     public partial class DCSSReplayWindow : Form
     {
-
+   
+        public static Thread m_Thread;
         public  TtyRecKeyframeDecoder ttyrecDecoder = null;
         public double PlaybackSpeed, PausedSpeed;
         public  TimeSpan Seek;
@@ -40,10 +42,11 @@ namespace DisplayWindow
         {
             try
             {
-                if (Text != text &&  InvokeRequired)
+                if (run &&   InvokeRequired)
                 {
                     var d = new SafeCallDelegateTitle(UpdateTitle);
-                    this.Invoke(d, new object[] { text });
+                    IAsyncResult ar = this.BeginInvoke(d, new object[] { text });
+                    ar.AsyncWaitHandle.WaitOne();
                 }
                 else
                 {
@@ -59,16 +62,17 @@ namespace DisplayWindow
         {
                 if (StartTimeLabel.InvokeRequired )
                 {
-                        var d = new SafeCallDelegateTitle2(UpdateTime);
-                        this.Invoke(d, new object[] { start, end });
-                }
+                var d = new SafeCallDelegateTitle2(UpdateTime);
+                IAsyncResult ar2 = this.BeginInvoke(d, new object[] { start, end });
+                // ar2.AsyncWaitHandle.WaitOne();
+            }
                 else
                 {
                     if (StartTimeLabel.Text != start)
                     {
-                       // StartTimeLabel.Text = start;
-                      //  EndTimeLabel.Text = end;
-                       // SeekBar.Invalidate();
+                        StartTimeLabel.Text = start;
+                        EndTimeLabel.Text = end;
+                        SeekBar.Invalidate();
                     }
                 }
         }
@@ -100,10 +104,7 @@ namespace DisplayWindow
             if (frame == null && pictureBox2.Image == null) return;
             pictureBox2.Image = frame;
         }
-        private void Form2_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            run = false;
-        }
+
         public void SeekBar_Paint(object sender, PaintEventArgs e)
         {
             var start = ttyrecDecoder == null ? new System.TimeSpan(0) : ttyrecDecoder.CurrentFrame.SinceStart;
@@ -147,6 +148,15 @@ namespace DisplayWindow
         {
             loopTimer.Enabled = false;
         }
+        public readonly AutoResetEvent mWaitForThread = new AutoResetEvent(false);
+
+        private void DCSSReplayWindow_FormClosing(object sender, FormClosingEventArgs e)
+        {
+           
+            run = false;
+            // mWaitForThread.WaitOne();
+        }
+
         public void PlayButton_Click(object sender, System.EventArgs e)
         {
             if (PlaybackSpeed != 0) { PlayButton.Image = Image.FromFile(@"..\..\..\Extra\play.png"); PausedSpeed = PlaybackSpeed; PlaybackSpeed = 0; }

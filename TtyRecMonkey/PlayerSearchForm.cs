@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -16,6 +17,7 @@ namespace TtyRecMonkey
 {
     public partial class PlayerSearchForm : Form
     {
+       
         public Dictionary<string, Stream> ext = new Dictionary<string, Stream>();
         public MemoryStream str = new MemoryStream();
         private List<string> linkList = new List<string>();
@@ -174,9 +176,6 @@ namespace TtyRecMonkey
                     hostsite = "https://crawl.kelbi.org/crawl/ttyrec/";
                     break;
                 case 8:
-                    hostsite = "https://crawl.project357.org/ttyrec/";
-                    break;
-                case 9:
                     hostsite = "http://lazy-life.ddo.jp/mirror/ttyrecs/";
                     break;
                 default:

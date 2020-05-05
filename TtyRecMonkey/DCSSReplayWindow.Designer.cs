@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace DisplayWindow
@@ -148,7 +149,7 @@ namespace DisplayWindow
             this.Controls.Add(this.pictureBox2);
             this.Name = "DCSSReplayWindow";
             this.Text = "DCSSReplay";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form2_FormClosed);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DCSSReplayWindow_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
