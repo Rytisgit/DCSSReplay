@@ -88,7 +88,7 @@ namespace FrameGenerator
 
                 var image = DrawFrame(model);
                 
-#if false //Memory Limit Mode
+#if true //Memory Limit Mode
                 GC.Collect();
 #endif
                 return image;
@@ -131,7 +131,7 @@ namespace FrameGenerator
                     break;
             }
             Bitmap forupdate = new Bitmap(currentFrame);
-            System.GC.Collect();
+
             return forupdate;
 
         }
