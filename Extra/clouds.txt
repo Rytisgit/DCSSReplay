@@ -31,7 +31,7 @@ cloud_cold1
 °BLUE
 cloud_cold0
 §MAGENTA
-neg_tloc_hybrid
+cloud_tloc_energy
 ☼MAGENTA
 cloud_neg2
 ○MAGENTA
