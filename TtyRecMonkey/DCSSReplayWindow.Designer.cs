@@ -72,6 +72,7 @@ namespace DisplayWindow
             // 
             // StartTimeLabel
             // 
+            this.StartTimeLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.StartTimeLabel.AutoSize = true;
             this.StartTimeLabel.BackColor = System.Drawing.Color.Silver;
             this.StartTimeLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
@@ -98,8 +99,7 @@ namespace DisplayWindow
             // 
             // PlayButton
             // 
-            this.PlayButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.PlayButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.PlayButton.BackColor = System.Drawing.Color.Transparent;
             this.PlayButton.FlatAppearance.BorderSize = 0;
             this.PlayButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -114,8 +114,7 @@ namespace DisplayWindow
             // 
             // EndTimeLabel
             // 
-            this.EndTimeLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.EndTimeLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.EndTimeLabel.AutoSize = true;
             this.EndTimeLabel.BackColor = System.Drawing.Color.Silver;
             this.EndTimeLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
