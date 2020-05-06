@@ -765,22 +765,27 @@ namespace FrameGenerator
                 return false;
             }
 
+            Bitmap brandToDraw = null;
             bool cached = false;
             if (tile.TryDrawWallOrFloor(wall, floor, wallAndFloorColors, out drawnTile) ||
-                tile.TryDrawMonster(tileHighlight, overrides, _monsterpng, floor, out drawnTile) ||//first try drawing overrides, that include blue color monsters, and monsters in sight
-                tile.TryDrawCachedTile(_outOfSightCache, out drawnTile, out cached) ||//add highlight check?
-                tile.TryDrawMonster(tileHighlight, _monsterdata, _monsterpng, floor, out drawnTile) ||//draw the rest of the monsters
+                tile.TryDrawMonster(tileHighlight, overrides, _monsterpng, _miscallaneous, floor, out drawnTile, out brandToDraw) ||//first try drawing overrides, that include blue color monsters, and monsters in sight
+                tile.TryDrawCachedTile(tileHighlight, _outOfSightCache, new List<char> {'!', '?', '=', '"', '$', ')', '[', '_', '}', '/', '(', ':', '|', '%', '÷', '†'}, out drawnTile, out cached) ||
+                tile.TryDrawMonster(tileHighlight, _monsterdata, _monsterpng, _miscallaneous, floor, out drawnTile, out brandToDraw) ||//draw the rest of the monsters
                 tile.TryDrawFeature(_features, _alldngnpng, _miscallaneous, floor, wall, out drawnTile) ||
                 tile.TryDrawCloud(_cloudtiles, _alleffects, floor, model.SideData, model.MonsterData, out drawnTile) ||
                 tile.TryDrawItem(tileHighlight, _itemdata, _itempng, _miscallaneous, floor, model.Location, out drawnTile)) 
             {
 
-                g.DrawImage(drawnTile, x, y, drawnTile.Width * resize, drawnTile.Height * resize);  
-                //if (!tileHighlight.Equals(Enum.GetName(typeof(ColorList2), ColorList2.BLACK)) && !tile.Substring(1).Equals(Enum.GetName(typeof(ColorList2), ColorList2.BLACK)))
-                //{
-                //    var color = ColorList.GetColor(tileHighlight);
-                //    g.FillRectangle(new SolidBrush(Color.FromArgb(100, color.R, color.G,color.B)), x, y, drawnTile.Width * resize, drawnTile.Height * resize);/
-                //}
+                g.DrawImage(drawnTile, x, y, drawnTile.Width * resize, drawnTile.Height * resize);
+                if (brandToDraw != null)
+                {
+                    g.DrawImage(brandToDraw, x, y, brandToDraw.Width * resize, brandToDraw.Height * resize);
+                }
+                else if (!tileHighlight.Equals(Enum.GetName(typeof(ColorList2), ColorList2.BLACK)) && (!tile.Substring(1).Equals(Enum.GetName(typeof(ColorList2), ColorList2.BLACK)) || tile[0] == '.'))
+                {
+                    var color = ColorList.GetColor(tileHighlight);
+                    g.FillRectangle(new SolidBrush(Color.FromArgb(100, color.R, color.G, color.B)), x, y, drawnTile.Width * resize, drawnTile.Height * resize);
+                }
                 if (cached)//darken to match out of sight
                 {
                     g.FillRectangle(new SolidBrush(Color.FromArgb(150, 0, 0, 0)), x, y, drawnTile.Width * resize, drawnTile.Height * resize);
