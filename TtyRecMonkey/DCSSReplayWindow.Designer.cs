@@ -146,6 +146,7 @@ namespace DisplayWindow
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBox2);
+            this.KeyPreview = true;
             this.Name = "DCSSReplayWindow";
             this.Text = "DCSSReplay";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DCSSReplayWindow_FormClosing);
