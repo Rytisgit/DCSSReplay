@@ -87,7 +87,7 @@ namespace FrameGenerator
                 
 
                 var image = DrawFrame(model);
-
+                
 #if false //Memory Limit Mode
                 GC.Collect();
 #endif
@@ -768,7 +768,13 @@ namespace FrameGenerator
                 tile.TryDrawCloud(_cloudtiles, _alleffects, floor, model.SideData, model.MonsterData, out drawnTile) ||
                 tile.TryDrawItem(tileHighlight, _itemdata, _itempng, _miscallaneous, floor, model.Location, out drawnTile)) 
             {
-                g.DrawImage(drawnTile, x, y, drawnTile.Width * resize, drawnTile.Height * resize);
+
+                g.DrawImage(drawnTile, x, y, drawnTile.Width * resize, drawnTile.Height * resize);  
+                //if (!tileHighlight.Equals(Enum.GetName(typeof(ColorList2), ColorList2.BLACK)) && !tile.Substring(1).Equals(Enum.GetName(typeof(ColorList2), ColorList2.BLACK)))
+                //{
+                //    var color = ColorList.GetColor(tileHighlight);
+                //    g.FillRectangle(new SolidBrush(Color.FromArgb(100, color.R, color.G,color.B)), x, y, drawnTile.Width * resize, drawnTile.Height * resize);/
+                //}
                 if (cached)//darken to match out of sight
                 {
                     g.FillRectangle(new SolidBrush(Color.FromArgb(150, 0, 0, 0)), x, y, drawnTile.Width * resize, drawnTile.Height * resize);
