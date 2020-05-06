@@ -1,46 +1,52 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
+using System.Reflection;
+using System.Threading;
+using System.Timers;
 using System.Windows.Forms;
-
+using TtyRecDecoder;
+using Timer = System.Timers.Timer;
 namespace DisplayWindow
 {
 
     public partial class DCSSReplayWindow : Form
     {
+   
+        public static Thread m_Thread;
+        public  TtyRecKeyframeDecoder ttyrecDecoder = null;
+        public double PlaybackSpeed, PausedSpeed;
+        public  TimeSpan Seek;
         private delegate void SafeCallDelegate(Bitmap frame);
-        private delegate void SafeCallDelegate2(Bitmap frame);
         private delegate void SafeCallDelegateTitle(string title);
+        private delegate void SafeCallDelegateTitle2(string title, string title2);
+        private delegate void SafeCallDelegateSeekBar(object obj, ElapsedEventArgs e);
         private delegate void SafeCallDelegateToggleControls(bool shouldShow);
-
+        private  Timer loopTimer;  
+        public bool run = true;
         public DCSSReplayWindow()
         {
             InitializeComponent();
+            PlayButton.Image = Image.FromFile(@"..\..\..\Extra\pause.png");
+            typeof(Panel).InvokeMember("DoubleBuffered",
+            BindingFlags.SetProperty | BindingFlags.Instance | BindingFlags.NonPublic,
+            null, SeekBar, new object[] { true });
+            loopTimer = new Timer();
+            loopTimer.Interval = 10;
+            loopTimer.Enabled = false;
+            loopTimer.Elapsed += loopTimerEvent;
+            loopTimer.AutoReset = true;
 
-        }
-
-#pragma warning disable IDE0060 // Remove unused parameter
-        public void Update(Bitmap frame)
-#pragma warning restore IDE0060 // Remove unused parameter
-        {
-            /* if (pictureBox1.InvokeRequired)
-             {
-                 var d = new SafeCallDelegate(update);
-                 pictureBox1.Invoke(d, new object[] { frame });
-             }
-             else
-             {
-                 pictureBox1.Image = frame;
-             }
-             */
         }
 
         public void UpdateTitle(string text)
         {
             try
             {
-                if (Text != text && InvokeRequired)
+                if (run &&   InvokeRequired)
                 {
                     var d = new SafeCallDelegateTitle(UpdateTitle);
-                    this.Invoke(d, new object[] { text });
+                    IAsyncResult ar = this.BeginInvoke(d, new object[] { text });
+                    ar.AsyncWaitHandle.WaitOne();
                 }
                 else
                 {
@@ -51,6 +57,24 @@ namespace DisplayWindow
             {
             }
 
+        }
+        public void UpdateTime(string start, string end)
+        {
+                if (StartTimeLabel.InvokeRequired )
+                {
+                var d = new SafeCallDelegateTitle2(UpdateTime);
+                IAsyncResult ar2 = this.BeginInvoke(d, new object[] { start, end });
+                // ar2.AsyncWaitHandle.WaitOne();
+            }
+                else
+                {
+                    if (StartTimeLabel.Text != start)
+                    {
+                        StartTimeLabel.Text = start;
+                        EndTimeLabel.Text = end;
+                        SeekBar.Invalidate();
+                    }
+                }
         }
 
         public void ShowControls(bool shouldShow)
@@ -75,36 +99,70 @@ namespace DisplayWindow
             }
         }
 
-        /* private void OnResize(object sender, System.EventArgs e)
-          {
-              pictureBox1.Width = (int)(0.35 * ClientSize.Width);
-              pictureBox1.Height = (int)(0.3 * ClientSize.Height);
-              pictureBox1.Location = new System.Drawing.Point((int)(ClientSize.Width * 0.65), (int)(0.7 * ClientSize.Height));
-          }
-          private void Form_Shown(Object sender, EventArgs e)
-          {
-
-              ClientSize = new Size(1602, 1050);
-              pictureBox1.Width = (int)(0.35 * ClientSize.Width);
-              pictureBox1.Height = (int)(0.3 * ClientSize.Height);
-              pictureBox1.Location = new System.Drawing.Point((int)(ClientSize.Width * 0.65), (int)(0.7 * ClientSize.Height));
-          }
-          */
         public void Update2(Bitmap frame)
         {
             if (frame == null && pictureBox2.Image == null) return;
             pictureBox2.Image = frame;
         }
-        public bool run = true;
-        private void Form2_FormClosed(object sender, FormClosedEventArgs e)
+
+        public void SeekBar_Paint(object sender, PaintEventArgs e)
         {
+            var start = ttyrecDecoder == null ? new System.TimeSpan(0) : ttyrecDecoder.CurrentFrame.SinceStart;
+            var end = ttyrecDecoder == null ? new System.TimeSpan(0) : ttyrecDecoder.Length;
+            var progress = start.TotalMilliseconds / end.TotalMilliseconds;
+        if(progress>0)
+            {
+                var rect = new Rectangle(e.ClipRectangle.Left,
+          e.ClipRectangle.Top,
+          (int)(SeekBar.Width * progress),
+          SeekBar.Height);
+          e.Graphics.DrawRectangle(Pens.DarkBlue,rect
+          );
+          e.Graphics.FillRectangle(new SolidBrush(Color.DarkBlue), rect);
+            }
+        }
+        private  void SeekBar_MouseDown(object sender, MouseEventArgs e)
+        {
+            
+            if (e.Button == MouseButtons.Left)
+            {
+                loopTimer.Enabled = true;
+            }
+        }
+        private  void loopTimerEvent(Object source, ElapsedEventArgs e)
+        {
+            if (SeekBar.InvokeRequired)
+            {
+                var d = new SafeCallDelegateSeekBar(loopTimerEvent);
+                this.Invoke(d, new object[] { source, e });
+            }
+            else
+            {
+                var MouseCoordinates = SeekBar.PointToClient(Cursor.Position);
+                double progress = (double)(MouseCoordinates.X) / SeekBar.Width;
+                Seek = new TimeSpan((long)(ttyrecDecoder.Length.Ticks * progress));
+            }
+        }
+
+        private  void SeekBar_MouseUp(object sender, MouseEventArgs e)
+        {
+            loopTimer.Enabled = false;
+        }
+        public readonly AutoResetEvent mWaitForThread = new AutoResetEvent(false);
+
+        private void DCSSReplayWindow_FormClosing(object sender, FormClosingEventArgs e)
+        {
+           
             run = false;
+            // mWaitForThread.WaitOne();
         }
 
-        private void label1_Click(object sender, System.EventArgs e)
+        public void PlayButton_Click(object sender, System.EventArgs e)
         {
-
+            if (PlaybackSpeed != 0) { PlayButton.Image = Image.FromFile(@"..\..\..\Extra\play.png"); PausedSpeed = PlaybackSpeed; PlaybackSpeed = 0; }
+            else { PlayButton.Image = Image.FromFile(@"..\..\..\Extra\pause.png"); PlaybackSpeed = PausedSpeed; }
         }
+
     }
 
 }
