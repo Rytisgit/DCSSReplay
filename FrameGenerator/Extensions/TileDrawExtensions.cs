@@ -9,7 +9,7 @@ namespace FrameGenerator.Extensions
 {
     public static class TileDrawExtensions
     {
-        public static bool TryDrawWallOrFloor(this string tile, Bitmap wall, Bitmap floor, out Bitmap tileToDraw)
+        public static bool TryDrawWallOrFloor(this string tile, Bitmap wall, Bitmap floor, string[] wallAndFloorColors, out Bitmap tileToDraw)
         {
             tileToDraw = new Bitmap(32, 32, PixelFormat.Format32bppArgb);
 
@@ -23,7 +23,7 @@ namespace FrameGenerator.Extensions
                     return true;
                 }
 
-                if (tile[0] == '#' && !tile.Equals("#LIGHTCYAN"))
+                if (tile[0] == '#' && tile.Substring(1).Equals(wallAndFloorColors[0]))
                 {
                     g.DrawImage(wall, 0, 0, wall.Width, wall.Height);
                     return true;
@@ -37,7 +37,7 @@ namespace FrameGenerator.Extensions
                     return true;
                 }
 
-                if (tile[0] == '.')
+                if (tile[0] == '.' && tile.Substring(1).Equals(wallAndFloorColors[1]))
                 {
                     g.DrawImage(floor, 0, 0, floor.Width, floor.Height);
                     return true;
@@ -160,13 +160,41 @@ namespace FrameGenerator.Extensions
             return true;
         }
 
-        public static bool TryDrawFeature(this string tile, Dictionary<string, string> featureData, Dictionary<string, Bitmap> allDungeonPngs, Bitmap floor, out Bitmap tileToDraw)
+        public static bool TryDrawFeature(this string tile, Dictionary<string, string> featureData, Dictionary<string, Bitmap> allDungeonPngs, Dictionary<string, Bitmap> misc, Bitmap floor, Bitmap wall, out Bitmap tileToDraw)
         {
             tileToDraw = new Bitmap(32, 32, PixelFormat.Format32bppArgb);
 
             using (Graphics g = Graphics.FromImage(tileToDraw))
             {
+
                 if (!featureData.TryGetValue(tile, out var pngName)) return false;
+                if (pngName == "wall")
+                {
+                    g.DrawImage(wall, 0, 0, wall.Width, wall.Height);
+                    if (tile == "#RED")
+                    {
+                        if (misc.TryGetValue("blood_red00", out Bitmap blood))
+                        {
+                            g.DrawImage(blood, 0, 0, blood.Width, blood.Height);
+                        }
+                        return true;
+                    }
+                }
+               
+
+                if (pngName == "floor")
+                {
+                    g.DrawImage(floor, 0, 0, floor.Width, floor.Height);
+                    if (tile.Substring(1) == Enum.GetName(typeof(ColorList2), ColorList2.RED))
+                    {
+                        if (misc.TryGetValue("blood_puddle_red", out Bitmap blood))
+                        { 
+                            g.DrawImage(blood, 0, 0, blood.Width, blood.Height); 
+                        }
+                    }
+                    return true;
+                }
+
                 if (!allDungeonPngs.TryGetValue(pngName, out Bitmap png)) return false;
 
                 g.DrawImage(floor, 0, 0, floor.Width, floor.Height);

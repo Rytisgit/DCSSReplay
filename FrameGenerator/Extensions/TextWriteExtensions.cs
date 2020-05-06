@@ -90,6 +90,7 @@ namespace FrameGenerator.Extensions
                 temp = Graphics.FromImage(bar);
                 temp.Clear(barColor);
                 g.DrawImage(bar, x, y);
+                previousAmount = previousAmount > maxAmount ? maxAmount : previousAmount;
                 if (barLength != 250 && previousAmount - amount > 0)
                 {
                     int prevBarLength = (int)(250 * ((float)(previousAmount - amount) / maxAmount)) + 1;

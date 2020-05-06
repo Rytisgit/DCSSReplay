@@ -8,12 +8,13 @@ using ICSharpCode.SharpZipLib.BZip2;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using TtyRecDecoder;
+using System.Drawing.Imaging;
+using ICSharpCode.SharpZipLib.GZip;
 
 namespace TtyRecMonkey
 {
@@ -21,10 +22,8 @@ namespace TtyRecMonkey
     public class PlayerForm : DCSSReplayWindow
     {
         private const int TimeStepLengthMS = 5000;
+        PlayerSearchForm playerSearch;
         private readonly MainGenerator frameGenerator;
-        private TtyRecKeyframeDecoder ttyrecDecoder = null;
-        private double PlaybackSpeed, PausedSpeed;
-        private TimeSpan Seek;
         private readonly List<DateTime> PreviousFrames = new List<DateTime>();
         private Bitmap bmp = new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
         private DateTime PreviousFrame = DateTime.Now;
@@ -89,23 +88,70 @@ namespace TtyRecMonkey
         {
             return files.Select(f =>
             {
-                Stream stream2 = File.OpenRead(f);
+               
+                if (Path.GetExtension(f) == ".ttyrec") return File.OpenRead(f);
+                Stream streamCompressed = File.OpenRead(f);
+                Stream streamUncompressed = new MemoryStream();
                 if (Path.GetExtension(f) == ".bz2")
                 {
-                    Stream stream = new MemoryStream();
-
+                   try
+                    {
+                        BZip2.Decompress(streamCompressed, streamUncompressed, false);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("The file is corrupted or not supported");
+                    }
+                    return streamUncompressed;
+                }
+                if (Path.GetExtension(f) == ".gz")
+                { 
                     try
                     {
-                        BZip2.Decompress(stream2, stream, false);
+                        GZip.Decompress(streamCompressed, streamUncompressed, false);
                     }
-                    catch 
+                    catch
                     {
-                        System.Windows.Forms.MessageBox.Show("The file is corrupted or not supported");
+                        MessageBox.Show("The file is corrupted or not supported");
                     }
-
-                    return stream;
+                    return streamUncompressed;
                 }
-                return stream2;
+                return null;
+            });
+        }
+        private IEnumerable<Stream> TtyrecToStream(Dictionary<string, Stream> s)
+        {
+            return s.Select(f =>
+            {
+
+                if (f.Key=="ttyrec") return f.Value;
+                Stream streamCompressed = f.Value;
+                Stream streamUncompressed = new MemoryStream();
+                if (f.Key == "bz2")
+                {
+                    try
+                    {
+                        BZip2.Decompress(streamCompressed, streamUncompressed, false);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("The file is corrupted or not supported");
+                    }
+                    return streamUncompressed;
+                }
+                if (f.Key == "gz")
+                {
+                    try
+                    {
+                        GZip.Decompress(streamCompressed, streamUncompressed, false);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("The file is corrupted or not supported");
+                    }
+                    return streamUncompressed;
+                }
+                return null;
             });
         }
 
@@ -122,9 +168,16 @@ namespace TtyRecMonkey
             if (ttyrecDecoder != null)
             {
                 ShowControls(false);
-                if (Seek + TimeSpan.FromSeconds(dt * PlaybackSpeed) <= ttyrecDecoder.Length && Seek + TimeSpan.FromSeconds(dt * PlaybackSpeed) >= TimeSpan.Zero)
+
+                Seek += TimeSpan.FromSeconds(dt * PlaybackSpeed);
+
+                if (Seek > ttyrecDecoder.Length)
                 {
-                    Seek += TimeSpan.FromSeconds(dt * PlaybackSpeed);
+                    Seek = ttyrecDecoder.Length;
+                }
+                if (Seek < TimeSpan.Zero)
+                {
+                    Seek = TimeSpan.Zero;
                 }
 
                 if (FrameStepCount != 0)
@@ -135,9 +188,11 @@ namespace TtyRecMonkey
                 }
                 else
                 {
+
                     ttyrecDecoder.Seek(Seek);
+
                 }
-                
+
                 var frame = ttyrecDecoder.CurrentFrame.Data;
 
                 if (frame != null)
@@ -146,14 +201,15 @@ namespace TtyRecMonkey
                     if (!frameGenerator.isGeneratingFrame)
                     {
                         frameGenerator.isGeneratingFrame = true;
-#if true
-                        ThreadPool.QueueUserWorkItem(o =>
+#if true                
+                        ThreadPool.UnsafeQueueUserWorkItem(o =>
                             {
                                 try
                                 {
                                     bmp = frameGenerator.GenerateImage(frame, ConsoleSwitchLevel);
                                     Update2(bmp);
                                     frameGenerator.isGeneratingFrame = false;
+                                    frame = null;
                                 }
                                 catch (Exception ex)
                                 {
@@ -161,7 +217,7 @@ namespace TtyRecMonkey
                                     //generator.GenerateImage(savedFrame);
                                     frameGenerator.isGeneratingFrame = false;
                                 }
-                            });
+                            }, null);
 #else //non threaded image generation (slow)
                             generator.GenerateImage(savedFrame);
                             update2(bmp);
@@ -177,16 +233,17 @@ namespace TtyRecMonkey
                 Update2(null);
 
             }
-
-            UpdateTitle(string.Format("DCSSReplay -- {0} FPS -- {1} @ {2} of {3} ({4} keyframes {5} packets) -- Speed {6}",
-                 PreviousFrames.Count,
-                 PrettyTimeSpan(Seek),
-                 ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.CurrentFrame.SinceStart),
-                 ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.Length),
-                 ttyrecDecoder == null ? "N/A" : ttyrecDecoder.Keyframes.ToString(),
-                 ttyrecDecoder == null ? "N/A" : ttyrecDecoder.PacketCount.ToString(),
-                 PlaybackSpeed)
-            );
+                UpdateTitle(string.Format("DCSSReplay -- {0} FPS -- {1} @ {2} of {3} ({4} keyframes {5} packets) -- Speed {6}",
+                     PreviousFrames.Count,
+                     PrettyTimeSpan(Seek),
+                     ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.CurrentFrame.SinceStart),
+                     ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.Length),
+                     ttyrecDecoder == null ? "N/A" : ttyrecDecoder.Keyframes.ToString(),
+                     ttyrecDecoder == null ? "N/A" : ttyrecDecoder.PacketCount.ToString(),
+                     PlaybackSpeed)
+                );
+                UpdateTime(ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.CurrentFrame.SinceStart),
+                      ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.Length));
         }
 
         protected override void OnKeyDown(KeyEventArgs e)
@@ -197,7 +254,7 @@ namespace TtyRecMonkey
             {
 
                 case Keys.Escape: using (ttyrecDecoder) { } ttyrecDecoder = null; break;
-                //case Keys.Control | Keys.C: Reconfigure(); break;
+                case Keys.Control | Keys.C: PlayerDownloadWindow(); break;
                 case Keys.Control | Keys.O: OpenFile(); break;
                 case Keys.Alt | Keys.Enter:
                     if (FormBorderStyle == FormBorderStyle.None)
@@ -254,12 +311,33 @@ namespace TtyRecMonkey
 
                 case Keys.V://Play / Pause
                 case Keys.Space:
-                    if (PlaybackSpeed != 0) { PausedSpeed = PlaybackSpeed; PlaybackSpeed = 0; }
-                    else { PlaybackSpeed = PausedSpeed; }
+                    PlayButton_Click(new object(), e);
                     break;
             }
             base.OnKeyDown(e);
         }
+
+        private void PlayerDownloadWindow()
+        {
+            playerSearch = new PlayerSearchForm();
+            playerSearch.Visible = true;
+            playerSearch.dataGridView1.CellDoubleClick += DownloadTTyRec;
+            playerSearch.DownloadButton.Click += DownloadTTyRec;
+        }
+
+
+        
+        private async void DownloadTTyRec(object sender, EventArgs e)
+        {
+            await playerSearch.DownloadFileAsync(sender, e); 
+            var streams = TtyrecToStream(playerSearch.ext);
+
+            var delay = TimeSpan.Zero;
+            ttyrecDecoder = new TtyRecKeyframeDecoder(80, 24, streams, delay, MaxDelayBetweenPackets);
+            PlaybackSpeed = +1;
+            Seek = TimeSpan.Zero;
+        }
+   
 
         static string PrettyTimeSpan(TimeSpan ts)
         {
@@ -300,6 +378,7 @@ namespace TtyRecMonkey
             Thread m_Thread = new Thread(() => form.Loop());
             m_Thread.Start();
             Application.Run(form);
+            
         }
     }
 }

@@ -20,9 +20,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extra", "Extra", "{46E43B1B
 		Extra\items.txt = Extra\items.txt
 		Extra\monsteroverrides.txt = Extra\monsteroverrides.txt
 		Extra\namedmonsteroverrides.txt = Extra\namedmonsteroverrides.txt
+		Extra\pause.png = Extra\pause.png
+		Extra\play.png = Extra\play.png
 		Extra\racepng.txt = Extra\racepng.txt
 		Extra\SameMonsterRules.txt = Extra\SameMonsterRules.txt
 		Extra\tilefloor.txt = Extra\tilefloor.txt
+		Extra\tilefloorcolors.txt = Extra\tilefloorcolors.txt
 		Extra\weapons.txt = Extra\weapons.txt
 	EndProjectSection
 EndProject
@@ -66,7 +69,6 @@ Global
 		{2409C96E-18FC-4420-A755-A2509F3B33C2}.Release|x86.ActiveCfg = Release|x86
 		{2409C96E-18FC-4420-A755-A2509F3B33C2}.Release|x86.Build.0 = Release|x86
 		{8F44624A-D188-4188-B9AA-5F99F20723E1}.Debug|Any CPU.ActiveCfg = PuttyDllDebug|Win32
-		{8F44624A-D188-4188-B9AA-5F99F20723E1}.Debug|Any CPU.Build.0 = PuttyDllDebug|Win32
 		{8F44624A-D188-4188-B9AA-5F99F20723E1}.Debug|x64.ActiveCfg = Debug|Win32
 		{8F44624A-D188-4188-B9AA-5F99F20723E1}.Debug|x64.Build.0 = Debug|x64
 		{8F44624A-D188-4188-B9AA-5F99F20723E1}.Debug|x86.ActiveCfg = Debug|Win32
