@@ -760,7 +760,7 @@ namespace FrameGenerator
             }
 
             bool cached = false;
-            if (tile.TryDrawWallOrFloor(wall, floor, out drawnTile) ||
+            if (//tile.TryDrawWallOrFloor(wall, floor, out drawnTile) ||
                 tile.TryDrawMonster(tileHighlight, overrides, _monsterpng, floor, out drawnTile) ||//first try drawing overrides, that include blue color monsters, and monsters in sight
                 tile.TryDrawCachedTile(_outOfSightCache, out drawnTile, out cached) ||//add highlight check?
                 tile.TryDrawMonster(tileHighlight, _monsterdata, _monsterpng, floor, out drawnTile) ||//draw the rest of the monsters
