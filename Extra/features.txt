@@ -70,6 +70,8 @@ shoals_shallow_water9
 floor
 .LIGHTGREEN
 floor
+.BROWN
+floor
 .BLUE
 floor
 .MAGENTA
@@ -94,8 +96,6 @@ floor
 floor
 .WHITE
 floor
-.BROWN
-expired_portal
 'LIGHTGREY
 open_door
 'BLUE
