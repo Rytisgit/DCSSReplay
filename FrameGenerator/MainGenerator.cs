@@ -23,6 +23,7 @@ namespace FrameGenerator
         private readonly List<NamedMonsterOverride> _namedMonsterOverrideData;
         private readonly Dictionary<string, string> _characterdata;
         private readonly Dictionary<string, string[]> _floorandwall;
+        private readonly Dictionary<string, string[]> _floorandwallColor;
         private readonly Dictionary<string, string> _features;
         private readonly Dictionary<string, string> _cloudtiles;
         private readonly Dictionary<string, string> _itemdata;
@@ -56,6 +57,7 @@ namespace FrameGenerator
             _weapondata = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\weapons.txt");
 
             _floorandwall = ReadFromFile.GetFloorAndWallNamesForDungeons(@"..\..\..\Extra\tilefloor.txt");
+            _floorandwallColor = ReadFromFile.GetFloorAndWallNamesForDungeons(@"..\..\..\Extra\tilefloorcolors.txt");
             _monsterdata = ReadFromFile.GetMonsterData(gameLocation + @"\mon-data.h", @"..\..\..\Extra\monsteroverrides.txt");
             _namedMonsterOverrideData = ReadFromFile.GetNamedMonsterOverrideData(@"..\..\..\Extra\namedmonsteroverrides.txt");
 
@@ -706,8 +708,12 @@ namespace FrameGenerator
 
             if (!_floorandwall.TryGetValue(location[0].ToUpper(), out var CurrentLocationFloorAndWallName)) return;
 
+            if (!_floorandwallColor.TryGetValue(location[0].ToUpper(), out var CurrentLocationFloorAndWallColor)) return;
+
             if (!_wallpng.TryGetValue(CurrentLocationFloorAndWallName[0], out var wall)) return;
             if (!_floorpng.TryGetValue(CurrentLocationFloorAndWallName[1], out var floor)) return;
+
+            //TODO special handling for pan abyss zot and elf
 
             var currentTileX = startX;
             var currentTileY = startY;
@@ -724,7 +730,7 @@ namespace FrameGenerator
                 else
                     currentTileX += 32 * resize;
 
-                var tileDrawn = DrawCurrentTile(g, model, dict, model.TileNames[i], model.HighlightColors[i], wall, floor, overrides, currentTileX, currentTileY, resize, out Bitmap drawnTile);
+                var tileDrawn = DrawCurrentTile(g, model, dict, model.TileNames[i], model.HighlightColors[i], wall, floor, CurrentLocationFloorAndWallColor, overrides, currentTileX, currentTileY, resize, out Bitmap drawnTile);
 
                 if (tileDrawn && !model.TileNames[i].IsWallOrFloor())
                 {
@@ -752,7 +758,7 @@ namespace FrameGenerator
 #endif
         }
 
-        private bool DrawCurrentTile(Graphics g, Model model, Dictionary<string, string> dict, string tile, string tileHighlight, Bitmap wall, Bitmap floor, Dictionary<string, string> overrides, float x, float y, float resize, out Bitmap drawnTile)
+        private bool DrawCurrentTile(Graphics g, Model model, Dictionary<string, string> dict, string tile, string tileHighlight, Bitmap wall, Bitmap floor, string[] wallAndFloorColors, Dictionary<string, string> overrides, float x, float y, float resize, out Bitmap drawnTile)
         {
             if (tile[0] == ' ' && (tileHighlight == Enum.GetName(typeof(ColorList2), ColorList2.LIGHTGREY) || tileHighlight == Enum.GetName(typeof(ColorList2), ColorList2.BLACK)) || tile.StartsWith("@BL")) { 
                 drawnTile = null; 
@@ -760,11 +766,11 @@ namespace FrameGenerator
             }
 
             bool cached = false;
-            if (//tile.TryDrawWallOrFloor(wall, floor, out drawnTile) ||
+            if (tile.TryDrawWallOrFloor(wall, floor, wallAndFloorColors, out drawnTile) ||
                 tile.TryDrawMonster(tileHighlight, overrides, _monsterpng, floor, out drawnTile) ||//first try drawing overrides, that include blue color monsters, and monsters in sight
                 tile.TryDrawCachedTile(_outOfSightCache, out drawnTile, out cached) ||//add highlight check?
                 tile.TryDrawMonster(tileHighlight, _monsterdata, _monsterpng, floor, out drawnTile) ||//draw the rest of the monsters
-                tile.TryDrawFeature(_features, _alldngnpng, floor, out drawnTile) ||
+                tile.TryDrawFeature(_features, _alldngnpng, _miscallaneous, floor, wall, out drawnTile) ||
                 tile.TryDrawCloud(_cloudtiles, _alleffects, floor, model.SideData, model.MonsterData, out drawnTile) ||
                 tile.TryDrawItem(tileHighlight, _itemdata, _itempng, _miscallaneous, floor, model.Location, out drawnTile)) 
             {
