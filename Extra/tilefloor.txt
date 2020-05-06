@@ -13,10 +13,10 @@ floor_vines0
 DWARF
 relief0
 limestone0
-Hall of Blades
+HALL OF BLADES
 relief0
 mesh0
-Elven Halls
+ELVEN HALLS
 relief0
 mesh0
 TARTARUS
@@ -40,7 +40,7 @@ rough_red0
 COCYTUS
 ice_wall0
 frozen0
-Orcish Mines
+ORCISH MINES
 orc0
 orc0
 LAIR
