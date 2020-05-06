@@ -768,11 +768,11 @@ namespace FrameGenerator
 
             Bitmap brandToDraw = null;
             bool cached = false;
-            if (tile.TryDrawWallOrFloor(wall, floor, wallAndFloorColors, out drawnTile) ||
+            if (tile.TryDrawWallOrFloor(tileHighlight, wall, floor, wallAndFloorColors, out drawnTile) ||
                 tile.TryDrawMonster(tileHighlight, overrides, _monsterpng, _miscallaneous, floor, out drawnTile, out brandToDraw) ||//first try drawing overrides, that include blue color monsters, and monsters in sight
                 tile.TryDrawCachedTile(tileHighlight, _outOfSightCache, new List<char> {'!', '?', '=', '"', '$', ')', '[', '_', '}', '/', '(', ':', '|', '%', '÷', '†'}, out drawnTile, out cached) ||
                 tile.TryDrawMonster(tileHighlight, _monsterdata, _monsterpng, _miscallaneous, floor, out drawnTile, out brandToDraw) ||//draw the rest of the monsters
-                tile.TryDrawFeature(_features, _alldngnpng, _miscallaneous, floor, wall, out drawnTile) ||
+                tile.TryDrawFeature(tileHighlight, _features, _alldngnpng, _miscallaneous, floor, wall, out drawnTile) ||
                 tile.TryDrawCloud(_cloudtiles, _alleffects, floor, model.SideData, model.MonsterData, out drawnTile) ||
                 tile.TryDrawItem(tileHighlight, _itemdata, _itempng, _miscallaneous, floor, model.Location, out drawnTile)) 
             {

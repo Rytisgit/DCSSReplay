@@ -9,13 +9,14 @@ namespace FrameGenerator.Extensions
 {
     public static class TileDrawExtensions
     {
-        public static bool TryDrawWallOrFloor(this string tile, Bitmap wall, Bitmap floor, string[] wallAndFloorColors, out Bitmap tileToDraw)
+        public static bool TryDrawWallOrFloor(this string tile, string background, Bitmap wall, Bitmap floor, string[] wallAndFloorColors, out Bitmap tileToDraw)
         {
+            var highlighted = FixHighlight(tile, background, out var correctTile);
             tileToDraw = new Bitmap(32, 32, PixelFormat.Format32bppArgb);
 
             using (Graphics g = Graphics.FromImage(tileToDraw))
             {
-                if (tile == "#BLUE")
+                if (correctTile == "#BLUE")
                 {
                     g.DrawImage(wall, 0, 0, wall.Width, wall.Height);
                     var blueTint = new SolidBrush(Color.FromArgb(150, 0, 0, 0));
@@ -23,13 +24,13 @@ namespace FrameGenerator.Extensions
                     return true;
                 }
 
-                if (tile[0] == '#' && tile.Substring(1).Equals(wallAndFloorColors[0]))
+                if (correctTile[0] == '#' && correctTile.Substring(1).Equals(wallAndFloorColors[0]))
                 {
                     g.DrawImage(wall, 0, 0, wall.Width, wall.Height);
                     return true;
                 }
 
-                if (tile == ".BLUE")
+                if (correctTile == ".BLUE")
                 {
                     g.DrawImage(floor, 0, 0, floor.Width, floor.Height);
                     var blueTint = new SolidBrush(Color.FromArgb(150, 0, 0, 0));
@@ -37,20 +38,20 @@ namespace FrameGenerator.Extensions
                     return true;
                 }
 
-                if (tile[0] == '.' && tile.Substring(1).Equals(wallAndFloorColors[1]))
+                if (correctTile[0] == '.' && correctTile.Substring(1).Equals(wallAndFloorColors[1]))
                 {
                     g.DrawImage(floor, 0, 0, floor.Width, floor.Height);
                     return true;
                 }
 
-                if (tile == "*BLUE")
+                if (correctTile == "*BLUE")
                 {
                     g.DrawImage(wall, 0, 0, wall.Width, wall.Height);
                     var blueTint = new SolidBrush(Color.FromArgb(40, 30, 30, 200));
                     g.FillRectangle(blueTint, 0, 0, wall.Width, wall.Height);
                     return true;
                 }
-                if (tile == ",BLUE")
+                if (correctTile == ",BLUE")
                 {
                     g.DrawImage(floor, 0, 0, floor.Width, floor.Height);
                     var blueTint = new SolidBrush(Color.FromArgb(40, 20, 20, 200));
@@ -160,18 +161,20 @@ namespace FrameGenerator.Extensions
             return true;
         }
 
-        public static bool TryDrawFeature(this string tile, Dictionary<string, string> featureData, Dictionary<string, Bitmap> allDungeonPngs, Dictionary<string, Bitmap> misc, Bitmap floor, Bitmap wall, out Bitmap tileToDraw)
+        public static bool TryDrawFeature(this string tile, string background, Dictionary<string, string> featureData, Dictionary<string, Bitmap> allDungeonPngs, Dictionary<string, Bitmap> misc, Bitmap floor, Bitmap wall, out Bitmap tileToDraw)
         {
+
+            var highlighted = FixHighlight(tile, background, out var correctTile);
             tileToDraw = new Bitmap(32, 32, PixelFormat.Format32bppArgb);
 
             using (Graphics g = Graphics.FromImage(tileToDraw))
             {
 
-                if (!featureData.TryGetValue(tile, out var pngName)) return false;
+                if (!featureData.TryGetValue(correctTile, out var pngName)) return false;
                 if (pngName == "wall")
                 {
                     g.DrawImage(wall, 0, 0, wall.Width, wall.Height);
-                    if (tile == "#RED")
+                    if (correctTile == "#RED")
                     {
                         if (misc.TryGetValue("blood_red00", out Bitmap blood))
                         {
@@ -185,7 +188,7 @@ namespace FrameGenerator.Extensions
                 if (pngName == "floor")
                 {
                     g.DrawImage(floor, 0, 0, floor.Width, floor.Height);
-                    if (tile.Substring(1) == Enum.GetName(typeof(ColorList2), ColorList2.RED))
+                    if (correctTile.Substring(1) == Enum.GetName(typeof(ColorList2), ColorList2.RED))
                     {
                         if (misc.TryGetValue("blood_puddle_red", out Bitmap blood))
                         { 
