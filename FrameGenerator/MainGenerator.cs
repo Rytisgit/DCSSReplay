@@ -131,6 +131,7 @@ namespace FrameGenerator
                     break;
             }
             Bitmap forupdate = new Bitmap(currentFrame);
+            System.GC.Collect();
             return forupdate;
 
         }
