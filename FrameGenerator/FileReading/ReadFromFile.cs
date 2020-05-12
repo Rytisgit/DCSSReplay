@@ -11,7 +11,7 @@ namespace FrameGenerator.FileReading
         public static Dictionary<string, string> GetDictionaryFromFile(string path)
         {
             var dict = new Dictionary<string, string>();
-
+            
             string[] lines = File.ReadAllLines(path);
 
             for (var i = 0; i < lines.Length; i += 2)
@@ -133,7 +133,7 @@ namespace FrameGenerator.FileReading
         {
             var dict = new Dictionary<string, SKBitmap>();
             List<string> pngFiles = Directory.GetFiles(folder, "*.png*", SearchOption.AllDirectories).ToList();
-            var files = Directory.GetFiles(@"..\..\..\Extra", "*.png", SearchOption.TopDirectoryOnly).ToList();
+            var files = Directory.GetFiles(folder, "*.png", SearchOption.TopDirectoryOnly).ToList();
             pngFiles.AddRange(files);
             foreach (var file in pngFiles)
             {
@@ -149,8 +149,8 @@ namespace FrameGenerator.FileReading
 
             var GetCharacterPNG = new Dictionary<string, SKBitmap>();
 
-            List<string> allpngfiles = Directory.GetFiles(gameLocation + @"\rltiles\player\base", "*.png*", SearchOption.AllDirectories).ToList();
-            allpngfiles.AddRange(Directory.GetFiles(gameLocation + @"\rltiles\player\felids", "*.png*", SearchOption.AllDirectories).ToList());
+            List<string> allpngfiles = Directory.GetFiles(gameLocation + @"/rltiles/player/base", "*.png*", SearchOption.AllDirectories).ToList();
+            allpngfiles.AddRange(Directory.GetFiles(gameLocation + @"/rltiles/player/felids", "*.png*", SearchOption.AllDirectories).ToList());
             foreach (var file in allpngfiles)
             {
                 FileInfo info = new FileInfo(file);
@@ -167,7 +167,7 @@ namespace FrameGenerator.FileReading
         {
 
             var monsterPNG = new Dictionary<string, SKBitmap>();
-            string[] allpngfiles = Directory.GetFiles(gameLocation + @"\rltiles\mon", "*.png*", SearchOption.AllDirectories);
+            string[] allpngfiles = Directory.GetFiles(gameLocation + @"/rltiles/mon", "*.png*", SearchOption.AllDirectories);
             foreach (var file in allpngfiles)
             {
                 FileInfo info = new FileInfo(file);
@@ -182,8 +182,8 @@ namespace FrameGenerator.FileReading
 
             var GetWeaponPNG = new Dictionary<string, SKBitmap>();
 
-            List<string> allpngfiles = Directory.GetFiles(gameLocation + @"\rltiles\player\hand1", "*.png*", SearchOption.AllDirectories).ToList();
-            allpngfiles.AddRange(Directory.GetFiles(gameLocation + @"\rltiles\player\transform", "*.png*", SearchOption.AllDirectories).ToList());
+            List<string> allpngfiles = Directory.GetFiles(gameLocation + @"/rltiles/player/hand1", "*.png*", SearchOption.AllDirectories).ToList();
+            allpngfiles.AddRange(Directory.GetFiles(gameLocation + @"/rltiles/player/transform", "*.png*", SearchOption.AllDirectories).ToList());
             foreach (var file in allpngfiles)
             {
                 FileInfo info = new FileInfo(file);

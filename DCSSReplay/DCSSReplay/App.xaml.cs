@@ -3,18 +3,20 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using DCSSReplay.Services;
 using DCSSReplay.Views;
+using SkiaSharpFormsDemos.Bitmaps;
+using SkiaSharp;
 
 namespace DCSSReplay
 {
     public partial class App : Application
     {
 
-        public App()
+        public App(SKBitmap bmp)
         {
             InitializeComponent();
 
             DependencyService.Register<MockDataStore>();
-            MainPage = new MainPage();
+            MainPage = new ImageView(bmp);
         }
 
         protected override void OnStart()

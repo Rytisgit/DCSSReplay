@@ -15,6 +15,7 @@ using System.Windows.Forms;
 using TtyRecDecoder;
 using System.Drawing.Imaging;
 using ICSharpCode.SharpZipLib.GZip;
+using SkiaSharp.vi;
 
 namespace TtyRecMonkey
 {
@@ -206,7 +207,7 @@ namespace TtyRecMonkey
                             {
                                 try
                                 {
-                                    bmp = frameGenerator.GenerateImage(frame, ConsoleSwitchLevel);
+                                    bmp = frameGenerator.GenerateImage(frame, ConsoleSwitchLevel).ToBitmap();
                                     Update2(bmp);
                                     frameGenerator.isGeneratingFrame = false;
                                     frame = null;

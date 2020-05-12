@@ -45,27 +45,26 @@ namespace FrameGenerator
         public static SKBitmap CharacterSKBitmap = new SKBitmap(32, 32);
         
 
-        public MainGenerator()
+        public MainGenerator(string gameLocation = @"..\..\..\Extra")
         {
-            string gameLocation = @"..\..\..\Extra";
 
-            _characterdata = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\racepng.txt");
-            _features = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\features.txt");
-            _cloudtiles = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\clouds.txt");
-            _itemdata = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\items.txt");
-            _weapondata = ReadFromFile.GetDictionaryFromFile(@"..\..\..\Extra\weapons.txt");
+            _characterdata = ReadFromFile.GetDictionaryFromFile(gameLocation + @"/racepng.txt");
+            _features = ReadFromFile.GetDictionaryFromFile(gameLocation + @"/features.txt");
+            _cloudtiles = ReadFromFile.GetDictionaryFromFile(gameLocation + @"/clouds.txt");
+            _itemdata = ReadFromFile.GetDictionaryFromFile(gameLocation + @"/items.txt");
+            _weapondata = ReadFromFile.GetDictionaryFromFile(gameLocation + @"/weapons.txt");
 
-            _floorandwall = ReadFromFile.GetFloorAndWallNamesForDungeons(@"..\..\..\Extra\tilefloor.txt");
-            _floorandwallColor = ReadFromFile.GetFloorAndWallNamesForDungeons(@"..\..\..\Extra\tilefloorcolors.txt");
-            _monsterdata = ReadFromFile.GetMonsterData(gameLocation + @"\mon-data.h", @"..\..\..\Extra\monsteroverrides.txt");
-            _namedMonsterOverrideData = ReadFromFile.GetNamedMonsterOverrideData(@"..\..\..\Extra\namedmonsteroverrides.txt");
+            _floorandwall = ReadFromFile.GetFloorAndWallNamesForDungeons(gameLocation + @"/tilefloor.txt");
+            _floorandwallColor = ReadFromFile.GetFloorAndWallNamesForDungeons(gameLocation + @"/tilefloorColors.txt");
+            _monsterdata = ReadFromFile.GetMonsterData(gameLocation + @"/mon-data.h", gameLocation + @"/monsteroverrides.txt");
+            _namedMonsterOverrideData = ReadFromFile.GetNamedMonsterOverrideData(gameLocation + @"/namedmonsteroverrides.txt");
 
-            _floorpng = ReadFromFile.GetSKBitmapDictionaryFromFolder(gameLocation + @"\rltiles\dngn\floor");
-            _wallpng = ReadFromFile.GetSKBitmapDictionaryFromFolder(gameLocation + @"\rltiles\dngn\wall");
-            _alldngnpng = ReadFromFile.GetSKBitmapDictionaryFromFolder(gameLocation + @"\rltiles\dngn");
-            _alleffects = ReadFromFile.GetSKBitmapDictionaryFromFolder(gameLocation + @"\rltiles\effect");
-            _miscallaneous = ReadFromFile.GetSKBitmapDictionaryFromFolder(gameLocation + @"\rltiles\misc");
-            _itempng = ReadFromFile.GetSKBitmapDictionaryFromFolder(gameLocation + @"\rltiles\item");
+            _floorpng = ReadFromFile.GetSKBitmapDictionaryFromFolder(gameLocation + @"/rltiles/dngn/floor");
+            _wallpng = ReadFromFile.GetSKBitmapDictionaryFromFolder(gameLocation + @"/rltiles/dngn/wall");
+            _alldngnpng = ReadFromFile.GetSKBitmapDictionaryFromFolder(gameLocation + @"/rltiles/dngn");
+            _alleffects = ReadFromFile.GetSKBitmapDictionaryFromFolder(gameLocation + @"/rltiles/effect");
+            _miscallaneous = ReadFromFile.GetSKBitmapDictionaryFromFolder(gameLocation + @"/rltiles/misc");
+            _itempng = ReadFromFile.GetSKBitmapDictionaryFromFolder(gameLocation + @"/rltiles/item");
 
             _characterpng = ReadFromFile.GetCharacterPNG(gameLocation);
             _monsterpng = ReadFromFile.GetMonsterPNG(gameLocation);
@@ -76,6 +75,7 @@ namespace FrameGenerator
 
         public SKBitmap GenerateImage(TerminalCharacter[,] chars, int consoleLevel = 1)
         {
+            return DrawFrame(new Model());
             if (chars != null)
             {
 
