@@ -74,6 +74,9 @@
     <AndroidAsset Include="Assets\Extra.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </AndroidAsset>
+    <AndroidAsset Include="Assets\PuttyDLL.dll.lastcodeanalysissucceeded" />
+    <AndroidAsset Include="Assets\PuttyDLL.exp" />
+    <AndroidAsset Include="Assets\PuttyDLL.lib" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml" />
@@ -118,6 +121,12 @@
       <Project>{4d673517-d6ab-429c-ab59-331a9b4103d6}</Project>
       <Name>DCSSReplay</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\PuttyDLL.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\PuttyDLL.pdb" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

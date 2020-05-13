@@ -16,5 +16,6 @@
     <ProjectReference Include="..\..\FrameGenerator\FrameGenerator.csproj" />
     <ProjectReference Include="..\..\InputParse\InputParser.csproj" />
     <ProjectReference Include="..\..\PuttySharp\PuttySharp.csproj" />
+    <ProjectReference Include="..\..\TtyRecDecoder\TtyRecDecoder.csproj" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,287 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|ARM64">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM64">
+      <Configuration>Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x86">
+      <Configuration>Debug</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x86">
+      <Configuration>Release</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{cb0a5249-3a72-4019-8f76-0a25371883e8}</ProjectGuid>
+    <Keyword>Android</Keyword>
+    <RootNamespace>Putty_Android</RootNamespace>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <ApplicationType>Android</ApplicationType>
+    <ApplicationTypeRevision>3.0</ApplicationTypeRevision>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Gcc_4_9</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Putty\noshare.c" />
+    <ClCompile Include="..\Putty\be_all_s.c" />
+    <ClCompile Include="..\Putty\callback.c" />
+    <ClCompile Include="..\Putty\cmdline.c" />
+    <ClCompile Include="..\Putty\conf.c" />
+    <ClCompile Include="..\Putty\config.c" />
+    <ClCompile Include="..\Putty\cproxy.c" />
+    <ClCompile Include="..\Putty\dialog.c" />
+    <ClCompile Include="..\Putty\errsock.c" />
+    <ClCompile Include="..\Putty\ldisc.c" />
+    <ClCompile Include="..\Putty\ldiscucs.c" />
+    <ClCompile Include="..\Putty\logging.c" />
+    <ClCompile Include="..\Putty\minibidi.c" />
+    <ClCompile Include="..\Putty\misc.c" />
+    <ClCompile Include="..\Putty\miscucs.c" />
+    <ClCompile Include="..\Putty\pgssapi.c" />
+    <ClCompile Include="..\Putty\pinger.c" />
+    <ClCompile Include="..\Putty\portfwd.c" />
+    <ClCompile Include="..\Putty\proxy.c" />
+    <ClCompile Include="..\Putty\raw.c" />
+    <ClCompile Include="..\Putty\rlogin.c" />
+    <ClCompile Include="..\Putty\sercfg.c" />
+    <ClCompile Include="..\Putty\settings.c" />
+    <ClCompile Include="..\Putty\ssh.c" />
+    <ClCompile Include="..\Putty\sshaes.c" />
+    <ClCompile Include="..\Putty\ssharcf.c" />
+    <ClCompile Include="..\Putty\sshblowf.c" />
+    <ClCompile Include="..\Putty\sshbn.c" />
+    <ClCompile Include="..\Putty\sshcrc.c" />
+    <ClCompile Include="..\Putty\sshcrcda.c" />
+    <ClCompile Include="..\Putty\sshdes.c" />
+    <ClCompile Include="..\Putty\sshdh.c" />
+    <ClCompile Include="..\Putty\sshdss.c" />
+    <ClCompile Include="..\Putty\sshgssc.c" />
+    <ClCompile Include="..\Putty\sshmd5.c" />
+    <ClCompile Include="..\Putty\sshpubk.c" />
+    <ClCompile Include="..\Putty\sshrand.c" />
+    <ClCompile Include="..\Putty\sshrsa.c" />
+    <ClCompile Include="..\Putty\sshsh256.c" />
+    <ClCompile Include="..\Putty\sshsh512.c" />
+    <ClCompile Include="..\Putty\sshsha.c" />
+    <ClCompile Include="..\Putty\sshshare.c" />
+    <ClCompile Include="..\Putty\sshzlib.c" />
+    <ClCompile Include="..\Putty\telnet.c" />
+    <ClCompile Include="..\Putty\terminal.c" />
+    <ClCompile Include="..\Putty\timing.c" />
+    <ClCompile Include="..\Putty\tree234.c" />
+    <ClCompile Include="..\Putty\version.c" />
+    <ClCompile Include="..\Putty\wcwidth.c" />
+    <ClCompile Include="..\Putty\wildcard.c" />
+    <ClCompile Include="..\Putty\WINDOWS\MSVC\PUTTYDLL\export.c" />
+    <ClCompile Include="..\Putty\WINDOWS\sizetip.c" />
+    <ClCompile Include="..\Putty\WINDOWS\wincfg.c" />
+    <ClCompile Include="..\Putty\WINDOWS\winctrls.c" />
+    <ClCompile Include="..\Putty\WINDOWS\windefs.c" />
+    <ClCompile Include="..\Putty\WINDOWS\windlg.c" />
+    <ClCompile Include="..\Putty\WINDOWS\window.c" />
+    <ClCompile Include="..\Putty\WINDOWS\wingss.c" />
+    <ClCompile Include="..\Putty\WINDOWS\winhandl.c" />
+    <ClCompile Include="..\Putty\WINDOWS\winhelp.c" />
+    <ClCompile Include="..\Putty\WINDOWS\winhsock.c" />
+    <ClCompile Include="..\Putty\WINDOWS\winjump.c" />
+    <ClCompile Include="..\Putty\WINDOWS\winmisc.c" />
+    <ClCompile Include="..\Putty\WINDOWS\winnet.c" />
+    <ClCompile Include="..\Putty\WINDOWS\winnoise.c" />
+    <ClCompile Include="..\Putty\WINDOWS\winnpc.c" />
+    <ClCompile Include="..\Putty\WINDOWS\winnps.c" />
+    <ClCompile Include="..\Putty\WINDOWS\winpgntc.c" />
+    <ClCompile Include="..\Putty\WINDOWS\winprint.c" />
+    <ClCompile Include="..\Putty\WINDOWS\winproxy.c" />
+    <ClCompile Include="..\Putty\WINDOWS\winsecur.c" />
+    <ClCompile Include="..\Putty\WINDOWS\winser.c" />
+    <ClCompile Include="..\Putty\WINDOWS\winshare.c" />
+    <ClCompile Include="..\Putty\WINDOWS\winstore.c" />
+    <ClCompile Include="..\Putty\WINDOWS\wintime.c" />
+    <ClCompile Include="..\Putty\WINDOWS\winucs.c" />
+    <ClCompile Include="..\Putty\WINDOWS\winutils.c" />
+    <ClCompile Include="..\Putty\WINDOWS\winx11.c" />
+    <ClCompile Include="..\Putty\x11fwd.c" />
+    <ClCompile Include="Putty_Android.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Putty\charset\charset.h" />
+    <ClInclude Include="..\Putty\dialog.h" />
+    <ClInclude Include="..\Putty\int64.h" />
+    <ClInclude Include="..\Putty\ldisc.h" />
+    <ClInclude Include="..\Putty\macosx\osx.h" />
+    <ClInclude Include="..\Putty\misc.h" />
+    <ClInclude Include="..\Putty\network.h" />
+    <ClInclude Include="..\Putty\pgssapi.h" />
+    <ClInclude Include="..\Putty\proxy.h" />
+    <ClInclude Include="..\Putty\putty.h" />
+    <ClInclude Include="..\Putty\puttymem.h" />
+    <ClInclude Include="..\Putty\puttyps.h" />
+    <ClInclude Include="..\Putty\ssh.h" />
+    <ClInclude Include="..\Putty\sshbn.h" />
+    <ClInclude Include="..\Putty\sshgss.h" />
+    <ClInclude Include="..\Putty\sshgssc.h" />
+    <ClInclude Include="..\Putty\storage.h" />
+    <ClInclude Include="..\Putty\terminal.h" />
+    <ClInclude Include="..\Putty\tree234.h" />
+    <ClInclude Include="..\Putty\unix\unix.h" />
+    <ClInclude Include="..\Putty\version.h" />
+    <ClInclude Include="..\Putty\WINDOWS\rcstuff.h" />
+    <ClInclude Include="..\Putty\WINDOWS\winhelp.h" />
+    <ClInclude Include="..\Putty\WINDOWS\winsecur.h" />
+    <ClInclude Include="..\Putty\WINDOWS\winstuff.h" />
+    <ClInclude Include="..\Putty\WINDOWS\win_res.h" />
+    <ClInclude Include="Putty_Android.h" />
+    <ClInclude Include="pch.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\Putty\WINDOWS\putty.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\Putty\WINDOWS\puttycfg.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\Putty\WINDOWS\putty.rc">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x86'">..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>
