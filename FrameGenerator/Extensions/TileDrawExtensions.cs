@@ -18,7 +18,7 @@ namespace FrameGenerator.Extensions
                 if (correctTile == "#BLUE")
                 {
                     g.DrawBitmap(wall, new SKRect(0, 0, wall.Width, wall.Height));
-                    g.DrawColor(new SKColor(150, 0, 0, 0));
+                    g.DrawColor(new SKColor(0, 0, 0, 150), SKBlendMode.Overlay);
                     return true;
                 }
 
@@ -30,27 +30,27 @@ namespace FrameGenerator.Extensions
 
                 if (correctTile == ".BLUE")
                 {
-                    g.DrawBitmap(wall, new SKRect(0, 0, wall.Width, wall.Height));
-                    g.DrawColor(new SKColor(150,0,0,0));
+                    g.DrawBitmap(floor, new SKRect(0, 0, floor.Width, floor.Height));
+                    g.DrawColor(new SKColor(0, 0, 0, 150), SKBlendMode.Overlay);
                     return true;
                 }
 
                 if (correctTile[0] == '.' && correctTile.Substring(1).Equals(wallAndFloorColors[1]))
                 {
-                    g.DrawBitmap(wall, new SKRect(0, 0, wall.Width, wall.Height));
+                    g.DrawBitmap(floor, new SKRect(0, 0, floor.Width, floor.Height));
                     return true;
                 }
 
                 if (correctTile == "*BLUE")
                 {
                     g.DrawBitmap(wall, new SKRect(0, 0, wall.Width, wall.Height));
-                    g.DrawColor(new SKColor(40, 30, 30, 200));
+                    g.DrawColor(new SKColor(40, 30, 30, 200), SKBlendMode.Overlay);
                     return true;
                 }
                 if (correctTile == ",BLUE")
                 {
-                    g.DrawBitmap(wall, new SKRect(0, 0, wall.Width, wall.Height));
-                    g.DrawColor(new SKColor(40, 20, 20, 200));
+                    g.DrawBitmap(floor, new SKRect(0, 0, floor.Width, floor.Height));
+                    g.DrawColor(new SKColor(40, 20, 20, 200), SKBlendMode.Overlay);
                     return true;
                 }
             }
