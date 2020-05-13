@@ -1,8 +1,8 @@
-#include "putty.h"
+#include "PUTTY.H"
 
 #include <string.h>
 #include "sshgssc.h"
-#include "misc.h"
+#include "MISC.H"
 
 #ifndef NO_GSSAPI
 

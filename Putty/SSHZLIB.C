@@ -58,7 +58,7 @@
 #define sfree(x) ( free((x)) )
 
 #else
-#include "ssh.h"
+#include "SSH.H"
 #endif
 
 #ifndef FALSE

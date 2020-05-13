@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "putty.h"
+#include "PUTTY.H"
 
 #ifndef NO_SECURITY
 #include "winsecur.h"

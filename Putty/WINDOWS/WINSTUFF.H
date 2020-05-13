@@ -11,7 +11,7 @@
 #include <windows.h>
 #include <stdio.h>		       /* for FILENAME_MAX */
 
-#include "tree234.h"
+#include "TREE234.H"
 
 #include "winhelp.h"
 
@@ -140,7 +140,7 @@ typedef struct terminal_tag Terminal;
 #define JUMPLISTREG_ERROR_VALUEWRITE_FAILURE 4
 #define JUMPLISTREG_ERROR_INVALID_VALUE 5
 
-#define PUTTY_HELP_FILE "putty.hlp"
+#define PUTTY_HELP_FILE "PUTTY.Hlp"
 #define PUTTY_CHM_FILE "putty.chm"
 #define PUTTY_HELP_CONTENTS "putty.cnt"
 
@@ -524,7 +524,7 @@ extern Backend serial_backend;
 /*
  * Exports from winjump.c.
  */
-#define JUMPLIST_SUPPORTED             /* suppress #defines in putty.h */
+#define JUMPLIST_SUPPORTED             /* suppress #defines in PUTTY.H */
 void add_session_to_jumplist(const char * const sessionname);
 void remove_session_from_jumplist(const char * const sessionname);
 void clear_jumplist(void);

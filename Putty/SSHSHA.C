@@ -5,7 +5,7 @@
  * Tatham.
  */
 
-#include "ssh.h"
+#include "SSH.H"
 
 /* ----------------------------------------------------------------------
  * Core SHA algorithm: processes 16-word blocks into a message digest.

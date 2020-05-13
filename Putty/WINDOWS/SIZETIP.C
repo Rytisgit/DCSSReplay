@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <tchar.h>
 
-#include "putty.h"
+#include "PUTTY.H"
 
 static ATOM tip_class = 0;
 

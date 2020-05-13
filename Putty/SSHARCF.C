@@ -5,7 +5,7 @@
  */
 
 #include <assert.h>
-#include "ssh.h"
+#include "SSH.H"
 
 typedef struct {
     unsigned char i, j, s[256];

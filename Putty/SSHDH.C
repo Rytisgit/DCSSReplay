@@ -2,7 +2,7 @@
  * Diffie-Hellman implementation for PuTTY.
  */
 
-#include "ssh.h"
+#include "SSH.H"
 
 /*
  * The primes used in the group1 and group14 key exchange.

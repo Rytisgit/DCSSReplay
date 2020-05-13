@@ -9,7 +9,7 @@
 #include <string.h>
 #include <assert.h>
 
-#include "putty.h"
+#include "PUTTY.H"
 
 #ifndef NO_HTMLHELP
 #include <htmlhelp.h>

@@ -8,9 +8,9 @@
 #include <assert.h>
 
 #define DEFINE_PLUG_METHOD_MACROS
-#include "tree234.h"
-#include "putty.h"
-#include "network.h"
+#include "TREE234.H"
+#include "PUTTY.H"
+#include "NETWORK.H"
 #include "proxy.h"
 
 Socket make_handle_socket(HANDLE send_H, HANDLE recv_H, Plug plug,

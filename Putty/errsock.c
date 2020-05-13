@@ -6,9 +6,9 @@
 #include <assert.h>
 
 #define DEFINE_PLUG_METHOD_MACROS
-#include "tree234.h"
-#include "putty.h"
-#include "network.h"
+#include "TREE234.H"
+#include "PUTTY.H"
+#include "NETWORK.H"
 
 typedef struct Socket_error_tag *Error_Socket;
 

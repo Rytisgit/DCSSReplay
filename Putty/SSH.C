@@ -9,9 +9,9 @@
 #include <limits.h>
 #include <signal.h>
 
-#include "putty.h"
-#include "tree234.h"
-#include "ssh.h"
+#include "PUTTY.H"
+#include "TREE234.H"
+#include "SSH.H"
 #ifndef NO_GSSAPI
 #include "sshgssc.h"
 #include "sshgss.h"

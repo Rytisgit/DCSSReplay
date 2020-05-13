@@ -1,4 +1,4 @@
-#include "ssh.h"
+#include "SSH.H"
 
 /*
  * MD5 implementation for PuTTY. Written directly from the spec by

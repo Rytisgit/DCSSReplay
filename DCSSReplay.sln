@@ -41,8 +41,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DCSSReplay.Android", "DCSSR
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DCSSReplay", "DCSSReplay\DCSSReplay\DCSSReplay.csproj", "{4D673517-D6AB-429C-AB59-331A9B4103D6}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Putty.Shared", "Putty.Shared\Putty.Shared.vcxitems", "{1F6238A9-3856-40A0-838A-8123659F9B66}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Putty.Android", "Putty.Android\Putty.Android.vcxproj", "{CB0A5249-3A72-4019-8F76-0A25371883E8}"
 EndProject
 Global

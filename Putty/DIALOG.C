@@ -10,7 +10,7 @@
 
 #define DEFINE_INTORPTR_FNS
 
-#include "putty.h"
+#include "PUTTY.H"
 #include "dialog.h"
 
 int ctrl_path_elements(char *path)

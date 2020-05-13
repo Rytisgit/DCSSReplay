@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <limits.h>
 #include <assert.h>
-#include "putty.h"
+#include "PUTTY.H"
 #include "storage.h"
 
 #include <shlobj.h>

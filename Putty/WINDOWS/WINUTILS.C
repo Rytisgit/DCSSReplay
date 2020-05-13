@@ -6,8 +6,8 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-#include "putty.h"
-#include "misc.h"
+#include "PUTTY.H"
+#include "MISC.H"
 
 #ifdef TESTMODE
 /* Definitions to allow this module to be compiled standalone for testing

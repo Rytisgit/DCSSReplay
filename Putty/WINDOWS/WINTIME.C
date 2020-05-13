@@ -2,7 +2,7 @@
  * wintime.c - Avoid trouble with time() returning (time_t)-1 on Windows.
  */
 
-#include "putty.h"
+#include "PUTTY.H"
 #include <time.h>
 
 struct tm ltime(void)

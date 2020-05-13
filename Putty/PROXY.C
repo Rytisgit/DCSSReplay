@@ -10,8 +10,8 @@
 #include <string.h>
 
 #define DEFINE_PLUG_METHOD_MACROS
-#include "putty.h"
-#include "network.h"
+#include "PUTTY.H"
+#include "NETWORK.H"
 #include "proxy.h"
 
 #define do_proxy_dns(conf) \

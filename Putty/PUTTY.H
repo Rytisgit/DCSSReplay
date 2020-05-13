@@ -23,9 +23,10 @@ typedef struct backend_tag Backend;
 typedef struct terminal_tag Terminal;
 #endif
 
-#include "puttyps.h"
-#include "network.h"
-#include "misc.h"
+#include "PUTTYPS.H"
+#include "NETWORK.H"
+#include "MISC.H"
+
 
 /*
  * Fingerprints of the PGP master keys that can be used to establish a trust
@@ -1102,7 +1103,7 @@ void pinger_free(Pinger);
  * Exports from misc.c.
  */
 
-#include "misc.h"
+#include "MISC.H"
 int conf_launchable(Conf *conf);
 char const *conf_dest(Conf *conf);
 

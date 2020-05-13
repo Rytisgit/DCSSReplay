@@ -4,9 +4,9 @@
 #include <time.h>
 #include <assert.h>
 
-#include "putty.h"
-#include "terminal.h"
-#include "misc.h"
+#include "PUTTY.H"
+#include "TERMINAL.H"
+#include "MISC.H"
 
 /* Character conversion arrays; they are usually taken from windows,
  * the xterm one has the four scanlines that have no unicode 2.0

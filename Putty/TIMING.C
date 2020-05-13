@@ -30,8 +30,8 @@
 #include <assert.h>
 #include <stdio.h>
 
-#include "putty.h"
-#include "tree234.h"
+#include "PUTTY.H"
+#include "TREE234.H"
 
 struct timer {
     timer_fn_t fn;

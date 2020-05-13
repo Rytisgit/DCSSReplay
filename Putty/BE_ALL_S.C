@@ -4,7 +4,7 @@
  */
 
 #include <stdio.h>
-#include "putty.h"
+#include "PUTTY.H"
 #include "UNIX/UNIX.H"
 
 /*

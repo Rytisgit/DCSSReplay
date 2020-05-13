@@ -3,7 +3,7 @@
  * keepalives, to avoid replicating this code in multiple backends.
  */
 
-#include "putty.h"
+#include "PUTTY.H"
 
 struct pinger_tag {
     int interval;

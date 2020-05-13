@@ -1,6 +1,6 @@
 #ifndef PUTTY_SSHGSSC_H
 #define PUTTY_SSHGSSC_H
-#include "putty.h"
+#include "PUTTY.H"
 #ifndef NO_GSSAPI
 
 #include "pgssapi.h"

@@ -15,8 +15,8 @@
 #endif
 
 #define PUTTY_DO_GLOBALS	       /* actually _define_ globals */
-#include "putty.h"
-#include "terminal.h"
+#include "PUTTY.H"
+#include "TERMINAL.H"
 #include "storage.h"
 #include "win_res.h"
 

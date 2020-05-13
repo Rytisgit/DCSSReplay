@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "puttymem.h"
-#include "tree234.h"
-#include "network.h"
-#include "int64.h"
-#include "misc.h"
+#include "PUTTYMEM.H"
+#include "TREE234.H"
+#include "NETWORK.H"
+#include "INT64.H"
+#include "MISC.H"
 
 struct ssh_channel;
 typedef struct ssh_tag *Ssh;

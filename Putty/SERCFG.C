@@ -12,7 +12,7 @@
 #include <assert.h>
 #include <stdlib.h>
 
-#include "putty.h"
+#include "PUTTY.H"
 #include "dialog.h"
 #include "storage.h"
 

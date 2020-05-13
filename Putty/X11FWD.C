@@ -7,9 +7,9 @@
 #include <assert.h>
 #include <time.h>
 
-#include "putty.h"
-#include "ssh.h"
-#include "tree234.h"
+#include "PUTTY.H"
+#include "SSH.H"
+#include "TREE234.H"
 
 #define GET_16BIT(endian, cp) \
   (endian=='B' ? GET_16BIT_MSB_FIRST(cp) : GET_16BIT_LSB_FIRST(cp))

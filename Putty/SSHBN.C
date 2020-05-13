@@ -8,14 +8,14 @@
 #include <string.h>
 #include <limits.h>
 
-#include "misc.h"
+#include "MISC.H"
 
 #include "sshbn.h"
 
 #define BIGNUM_INTERNAL
 typedef BignumInt *Bignum;
 
-#include "ssh.h"
+#include "SSH.H"
 
 BignumInt bnZero[1] = { 0 };
 BignumInt bnOne[2] = { 1, 1 };

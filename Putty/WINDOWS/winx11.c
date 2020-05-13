@@ -6,8 +6,8 @@
 #include <assert.h>
 #include <stdlib.h>
 
-#include "putty.h"
-#include "ssh.h"
+#include "PUTTY.H"
+#include "SSH.H"
 
 void platform_get_x11_auth(struct X11Display *disp, Conf *conf)
 {
