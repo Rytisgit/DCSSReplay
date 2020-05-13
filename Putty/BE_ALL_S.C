@@ -5,6 +5,7 @@
 
 #include <stdio.h>
 #include "putty.h"
+#include "UNIX/UNIX.H"
 
 /*
  * This appname is not strictly in the right place, since Plink

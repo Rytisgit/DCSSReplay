@@ -3,41 +3,24 @@
  * See the file LICENSE.txt for copying permission.
  */
 
-#include "putty.h"
-#include "puttymem.h"
-#include "terminal.h"
 
-#define EXPORT(rt) __declspec(dllexport) rt
+#include "../../../puttymem.h"
+#include "../../../terminal.h"
+#include "../../../PUTTY.H"
+
+#define EXPORT(rt) rt
 
 extern Conf *conf;
 
 static Conf* get_default_config() {
 	if (!conf) {
 		conf = conf_new();
-		load_open_settings( NULL, conf );
+		load_open_settings(NULL, conf);
 		conf_set_int(conf, CONF_logflush, 0);
 	}
 	return conf;
-}
+};
 
-EXPORT(Terminal*) CreatePuttyTerminal( int w, int h ) {
-	int i;
-	struct unicode_data* unicode;
-	Terminal* terminal;
-
-	unicode = snew(struct unicode_data);
-	memset( unicode, 0, sizeof(struct unicode_data) );
-
-	for ( i=0 ; i<256 ; ++i ) {
-		unicode->unitab_ctrl[i]=i;
-		//unicode->unitab_line[i]=i;
-	}
-
-	terminal = term_init( get_default_config(), unicode, NULL );
-	term_size( terminal, h, w, 0 );
-
-	return terminal;
-}
 
 static void copy_termlines( tree234* dest, tree234* src ) {
 	int w,h,x,y;
@@ -56,50 +39,70 @@ static void copy_termlines( tree234* dest, tree234* src ) {
 		desttl->temporary = srctl->temporary;
 	}
 }
+extern "C" {
+	EXPORT(Terminal*) CreatePuttyTerminal(int w, int h) {
+		int i;
+		struct unicode_data* unicode;
+		Terminal* terminal;
 
-EXPORT(Terminal*) ClonePuttyTerminal( Terminal* term ) {
-	struct unicode_data* unicode;
-	Terminal* clone;
-	Terminal  restore;
+		unicode = snew(struct unicode_data);
+		memset(unicode, 0, sizeof(struct unicode_data));
 
-	unicode = snew(struct unicode_data);
-	memcpy( unicode, term->ucsdata, sizeof(struct unicode_data) );
-	clone = term_init( get_default_config(), unicode, NULL );
-	term_size( clone, term->rows, term->cols, 0 );
-	restore = *clone;
+		for (i = 0; i < 256; ++i) {
+			unicode->unitab_ctrl[i] = i;
+			//unicode->unitab_line[i]=i;
+		}
 
-	memcpy( clone, term, sizeof(Terminal) );
+		terminal = term_init(get_default_config(), unicode, NULL);
+		term_size(terminal, h, w, 0);
 
-	clone->conf       = restore.conf;
+		return terminal;
+	}
 
-	clone->screen     = restore.screen;     copy_termlines( clone->screen    , term->screen     );
-	clone->scrollback = restore.scrollback; copy_termlines( clone->scrollback, term->scrollback );
-	clone->alt_screen = restore.alt_screen; copy_termlines( clone->alt_screen, term->alt_screen );
+	EXPORT(Terminal*) ClonePuttyTerminal(Terminal* term) {
+		struct unicode_data* unicode;
+		Terminal* clone;
+		Terminal  restore;
 
-	clone->disptext   = restore.disptext;
-	clone->ucsdata    = restore.ucsdata;
+		unicode = snew(struct unicode_data);
+		memcpy(unicode, term->ucsdata, sizeof(struct unicode_data));
+		clone = term_init(get_default_config(), unicode, NULL);
+		term_size(clone, term->rows, term->cols, 0);
+		restore = *clone;
 
-	return clone;
-}
+		memcpy(clone, term, sizeof(Terminal));
 
-EXPORT(termchar*) GetPuttyTerminalLine( Terminal* terminal, int y ) {
-	termline* line = index234(terminal->screen,y);
-	return line->chars;
-}
+		clone->conf = restore.conf;
 
-EXPORT(void) DestroyPuttyTerminal( Terminal* terminal ) {
-	safefree( terminal->ucsdata );
-	term_free(terminal);
-}
+		clone->screen = restore.screen;     copy_termlines(clone->screen, term->screen);
+		clone->scrollback = restore.scrollback; copy_termlines(clone->scrollback, term->scrollback);
+		clone->alt_screen = restore.alt_screen; copy_termlines(clone->alt_screen, term->alt_screen);
 
-EXPORT(void) SendPuttyTerminal( Terminal *terminal, int is_stderr, const char *data, int len ) {
-	term_data( terminal, is_stderr, data, len );
-}
+		clone->disptext = restore.disptext;
+		clone->ucsdata = restore.ucsdata;
 
-EXPORT(int) GetPuttyTerminalWidth( Terminal* terminal ) {
-	return terminal->cols;
-}
+		return clone;
+	}
 
-EXPORT(int) GetPuttyTerminalHeight( Terminal* terminal ) {
-	return terminal->rows;
+	EXPORT(termchar*) GetPuttyTerminalLine(Terminal* terminal, int y) {
+		termline* line = index234(terminal->screen, y);
+		return line->chars;
+	}
+
+	EXPORT(void) DestroyPuttyTerminal(Terminal* terminal) {
+		safefree(terminal->ucsdata);
+		term_free(terminal);
+	}
+
+	EXPORT(void) SendPuttyTerminal(Terminal* terminal, int is_stderr, const char* data, int len) {
+		term_data(terminal, is_stderr, data, len);
+	}
+
+	EXPORT(int) GetPuttyTerminalWidth(Terminal* terminal) {
+		return terminal->cols;
+	}
+
+	EXPORT(int) GetPuttyTerminalHeight(Terminal* terminal) {
+		return terminal->rows;
+	}
 }

@@ -10,7 +10,7 @@
 #ifndef NO_LIBDL
 #include <dlfcn.h>		       /* Dynamic library loading */
 #endif /*  NO_LIBDL */
-#include "charset.h"
+#include "../CHARSET/CHARSET.H"
 
 struct Filename {
     char *path;
