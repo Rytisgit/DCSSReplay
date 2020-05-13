@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <limits.h>
 
-#include "putty.h"
+#include "PUTTY.H"
 
 #define SERIAL_MAX_BACKLOG 4096
 

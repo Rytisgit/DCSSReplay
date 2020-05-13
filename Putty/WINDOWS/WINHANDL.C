@@ -31,7 +31,7 @@
 
 #include <assert.h>
 
-#include "putty.h"
+#include "PUTTY.H"
 
 /* ----------------------------------------------------------------------
  * Generic definitions.

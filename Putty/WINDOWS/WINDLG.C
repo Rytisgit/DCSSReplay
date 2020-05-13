@@ -9,8 +9,8 @@
 #include <ctype.h>
 #include <time.h>
 
-#include "putty.h"
-#include "ssh.h"
+#include "PUTTY.H"
+#include "SSH.H"
 #include "win_res.h"
 #include "storage.h"
 #include "dialog.h"

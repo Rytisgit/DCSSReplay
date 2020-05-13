@@ -8,8 +8,8 @@
 #include <stdio.h>
 #include <ctype.h>
 
-#include "putty.h"
-#include "terminal.h"
+#include "PUTTY.H"
+#include "TERMINAL.H"
 #include "ldisc.h"
 
 void lpage_send(void *handle,

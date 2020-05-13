@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Putty_Android.cpp" />
     <ClCompile Include="..\Putty\WINDOWS\MSVC\PUTTYDLL\export.c" />
     <ClCompile Include="..\Putty\be_all_s.c">
       <Filter>Source Files</Filter>
@@ -150,93 +149,11 @@
     <ClCompile Include="..\Putty\wildcard.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Putty\WINDOWS\sizetip.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Putty\WINDOWS\wincfg.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Putty\WINDOWS\winctrls.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Putty\WINDOWS\windefs.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Putty\WINDOWS\windlg.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Putty\WINDOWS\window.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Putty\WINDOWS\wingss.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Putty\WINDOWS\winhandl.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Putty\WINDOWS\winhelp.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Putty\WINDOWS\winhsock.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Putty\WINDOWS\winjump.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Putty\WINDOWS\winmisc.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Putty\WINDOWS\winnet.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Putty\WINDOWS\winnoise.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Putty\WINDOWS\winnpc.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Putty\WINDOWS\winnps.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Putty\WINDOWS\winpgntc.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Putty\WINDOWS\winprint.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Putty\WINDOWS\winproxy.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Putty\WINDOWS\winsecur.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Putty\WINDOWS\winser.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Putty\WINDOWS\winshare.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Putty\WINDOWS\winstore.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Putty\WINDOWS\wintime.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Putty\WINDOWS\winucs.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Putty\WINDOWS\winutils.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Putty\WINDOWS\winx11.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\Putty\x11fwd.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Putty_Android.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="..\Putty\charset\charset.h">
       <Filter>Header Files</Filter>
@@ -298,50 +215,17 @@
     <ClInclude Include="..\Putty\tree234.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Putty\unix\unix.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\Putty\version.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Putty\WINDOWS\rcstuff.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Putty\WINDOWS\win_res.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Putty\WINDOWS\winhelp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Putty\WINDOWS\winsecur.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Putty\WINDOWS\winstuff.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClInclude Include="..\Putty.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
       <UniqueIdentifier>{efa8967e-9317-488a-9250-b04e33b59e88}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{df0ba9f3-1675-40fe-9b83-46acc0007516}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files">
       <UniqueIdentifier>{df84e370-8c1a-48b8-9a1a-f8bdeb9efdd4}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="..\Putty\WINDOWS\putty.ico">
-      <Filter>Resource Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\Putty\WINDOWS\puttycfg.ico">
-      <Filter>Resource Files</Filter>
-    </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="..\Putty\WINDOWS\putty.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
   </ItemGroup>
 </Project>

@@ -4,8 +4,8 @@
  * Unicode handling.
  */
 
-#include "putty.h"
-#include "misc.h"
+#include "PUTTY.H"
+#include "MISC.H"
 
 wchar_t *dup_mb_to_wc_c(int codepage, int flags, const char *string, int len)
 {

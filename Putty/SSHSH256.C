@@ -4,7 +4,7 @@
  *   http://csrc.nist.gov/cryptval/shs.html
  */
 
-#include "ssh.h"
+#include "SSH.H"
 
 /* ----------------------------------------------------------------------
  * Core SHA256 algorithm: processes 16-word blocks into a message digest.

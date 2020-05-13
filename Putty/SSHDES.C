@@ -1,5 +1,5 @@
 #include <assert.h>
-#include "ssh.h"
+#include "SSH.H"
 
 
 /* des.c - implementation of DES

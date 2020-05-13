@@ -7,8 +7,8 @@
 #include <string.h>
 #include <assert.h>
 
-#include "ssh.h"
-#include "misc.h"
+#include "SSH.H"
+#include "MISC.H"
 
 int makekey(unsigned char *data, int len, struct RSAKey *result,
 	    unsigned char **keystr, int order)

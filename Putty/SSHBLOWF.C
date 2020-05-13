@@ -6,7 +6,7 @@
 
 #include <assert.h>
 #include <stdio.h>
-#include "ssh.h"
+#include "SSH.H"
 
 typedef struct {
     word32 S0[256], S1[256], S2[256], S3[256], P[18];

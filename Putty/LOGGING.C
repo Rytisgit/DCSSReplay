@@ -9,7 +9,7 @@
 #include <time.h>
 #include <assert.h>
 
-#include "putty.h"
+#include "PUTTY.H"
 
 /* log session to file stuff ... */
 struct LogContext {

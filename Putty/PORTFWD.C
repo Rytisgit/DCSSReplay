@@ -5,8 +5,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "putty.h"
-#include "ssh.h"
+#include "PUTTY.H"
+#include "SSH.H"
 
 #ifndef FALSE
 #define FALSE 0

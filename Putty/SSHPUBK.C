@@ -9,9 +9,9 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include "putty.h"
-#include "ssh.h"
-#include "misc.h"
+#include "PUTTY.H"
+#include "SSH.H"
+#include "MISC.H"
 
 #define rsa_signature "SSH PRIVATE KEY FILE FORMAT 1.1\n"
 

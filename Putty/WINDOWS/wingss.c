@@ -1,6 +1,6 @@
 #ifndef NO_GSSAPI
 
-#include "putty.h"
+#include "PUTTY.H"
 
 #define SECURITY_WIN32
 #include <security.h>
@@ -9,7 +9,7 @@
 #include "sshgss.h"
 #include "sshgssc.h"
 
-#include "misc.h"
+#include "MISC.H"
 
 /* Windows code to set up the GSSAPI library list. */
 

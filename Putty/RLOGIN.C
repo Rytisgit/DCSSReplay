@@ -7,7 +7,7 @@
 #include <limits.h>
 #include <ctype.h>
 
-#include "putty.h"
+#include "PUTTY.H"
 
 #ifndef FALSE
 #define FALSE 0

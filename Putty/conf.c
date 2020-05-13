@@ -7,8 +7,8 @@
 #include <stddef.h>
 #include <assert.h>
 
-#include "tree234.h"
-#include "putty.h"
+#include "TREE234.H"
+#include "PUTTY.H"
 
 /*
  * Enumeration of types used in keys and values.

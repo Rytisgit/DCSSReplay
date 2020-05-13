@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <stdlib.h>
-#include "putty.h"
+#include "PUTTY.H"
 
 /*
  * Some command-line parameters need to be saved up until after

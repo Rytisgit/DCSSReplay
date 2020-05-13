@@ -30,7 +30,7 @@
 #include <assert.h>
 #include <stdlib.h>
 
-#include "ssh.h"
+#include "SSH.H"
 
 #define MAX_NR 14		       /* max no of rounds */
 #define MAX_NK 8		       /* max no of words in input key */

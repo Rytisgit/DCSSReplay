@@ -7,10 +7,10 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "tree234.h"
-#include "putty.h"
-#include "ssh.h"
-#include "network.h"
+#include "TREE234.H"
+#include "PUTTY.H"
+#include "SSH.H"
+#include "NETWORK.H"
 
 int platform_ssh_share(const char *name, Conf *conf,
                        Plug downplug, Plug upplug, Socket *sock,

@@ -4,7 +4,7 @@
  *   http://csrc.nist.gov/cryptval/shs.html
  */
 
-#include "ssh.h"
+#include "SSH.H"
 
 #define BLKSIZE 128
 

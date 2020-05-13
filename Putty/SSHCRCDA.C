@@ -22,8 +22,8 @@
  */
 
 #include <assert.h>
-#include "misc.h"
-#include "ssh.h"
+#include "MISC.H"
+#include "SSH.H"
 
 typedef unsigned char uchar;
 typedef unsigned short uint16;

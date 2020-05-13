@@ -81,7 +81,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>Gcc_4_9</PlatformToolset>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>gabi++_static</UseOfStl>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings" />
@@ -118,14 +119,10 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
@@ -204,35 +201,7 @@
     <ClCompile Include="..\Putty\wcwidth.c" />
     <ClCompile Include="..\Putty\wildcard.c" />
     <ClCompile Include="..\Putty\WINDOWS\MSVC\PUTTYDLL\export.c" />
-    <ClCompile Include="..\Putty\WINDOWS\sizetip.c" />
-    <ClCompile Include="..\Putty\WINDOWS\wincfg.c" />
-    <ClCompile Include="..\Putty\WINDOWS\winctrls.c" />
-    <ClCompile Include="..\Putty\WINDOWS\windefs.c" />
-    <ClCompile Include="..\Putty\WINDOWS\windlg.c" />
-    <ClCompile Include="..\Putty\WINDOWS\window.c" />
-    <ClCompile Include="..\Putty\WINDOWS\wingss.c" />
-    <ClCompile Include="..\Putty\WINDOWS\winhandl.c" />
-    <ClCompile Include="..\Putty\WINDOWS\winhelp.c" />
-    <ClCompile Include="..\Putty\WINDOWS\winhsock.c" />
-    <ClCompile Include="..\Putty\WINDOWS\winjump.c" />
-    <ClCompile Include="..\Putty\WINDOWS\winmisc.c" />
-    <ClCompile Include="..\Putty\WINDOWS\winnet.c" />
-    <ClCompile Include="..\Putty\WINDOWS\winnoise.c" />
-    <ClCompile Include="..\Putty\WINDOWS\winnpc.c" />
-    <ClCompile Include="..\Putty\WINDOWS\winnps.c" />
-    <ClCompile Include="..\Putty\WINDOWS\winpgntc.c" />
-    <ClCompile Include="..\Putty\WINDOWS\winprint.c" />
-    <ClCompile Include="..\Putty\WINDOWS\winproxy.c" />
-    <ClCompile Include="..\Putty\WINDOWS\winsecur.c" />
-    <ClCompile Include="..\Putty\WINDOWS\winser.c" />
-    <ClCompile Include="..\Putty\WINDOWS\winshare.c" />
-    <ClCompile Include="..\Putty\WINDOWS\winstore.c" />
-    <ClCompile Include="..\Putty\WINDOWS\wintime.c" />
-    <ClCompile Include="..\Putty\WINDOWS\winucs.c" />
-    <ClCompile Include="..\Putty\WINDOWS\winutils.c" />
-    <ClCompile Include="..\Putty\WINDOWS\winx11.c" />
     <ClCompile Include="..\Putty\x11fwd.c" />
-    <ClCompile Include="Putty_Android.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Putty\charset\charset.h" />
@@ -254,33 +223,9 @@
     <ClInclude Include="..\Putty\storage.h" />
     <ClInclude Include="..\Putty\terminal.h" />
     <ClInclude Include="..\Putty\tree234.h" />
-    <ClInclude Include="..\Putty\unix\unix.h" />
+    <ClInclude Include="..\Putty.h" />
     <ClInclude Include="..\Putty\version.h" />
-    <ClInclude Include="..\Putty\WINDOWS\rcstuff.h" />
-    <ClInclude Include="..\Putty\WINDOWS\winhelp.h" />
-    <ClInclude Include="..\Putty\WINDOWS\winsecur.h" />
-    <ClInclude Include="..\Putty\WINDOWS\winstuff.h" />
-    <ClInclude Include="..\Putty\WINDOWS\win_res.h" />
-    <ClInclude Include="Putty_Android.h" />
     <ClInclude Include="pch.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="..\Putty\WINDOWS\putty.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="..\Putty\WINDOWS\puttycfg.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="..\Putty\WINDOWS\putty.rc">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x86'">..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ResourceCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

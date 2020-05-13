@@ -9,8 +9,8 @@
 
 #include <time.h>
 #include <assert.h>
-#include "putty.h"
-#include "terminal.h"
+#include "PUTTY.H"
+#include "TERMINAL.H"
 
 #define poslt(p1,p2) ( (p1).y < (p2).y || ( (p1).y == (p2).y && (p1).x < (p2).x ) )
 #define posle(p1,p2) ( (p1).y < (p2).y || ( (p1).y == (p2).y && (p1).x <= (p2).x ) )

@@ -6,8 +6,8 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include "ssh.h"
-#include "misc.h"
+#include "SSH.H"
+#include "MISC.H"
 
 static void sha_mpint(SHA_State * s, Bignum b)
 {

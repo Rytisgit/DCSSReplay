@@ -134,9 +134,9 @@
 #include <assert.h>
 #include <limits.h>
 
-#include "putty.h"
-#include "tree234.h"
-#include "ssh.h"
+#include "PUTTY.H"
+#include "TREE234.H"
+#include "SSH.H"
 
 struct ssh_sharing_state {
     const struct plug_function_table *fn;

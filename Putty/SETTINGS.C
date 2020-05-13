@@ -5,7 +5,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "putty.h"
+#include "PUTTY.H"
 #include "storage.h"
 
 /* The cipher order given here is the default order. */

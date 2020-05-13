@@ -5,8 +5,8 @@
 
 #include <stdio.h>
 
-#include "putty.h"
-#include "ssh.h"
+#include "PUTTY.H"
+#include "SSH.H"
 #include "storage.h"
 
 #include <wincrypt.h>

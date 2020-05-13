@@ -9,8 +9,8 @@
 #include <ctype.h>
 #include <assert.h>
 
-#include "putty.h"
-#include "terminal.h"
+#include "PUTTY.H"
+#include "TERMINAL.H"
 #include "ldisc.h"
 
 #define ECHOING (ldisc->localecho == FORCE_ON || \

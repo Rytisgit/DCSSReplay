@@ -1,7 +1,7 @@
 /* This file actually defines the GSSAPI function pointers for
  * functions we plan to import from a GSSAPI library.
  */
-#include "putty.h"
+#include "PUTTY.H"
 
 #ifndef NO_GSSAPI
 
