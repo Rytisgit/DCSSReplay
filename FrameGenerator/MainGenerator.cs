@@ -614,9 +614,9 @@ namespace FrameGenerator
 
             font.Color = yellow;
 
-            g.DrawText(model.SideData.Name, 32 * model.LineLength, lineCount * lineHeight, font);
+            g.DrawText(model.SideData.Name, 32 * model.LineLength, lineCount * lineHeight + font.TextSize, font);
             lineCount++;
-            g.DrawText(model.SideData.Race, 32 * model.LineLength, lineCount * lineHeight, font);
+            g.DrawText(model.SideData.Race, 32 * model.LineLength, lineCount * lineHeight + font.TextSize, font);
             lineCount++;
             g.WriteSideDataInfo("Health: ", model.SideData.Health.ToString() + '/' + model.SideData.MaxHealth.ToString(), font, 32 * model.LineLength, lineCount * lineHeight)
             .DrawPercentageBar(model.SideData.Health, model.SideData.MaxHealth, prevHP, SKColors.Green, SKColors.Red, 32 * (model.LineLength + 8), lineCount * lineHeight);
@@ -649,7 +649,7 @@ namespace FrameGenerator
             font.Color = gray;
             if (!string.IsNullOrWhiteSpace(substring))
             {
-                g.DrawText(substring, 32 * model.LineLength + font.MeasureText("Wp: "), lineCount * lineHeight, font);
+                g.DrawText(substring, 32 * model.LineLength + font.MeasureText("Wp: "), lineCount * lineHeight + font.TextSize, font);
                 lineCount++;
             }
 
@@ -658,7 +658,7 @@ namespace FrameGenerator
             substring = model.SideData.Quiver.Substring(35);
             if (!string.IsNullOrWhiteSpace(substring))
             {
-                g.DrawText(substring, 32 * model.LineLength + font.MeasureText("Qv: "), lineCount * lineHeight, font);
+                g.DrawText(substring, 32 * model.LineLength + font.MeasureText("Qv: "), lineCount * lineHeight + font.TextSize, font);
                 lineCount++;
             }
 
@@ -720,7 +720,7 @@ namespace FrameGenerator
 
                 else if (_weaponpng.TryGetValue(model.SideData.Weapon.GetNonUniqueWeaponName(_weapondata), out png)) characterg.DrawBitmap(png, rect);
 
-                var rect2 = new SKRect(x, y, (x + CharacterSKBitmap.Width) * resize, (y + CharacterSKBitmap.Height) * resize);
+                var rect2 = new SKRect(x, y, x + (CharacterSKBitmap.Width * resize), y + (CharacterSKBitmap.Height * resize));
                 g.DrawBitmap(CharacterSKBitmap, rect2);
 
                 return true;
@@ -806,12 +806,12 @@ namespace FrameGenerator
                 tile.TryDrawCloud(_cloudtiles, _alleffects, floor, model.SideData, model.MonsterData, out drawnTile) ||
                 tile.TryDrawItem(tileHighlight, _itemdata, _itempng, _miscallaneous, floor, model.Location, out drawnTile)) 
             {
-                var rect = new SKRect(x, y, (x + drawnTile.Width) * resize, (y + drawnTile.Height) * resize);
+                var rect = new SKRect(x, y, x+ ( drawnTile.Width * resize),y+ ( drawnTile.Height * resize));
                 g.DrawBitmap(drawnTile, rect);
 
                 if (brandToDraw != null)
                 {
-                    g.DrawBitmap(brandToDraw, new SKRect(x, y, (x + brandToDraw.Width) * resize, (y + brandToDraw.Height) * resize));
+                    g.DrawBitmap(brandToDraw, new SKRect(x, y, x + (brandToDraw.Width * resize), y + (brandToDraw.Height * resize)));
                 }
                 else if (!tileHighlight.Equals(Enum.GetName(typeof(ColorListEnum), ColorListEnum.BLACK)) && (!tile.Substring(1).Equals(Enum.GetName(typeof(ColorListEnum), ColorListEnum.BLACK)) || tile[0] == '.'))
                 {
@@ -827,12 +827,13 @@ namespace FrameGenerator
                 {
                     var backgroundPaint = new SKPaint()
                     {
-                        Color = new SKColor(0,0,0,150),
+                        Color = new SKColor(0, 0, 0, 150),
                         Style = SKPaintStyle.StrokeAndFill
                     };
 
                     g.DrawRect(rect, backgroundPaint);
                 }
+
                 return true; 
             }
 
@@ -843,7 +844,8 @@ namespace FrameGenerator
             var font = new SKPaint
             {
                 Typeface = SKTypeface.FromFamilyName("Courier New"),
-                TextSize = 24 * resize
+                TextSize = 24 * resize,
+                
             };
             g.WriteCharacter(tile, font, x, y, tileHighlight);//unhandled tile, write it as a character instead
 

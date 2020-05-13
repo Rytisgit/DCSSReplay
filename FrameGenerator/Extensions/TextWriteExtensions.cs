@@ -10,9 +10,9 @@ namespace FrameGenerator.Extensions
             
             //font.Typeface = SKTypeface.FromFamilyName("Courier New",10,20,SKFontStyleSlant.Upright);
             //font.TextSize = 20;
-            g.DrawText("asdf", 20, 20, font);
+            //g.DrawText("asdf", 20, 20, font);
             font.Color = ColorList.GetColor(coloredCharacter.Substring(1));
-            g.DrawText(coloredCharacter[0].ToString(), x, y, font);
+            g.DrawText(coloredCharacter[0].ToString(), x, y + font.TextSize, font);
         }
         //private static int MeasureDisplayStringWidth(this Graphics graphics, string text, Font font)
         //{
@@ -76,9 +76,9 @@ namespace FrameGenerator.Extensions
             var gray = new SKColor(186, 189, 182);
 
             font.Color = brown;
-            g.DrawText(title, x, y, font);
+            g.DrawText(title, x, y + font.TextSize, font);
             font.Color = gray;
-            g.DrawText(info, x + font.MeasureText(title), y, font);
+            g.DrawText(info, x + font.MeasureText(title), y + font.TextSize, font);
 
             return g;
         }
