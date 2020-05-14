@@ -955,7 +955,7 @@ char *get_remote_username(Conf *conf); /* dynamically allocated */
  * Exports from terminal.c.
  */
 
-Terminal *term_init(Conf *, struct unicode_data *, void *);
+Terminal *term_init(struct unicode_data *, void *);
 void term_free(Terminal *);
 void term_size(Terminal *, int, int, int);
 void term_paint(Terminal *, Context, int, int, int, int, int);

@@ -1203,6 +1203,32 @@ static void term_schedule_vbell(Terminal *term, int already_started,
  * position the cursor below the last non-blank line (scrolling if
  * necessary).
  */
+static void term_print_finish(Terminal* term)
+{
+	void* data;
+	int len, size;
+	char c;
+
+	if (!term->printing && !term->only_printing)
+		return;			       /* we need do nothing */
+
+	//term_print_flush(term);
+	while ((size = bufchain_size(&term->printer_buf)) > 0) {
+		bufchain_prefix(&term->printer_buf, &data, &len);
+		c = *(char*)data;
+		if (c == '\033' || c == '\233') {
+			bufchain_consume(&term->printer_buf, size);
+			break;
+		}
+		else {
+			//printer_job_data(term->print_job, &c, 1);
+			bufchain_consume(&term->printer_buf, 1);
+		}
+	}
+	//printer_finish_job(term->print_job);
+	term->print_job = NULL;
+	term->printing = term->only_printing = FALSE;
+}
 static void power_on(Terminal *term, int clear)
 {
     term->alt_x = term->alt_y = 0;
@@ -1243,40 +1269,40 @@ static void power_on(Terminal *term, int clear)
     term->blink_is_real = 0;
     term->erase_char = term->basic_erase_char;
     term->alt_which = 0;
-    //term_print_finish(term);
+    term_print_finish(term);
     term->xterm_mouse = 0;
     term->xterm_extended_mouse = 0;
     term->urxvt_extended_mouse = 0;
     term->bracketed_paste = FALSE;
-    {
-		int i;
-		for (i = 0; i < 256; i += 32) {
-			static const char* const defaults[] = {
-				"0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0",
-				"0,1,2,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1",
-				"1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,2",
-				"1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1",
-				"1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1",
-				"1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1",
-				"2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,2",
-				"2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,2"
-			};
-			char buf[20], * buf2, * p;
-			int j;
-			sprintf(buf, "Wordness%d", i);
-			buf2 = defaults[i / 32];
-			p = buf2;
-			for (j = i; j < i + 32; j++) {
-				char* q = p;
-				while (*p && *p != ',')
-					p++;
-				if (*p == ',')
-					*p++ = '\0';
-				term->wordness[i] = atoi(q);
-			}
-			sfree(buf2);
+	
+
+		
+	/*for (int i = 0; i < 256; i += 32) {
+		static const char* const defaults[] = {
+			"0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0",
+			"0,1,2,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1",
+			"1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,2",
+			"1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1",
+			"1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1",
+			"1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1",
+			"2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,2",
+			"2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,2"
+		};
+		char * buf2, * p;
+		int j;
+		buf2 = defaults[i / 32];
+		p = buf2;
+		for (j = i; j < i + 32; j++) {
+			char* q = p;
+			while (*p && *p != ',')
+				p++;
+			if (*p == ',')
+				*p++ = '\0';
+			term->wordness[i] = atoi(q);
 		}
-    }
+		sfree(buf2);
+	}*/
+
     if (term->screen) {
 	swap_screen(term, 1, FALSE, FALSE);
 	erase_lots(term, FALSE, TRUE, TRUE);
@@ -1486,7 +1512,7 @@ void term_clrsb(Terminal *term)
 /*
  * Initialise the terminal.
  */
-Terminal *term_init(Conf *myconf, struct unicode_data *ucsdata,
+Terminal *term_init(struct unicode_data *ucsdata,
 		    void *frontend)
 {
     Terminal *term;
@@ -1496,9 +1522,10 @@ Terminal *term_init(Conf *myconf, struct unicode_data *ucsdata,
      * that need it.
      */
     term = snew(Terminal);
-    term->frontend = frontend;
+	
+    //term->frontend = frontend;
     term->ucsdata = ucsdata;
-    term->conf = NULL;
+    //term->conf = NULL;
     term->logctx = NULL;
     term->compatibility_level = TM_PUTTY;
     strcpy(term->id_string, "\033[?6c");
@@ -1520,9 +1547,9 @@ Terminal *term_init(Conf *myconf, struct unicode_data *ucsdata,
     term->termstate = TOPLEVEL;
     term->selstate = NO_SELECTION;
     term->curstype = 0;
-
+	
     term_copy_stuff_from_conf(term);
-
+	
     term->screen = term->alt_screen = term->scrollback = NULL;
     term->tempsblines = 0;
     term->alt_sblines = 0;
@@ -1530,10 +1557,13 @@ Terminal *term_init(Conf *myconf, struct unicode_data *ucsdata,
     term->disptext = NULL;
     term->dispcursx = term->dispcursy = -1;
     term->tabs = NULL;
+	
     deselect(term);
     term->rows = term->cols = -1;
+	
     power_on(term, TRUE);
     term->beephead = term->beeptail = NULL;
+
 #ifdef OPTIMISE_SCROLL
     term->scrollhead = term->scrolltail = NULL;
 #endif /* OPTIMISE_SCROLL */
@@ -1549,7 +1579,7 @@ Terminal *term_init(Conf *myconf, struct unicode_data *ucsdata,
     term->wcFrom = NULL;
     term->wcTo = NULL;
     term->wcFromTo_size = 0;
-
+	
     term->window_update_pending = FALSE;
 
     term->bidi_cache_size = 0;
@@ -4937,8 +4967,8 @@ static int wordtype(Terminal *term, int uc)
 	term->ucsdata->font_codepage == term->ucsdata->line_codepage)
 	return (uc != ' ');
 
-    if (uc < 0x80)
-	return term->wordness[uc];
+    //if (uc < 0x80)
+	//return term->wordness[uc];
 
     for (wptr = ucs_words; wptr->start; wptr++) {
 	if (uc >= wptr->start && uc <= wptr->end)

@@ -34,7 +34,7 @@ EXPORT(Terminal*) CreatePuttyTerminal( int w, int h ) {
 		//unicode->unitab_line[i]=i;
 	}
 
-	terminal = term_init(get_default_config, unicode, NULL );
+	terminal = term_init(unicode, NULL);
 	term_size( terminal, h, w, 0 );
 
 	return terminal;
@@ -64,14 +64,15 @@ EXPORT(Terminal*) ClonePuttyTerminal( Terminal* term ) {
 	Terminal  restore;
 
 	unicode = snew(struct unicode_data);
+	//memset(unicode, 0, sizeof(struct unicode_data));
 	memcpy( unicode, term->ucsdata, sizeof(struct unicode_data) );
-	clone = term_init( get_default_config(), unicode, NULL );
+	clone = term_init(unicode, NULL );
 	term_size( clone, term->rows, term->cols, 0 );
 	restore = *clone;
 
 	memcpy( clone, term, sizeof(Terminal) );
 
-	clone->conf       = restore.conf;
+	//clone->conf       = restore.conf;
 
 	clone->screen     = restore.screen;     copy_termlines( clone->screen    , term->screen     );
 	clone->scrollback = restore.scrollback; copy_termlines( clone->scrollback, term->scrollback );
