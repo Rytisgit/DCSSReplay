@@ -2617,6 +2617,8 @@ static void term_out(Terminal *term)
 		bufchain_consume(&term->inbuf, nchars);
 		chars = localbuf;
 		assert(chars != NULL);
+		printf(term->window_update_pending);
+		printf('\n');
 	    }
 	    c = *chars++;
 	    nchars--;
@@ -2637,37 +2639,6 @@ static void term_out(Terminal *term)
 	 * of i18n.
 	 */
 
-	/*
-	 * If we're printing, add the character to the printer
-	 * buffer.
-	 */
-	if (term->printing) {
-	    bufchain_add(&term->printer_buf, &c, 1);
-
-	    /*
-	     * If we're in print-only mode, we use a much simpler
-	     * state machine designed only to recognise the ESC[4i
-	     * termination sequence.
-	     */
-	    if (term->only_printing) {
-		if (c == '\033')
-		    term->print_state = 1;
-		else if (c == (unsigned char)'\233')
-		    term->print_state = 2;
-		else if (c == '[' && term->print_state == 1)
-		    term->print_state = 2;
-		else if (c == '4' && term->print_state == 2)
-		    term->print_state = 3;
-		else if (c == 'i' && term->print_state == 3)
-		    term->print_state = 4;
-		else
-		    term->print_state = 0;
-		if (term->print_state == 4) {
-		   // term_print_finish(term);
-		}
-		continue;
-	    }
-	}
 
 	/* First see about all those translations. */
 	if (term->termstate == TOPLEVEL) {
@@ -2973,8 +2944,11 @@ static void term_out(Terminal *term)
 		{
 		    termline *cline = scrlineptr(term->curs.y);
 		    int width = 0;
-		    if (DIRECT_CHAR(c))
+			
+			if (DIRECT_CHAR(c)) {
 			width = 1;
+			}
+			
 		    if (!width)
 			width = (term->cjk_ambig_wide ?
 				 mk_wcwidth_cjk((unsigned int) c) :
