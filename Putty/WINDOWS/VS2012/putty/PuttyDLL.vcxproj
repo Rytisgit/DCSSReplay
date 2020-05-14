@@ -380,33 +380,6 @@
     <ClCompile Include="..\..\..\wcwidth.c" />
     <ClCompile Include="..\..\..\wildcard.c" />
     <ClCompile Include="..\..\MSVC\PUTTYDLL\export.c" />
-    <ClCompile Include="..\..\sizetip.c" />
-    <ClCompile Include="..\..\wincfg.c" />
-    <ClCompile Include="..\..\winctrls.c" />
-    <ClCompile Include="..\..\windefs.c" />
-    <ClCompile Include="..\..\windlg.c" />
-    <ClCompile Include="..\..\window.c" />
-    <ClCompile Include="..\..\wingss.c" />
-    <ClCompile Include="..\..\winhandl.c" />
-    <ClCompile Include="..\..\winhelp.c" />
-    <ClCompile Include="..\..\winhsock.c" />
-    <ClCompile Include="..\..\winjump.c" />
-    <ClCompile Include="..\..\winmisc.c" />
-    <ClCompile Include="..\..\winnet.c" />
-    <ClCompile Include="..\..\winnoise.c" />
-    <ClCompile Include="..\..\winnpc.c" />
-    <ClCompile Include="..\..\winnps.c" />
-    <ClCompile Include="..\..\winpgntc.c" />
-    <ClCompile Include="..\..\winprint.c" />
-    <ClCompile Include="..\..\winproxy.c" />
-    <ClCompile Include="..\..\winsecur.c" />
-    <ClCompile Include="..\..\winser.c" />
-    <ClCompile Include="..\..\winshare.c" />
-    <ClCompile Include="..\..\winstore.c" />
-    <ClCompile Include="..\..\wintime.c" />
-    <ClCompile Include="..\..\winucs.c" />
-    <ClCompile Include="..\..\winutils.c" />
-    <ClCompile Include="..\..\winx11.c" />
     <ClCompile Include="..\..\..\x11fwd.c" />
   </ItemGroup>
   <ItemGroup>
@@ -432,11 +405,6 @@
     <ClInclude Include="..\..\..\tree234.h" />
     <ClInclude Include="..\..\..\unix\unix.h" />
     <ClInclude Include="..\..\..\version.h" />
-    <ClInclude Include="..\..\rcstuff.h" />
-    <ClInclude Include="..\..\win_res.h" />
-    <ClInclude Include="..\..\winhelp.h" />
-    <ClInclude Include="..\..\winsecur.h" />
-    <ClInclude Include="..\..\winstuff.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>
