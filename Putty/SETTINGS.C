@@ -77,7 +77,7 @@ char *get_remote_username(Conf *conf)
 	return dupstr(username);
     } else if (conf_get_int(conf, CONF_username_from_env)) {
 	/* Use local username. */
-	return get_username();     /* might still be NULL */
+	return "asdf";     /* might still be NULL */
     } else {
 	return NULL;
     }
@@ -86,8 +86,6 @@ char *get_remote_username(Conf *conf)
 static char *gpps_raw(void *handle, const char *name, const char *def)
 {
     char *ret = read_setting_s(handle, name);
-    if (!ret)
-	ret = platform_default_s(name);
     if (!ret)
 	ret = def ? dupstr(def) : NULL;   /* permit NULL as final fallback */
     return ret;
@@ -106,26 +104,10 @@ static void gpps(void *handle, const char *name, const char *def,
  * format of a Filename or FontSpec is platform-dependent. So the
  * platform-dependent functions MUST return some sort of value.
  */
-static void gppfont(void *handle, const char *name, Conf *conf, int primary)
-{
-    FontSpec *result = read_setting_fontspec(handle, name);
-    if (!result)
-        result = platform_default_fontspec(name);
-    conf_set_fontspec(conf, primary, result);
-    fontspec_free(result);
-}
-static void gppfile(void *handle, const char *name, Conf *conf, int primary)
-{
-    Filename *result = read_setting_filename(handle, name);
-    if (!result)
-	result = platform_default_filename(name);
-    conf_set_filename(conf, primary, result);
-    filename_free(result);
-}
+
 
 static int gppi_raw(void *handle, char *name, int def)
 {
-    def = platform_default_i(name, def);
     return read_setting_i(handle, name, def);
 }
 
@@ -417,30 +399,6 @@ static void wprefs(void *sesskey, char *name,
     sfree(buf);
 }
 
-char *save_settings(char *section, Conf *conf)
-{
-    void *sesskey;
-    char *errmsg;
-
-    sesskey = open_settings_w(section, &errmsg);
-    if (!sesskey)
-	return errmsg;
-    save_open_settings(sesskey, conf);
-    close_settings_w(sesskey);
-    return NULL;
-}
-
-void load_settings(char *section, Conf *conf)
-{
-    void *sesskey;
-
-    sesskey = open_settings_r(section);
-    load_open_settings(sesskey, conf);
-    close_settings_r(sesskey);
-
-    if (conf_launchable(conf))
-        add_session_to_jumplist(section);
-}
 
 void load_open_settings(void *sesskey, Conf *conf)
 {
@@ -453,7 +411,7 @@ void load_open_settings(void *sesskey, Conf *conf)
     conf_set_str(conf, CONF_ssh_nc_host, "");
 
     gpps(sesskey, "HostName", "", conf, CONF_host);
-    gppfile(sesskey, "LogFileName", conf, CONF_logfilename);
+    //gppfile(sesskey, "LogFileName", conf, CONF_logfilename);
     gppi(sesskey, "LogType", 0, conf, CONF_logtype);
     gppi(sesskey, "LogFileClash", LGXF_ASK, conf, CONF_logxfovr);
     gppi(sesskey, "LogFlush", 1, conf, CONF_logflush);
@@ -652,7 +610,7 @@ void load_open_settings(void *sesskey, Conf *conf)
     gpps(sesskey, "WinTitle", "", conf, CONF_wintitle);
     gppi(sesskey, "TermWidth", 80, conf, CONF_width);
     gppi(sesskey, "TermHeight", 24, conf, CONF_height);
-    gppfont(sesskey, "Font", conf, CONF_font);
+    //gppfont(sesskey, "Font", conf, CONF_font);
     gppi(sesskey, "FontQuality", FQ_DEFAULT, conf, CONF_font_quality);
     gppi(sesskey, "FontVTMode", VT_UNICODE, conf, CONF_vtmode);
     gppi(sesskey, "UseSystemColours", 0, conf, CONF_system_colour);
@@ -762,9 +720,9 @@ void load_open_settings(void *sesskey, Conf *conf)
     gppi(sesskey, "LoginShell", 1, conf, CONF_login_shell);
     gppi(sesskey, "ScrollbarOnLeft", 0, conf, CONF_scrollbar_on_left);
     gppi(sesskey, "ShadowBold", 0, conf, CONF_shadowbold);
-    gppfont(sesskey, "BoldFont", conf, CONF_boldfont);
-    gppfont(sesskey, "WideFont", conf, CONF_widefont);
-    gppfont(sesskey, "WideBoldFont", conf, CONF_wideboldfont);
+    //gppfont(sesskey, "BoldFont", conf, CONF_boldfont);
+    //gppfont(sesskey, "WideFont", conf, CONF_widefont);
+    //gppfont(sesskey, "WideBoldFont", conf, CONF_wideboldfont);
     gppi(sesskey, "ShadowBoldOffset", 1, conf, CONF_shadowboldoffset);
     gpps(sesskey, "SerialLine", "", conf, CONF_serline);
     gppi(sesskey, "SerialSpeed", 9600, conf, CONF_serspeed);
@@ -777,11 +735,6 @@ void load_open_settings(void *sesskey, Conf *conf)
     gppi(sesskey, "ConnectionSharingUpstream", 1, conf, CONF_ssh_connection_sharing_upstream);
     gppi(sesskey, "ConnectionSharingDownstream", 1, conf, CONF_ssh_connection_sharing_downstream);
     gppmap(sesskey, "SSHManualHostKeys", conf, CONF_ssh_manual_hostkeys);
-}
-
-void do_defaults(char *session, Conf *conf)
-{
-    load_settings(session, conf);
 }
 
 static int sessioncmp(const void *av, const void *bv)
