@@ -52,24 +52,6 @@ const char *const ttymodes[] = {
  * (which is only present in tools that manage settings).
  */
 
-Backend *backend_from_name(const char *name)
-{
-    Backend **p;
-    for (p = backends; *p != NULL; p++)
-	if (!strcmp((*p)->name, name))
-	    return *p;
-    return NULL;
-}
-
-Backend *backend_from_proto(int proto)
-{
-    Backend **p;
-    for (p = backends; *p != NULL; p++)
-	if ((*p)->protocol == proto)
-	    return *p;
-    return NULL;
-}
-
 char *get_remote_username(Conf *conf)
 {
     char *username = conf_get_str(conf, CONF_username);
@@ -418,70 +400,4 @@ static int sessioncmp(const void *av, const void *bv)
      * sort order.
      */
     return strcmp(a, b);	       /* otherwise, compare normally */
-}
-
-void get_sesslist(struct sesslist *list, int allocate)
-{
-    char otherbuf[2048];
-    int buflen, bufsize, i;
-    char *p, *ret;
-    void *handle;
-
-    if (allocate) {
-
-	buflen = bufsize = 0;
-	list->buffer = NULL;
-	if ((handle = enum_settings_start()) != NULL) {
-	    do {
-		ret = enum_settings_next(handle, otherbuf, sizeof(otherbuf));
-		if (ret) {
-		    int len = strlen(otherbuf) + 1;
-		    if (bufsize < buflen + len) {
-			bufsize = buflen + len + 2048;
-			list->buffer = sresize(list->buffer, bufsize, char);
-		    }
-		    strcpy(list->buffer + buflen, otherbuf);
-		    buflen += strlen(list->buffer + buflen) + 1;
-		}
-	    } while (ret);
-	    enum_settings_finish(handle);
-	}
-	list->buffer = sresize(list->buffer, buflen + 1, char);
-	list->buffer[buflen] = '\0';
-
-	/*
-	 * Now set up the list of sessions. Note that "Default
-	 * Settings" must always be claimed to exist, even if it
-	 * doesn't really.
-	 */
-
-	p = list->buffer;
-	list->nsessions = 1;	       /* "Default Settings" counts as one */
-	while (*p) {
-	    if (strcmp(p, "Default Settings"))
-		list->nsessions++;
-	    while (*p)
-		p++;
-	    p++;
-	}
-
-	list->sessions = snewn(list->nsessions + 1, char *);
-	list->sessions[0] = "Default Settings";
-	p = list->buffer;
-	i = 1;
-	while (*p) {
-	    if (strcmp(p, "Default Settings"))
-		list->sessions[i++] = p;
-	    while (*p)
-		p++;
-	    p++;
-	}
-
-	qsort(list->sessions, i, sizeof(char *), sessioncmp);
-    } else {
-	sfree(list->buffer);
-	sfree(list->sessions);
-	list->buffer = NULL;
-	list->sessions = NULL;
-    }
 }

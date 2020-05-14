@@ -1426,7 +1426,7 @@ void term_copy_stuff_from_conf(Terminal *term)
     term->no_dbackspace = 0;
     term->no_mouse_rep = 0;
     term->no_remote_charset = 1;
-	term->no_remote_resize = 0;
+	term->no_remote_resize = 1;
 	term->no_remote_wintitle = 0;
     term->rawcnp = 0;
     term->rect_select = 0;
@@ -2483,8 +2483,6 @@ static void toggle_mode(Terminal *term, int mode, int query, int state)
 	    break;
 	  case 3:		       /* DECCOLM: 80/132 columns */
 	    deselect(term);
-	    if (!term->no_remote_resize)
-		request_resize(term->frontend, state ? 132 : 80, term->rows);
 	    term->reset_132 = state;
 	    term->alt_t = term->marg_t = 0;
 	    term->alt_b = term->marg_b = term->rows - 1;
@@ -3316,8 +3314,6 @@ static void term_out(Terminal *term)
 		    if (term->ldisc)   /* cause ldisc to notice changes */
 			ldisc_send(term->ldisc, NULL, 0, 0);
 		    if (term->reset_132) {
-			if (!term->no_remote_resize)
-			    request_resize(term->frontend, 80, term->rows);
 			term->reset_132 = 0;
 		    }
                     if (term->scroll_on_disp)
@@ -3905,9 +3901,6 @@ static void term_out(Terminal *term)
 			    && (term->esc_args[0] < 1 ||
 				term->esc_args[0] >= 24)) {
 			    compatibility(VT340TEXT);
-			    if (!term->no_remote_resize)
-				request_resize(term->frontend, term->cols,
-					       def(term->esc_args[0], 24));
 			    deselect(term);
 			} else if (term->esc_nargs >= 1 &&
 				   term->esc_args[0] >= 1 &&
@@ -3925,10 +3918,6 @@ static void term_out(Terminal *term)
 				break;
 			      case 3:
 				if (term->esc_nargs >= 3) {
-				    if (!term->no_remote_resize)
-					move_window(term->frontend,
-						    def(term->esc_args[1], 0),
-						    def(term->esc_args[2], 0));
 				}
 				break;
 			      case 4:
@@ -3950,10 +3939,6 @@ static void term_out(Terminal *term)
 				break;
 			      case 8:
 				if (term->esc_nargs >= 3) {
-				    if (!term->no_remote_resize)
-					request_resize(term->frontend,
-						       def(term->esc_args[2], term->conf_width),
-						       def(term->esc_args[1], term->conf_height));
 				}
 				break;
 			      case 9:
@@ -4062,10 +4047,6 @@ static void term_out(Terminal *term)
 			 */
 			compatibility(VT420);
 			if (term->esc_nargs == 1 && term->esc_args[0] > 0) {
-			    if (!term->no_remote_resize)
-				request_resize(term->frontend, term->cols,
-					       def(term->esc_args[0],
-						   term->conf_height));
 			    deselect(term);
 			}
 			break;
@@ -4077,11 +4058,7 @@ static void term_out(Terminal *term)
 			 */
 			compatibility(VT340TEXT);
 			if (term->esc_nargs <= 1) {
-			    if (!term->no_remote_resize)
-				request_resize(term->frontend,
-					       def(term->esc_args[0],
-						   term->conf_width),
-					       term->rows);
+
 			    deselect(term);
 			}
 			break;
@@ -5172,11 +5149,11 @@ static void do_paint(Terminal *term, Context ctx, int may_optimise)
 
 	    if (break_run) {
 		if ((dirty_run || last_run_dirty) && ccount > 0) {
-		    do_text(ctx, start, i, ch, ccount, attr,
+		    /*do_text(ctx, start, i, ch, ccount, attr,
 			    ldata->lattr);
 		    if (attr & (TATTR_ACTCURS | TATTR_PASCURS))
 			do_cursor(ctx, start, i, ch, ccount, attr,
-				  ldata->lattr);
+				  ldata->lattr);*/
 		}
 		start = j;
 		ccount = 0;
@@ -5270,11 +5247,11 @@ static void do_paint(Terminal *term, Context ctx, int may_optimise)
 	    }
 	}
 	if (dirty_run && ccount > 0) {
-	    do_text(ctx, start, i, ch, ccount, attr,
+	    /*do_text(ctx, start, i, ch, ccount, attr,
 		    ldata->lattr);
 	    if (attr & (TATTR_ACTCURS | TATTR_PASCURS))
 		do_cursor(ctx, start, i, ch, ccount, attr,
-			  ldata->lattr);
+			  ldata->lattr);*/
 	}
 
 	unlineptr(ldata);

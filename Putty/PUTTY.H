@@ -933,14 +933,7 @@ void random_destroy_seed(void);
 /*
  * Exports from settings.c.
  */
-Backend *backend_from_name(const char *name);
-Backend *backend_from_proto(int proto);
 char *get_remote_username(Conf *conf); /* dynamically allocated */
-void load_settings(char *section, Conf *conf);
-void load_open_settings(void *sesskey, Conf *conf);
-void get_sesslist(struct sesslist *, int allocate);
-void do_defaults(char *, Conf *);
-void registry_cleanup(void);
 
 /*
  * Functions used by settings.c to provide platform-specific
@@ -997,35 +990,6 @@ int term_get_userpass_input(Terminal *term, prompts_t *p,
 int format_arrow_key(char *buf, Terminal *term, int xkey, int ctrl);
 
 
-/*
- * Exports from testback.c
- */
-
-extern Backend null_backend;
-extern Backend loop_backend;
-
-/*
- * Exports from raw.c.
- */
-
-extern Backend raw_backend;
-
-/*
- * Exports from rlogin.c.
- */
-
-extern Backend rlogin_backend;
-
-/*
- * Exports from telnet.c.
- */
-
-extern Backend telnet_backend;
-
-/*
- * Exports from ssh.c.
- */
-extern Backend ssh_backend;
 
 /*
  * Exports from ldisc.c.
