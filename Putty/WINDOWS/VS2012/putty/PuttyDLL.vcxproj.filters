@@ -29,9 +29,6 @@
     <ClCompile Include="..\..\..\errsock.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\logging.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\minibidi.c">
       <Filter>Source Files</Filter>
     </ClCompile>

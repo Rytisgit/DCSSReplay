@@ -1371,6 +1371,7 @@ static void set_erase_char(Terminal *term)
  * lookups which would be involved in fetching them from the former
  * every time.
  */
+
 void term_copy_stuff_from_conf(Terminal *term)
 {
     term->ansi_colour = conf_get_int(term->conf, CONF_ansi_colour);
