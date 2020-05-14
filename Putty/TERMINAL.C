@@ -1232,11 +1232,11 @@ static void power_on(Terminal *term, int clear)
 	for (i = 0; i < term->cols; i++)
 	    term->tabs[i] = (i % 8 == 0 ? TRUE : FALSE);
     }
-    term->alt_om = term->dec_om = conf_get_int(term->conf, CONF_dec_om);
+    term->alt_om = term->dec_om = 0;
     term->alt_ins = term->insert = FALSE;
     term->alt_wnext = term->wrapnext =
         term->save_wnext = term->alt_save_wnext = FALSE;
-    term->alt_wrap = term->wrap = conf_get_int(term->conf, CONF_wrap_mode);
+	term->alt_wrap = term->wrap = 1;
     term->alt_cset = term->cset = term->save_cset = term->alt_save_cset = 0;
     term->alt_utf = term->utf = term->save_utf = term->alt_save_utf = 0;
     term->utf_state = 0;
@@ -1251,10 +1251,10 @@ static void power_on(Terminal *term, int clear)
     term->default_attr = term->save_attr =
 	term->alt_save_attr = term->curr_attr = ATTR_DEFAULT;
     term->term_editing = term->term_echoing = FALSE;
-    term->app_cursor_keys = conf_get_int(term->conf, CONF_app_cursor);
-    term->app_keypad_keys = conf_get_int(term->conf, CONF_app_keypad);
-    term->use_bce = conf_get_int(term->conf, CONF_bce);
-    term->blink_is_real = conf_get_int(term->conf, CONF_blinktext);
+    term->app_cursor_keys = 0;
+	term->app_keypad_keys = 0;
+    term->use_bce = 1;
+    term->blink_is_real = 0;
     term->erase_char = term->basic_erase_char;
     term->alt_which = 0;
     term_print_finish(term);
@@ -1264,9 +1264,33 @@ static void power_on(Terminal *term, int clear)
     set_raw_mouse_mode(term->frontend, FALSE);
     term->bracketed_paste = FALSE;
     {
-	int i;
-	for (i = 0; i < 256; i++)
-	    term->wordness[i] = conf_get_int_int(term->conf, CONF_wordness, i);
+		int i;
+		for (i = 0; i < 256; i += 32) {
+			static const char* const defaults[] = {
+				"0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0",
+				"0,1,2,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1",
+				"1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,2",
+				"1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1",
+				"1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1",
+				"1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1",
+				"2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,2",
+				"2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,2"
+			};
+			char buf[20], * buf2, * p;
+			int j;
+			sprintf(buf, "Wordness%d", i);
+			buf2 = defaults[i / 32];
+			p = buf2;
+			for (j = i; j < i + 32; j++) {
+				char* q = p;
+				while (*p && *p != ',')
+					p++;
+				if (*p == ',')
+					*p++ = '\0';
+				term->wordness[i] = atoi(q);
+			}
+			sfree(buf2);
+		}
     }
     if (term->screen) {
 	swap_screen(term, 1, FALSE, FALSE);
@@ -1374,50 +1398,50 @@ static void set_erase_char(Terminal *term)
 
 void term_copy_stuff_from_conf(Terminal *term)
 {
-    term->ansi_colour = conf_get_int(term->conf, CONF_ansi_colour);
-    term->arabicshaping = conf_get_int(term->conf, CONF_arabicshaping);
-    term->beep = conf_get_int(term->conf, CONF_beep);
-    term->bellovl = conf_get_int(term->conf, CONF_bellovl);
-    term->bellovl_n = conf_get_int(term->conf, CONF_bellovl_n);
-    term->bellovl_s = conf_get_int(term->conf, CONF_bellovl_s);
-    term->bellovl_t = conf_get_int(term->conf, CONF_bellovl_t);
-    term->bidi = conf_get_int(term->conf, CONF_bidi);
-    term->bksp_is_delete = conf_get_int(term->conf, CONF_bksp_is_delete);
-    term->blink_cur = conf_get_int(term->conf, CONF_blink_cur);
-    term->blinktext = conf_get_int(term->conf, CONF_blinktext);
-    term->cjk_ambig_wide = conf_get_int(term->conf, CONF_cjk_ambig_wide);
-    term->conf_height = conf_get_int(term->conf, CONF_height);
-    term->conf_width = conf_get_int(term->conf, CONF_width);
-    term->crhaslf = conf_get_int(term->conf, CONF_crhaslf);
-    term->erase_to_scrollback = conf_get_int(term->conf, CONF_erase_to_scrollback);
-    term->funky_type = conf_get_int(term->conf, CONF_funky_type);
-    term->lfhascr = conf_get_int(term->conf, CONF_lfhascr);
-    term->logflush = conf_get_int(term->conf, CONF_logflush);
-    term->logtype = conf_get_int(term->conf, CONF_logtype);
-    term->mouse_override = conf_get_int(term->conf, CONF_mouse_override);
-    term->nethack_keypad = conf_get_int(term->conf, CONF_nethack_keypad);
-    term->no_alt_screen = conf_get_int(term->conf, CONF_no_alt_screen);
-    term->no_applic_c = conf_get_int(term->conf, CONF_no_applic_c);
-    term->no_applic_k = conf_get_int(term->conf, CONF_no_applic_k);
-    term->no_dbackspace = conf_get_int(term->conf, CONF_no_dbackspace);
-    term->no_mouse_rep = conf_get_int(term->conf, CONF_no_mouse_rep);
+    term->ansi_colour = 1;
+    term->arabicshaping = 0;
+    term->beep = 0;
+    term->bellovl = 1;
+    term->bellovl_n = 5;
+    term->bellovl_s = 5000000;
+    term->bellovl_t = 5000000;
+    term->bidi = 0;
+    term->bksp_is_delete = 1;
+    term->blink_cur = 0;
+    term->blinktext = 0;
+    term->cjk_ambig_wide = 0;
+    term->conf_height = 24;
+    term->conf_width = 80;
+    term->crhaslf = 0;
+    term->erase_to_scrollback = 1;
+    term->funky_type = 0;
+    term->lfhascr = 0;
+    term->logflush = 0;
+    term->logtype = 0;
+    term->mouse_override = 1;
+    term->nethack_keypad = 0;
+    term->no_alt_screen = 0;
+    term->no_applic_c = 0;
+    term->no_applic_k = 0;
+    term->no_dbackspace = 0;
+    term->no_mouse_rep = 0;
     term->no_remote_charset = 1;
-    term->no_remote_resize = conf_get_int(term->conf, CONF_no_remote_resize);
-    term->no_remote_wintitle = conf_get_int(term->conf, CONF_no_remote_wintitle);
-    term->rawcnp = conf_get_int(term->conf, CONF_rawcnp);
-    term->rect_select = conf_get_int(term->conf, CONF_rect_select);
-    term->remote_qtitle_action = conf_get_int(term->conf, CONF_remote_qtitle_action);
-    term->rxvt_homeend = conf_get_int(term->conf, CONF_rxvt_homeend);
-    term->scroll_on_disp = conf_get_int(term->conf, CONF_scroll_on_disp);
-    term->scroll_on_key = conf_get_int(term->conf, CONF_scroll_on_key);
-    term->xterm_256_colour = conf_get_int(term->conf, CONF_xterm_256_colour);
+	term->no_remote_resize = 0;
+	term->no_remote_wintitle = 0;
+    term->rawcnp = 0;
+    term->rect_select = 0;
+    term->remote_qtitle_action = TITLE_EMPTY;
+	term->rxvt_homeend = 0;
+    term->scroll_on_disp = 1;
+    term->scroll_on_key = 0;
+	term->xterm_256_colour = 1;
 
     /*
      * Parse the control-character escapes in the configured
      * answerback string.
      */
     {
-	char *answerback = conf_get_str(term->conf, CONF_answerback);
+	char *answerback = "PuTTY";
 	int maxlen = strlen(answerback);
 
 	term->answerback = snewn(maxlen, char);
@@ -1442,86 +1466,6 @@ void term_copy_stuff_from_conf(Terminal *term)
  * user has disabled mouse reporting, and abandon a print job if
  * the user has disabled printing.
  */
-void term_reconfig(Terminal *term, Conf *conf)
-{
-    /*
-     * Before adopting the new config, check all those terminal
-     * settings which control power-on defaults; and if they've
-     * changed, we will modify the current state as well as the
-     * default one. The full list is: Auto wrap mode, DEC Origin
-     * Mode, BCE, blinking text, character classes.
-     */
-    int reset_wrap, reset_decom, reset_bce, reset_tblink, reset_charclass;
-    int i;
-
-    reset_wrap = (conf_get_int(term->conf, CONF_wrap_mode) !=
-		  conf_get_int(conf, CONF_wrap_mode));
-    reset_decom = (conf_get_int(term->conf, CONF_dec_om) !=
-		   conf_get_int(conf, CONF_dec_om));
-    reset_bce = (conf_get_int(term->conf, CONF_bce) !=
-		 conf_get_int(conf, CONF_bce));
-    reset_tblink = (conf_get_int(term->conf, CONF_blinktext) !=
-		    conf_get_int(conf, CONF_blinktext));
-    reset_charclass = 0;
-    for (i = 0; i < 256; i++)
-	if (conf_get_int_int(term->conf, CONF_wordness, i) !=
-	    conf_get_int_int(conf, CONF_wordness, i))
-	    reset_charclass = 1;
-
-    /*
-     * If the bidi or shaping settings have changed, flush the bidi
-     * cache completely.
-     */
-    if (conf_get_int(term->conf, CONF_arabicshaping) !=
-	conf_get_int(conf, CONF_arabicshaping) ||
-	conf_get_int(term->conf, CONF_bidi) !=
-	conf_get_int(conf, CONF_bidi)) {
-	for (i = 0; i < term->bidi_cache_size; i++) {
-	    sfree(term->pre_bidi_cache[i].chars);
-	    sfree(term->post_bidi_cache[i].chars);
-	    term->pre_bidi_cache[i].width = -1;
-	    term->pre_bidi_cache[i].chars = NULL;
-	    term->post_bidi_cache[i].width = -1;
-	    term->post_bidi_cache[i].chars = NULL;
-	}
-    }
-
-    conf_free(term->conf);
-    term->conf = conf_copy(conf);
-
-    if (reset_wrap)
-	term->alt_wrap = term->wrap = conf_get_int(term->conf, CONF_wrap_mode);
-    if (reset_decom)
-	term->alt_om = term->dec_om = conf_get_int(term->conf, CONF_dec_om);
-    if (reset_bce) {
-	term->use_bce = conf_get_int(term->conf, CONF_bce);
-	set_erase_char(term);
-    }
-    if (reset_tblink) {
-	term->blink_is_real = conf_get_int(term->conf, CONF_blinktext);
-    }
-    if (reset_charclass)
-	for (i = 0; i < 256; i++)
-	    term->wordness[i] = conf_get_int_int(term->conf, CONF_wordness, i);
-
-    if (conf_get_int(term->conf, CONF_no_alt_screen))
-	swap_screen(term, 0, FALSE, FALSE);
-    if (conf_get_int(term->conf, CONF_no_mouse_rep)) {
-	term->xterm_mouse = 0;
-	set_raw_mouse_mode(term->frontend, 0);
-    }
-    if (conf_get_int(term->conf, CONF_no_remote_charset)) {
-	term->cset_attr[0] = term->cset_attr[1] = CSET_ASCII;
-	term->sco_acs = term->alt_sco_acs = 0;
-	term->utf = 0;
-    }
-    if (!conf_get_str(term->conf, CONF_printer)) {
-	term_print_finish(term);
-    }
-    term_schedule_tblink(term);
-    term_schedule_cblink(term);
-    term_copy_stuff_from_conf(term);
-}
 
 /*
  * Clear the scrollback.
@@ -1585,7 +1529,7 @@ Terminal *term_init(Conf *myconf, struct unicode_data *ucsdata,
     term = snew(Terminal);
     term->frontend = frontend;
     term->ucsdata = ucsdata;
-    term->conf = conf_copy(myconf);
+    term->conf = NULL;
     term->logctx = NULL;
     term->compatibility_level = TM_PUTTY;
     strcpy(term->id_string, "\033[?6c");
@@ -1698,7 +1642,7 @@ void term_free(Terminal *term)
 
     expire_timer_context(term);
 
-    conf_free(term->conf);
+    //conf_free(term->conf);
 
     sfree(term);
 }
@@ -3701,8 +3645,7 @@ static void term_out(Terminal *term)
 			    char *printer;
 			    if (term->esc_nargs != 1) break;
 			    if (term->esc_args[0] == 5 && 
-				(printer = conf_get_str(term->conf,
-							CONF_printer))[0]) {
+				(printer = "")[0]) {
 				term->printing = TRUE;
 				term->only_printing = !term->esc_query;
 				term->print_state = 0;
