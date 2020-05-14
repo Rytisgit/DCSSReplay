@@ -2628,8 +2628,8 @@ static void term_out(Terminal *term)
 	    //if (term->logtype == LGTYP_DEBUG && term->logctx)
 		//logtraffic(term->logctx, (unsigned char) c, LGTYP_DEBUG);
 	//} else {
-	    c = unget;
-	    unget = -1;
+	    /*c = unget;
+	    unget = -1;*/
 	}
 
 	/* Note only VT220+ are 8-bit VT102 is seven bit, it shouldn't even
@@ -2761,44 +2761,6 @@ static void term_out(Terminal *term)
 				c = UCSERR;
 
 			break;
-		}
-	    }
-	    /* Are we in the nasty ACS mode? Note: no sco in utf mode. */
-	    else if(term->sco_acs && 
-		    (c!='\033' && c!='\012' && c!='\015' && c!='\b'))
-	    {
-	       if (term->sco_acs == 2) c |= 0x80;
-	       c |= CSET_SCOACS;
-	    } else {
-		switch (term->cset_attr[term->cset]) {
-		    /* 
-		     * Linedraw characters are different from 'ESC ( B'
-		     * only for a small range. For ones outside that
-		     * range, make sure we use the same font as well as
-		     * the same encoding.
-		     */
-		  case CSET_LINEDRW:
-		    if (term->ucsdata->unitab_ctrl[c] != 0xFF)
-			c = term->ucsdata->unitab_ctrl[c];
-		    else
-			c = ((unsigned char) c) | CSET_LINEDRW;
-		    break;
-
-		  case CSET_GBCHR:
-		    /* If UK-ASCII, make the '#' a LineDraw Pound */
-		    if (c == '#') {
-			c = '}' | CSET_LINEDRW;
-			break;
-		    }
-		  /*FALLTHROUGH*/ case CSET_ASCII:
-		    if (term->ucsdata->unitab_ctrl[c] != 0xFF)
-			c = term->ucsdata->unitab_ctrl[c];
-		    else
-			c = ((unsigned char) c) | CSET_ASCII;
-		    break;
-		case CSET_SCOACS:
-		    if (c>=' ') c = ((unsigned char)c) | CSET_SCOACS;
-		    break;
 		}
 	    }
 	}
