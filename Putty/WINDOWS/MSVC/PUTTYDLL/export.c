@@ -11,14 +11,15 @@
 
 extern Conf *conf;
 
-//static Conf* get_default_config() {
-//	if (!conf) {
-//		conf = conf_new();
-//		load_open_settings( NULL, conf );
-//		conf_set_int(conf, CONF_logflush, 0);
-//	}
-//	return conf;
-//}
+static Conf* get_default_config() {
+	/*if (!conf) {
+		conf = conf_new();
+		load_open_settings( NULL, conf );
+		conf_set_int(conf, CONF_logflush, 0);
+	}
+	return conf;*/
+	return NULL;
+}
 
 EXPORT(Terminal*) CreatePuttyTerminal( int w, int h ) {
 	int i;
@@ -33,7 +34,7 @@ EXPORT(Terminal*) CreatePuttyTerminal( int w, int h ) {
 		//unicode->unitab_line[i]=i;
 	}
 
-	terminal = term_init(NULL, unicode, NULL );
+	terminal = term_init(get_default_config, unicode, NULL );
 	term_size( terminal, h, w, 0 );
 
 	return terminal;
