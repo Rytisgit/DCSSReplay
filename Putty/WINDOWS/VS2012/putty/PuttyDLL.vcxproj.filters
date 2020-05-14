@@ -65,9 +65,6 @@
     <ClInclude Include="..\..\..\int64.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\ldisc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\macosx\osx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
