@@ -3995,11 +3995,11 @@ static void term_out(Terminal *term)
 				break;
 			      case 5:
 				/* move to top */
-				set_zorder(term->frontend, TRUE);
+				//set_zorder(term->frontend, TRUE);
 				break;
 			      case 6:
 				/* move to bottom */
-				set_zorder(term->frontend, FALSE);
+				//set_zorder(term->frontend, FALSE);
 				break;
 			      case 7:
 				refresh_window(term->frontend);
@@ -5462,169 +5462,6 @@ static void clip_addchar(clip_workbuf *b, wchar_t chr, int attr)
     b->bufpos++;
 }
 
-static void clipme(Terminal *term, pos top, pos bottom, int rect, int desel)
-{
-    clip_workbuf buf;
-    int old_top_x;
-    int attr;
-
-    buf.buflen = 5120;			
-    buf.bufpos = 0;
-    buf.textptr = buf.textbuf = snewn(buf.buflen, wchar_t);
-    buf.attrptr = buf.attrbuf = snewn(buf.buflen, int);
-
-    old_top_x = top.x;		       /* needed for rect==1 */
-
-    while (poslt(top, bottom)) {
-	int nl = FALSE;
-	termline *ldata = lineptr(top.y);
-	pos nlpos;
-
-	/*
-	 * nlpos will point at the maximum position on this line we
-	 * should copy up to. So we start it at the end of the
-	 * line...
-	 */
-	nlpos.y = top.y;
-	nlpos.x = term->cols;
-
-	/*
-	 * ... move it backwards if there's unused space at the end
-	 * of the line (and also set `nl' if this is the case,
-	 * because in normal selection mode this means we need a
-	 * newline at the end)...
-	 */
-	if (!(ldata->lattr & LATTR_WRAPPED)) {
-	    while (nlpos.x &&
-		   IS_SPACE_CHR(ldata->chars[nlpos.x - 1].chr) &&
-		   !ldata->chars[nlpos.x - 1].cc_next &&
-		   poslt(top, nlpos))
-		decpos(nlpos);
-	    if (poslt(nlpos, bottom))
-		nl = TRUE;
-	} else if (ldata->lattr & LATTR_WRAPPED2) {
-	    /* Ignore the last char on the line in a WRAPPED2 line. */
-	    decpos(nlpos);
-	}
-
-	/*
-	 * ... and then clip it to the terminal x coordinate if
-	 * we're doing rectangular selection. (In this case we
-	 * still did the above, so that copying e.g. the right-hand
-	 * column from a table doesn't fill with spaces on the
-	 * right.)
-	 */
-	if (rect) {
-	    if (nlpos.x > bottom.x)
-		nlpos.x = bottom.x;
-	    nl = (top.y < bottom.y);
-	}
-
-	while (poslt(top, bottom) && poslt(top, nlpos)) {
-#if 0
-	    char cbuf[16], *p;
-	    sprintf(cbuf, "<U+%04x>", (ldata[top.x] & 0xFFFF));
-#else
-	    wchar_t cbuf[16], *p;
-	    int c;
-	    int x = top.x;
-
-	    if (ldata->chars[x].chr == UCSWIDE) {
-		top.x++;
-		continue;
-	    }
-
-	    while (1) {
-		int uc = ldata->chars[x].chr;
-                attr = ldata->chars[x].attr;
-
-		switch (uc & CSET_MASK) {
-		  case CSET_LINEDRW:
-		    if (!term->rawcnp) {
-			uc = term->ucsdata->unitab_xterm[uc & 0xFF];
-			break;
-		    }
-		  case CSET_ASCII:
-		    uc = term->ucsdata->unitab_line[uc & 0xFF];
-		    break;
-		  case CSET_SCOACS:
-		    uc = term->ucsdata->unitab_scoacs[uc&0xFF];
-		    break;
-		}
-		switch (uc & CSET_MASK) {
-		  case CSET_ACP:
-		    uc = term->ucsdata->unitab_font[uc & 0xFF];
-		    break;
-		  case CSET_OEMCP:
-		    uc = term->ucsdata->unitab_oemcp[uc & 0xFF];
-		    break;
-		}
-
-		c = (uc & ~CSET_MASK);
-#ifdef PLATFORM_IS_UTF16
-		if (uc > 0x10000 && uc < 0x110000) {
-		    cbuf[0] = 0xD800 | ((uc - 0x10000) >> 10);
-		    cbuf[1] = 0xDC00 | ((uc - 0x10000) & 0x3FF);
-		    cbuf[2] = 0;
-		} else
-#endif
-		{
-		    cbuf[0] = uc;
-		    cbuf[1] = 0;
-		}
-
-		if (DIRECT_FONT(uc)) {
-		    if (c >= ' ' && c != 0x7F) {
-			char buf[4];
-			WCHAR wbuf[4];
-			int rv;
-			if (is_dbcs_leadbyte(term->ucsdata->font_codepage, (BYTE) c)) {
-			    buf[0] = c;
-			    buf[1] = (char) (0xFF & ldata->chars[top.x + 1].chr);
-			    rv = mb_to_wc(term->ucsdata->font_codepage, 0, buf, 2, wbuf, 4);
-			    top.x++;
-			} else {
-			    buf[0] = c;
-			    rv = mb_to_wc(term->ucsdata->font_codepage, 0, buf, 1, wbuf, 4);
-			}
-
-			if (rv > 0) {
-			    memcpy(cbuf, wbuf, rv * sizeof(wchar_t));
-			    cbuf[rv] = 0;
-			}
-		    }
-		}
-#endif
-
-		for (p = cbuf; *p; p++)
-		    clip_addchar(&buf, *p, attr);
-
-		if (ldata->chars[x].cc_next)
-		    x += ldata->chars[x].cc_next;
-		else
-		    break;
-	    }
-	    top.x++;
-	}
-	if (nl) {
-	    int i;
-	    for (i = 0; i < sel_nl_sz; i++)
-		clip_addchar(&buf, sel_nl[i], 0);
-	}
-	top.y++;
-	top.x = rect ? old_top_x : 0;
-
-	unlineptr(ldata);
-    }
-#if SELECTION_NUL_TERMINATED
-    clip_addchar(&buf, 0, 0);
-#endif
-    /* Finally, transfer all that to the clipboard. */
-    write_clip(term->frontend, buf.textbuf, buf.attrbuf, buf.bufpos, desel);
-    sfree(buf.textbuf);
-    sfree(buf.attrbuf);
-}
-
 void term_copyall(Terminal *term)
 {
     pos top;
@@ -5634,7 +5471,7 @@ void term_copyall(Terminal *term)
     top.x = 0;
     bottom.y = find_last_nonempty_line(term, screen);
     bottom.x = term->cols;
-    clipme(term, top, bottom, 0, TRUE);
+    //clipme(term, top, bottom, 0, TRUE);
 }
 
 /*
@@ -5879,8 +5716,6 @@ static void term_paste_callback(void *vterm)
 	    if (term->paste_buffer[term->paste_pos + n++] == '\015')
 		break;
 	}
-	if (term->ldisc)
-	    luni_send(term->ldisc, term->paste_buffer + term->paste_pos, n, 0);
 	term->paste_pos += n;
 
 	if (term->paste_pos < term->paste_len) {
@@ -5944,8 +5779,6 @@ void term_do_paste(Terminal *term)
 
         /* Assume a small paste will be OK in one go. */
         if (term->paste_len < 256) {
-            if (term->ldisc)
-		luni_send(term->ldisc, term->paste_buffer, term->paste_len, 0);
             if (term->paste_buffer)
                 sfree(term->paste_buffer);
             term->paste_buffer = 0;
@@ -6191,8 +6024,8 @@ void term_mouse(Terminal *term, Mouse_Button braw, Mouse_Button bcooked,
 	     * We've completed a selection. We now transfer the
 	     * data to the clipboard.
 	     */
-	    clipme(term, term->selstart, term->selend,
-		   (term->seltype == RECTANGULAR), FALSE);
+	    //clipme(term, term->selstart, term->selend,
+		  // (term->seltype == RECTANGULAR), FALSE);
 	    term->selstate = SELECTED;
 	} else
 	    term->selstate = NO_SELECTION;

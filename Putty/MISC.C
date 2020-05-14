@@ -736,7 +736,6 @@ void *safemalloc(size_t n, size_t size)
 #else
 	strcpy(str, "Out of memory!");
 #endif
-	modalfatalbox("%s", str);
     }
 #ifdef MALLOC_LOG
     if (fp)
@@ -778,7 +777,6 @@ void *saferealloc(void *ptr, size_t n, size_t size)
 #else
 	strcpy(str, "Out of memory!");
 #endif
-	modalfatalbox("%s", str);
     }
 #ifdef MALLOC_LOG
     if (fp)
@@ -883,7 +881,7 @@ char const *conf_dest(Conf *conf)
 	return conf_get_str(conf, CONF_host);
 }
 
-#ifndef PLATFORM_HAS_SMEMCLR
+
 /*
  * Securely wipe memory.
  *
@@ -896,32 +894,31 @@ char const *conf_dest(Conf *conf)
  * Some platforms (e.g. Windows) may provide their own version of this
  * function.
  */
-void smemclr(void *b, size_t n) {
-    volatile char *vp;
+void smemclr(void* b, size_t n) {
+	volatile char* vp;
 
-    if (b && n > 0) {
-        /*
-         * Zero out the memory.
-         */
-        memset(b, 0, n);
+	if (b && n > 0) {
+		/*
+		 * Zero out the memory.
+		 */
+		memset(b, 0, n);
 
-        /*
-         * Perform a volatile access to the object, forcing the
-         * compiler to admit that the previous memset was important.
-         *
-         * This while loop should in practice run for zero iterations
-         * (since we know we just zeroed the object out), but in
-         * theory (as far as the compiler knows) it might range over
-         * the whole object. (If we had just written, say, '*vp =
-         * *vp;', a compiler could in principle have 'helpfully'
-         * optimised the memset into only zeroing out the first byte.
-         * This should be robust.)
-         */
-        vp = b;
-        while (*vp) vp++;
-    }
+		/*
+		 * Perform a volatile access to the object, forcing the
+		 * compiler to admit that the previous memset was important.
+		 *
+		 * This while loop should in practice run for zero iterations
+		 * (since we know we just zeroed the object out), but in
+		 * theory (as far as the compiler knows) it might range over
+		 * the whole object. (If we had just written, say, '*vp =
+		 * *vp;', a compiler could in principle have 'helpfully'
+		 * optimised the memset into only zeroing out the first byte.
+		 * This should be robust.)
+		 */
+		vp = b;
+		while (*vp) vp++;
+	}
 }
-#endif
 
 /*
  * Validate a manual host key specification (either entered in the

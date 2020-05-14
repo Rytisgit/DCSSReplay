@@ -155,62 +155,6 @@ static void logfopen_callback(void *handle, int mode)
     }
 }
 
-/*
- * Open the log file. Takes care of detecting an already-existing
- * file and asking the user whether they want to append, overwrite
- * or cancel logging.
- */
-void logfopen(void *handle)
-{
-    struct LogContext *ctx = (struct LogContext *)handle;
-    struct tm tm;
-    FILE *fp;
-    int mode;
-
-    /* Prevent repeat calls */
-    if (ctx->state != L_CLOSED)
-	return;
-
-    if (!ctx->logtype)
-	return;
-
-    tm = ltime();
-
-    /* substitute special codes in file name */
-    if (ctx->currlogfilename)
-        filename_free(ctx->currlogfilename);
-    ctx->currlogfilename = 
-        xlatlognam(conf_get_filename(ctx->conf, CONF_logfilename),
-                   conf_get_str(ctx->conf, CONF_host),
-                   conf_get_int(ctx->conf, CONF_port), &tm);
-
-    fp = f_open(ctx->currlogfilename, "r", FALSE);  /* file already present? */
-    if (fp) {
-	int logxfovr = conf_get_int(ctx->conf, CONF_logxfovr);
-	fclose(fp);
-	if (logxfovr != LGXF_ASK) {
-	    mode = ((logxfovr == LGXF_OVR) ? 2 : 1);
-	} else
-	    mode = askappend(ctx->frontend, ctx->currlogfilename,
-			     logfopen_callback, ctx);
-    } else
-	mode = 2;		       /* create == overwrite */
-
-    if (mode < 0)
-	ctx->state = L_OPENING;
-    else
-	logfopen_callback(ctx, mode);  /* open the file */
-}
-
-void logfclose(void *handle)
-{
-    struct LogContext *ctx = (struct LogContext *)handle;
-    if (ctx->lgfp) {
-	fclose(ctx->lgfp);
-	ctx->lgfp = NULL;
-    }
-    ctx->state = L_CLOSED;
-}
 
 /*
  * Log session traffic.
