@@ -125,8 +125,6 @@ static void free_value(struct value *val, int type)
 {
     if (type == TYPE_STR)
 	sfree(val->u.stringval);
-    else if (type == TYPE_FILENAME)
-	filename_free(val->u.fileval);
     else if (type == TYPE_FONT)
 	fontspec_free(val->u.fontval);
 }
