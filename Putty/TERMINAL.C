@@ -2617,8 +2617,8 @@ static void term_out(Terminal *term)
 		bufchain_consume(&term->inbuf, nchars);
 		chars = localbuf;
 		assert(chars != NULL);
-		printf(term->window_update_pending);
-		printf('\n');
+		//printf(term->window_update_pending);
+		//printf('\n');
 	    }
 	    c = *chars++;
 	    nchars--;
@@ -2974,8 +2974,8 @@ static void term_out(Terminal *term)
 		    if (((c & CSET_MASK) == CSET_ASCII ||
 			 (c & CSET_MASK) == 0) &&
 			term->logctx)
-			//logtraffic(term->logctx, (unsigned char) c,
-				   //LGTYP_ASCII);
+			logtraffic(term->logctx, (unsigned char) c,
+				   LGTYP_ASCII);
 
 		    switch (width) {
 		      case 2:
