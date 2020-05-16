@@ -15,7 +15,7 @@ using System.Windows.Forms;
 using TtyRecDecoder;
 using System.Drawing.Imaging;
 using ICSharpCode.SharpZipLib.GZip;
-using SkiaSharp.vi;
+using SkiaSharp.Views.Desktop;
 
 namespace TtyRecMonkey
 {

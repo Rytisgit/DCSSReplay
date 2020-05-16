@@ -75,7 +75,7 @@ namespace FrameGenerator
 
         public SKBitmap GenerateImage(TerminalCharacter[,] chars, int consoleLevel = 1)
         {
-            return DrawFrame(new Model());
+            //return DrawFrame(new Model());
             if (chars != null)
             {
 
@@ -87,7 +87,7 @@ namespace FrameGenerator
                 }
                 
 
-                var image = DrawFrame(new Model());
+                var image = DrawFrame(model);
                 
 #if true //Memory Limit Mode
                 GC.Collect();

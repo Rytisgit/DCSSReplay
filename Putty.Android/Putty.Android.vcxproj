@@ -86,7 +86,9 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings" />
-  <ImportGroup Label="Shared" />
+  <ImportGroup Label="Shared">
+    <Import Project="..\SlimPutty\SlimPutty.vcxitems" Label="Shared" />
+  </ImportGroup>
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -107,14 +109,10 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
@@ -127,105 +125,22 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\Putty\noshare.c" />
-    <ClCompile Include="..\Putty\be_all_s.c" />
-    <ClCompile Include="..\Putty\callback.c" />
-    <ClCompile Include="..\Putty\cmdline.c" />
-    <ClCompile Include="..\Putty\conf.c" />
-    <ClCompile Include="..\Putty\config.c" />
-    <ClCompile Include="..\Putty\cproxy.c" />
-    <ClCompile Include="..\Putty\dialog.c" />
-    <ClCompile Include="..\Putty\errsock.c" />
-    <ClCompile Include="..\Putty\ldisc.c" />
-    <ClCompile Include="..\Putty\ldiscucs.c" />
-    <ClCompile Include="..\Putty\logging.c" />
-    <ClCompile Include="..\Putty\minibidi.c" />
-    <ClCompile Include="..\Putty\misc.c" />
-    <ClCompile Include="..\Putty\miscucs.c" />
-    <ClCompile Include="..\Putty\pgssapi.c" />
-    <ClCompile Include="..\Putty\pinger.c" />
-    <ClCompile Include="..\Putty\portfwd.c" />
-    <ClCompile Include="..\Putty\proxy.c" />
-    <ClCompile Include="..\Putty\raw.c" />
-    <ClCompile Include="..\Putty\rlogin.c" />
-    <ClCompile Include="..\Putty\sercfg.c" />
-    <ClCompile Include="..\Putty\settings.c" />
-    <ClCompile Include="..\Putty\ssh.c" />
-    <ClCompile Include="..\Putty\sshaes.c" />
-    <ClCompile Include="..\Putty\ssharcf.c" />
-    <ClCompile Include="..\Putty\sshblowf.c" />
-    <ClCompile Include="..\Putty\sshbn.c" />
-    <ClCompile Include="..\Putty\sshcrc.c" />
-    <ClCompile Include="..\Putty\sshcrcda.c" />
-    <ClCompile Include="..\Putty\sshdes.c" />
-    <ClCompile Include="..\Putty\sshdh.c" />
-    <ClCompile Include="..\Putty\sshdss.c" />
-    <ClCompile Include="..\Putty\sshgssc.c" />
-    <ClCompile Include="..\Putty\sshmd5.c" />
-    <ClCompile Include="..\Putty\sshpubk.c" />
-    <ClCompile Include="..\Putty\sshrand.c" />
-    <ClCompile Include="..\Putty\sshrsa.c" />
-    <ClCompile Include="..\Putty\sshsh256.c" />
-    <ClCompile Include="..\Putty\sshsh512.c" />
-    <ClCompile Include="..\Putty\sshsha.c" />
-    <ClCompile Include="..\Putty\sshshare.c" />
-    <ClCompile Include="..\Putty\sshzlib.c" />
-    <ClCompile Include="..\Putty\telnet.c" />
-    <ClCompile Include="..\Putty\terminal.c" />
-    <ClCompile Include="..\Putty\timing.c" />
-    <ClCompile Include="..\Putty\tree234.c" />
-    <ClCompile Include="..\Putty\version.c" />
-    <ClCompile Include="..\Putty\wcwidth.c" />
-    <ClCompile Include="..\Putty\wildcard.c" />
-    <ClCompile Include="..\Putty\WINDOWS\MSVC\PUTTYDLL\export.c" />
-    <ClCompile Include="..\Putty\x11fwd.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\Putty\charset\charset.h" />
-    <ClInclude Include="..\Putty\dialog.h" />
-    <ClInclude Include="..\Putty\int64.h" />
-    <ClInclude Include="..\Putty\ldisc.h" />
-    <ClInclude Include="..\Putty\macosx\osx.h" />
-    <ClInclude Include="..\Putty\misc.h" />
-    <ClInclude Include="..\Putty\network.h" />
-    <ClInclude Include="..\Putty\pgssapi.h" />
-    <ClInclude Include="..\Putty\proxy.h" />
-    <ClInclude Include="..\Putty\putty.h" />
-    <ClInclude Include="..\Putty\puttymem.h" />
-    <ClInclude Include="..\Putty\puttyps.h" />
-    <ClInclude Include="..\Putty\ssh.h" />
-    <ClInclude Include="..\Putty\sshbn.h" />
-    <ClInclude Include="..\Putty\sshgss.h" />
-    <ClInclude Include="..\Putty\sshgssc.h" />
-    <ClInclude Include="..\Putty\storage.h" />
-    <ClInclude Include="..\Putty\terminal.h" />
-    <ClInclude Include="..\Putty\tree234.h" />
-    <ClInclude Include="..\Putty.h" />
-    <ClInclude Include="..\Putty\version.h" />
-    <ClInclude Include="pch.h" />
+    <ClCompile Include="exportAndroid.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

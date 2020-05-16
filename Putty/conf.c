@@ -44,7 +44,6 @@ struct value {
 	int intval;
 	char *stringval;
 	Filename *fileval;
-	FontSpec *fontval;
     } u;
 };
 
@@ -125,10 +124,6 @@ static void free_value(struct value *val, int type)
 {
     if (type == TYPE_STR)
 	sfree(val->u.stringval);
-    else if (type == TYPE_FILENAME)
-	filename_free(val->u.fileval);
-    else if (type == TYPE_FONT)
-	fontspec_free(val->u.fontval);
 }
 
 /*
@@ -143,12 +138,6 @@ static void copy_value(struct value *to, struct value *from, int type)
 	break;
       case TYPE_STR:
 	to->u.stringval = dupstr(from->u.stringval);
-	break;
-      case TYPE_FILENAME:
-	to->u.fileval = filename_copy(from->u.fileval);
-	break;
-      case TYPE_FONT:
-	to->u.fontval = fontspec_copy(from->u.fontval);
 	break;
     }
 }
@@ -337,19 +326,6 @@ Filename *conf_get_filename(Conf *conf, int primary)
     return entry->value.u.fileval;
 }
 
-FontSpec *conf_get_fontspec(Conf *conf, int primary)
-{
-    struct key key;
-    struct conf_entry *entry;
-
-    assert(subkeytypes[primary] == TYPE_NONE);
-    assert(valuetypes[primary] == TYPE_FONT);
-    key.primary = primary;
-    entry = find234(conf->tree, &key, NULL);
-    assert(entry);
-    return entry->value.u.fontval;
-}
-
 void conf_set_int(Conf *conf, int primary, int value)
 {
     struct conf_entry *entry = snew(struct conf_entry);
@@ -413,28 +389,6 @@ void conf_del_str_str(Conf *conf, int primary, const char *secondary)
     }
  }
 
-void conf_set_filename(Conf *conf, int primary, const Filename *value)
-{
-    struct conf_entry *entry = snew(struct conf_entry);
-
-    assert(subkeytypes[primary] == TYPE_NONE);
-    assert(valuetypes[primary] == TYPE_FILENAME);
-    entry->key.primary = primary;
-    entry->value.u.fileval = filename_copy(value);
-    conf_insert(conf, entry);
-}
-
-void conf_set_fontspec(Conf *conf, int primary, const FontSpec *value)
-{
-    struct conf_entry *entry = snew(struct conf_entry);
-
-    assert(subkeytypes[primary] == TYPE_NONE);
-    assert(valuetypes[primary] == TYPE_FONT);
-    entry->key.primary = primary;
-    entry->value.u.fontval = fontspec_copy(value);
-    conf_insert(conf, entry);
-}
-
 int conf_serialised_size(Conf *conf)
 {
     int i;
@@ -457,12 +411,6 @@ int conf_serialised_size(Conf *conf)
 	    break;
 	  case TYPE_STR:
 	    size += 1 + strlen(entry->value.u.stringval);
-	    break;
-	  case TYPE_FILENAME:
-	    size += filename_serialise(entry->value.u.fileval, NULL);
-	    break;
-	  case TYPE_FONT:
-	    size += fontspec_serialise(entry->value.u.fontval, NULL);
 	    break;
 	}
     }
@@ -504,12 +452,6 @@ void conf_serialise(Conf *conf, void *vdata)
 	    memcpy(data, entry->value.u.stringval, len);
 	    data += len;
 	    *data++ = 0;
-	    break;
-	  case TYPE_FILENAME:
-            data += filename_serialise(entry->value.u.fileval, data);
-	    break;
-	  case TYPE_FONT:
-            data += fontspec_serialise(entry->value.u.fontval, data);
 	    break;
 	}
     }
@@ -580,30 +522,7 @@ int conf_deserialise(Conf *conf, void *vdata, int maxsize)
 	    maxsize -= (zero + 1 - data);
 	    data = zero + 1;
 	    break;
-	  case TYPE_FILENAME:
-            entry->value.u.fileval =
-                filename_deserialise(data, maxsize, &used);
-            if (!entry->value.u.fileval) {
-		if (subkeytypes[entry->key.primary] == TYPE_STR)
-		    sfree(entry->key.secondary.s);
-		sfree(entry);
-		goto done;
-	    }
-	    data += used;
-	    maxsize -= used;
-	    break;
-	  case TYPE_FONT:
-            entry->value.u.fontval =
-                fontspec_deserialise(data, maxsize, &used);
-            if (!entry->value.u.fontval) {
-		if (subkeytypes[entry->key.primary] == TYPE_STR)
-		    sfree(entry->key.secondary.s);
-		sfree(entry);
-		goto done;
-	    }
-	    data += used;
-	    maxsize -= used;
-	    break;
+	
 	}
 	conf_insert(conf, entry);
     }

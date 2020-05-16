@@ -144,39 +144,7 @@ char *host_strrchr(const char *s, int c)
 }
 
 #ifdef TEST_HOST_STRFOO
-int main(void)
-{
-    int passes = 0, fails = 0;
 
-#define TEST1(func, string, arg2, suffix, result) do                    \
-    {                                                                   \
-        const char *str = string;                                       \
-        unsigned ret = func(string, arg2) suffix;                       \
-        if (ret == result) {                                            \
-            passes++;                                                   \
-        } else {                                                        \
-            printf("fail: %s(%s,%s)%s = %u, expected %u\n",             \
-                   #func, #string, #arg2, #suffix, ret, result);        \
-            fails++;                                                    \
-        }                                                               \
-} while (0)
-
-    TEST1(host_strchr, "[1:2:3]:4:5", ':', -str, 7);
-    TEST1(host_strrchr, "[1:2:3]:4:5", ':', -str, 9);
-    TEST1(host_strcspn, "[1:2:3]:4:5", "/:",, 7);
-    TEST1(host_strchr, "[1:2:3]", ':', == NULL, 1);
-    TEST1(host_strrchr, "[1:2:3]", ':', == NULL, 1);
-    TEST1(host_strcspn, "[1:2:3]", "/:",, 7);
-    TEST1(host_strcspn, "[1:2/3]", "/:",, 4);
-    TEST1(host_strcspn, "[1:2:3]/", "/:",, 7);
-
-    printf("passed %d failed %d total %d\n", passes, fails, passes+fails);
-    return fails != 0 ? 1 : 0;
-}
-/* Stubs to stop the rest of this module causing compile failures. */
-void modalfatalbox(char *fmt, ...) {}
-int conf_get_int(Conf *conf, int primary) { return 0; }
-char *conf_get_str(Conf *conf, int primary) { return NULL; }
 #endif /* TEST_HOST_STRFOO */
 
 /*
@@ -736,7 +704,6 @@ void *safemalloc(size_t n, size_t size)
 #else
 	strcpy(str, "Out of memory!");
 #endif
-	modalfatalbox("%s", str);
     }
 #ifdef MALLOC_LOG
     if (fp)
@@ -778,7 +745,6 @@ void *saferealloc(void *ptr, size_t n, size_t size)
 #else
 	strcpy(str, "Out of memory!");
 #endif
-	modalfatalbox("%s", str);
     }
 #ifdef MALLOC_LOG
     if (fp)
@@ -863,27 +829,7 @@ void debug_memdump(void *buf, int len, int L)
 
 #endif				/* def DEBUG */
 
-/*
- * Determine whether or not a Conf represents a session which can
- * sensibly be launched right now.
- */
-int conf_launchable(Conf *conf)
-{
-    if (conf_get_int(conf, CONF_protocol) == PROT_SERIAL)
-	return conf_get_str(conf, CONF_serline)[0] != 0;
-    else
-	return conf_get_str(conf, CONF_host)[0] != 0;
-}
 
-char const *conf_dest(Conf *conf)
-{
-    if (conf_get_int(conf, CONF_protocol) == PROT_SERIAL)
-	return conf_get_str(conf, CONF_serline);
-    else
-	return conf_get_str(conf, CONF_host);
-}
-
-#ifndef PLATFORM_HAS_SMEMCLR
 /*
  * Securely wipe memory.
  *
@@ -896,32 +842,31 @@ char const *conf_dest(Conf *conf)
  * Some platforms (e.g. Windows) may provide their own version of this
  * function.
  */
-void smemclr(void *b, size_t n) {
-    volatile char *vp;
+void smemclr(void* b, size_t n) {
+	volatile char* vp;
 
-    if (b && n > 0) {
-        /*
-         * Zero out the memory.
-         */
-        memset(b, 0, n);
+	if (b && n > 0) {
+		/*
+		 * Zero out the memory.
+		 */
+		memset(b, 0, n);
 
-        /*
-         * Perform a volatile access to the object, forcing the
-         * compiler to admit that the previous memset was important.
-         *
-         * This while loop should in practice run for zero iterations
-         * (since we know we just zeroed the object out), but in
-         * theory (as far as the compiler knows) it might range over
-         * the whole object. (If we had just written, say, '*vp =
-         * *vp;', a compiler could in principle have 'helpfully'
-         * optimised the memset into only zeroing out the first byte.
-         * This should be robust.)
-         */
-        vp = b;
-        while (*vp) vp++;
-    }
+		/*
+		 * Perform a volatile access to the object, forcing the
+		 * compiler to admit that the previous memset was important.
+		 *
+		 * This while loop should in practice run for zero iterations
+		 * (since we know we just zeroed the object out), but in
+		 * theory (as far as the compiler knows) it might range over
+		 * the whole object. (If we had just written, say, '*vp =
+		 * *vp;', a compiler could in principle have 'helpfully'
+		 * optimised the memset into only zeroing out the first byte.
+		 * This should be robust.)
+		 */
+		vp = b;
+		while (*vp) vp++;
+	}
 }
-#endif
 
 /*
  * Validate a manual host key specification (either entered in the

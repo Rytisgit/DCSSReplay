@@ -8,19 +8,51 @@
 #include "../../../TERMINAL.H"
 #include "../../../PUTTY.H"
 
-#define EXPORT(rt) rt
+#define EXPORT(rt) __declspec(dllexport) rt
 
 extern Conf *conf;
 
 static Conf* get_default_config() {
-	if (!conf) {
+	/*if (!conf) {
 		conf = conf_new();
 		load_open_settings(NULL, conf);
 		conf_set_int(conf, CONF_logflush, 0);
 	}
-	return conf;
-};
+	return conf;*/
+	return NULL;
+}
+//void CreateConsole()
+//{
+//	if (!AllocConsole()) {
+//		// Add some error handling here.
+//		// You can call GetLastError() to get more info about the error.
+//		return;
+//	}
+//
+//	// std::cout, std::clog, std::cerr, std::cin
+//	FILE* fDummy;
+//	freopen_s(&fDummy, "CONOUT$", "w", stdout);
+//	freopen_s(&fDummy, "CONOUT$", "w", stderr);
+//	freopen_s(&fDummy, "CONIN$", "r", stdin);
+//
+//}
+EXPORT(Terminal*) CreatePuttyTerminal(int w, int h) {
+	int i;
+	struct unicode_data* unicode;
+	Terminal* terminal;
+	//CreateConsole();
+	//printf("TESTSSETSETSETSET");
+	unicode = snew(struct unicode_data);
+	memset(unicode, 0, sizeof(struct unicode_data));
 
+	for (i = 0; i < 256; ++i) {
+		unicode->unitab_ctrl[i] = i;
+		//unicode->unitab_line[i]=i;
+	}
+
+	terminal = term_init(unicode, NULL);
+	term_size(terminal, h, w, 0);
+}
 
 static void copy_termlines( tree234* dest, tree234* src ) {
 	int w,h,x,y;
@@ -39,39 +71,21 @@ static void copy_termlines( tree234* dest, tree234* src ) {
 		desttl->temporary = srctl->temporary;
 	}
 }
-	EXPORT(Terminal*) CreatePuttyTerminal(int w, int h) {
-		int i;
-		struct unicode_data* unicode;
-		Terminal* terminal;
 
-		unicode = snew(struct unicode_data);
-		memset(unicode, 0, sizeof(struct unicode_data));
-
-		for (i = 0; i < 256; ++i) {
-			unicode->unitab_ctrl[i] = i;
-			//unicode->unitab_line[i]=i;
-		}
-
-		terminal = term_init(get_default_config(), unicode, NULL);
-		term_size(terminal, h, w, 0);
-
-		return terminal;
-	}
-
-EXPORT(Terminal*) ClonePuttyTerminal(Terminal* term) {
+EXPORT(Terminal*) ClonePuttyTerminal( Terminal* term ) {
 	struct unicode_data* unicode;
 	Terminal* clone;
 	Terminal  restore;
 
 	unicode = snew(struct unicode_data);
 	memcpy(unicode, term->ucsdata, sizeof(struct unicode_data));
-	clone = term_init(get_default_config(), unicode, NULL);
+	clone = term_init(unicode, NULL);
 	term_size(clone, term->rows, term->cols, 0);
 	restore = *clone;
 
 	memcpy(clone, term, sizeof(Terminal));
 
-	clone->conf = restore.conf;
+	//clone->conf       = restore.conf;
 
 	clone->screen = restore.screen;     copy_termlines(clone->screen, term->screen);
 	clone->scrollback = restore.scrollback; copy_termlines(clone->scrollback, term->scrollback);
