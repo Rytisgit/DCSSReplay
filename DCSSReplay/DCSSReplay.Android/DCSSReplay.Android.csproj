@@ -76,6 +76,19 @@
     <AndroidAsset Include="Assets\Extra.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </AndroidAsset>
+    <AndroidAsset Include="Assets\neopolispart1.ttyrec" />
+    <AndroidNativeLibrary Include="lib\arm64-v8a\libPuttyDLL.so">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AndroidNativeLibrary>
+    <AndroidNativeLibrary Include="lib\armeabi-v7a\libPuttyDLL.so">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AndroidNativeLibrary>
+    <AndroidNativeLibrary Include="lib\x86\libPuttyDLL.so">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AndroidNativeLibrary>
+    <AndroidNativeLibrary Include="lib\x86_64\libPuttyDLL.so">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AndroidNativeLibrary>
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml" />
@@ -121,17 +134,6 @@
       <Name>DCSSReplay</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <AndroidNativeLibrary Include="lib\arm64-v8a\libPutty_Android.so">
-      <!--Use ABI tags as below when sniffing folders not present. Only one ABI tag has to be present-->
-      <!-- <Abi>arm64-v8a</Abi> -->
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </AndroidNativeLibrary>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="lib\armeabi-v7a\" />
-    <Folder Include="lib\x86\" />
-    <Folder Include="lib\x86_64\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

@@ -15,13 +15,13 @@ namespace Putty
     {
         readonly IntPtr Handle;
 
-        [DllImport(@"PuttyDLL", CallingConvention = CallingConvention.Cdecl)] static extern IntPtr CreatePuttyTerminal(int width, int height);
-        [DllImport(@"PuttyDLL", CallingConvention = CallingConvention.Cdecl)] static extern void DestroyPuttyTerminal(IntPtr terminal);
-        [DllImport(@"PuttyDLL", CallingConvention = CallingConvention.Cdecl)] unsafe static extern void SendPuttyTerminal(IntPtr terminal, int stderr, byte* data, int length);
-        [DllImport(@"PuttyDLL", CallingConvention = CallingConvention.Cdecl)] unsafe static extern TerminalCharacter* GetPuttyTerminalLine(IntPtr terminal, int y);
-        [DllImport(@"PuttyDLL", CallingConvention = CallingConvention.Cdecl)] static extern IntPtr ClonePuttyTerminal(IntPtr terminal);
-        [DllImport(@"PuttyDLL", CallingConvention = CallingConvention.Cdecl)] static extern int GetPuttyTerminalWidth(IntPtr terminal);
-        [DllImport(@"PuttyDLL", CallingConvention = CallingConvention.Cdecl)] static extern int GetPuttyTerminalHeight(IntPtr terminal);
+        [DllImport(@"libPuttyDLL", CallingConvention = CallingConvention.Cdecl)] static extern IntPtr CreatePuttyTerminal(int width, int height);
+        [DllImport(@"libPuttyDLL", CallingConvention = CallingConvention.Cdecl)] static extern void DestroyPuttyTerminal(IntPtr terminal);
+        [DllImport(@"libPuttyDLL", CallingConvention = CallingConvention.Cdecl)] unsafe static extern void SendPuttyTerminal(IntPtr terminal, int stderr, byte* data, int length);
+        [DllImport(@"libPuttyDLL", CallingConvention = CallingConvention.Cdecl)] unsafe static extern TerminalCharacter* GetPuttyTerminalLine(IntPtr terminal, int y);
+        [DllImport(@"libPuttyDLL", CallingConvention = CallingConvention.Cdecl)] static extern IntPtr ClonePuttyTerminal(IntPtr terminal);
+        [DllImport(@"libPuttyDLL", CallingConvention = CallingConvention.Cdecl)] static extern int GetPuttyTerminalWidth(IntPtr terminal);
+        [DllImport(@"libPuttyDLL", CallingConvention = CallingConvention.Cdecl)] static extern int GetPuttyTerminalHeight(IntPtr terminal);
 
         /// <summary>
         /// Create a new PuTTY terminal

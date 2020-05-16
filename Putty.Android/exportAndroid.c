@@ -12,36 +12,12 @@
 
 extern Conf* conf;
 
-static Conf* get_default_config() {
-	/*if (!conf) {
-		conf = conf_new();
-		load_open_settings(NULL, conf);
-		conf_set_int(conf, CONF_logflush, 0);
-	}
-	return conf;*/
-	return NULL;
-}
-//void CreateConsole()
-//{
-//	if (!AllocConsole()) {
-//		// Add some error handling here.
-//		// You can call GetLastError() to get more info about the error.
-//		return;
-//	}
-//
-//	// std::cout, std::clog, std::cerr, std::cin
-//	FILE* fDummy;
-//	freopen_s(&fDummy, "CONOUT$", "w", stdout);
-//	freopen_s(&fDummy, "CONOUT$", "w", stderr);
-//	freopen_s(&fDummy, "CONIN$", "r", stdin);
-//
-//}
+
 EXPORT(Terminal*) CreatePuttyTerminal(int w, int h) {
 	int i;
 	struct unicode_data* unicode;
 	Terminal* terminal;
-	//CreateConsole();
-	//printf("TESTSSETSETSETSET");
+
 	unicode = snew(struct unicode_data);
 	memset(unicode, 0, sizeof(struct unicode_data));
 
