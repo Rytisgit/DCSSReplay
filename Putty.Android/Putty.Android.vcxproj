@@ -101,24 +101,28 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <TargetName>libPuttyDLL</TargetName>
+    <OutDir>$(SolutionDir)DCSSReplay\DCSSReplay.Android\lib\$(TargetArchAbi)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
     <TargetName>libPuttyDLL</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
     <TargetName>libPuttyDLL</TargetName>
+    <OutDir>$(SolutionDir)DCSSReplay\DCSSReplay.Android\lib\$(TargetArchAbi)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
     <TargetName>libPuttyDLL</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
     <TargetName>libPuttyDLL</TargetName>
+    <OutDir>$(SolutionDir)DCSSReplay\DCSSReplay.Android\lib\$(TargetArchAbi)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <TargetName>libPuttyDLL</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <TargetName>libPuttyDLL</TargetName>
+    <OutDir>$(SolutionDir)DCSSReplay\DCSSReplay.Android\lib\$(TargetArchAbi)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
