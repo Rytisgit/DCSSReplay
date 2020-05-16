@@ -13,6 +13,7 @@ using System.IO;
 using Android;
 using System.Drawing;
 using SkiaSharp.Views.Forms;
+using Putty;
 
 namespace DCSSReplay.Droid
 {
@@ -39,8 +40,22 @@ namespace DCSSReplay.Droid
         {
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
-            
+
             base.OnCreate(savedInstanceState);
+
+            var term = new Terminal(80, 24);
+            var i = term.GetLine(1);
+            ExtractExtraFileFolder();
+            var files = Directory.GetFiles(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "*", SearchOption.AllDirectories);
+            var gen = new MainGenerator(System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), @"Extra"));
+            var img = gen.GenerateImage(null);
+            Xamarin.Essentials.Platform.Init(this, savedInstanceState);
+            global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
+            LoadApplication(new App(img));
+        }
+
+        private void ExtractExtraFileFolder()
+        {
             CheckAppPermissions();
             try
             {
@@ -80,18 +95,13 @@ namespace DCSSReplay.Droid
                 zipInStream.Close();
                 fileStreamIn.Close();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e);
             }
-            var files = Directory.GetFiles(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "*", SearchOption.AllDirectories);
-            var gen = new MainGenerator(System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), @"Extra"));
-            var img = gen.GenerateImage(null);
-            Xamarin.Essentials.Platform.Init(this, savedInstanceState);
-            global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
-            LoadApplication(new App(img));
         }
-        
+
+
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
