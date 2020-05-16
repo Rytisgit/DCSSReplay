@@ -23,8 +23,7 @@ typedef struct backend_tag Backend;
 typedef struct terminal_tag Terminal;
 #endif
 
-#include "PUTTYPS.H"
-#include "NETWORK.H"
+
 #include "MISC.H"
 
 
