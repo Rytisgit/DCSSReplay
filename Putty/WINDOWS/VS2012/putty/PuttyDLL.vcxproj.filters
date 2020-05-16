@@ -1,19 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <CustomBuild Include="..\..\putty.ico">
-      <Filter>Resource Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\..\puttycfg.ico">
-      <Filter>Resource Files</Filter>
-    </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="..\..\putty.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="..\..\..\callback.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -50,9 +37,6 @@
     <ClInclude Include="..\..\..\puttymem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\puttyps.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\terminal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -69,9 +53,6 @@
     </Filter>
     <Filter Include="Header Files">
       <UniqueIdentifier>{8c940eae-8579-4a10-b1a1-bd19ff6e8c9c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{e34b5d5d-ec5e-422e-9244-e7dd2783eead}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
