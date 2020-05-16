@@ -144,39 +144,7 @@ char *host_strrchr(const char *s, int c)
 }
 
 #ifdef TEST_HOST_STRFOO
-int main(void)
-{
-    int passes = 0, fails = 0;
 
-#define TEST1(func, string, arg2, suffix, result) do                    \
-    {                                                                   \
-        const char *str = string;                                       \
-        unsigned ret = func(string, arg2) suffix;                       \
-        if (ret == result) {                                            \
-            passes++;                                                   \
-        } else {                                                        \
-            printf("fail: %s(%s,%s)%s = %u, expected %u\n",             \
-                   #func, #string, #arg2, #suffix, ret, result);        \
-            fails++;                                                    \
-        }                                                               \
-} while (0)
-
-    TEST1(host_strchr, "[1:2:3]:4:5", ':', -str, 7);
-    TEST1(host_strrchr, "[1:2:3]:4:5", ':', -str, 9);
-    TEST1(host_strcspn, "[1:2:3]:4:5", "/:",, 7);
-    TEST1(host_strchr, "[1:2:3]", ':', == NULL, 1);
-    TEST1(host_strrchr, "[1:2:3]", ':', == NULL, 1);
-    TEST1(host_strcspn, "[1:2:3]", "/:",, 7);
-    TEST1(host_strcspn, "[1:2/3]", "/:",, 4);
-    TEST1(host_strcspn, "[1:2:3]/", "/:",, 7);
-
-    printf("passed %d failed %d total %d\n", passes, fails, passes+fails);
-    return fails != 0 ? 1 : 0;
-}
-/* Stubs to stop the rest of this module causing compile failures. */
-void modalfatalbox(char *fmt, ...) {}
-int conf_get_int(Conf *conf, int primary) { return 0; }
-char *conf_get_str(Conf *conf, int primary) { return NULL; }
 #endif /* TEST_HOST_STRFOO */
 
 /*
@@ -860,26 +828,6 @@ void debug_memdump(void *buf, int len, int L)
 }
 
 #endif				/* def DEBUG */
-
-/*
- * Determine whether or not a Conf represents a session which can
- * sensibly be launched right now.
- */
-int conf_launchable(Conf *conf)
-{
-    if (conf_get_int(conf, CONF_protocol) == PROT_SERIAL)
-	return conf_get_str(conf, CONF_serline)[0] != 0;
-    else
-	return conf_get_str(conf, CONF_host)[0] != 0;
-}
-
-char const *conf_dest(Conf *conf)
-{
-    if (conf_get_int(conf, CONF_protocol) == PROT_SERIAL)
-	return conf_get_str(conf, CONF_serline);
-    else
-	return conf_get_str(conf, CONF_host);
-}
 
 
 /*
