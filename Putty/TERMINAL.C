@@ -71,7 +71,7 @@ char *EMPTY_WINDOW_TITLE = "";
 const char sco2ansicolour[] = { 0, 4, 2, 6, 1, 5, 3, 7 };
 
 #define sel_nl_sz  (sizeof(sel_nl)/sizeof(wchar_t))
-const wchar_t sel_nl[] = SEL_NL;
+
 
 /*
  * Fetch the character at a particular position in a line array,
@@ -100,7 +100,6 @@ static void resizeline(Terminal *, termline *, int);
 static termline *lineptr(Terminal *, int, int, int);
 static void unlineptr(termline *);
 static void check_line_size(Terminal *, termline *);
-static void do_paint(Terminal *, Context, int);
 static void erase_lots(Terminal *, int, int, int);
 static int find_last_nonempty_line(Terminal *, tree234 *);
 static void swap_screen(Terminal *, int, int, int);

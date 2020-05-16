@@ -8,7 +8,7 @@
 #include "../Putty/TERMINAL.H"
 #include "../Putty/PUTTY.H"
 
-#define EXPORT(rt)  rt
+#define EXPORT(rt) extern rt
 
 extern Conf* conf;
 
