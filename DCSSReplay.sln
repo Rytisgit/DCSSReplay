@@ -41,7 +41,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DCSSReplay.Android", "DCSSR
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DCSSReplay", "DCSSReplay\DCSSReplay\DCSSReplay.csproj", "{4D673517-D6AB-429C-AB59-331A9B4103D6}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Putty.Android", "Putty.Android\Putty.Android.vcxproj", "{CB0A5249-3A72-4019-8F76-0A25371883E8}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PuttyDLL.Android", "Putty.Android\Putty.Android.vcxproj", "{CB0A5249-3A72-4019-8F76-0A25371883E8}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SlimPutty", "SlimPutty\SlimPutty.vcxitems", "{B827B9A1-9934-42C6-96D1-532E87369D1C}"
 EndProject
