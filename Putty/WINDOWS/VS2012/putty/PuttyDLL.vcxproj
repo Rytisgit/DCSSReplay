@@ -335,7 +335,6 @@
     <ClCompile Include="..\..\..\config.c" />
     <ClCompile Include="..\..\..\dialog.c" />
     <ClCompile Include="..\..\..\errsock.c" />
-    <ClCompile Include="..\..\..\LOGGING.C" />
     <ClCompile Include="..\..\..\minibidi.c" />
     <ClCompile Include="..\..\..\misc.c" />
     <ClCompile Include="..\..\..\settings.c" />

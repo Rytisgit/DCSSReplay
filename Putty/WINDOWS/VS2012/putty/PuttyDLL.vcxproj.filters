@@ -54,9 +54,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\MSVC\PUTTYDLL\export.c" />
-    <ClCompile Include="..\..\..\LOGGING.C">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\charset\charset.h">
