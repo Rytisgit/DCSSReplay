@@ -52,6 +52,8 @@ EXPORT(Terminal*) CreatePuttyTerminal(int w, int h) {
 
 	terminal = term_init(unicode, NULL);
 	term_size(terminal, h, w, 0);
+
+	return terminal;
 }
 
 static void copy_termlines( tree234* dest, tree234* src ) {
