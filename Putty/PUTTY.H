@@ -573,17 +573,12 @@ void free_prompts(prompts_t *p);
  * Exports from the front end.
  */
 void request_resize(void *frontend, int, int);
-void do_text(Context, int, int, wchar_t *, int, unsigned long, int);
-void do_cursor(Context, int, int, wchar_t *, int, unsigned long, int);
-int char_width(Context ctx, int uc);
 #ifdef OPTIMISE_SCROLL
 void do_scroll(Context, int, int, int);
 #endif
 void set_title(void *frontend, char *);
 void set_icon(void *frontend, char *);
 void set_sbar(void *frontend, int, int, int);
-Context get_ctx(void *frontend);
-void free_ctx(Context);
 void palette_set(void *frontend, int, int, int, int);
 void palette_reset(void *frontend);
 void write_aclip(void *frontend, char *, int, int);
@@ -609,7 +604,7 @@ void ldisc_update(void *frontend, int echo, int edit);
  * special commands changes. It does not need to invoke it at session
  * shutdown. */
 
-int from_backend(void *frontend, int is_stderr, const char *data, int len);
+
 int from_backend_untrusted(void *frontend, const char *data, int len);
 /* Called when the back end wants to indicate that EOF has arrived on
  * the server-to-client stream. Returns FALSE to indicate that we
@@ -959,7 +954,6 @@ char *get_remote_username(Conf *conf); /* dynamically allocated */
 Terminal *term_init(struct unicode_data *, void *);
 void term_free(Terminal *);
 void term_size(Terminal *, int, int, int);
-void term_paint(Terminal *, Context, int, int, int, int, int);
 void term_scroll(Terminal *, int, int);
 void term_scroll_to_selection(Terminal *, int);
 void term_pwron(Terminal *, int);
@@ -1031,11 +1025,6 @@ void pinger_free(Pinger);
 int conf_launchable(Conf *conf);
 char const *conf_dest(Conf *conf);
 
-/*
- * Exports from sercfg.c.
- */
-void ser_setup_config_box(struct controlbox *b, int midsession,
-			  int parity_mask, int flow_mask);
 
 /*
  * Exports from version.c.

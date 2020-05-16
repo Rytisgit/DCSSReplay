@@ -43,15 +43,14 @@ namespace DCSSReplay.Droid
 
             base.OnCreate(savedInstanceState);
 
-            var term = new Terminal(80, 24);
-            var i = term.GetLine(1);
+            //var term = new Terminal(80, 24);
+            //var i = term.GetLine(1);
             ExtractExtraFileFolder();
-            var files = Directory.GetFiles(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "*", SearchOption.AllDirectories);
-            var gen = new MainGenerator(System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), @"Extra"));
-            var img = gen.GenerateImage(null);
+            //var files = Directory.GetFiles(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "*", SearchOption.AllDirectories);
+
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
-            LoadApplication(new App(img));
+            LoadApplication(new App(Assets.Open("neopolispart1.ttyrec")));
         }
 
         private void ExtractExtraFileFolder()

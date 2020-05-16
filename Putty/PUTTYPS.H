@@ -7,7 +7,7 @@
 
 #ifdef _WINDOWS
 
-#include "winstuff.h"
+
 
 #elif defined(MACOSX)
 
