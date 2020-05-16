@@ -2623,15 +2623,10 @@ static void term_out(Terminal *term)
 	    c = *chars++;
 	    nchars--;
 
-	    /*
-	     * Optionally log the session traffic to a file. Useful for
-	     * debugging and possibly also useful for actual logging.
-	     */
-	    //if (term->logtype == LGTYP_DEBUG && term->logctx)
-		//logtraffic(term->logctx, (unsigned char) c, LGTYP_DEBUG);
-	//} else {
-	    /*c = unget;
-	    unget = -1;*/
+
+	} else {
+	    c = unget;
+	    unget = -1;
 	}
 
 	/* Note only VT220+ are 8-bit VT102 is seven bit, it shouldn't even
@@ -2886,8 +2881,6 @@ static void term_out(Terminal *term)
 		    else if (term->curs.y < term->rows - 1)
 			term->curs.y++;
 		}
-		if (term->logctx)
-		    //logtraffic(term->logctx, (unsigned char) c, LGTYP_ASCII);
 		break;
 	      case '\014':	      /* FF: Form feed */
 		if (has_compat(SCOANSI)) {
@@ -2910,8 +2903,6 @@ static void term_out(Terminal *term)
 		    term->curs.x = 0;
 		term->wrapnext = FALSE;
 		seen_disp_event(term);
-		if (term->logctx)
-		    //logtraffic(term->logctx, (unsigned char) c, LGTYP_ASCII);
 		break;
 	      case '\t':	      /* HT: Character tabulation */
 		{
@@ -2971,12 +2962,6 @@ static void term_out(Terminal *term)
 			incpos(cursplus);
 			check_selection(term, term->curs, cursplus);
 		    }
-			if (((c & CSET_MASK) == CSET_ASCII ||
-				(c & CSET_MASK) == 0) &&
-				term->logctx)
-				printf("logit");
-			/*logtraffic(term->logctx, (unsigned char) c,
-				   LGTYP_ASCII);*/
 
 		    switch (width) {
 		      case 2:
