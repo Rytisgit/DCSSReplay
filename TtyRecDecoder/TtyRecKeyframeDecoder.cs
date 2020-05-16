@@ -43,7 +43,6 @@ namespace TtyRecDecoder
         public int Height { get; private set; }
 
         public TtyRecFrame CurrentFrame;
-        public TtyRecFrame ChangeFrame;
         private int LastActiveRangeStart = int.MaxValue;
         private int LastActiveRangeEnd = int.MinValue;
          
@@ -65,57 +64,19 @@ namespace TtyRecDecoder
             var h = Height;
             var w = Width;
 
-            if (CurrentFrame.Data == null)//starting from scratch
+            var frame = new TtyRecFrame()
             {
-                var newFrame = new TtyRecFrame()
-                {
-                    Data = new TerminalCharacter[w, h],
-                    SinceStart = since_start
-                };
+                Data = new TerminalCharacter[w, h],
+                SinceStart = since_start
+            };
 
-                for (int y = 0; y < h; ++y)
-                {
-                    var line = term.GetLine(y);
-                    for (int x = 0; x < w; ++x) newFrame.Data[x, y] = line[x];
-                }
-                Console.WriteLine("newframe");
-                ChangeFrame = newFrame;
-                return newFrame;
-            }
-            else// edit curent frame by differences
+            for (int y = 0; y < h; ++y)
             {
-                CurrentFrame.SinceStart = since_start;
-                var data = CurrentFrame.Data;
-
-                for (int y = 0; y < h; ++y)
-                {
-                    var line = term.GetLine(y);
-                    for (int x = 0; x < w; ++x)
-                    {
-                        if (55328 != line[x].chr && (data[x, y].chr != line[x].chr || data[x, y].attr != line[x].attr))
-                        {
-                            data[x, y] = line[x];
-                            ChangeFrame.Data[x, y] = line[x];
-                        }
-                        if (55328 == line[x].chr)
-                        {
-                            if(data[x, y].chr != 55328)
-                            {
-                                if (ChangeFrame.Data[x, y].chr == 55328 && ChangeFrame.Data[x, y].attr != line[x].attr)
-                                {
-                                    data[x, y] = line[x];
-                                }
-                                else
-                                {
-                                    ChangeFrame.Data[x, y] = line[x];
-                                }
-                            }
-                        }
-                    }
-                }
+                var line = term.GetLine(y);
+                for (int x = 0; x < w; ++x) frame.Data[x, y] = line[x];
             }
 
-            return CurrentFrame;
+            return frame;
         }
 
         static int BinarySearchIndex<T>(IList<T> list, Func<T, bool> cond)

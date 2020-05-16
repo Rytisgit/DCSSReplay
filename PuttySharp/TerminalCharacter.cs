@@ -9,8 +9,8 @@ namespace Putty
     [DebuggerDisplay("{Character} {attr}")]
     public struct TerminalCharacter
     {
-        public readonly uint chr;
-        public readonly uint attr;
+        private readonly uint chr;
+        private readonly uint attr;
         private readonly int cc_next;
 
         public char Character { get { return (char)chr; } }
