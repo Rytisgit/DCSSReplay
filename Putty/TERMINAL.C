@@ -1027,7 +1027,7 @@ static termline *lineptr(Terminal *term, int y, int lineno, int screen)
 	} else {
 	    whichtree = term->alt_screen;
 	    treeindex = y + term->alt_sblines;
-	    /* treeindex = y + count234(term->alt_screen); */
+	     treeindex = y + count234(term->alt_screen); 
 	}
     }
     if (whichtree == term->scrollback) {
@@ -2971,11 +2971,12 @@ static void term_out(Terminal *term)
 			incpos(cursplus);
 			check_selection(term, term->curs, cursplus);
 		    }
-		    if (((c & CSET_MASK) == CSET_ASCII ||
-			 (c & CSET_MASK) == 0) &&
-			term->logctx)
-			logtraffic(term->logctx, (unsigned char) c,
-				   LGTYP_ASCII);
+			if (((c & CSET_MASK) == CSET_ASCII ||
+				(c & CSET_MASK) == 0) &&
+				term->logctx)
+				printf("logit");
+			/*logtraffic(term->logctx, (unsigned char) c,
+				   LGTYP_ASCII);*/
 
 		    switch (width) {
 		      case 2:
