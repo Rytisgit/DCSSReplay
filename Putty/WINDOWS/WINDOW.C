@@ -275,8 +275,6 @@ static void start_backend(void)
 	title = msg;
     }
     sfree(realhost);
-    set_title(NULL, title);
-    set_icon(NULL, title);
 
     /*
      * Connect the terminal to the backend for resize purposes.
@@ -309,8 +307,6 @@ static void close_session(void *ignored_context)
 
     session_closed = TRUE;
     sprintf(morestuff, "%.70s (inactive)", appname);
-    set_icon(NULL, morestuff);
-    set_title(NULL, morestuff);
 
     if (ldisc) {
 	ldisc_free(ldisc);
@@ -1131,27 +1127,7 @@ void set_raw_mouse_mode(void *frontend, int activate)
     update_mouse_pointer();
 }
 
-/*
- * Print a message box and close the connection.
- */
-void connection_fatal(void *frontend, char *fmt, ...)
-{
-    va_list ap;
-    char *stuff, morestuff[100];
 
-    va_start(ap, fmt);
-    stuff = dupvprintf(fmt, ap);
-    va_end(ap);
-    sprintf(morestuff, "%.70s Fatal Error", appname);
-    MessageBox(hwnd, stuff, morestuff, MB_ICONERROR | MB_OK);
-    sfree(stuff);
-
-    if (conf_get_int(conf, CONF_close_on_exit) == FORCE_ON)
-	PostQuitMessage(1);
-    else {
-	queue_toplevel_callback(close_session, NULL);
-    }
-}
 
 /*
  * Report an error at the command-line parsing stage.
@@ -2360,7 +2336,6 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT message,
 		    init_lvl = 2;
 		}
 
-		set_title(NULL, conf_get_str(conf, CONF_wintitle));
 		if (IsIconic(hwnd)) {
 		    SetWindowText(hwnd,
 				  conf_get_int(conf, CONF_win_name_always) ?
@@ -2401,7 +2376,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT message,
 	    term_copyall(term);
 	    break;
 	  case IDM_PASTE:
-	    request_paste(NULL);
+	    //request_paste(NULL);
 	    break;
 	  case IDM_CLRSB:
 	    term_clrsb(term);
@@ -4185,7 +4160,7 @@ static int TranslateKey(UINT message, WPARAM wParam, LPARAM lParam,
 	    return 0;
 	}
 	if (wParam == VK_INSERT && shift_state == 1) {
-	    request_paste(NULL);
+	    //request_paste(NULL);
 	    return 0;
 	}
 	if (left_alt && wParam == VK_F4 && conf_get_int(conf, CONF_alt_f4)) {

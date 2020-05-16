@@ -587,7 +587,6 @@ void free_ctx(Context);
 void palette_set(void *frontend, int, int, int, int);
 void palette_reset(void *frontend);
 void write_aclip(void *frontend, char *, int, int);
-void write_clip(void *frontend, wchar_t *, int *, int, int);
 void get_clip(void *frontend, wchar_t **, int *);
 void optimised_move(void *frontend, int, int, int);
 void set_raw_mouse_mode(void *frontend, int);
@@ -609,7 +608,7 @@ void ldisc_update(void *frontend, int echo, int edit);
  * connection, if necessary; it can also invoke it later if the set of
  * special commands changes. It does not need to invoke it at session
  * shutdown. */
-void update_specials_menu(void *frontend);
+
 int from_backend(void *frontend, int is_stderr, const char *data, int len);
 int from_backend_untrusted(void *frontend, const char *data, int len);
 /* Called when the back end wants to indicate that EOF has arrived on
@@ -631,7 +630,7 @@ int get_userpass_input(prompts_t *p, unsigned char *in, int inlen);
 
 void set_iconic(void *frontend, int iconic);
 void move_window(void *frontend, int x, int y);
-void set_zorder(void *frontend, int top);
+
 void refresh_window(void *frontend);
 void set_zoomed(void *frontend, int zoomed);
 int is_iconic(void *frontend);
@@ -921,10 +920,6 @@ int conf_deserialise(Conf *conf, void *data, int maxsize);/*returns size used*/
  * handle data==NULL without crashing. So you can call it once to find
  * out a size, then again once you've allocated a buffer.
  */
-FontSpec *fontspec_copy(const FontSpec *f);
-void fontspec_free(FontSpec *f);
-int fontspec_serialise(FontSpec *f, void *data);
-FontSpec *fontspec_deserialise(void *data, int maxsize, int *used);
 
 /*
  * Exports from noise.c.
@@ -939,16 +934,7 @@ void random_destroy_seed(void);
 /*
  * Exports from settings.c.
  */
-Backend *backend_from_name(const char *name);
-Backend *backend_from_proto(int proto);
 char *get_remote_username(Conf *conf); /* dynamically allocated */
-char *save_settings(char *section, Conf *conf);
-void save_open_settings(void *sesskey, Conf *conf);
-void load_settings(char *section, Conf *conf);
-void load_open_settings(void *sesskey, Conf *conf);
-void get_sesslist(struct sesslist *, int allocate);
-void do_defaults(char *, Conf *);
-void registry_cleanup(void);
 
 /*
  * Functions used by settings.c to provide platform-specific
@@ -965,16 +951,12 @@ void registry_cleanup(void);
  * 'FontSpec *' returned by platform_default_fontspec, have ownership
  * transferred to the caller, and must be freed.
  */
-char *platform_default_s(const char *name);
-int platform_default_i(const char *name, int def);
-Filename *platform_default_filename(const char *name);
-FontSpec *platform_default_fontspec(const char *name);
 
 /*
  * Exports from terminal.c.
  */
 
-Terminal *term_init(Conf *, struct unicode_data *, void *);
+Terminal *term_init(struct unicode_data *, void *);
 void term_free(Terminal *);
 void term_size(Terminal *, int, int, int);
 void term_paint(Terminal *, Context, int, int, int, int, int);
@@ -994,7 +976,6 @@ void term_do_paste(Terminal *);
 void term_nopaste(Terminal *);
 int term_ldisc(Terminal *, int option);
 void term_copyall(Terminal *);
-void term_reconfig(Terminal *, Conf *);
 void term_seen_key_event(Terminal *); 
 int term_data(Terminal *, int is_stderr, const char *data, int len);
 int term_data_untrusted(Terminal *, const char *data, int len);
@@ -1009,59 +990,7 @@ int term_get_userpass_input(Terminal *term, prompts_t *p,
 
 int format_arrow_key(char *buf, Terminal *term, int xkey, int ctrl);
 
-/*
- * Exports from logging.c.
- */
-void *log_init(void *frontend, Conf *conf);
-void log_free(void *logctx);
-void log_reconfig(void *logctx, Conf *conf);
-void logfopen(void *logctx);
-void logfclose(void *logctx);
-void logtraffic(void *logctx, unsigned char c, int logmode);
-void logflush(void *logctx);
-void log_eventlog(void *logctx, const char *string);
-enum { PKT_INCOMING, PKT_OUTGOING };
-enum { PKTLOG_EMIT, PKTLOG_BLANK, PKTLOG_OMIT };
-struct logblank_t {
-    int offset;
-    int len;
-    int type;
-};
-void log_packet(void *logctx, int direction, int type,
-		char *texttype, const void *data, int len,
-		int n_blanks, const struct logblank_t *blanks,
-		const unsigned long *sequence,
-                unsigned downstream_id, const char *additional_log_text);
 
-/*
- * Exports from testback.c
- */
-
-extern Backend null_backend;
-extern Backend loop_backend;
-
-/*
- * Exports from raw.c.
- */
-
-extern Backend raw_backend;
-
-/*
- * Exports from rlogin.c.
- */
-
-extern Backend rlogin_backend;
-
-/*
- * Exports from telnet.c.
- */
-
-extern Backend telnet_backend;
-
-/*
- * Exports from ssh.c.
- */
-extern Backend ssh_backend;
 
 /*
  * Exports from ldisc.c.
@@ -1071,11 +1000,6 @@ void ldisc_configure(void *, Conf *);
 void ldisc_free(void *);
 void ldisc_send(void *handle, char *buf, int len, int interactive);
 
-/*
- * Exports from ldiscucs.c.
- */
-void lpage_send(void *, int codepage, char *buf, int len, int interactive);
-void luni_send(void *, wchar_t * widebuf, int len, int interactive);
 
 /*
  * Exports from sshrand.c.
@@ -1194,9 +1118,6 @@ void pgp_fingerprints(void);
  *    back via the provided function with a result that's either 0
  *    or +1'.
  */
-int verify_ssh_host_key(void *frontend, char *host, int port, char *keytype,
-                        char *keystr, char *fingerprint,
-                        void (*callback)(void *ctx, int result), void *ctx);
 /*
  * askalg has the same set of return values as verify_ssh_host_key.
  */
@@ -1300,10 +1221,6 @@ Filename *filename_from_str(const char *string);
 const char *filename_to_str(const Filename *fn);
 int filename_equal(const Filename *f1, const Filename *f2);
 int filename_is_null(const Filename *fn);
-Filename *filename_copy(const Filename *fn);
-void filename_free(Filename *fn);
-int filename_serialise(const Filename *f, void *data);
-Filename *filename_deserialise(void *data, int maxsize, int *used);
 char *get_username(void);	       /* return value needs freeing */
 char *get_random_data(int bytes);      /* used in cmdgen.c */
 char filename_char_sanitise(char c);   /* rewrite special pathname chars */

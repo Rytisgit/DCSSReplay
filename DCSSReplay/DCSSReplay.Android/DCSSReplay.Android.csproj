@@ -74,9 +74,6 @@
     <AndroidAsset Include="Assets\Extra.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </AndroidAsset>
-    <AndroidAsset Include="Assets\PuttyDLL.dll.lastcodeanalysissucceeded" />
-    <AndroidAsset Include="Assets\PuttyDLL.exp" />
-    <AndroidAsset Include="Assets\PuttyDLL.lib" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml" />
@@ -123,10 +120,21 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\PuttyDLL.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\PuttyDLL.pdb" />
+    <AndroidNativeLibrary Include="lib\arm64-v8a\libPutty_Android.so">
+      <!--Use ABI tags as below when sniffing folders not present. Only one ABI tag has to be present-->
+      <!-- <Abi>arm64-v8a</Abi> -->
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AndroidNativeLibrary>
+    <AndroidNativeLibrary Include="lib\armeabi-v7a\libPutty_Android.so">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AndroidNativeLibrary>
+    <None Include="lib\armeabi\libPutty_Android.so" />
+    <AndroidNativeLibrary Include="lib\x86\libPutty_Android.so">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AndroidNativeLibrary>
+    <AndroidNativeLibrary Include="lib\x86_64\libPutty_Android.so">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AndroidNativeLibrary>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>
