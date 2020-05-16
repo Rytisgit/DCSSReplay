@@ -331,13 +331,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\callback.c" />
-    <ClCompile Include="..\..\..\conf.c" />
-    <ClCompile Include="..\..\..\config.c" />
-    <ClCompile Include="..\..\..\dialog.c" />
-    <ClCompile Include="..\..\..\errsock.c" />
     <ClCompile Include="..\..\..\minibidi.c" />
     <ClCompile Include="..\..\..\misc.c" />
-    <ClCompile Include="..\..\..\settings.c" />
     <ClCompile Include="..\..\..\terminal.c" />
     <ClCompile Include="..\..\..\tree234.c" />
     <ClCompile Include="..\..\..\version.c" />
@@ -346,22 +341,12 @@
     <ClCompile Include="..\..\MSVC\PUTTYDLL\export.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\charset\charset.h" />
-    <ClInclude Include="..\..\..\dialog.h" />
-    <ClInclude Include="..\..\..\int64.h" />
-    <ClInclude Include="..\..\..\macosx\osx.h" />
     <ClInclude Include="..\..\..\misc.h" />
-    <ClInclude Include="..\..\..\network.h" />
-    <ClInclude Include="..\..\..\noshare.c" />
-    <ClInclude Include="..\..\..\pgssapi.h" />
-    <ClInclude Include="..\..\..\proxy.h" />
     <ClInclude Include="..\..\..\putty.h" />
     <ClInclude Include="..\..\..\puttymem.h" />
     <ClInclude Include="..\..\..\puttyps.h" />
-    <ClInclude Include="..\..\..\storage.h" />
     <ClInclude Include="..\..\..\terminal.h" />
     <ClInclude Include="..\..\..\tree234.h" />
-    <ClInclude Include="..\..\..\unix\unix.h" />
     <ClInclude Include="..\..\..\version.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
