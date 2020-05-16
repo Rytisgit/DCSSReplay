@@ -316,20 +316,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="..\..\putty.ico" />
-    <CustomBuild Include="..\..\puttycfg.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="..\..\putty.rc">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='PuttyDllDebug|Win32'">..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='PuttyDllDebug|x64'">..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="..\..\..\callback.c" />
     <ClCompile Include="..\..\..\minibidi.c" />
     <ClCompile Include="..\..\..\misc.c" />
@@ -344,7 +330,6 @@
     <ClInclude Include="..\..\..\misc.h" />
     <ClInclude Include="..\..\..\putty.h" />
     <ClInclude Include="..\..\..\puttymem.h" />
-    <ClInclude Include="..\..\..\puttyps.h" />
     <ClInclude Include="..\..\..\terminal.h" />
     <ClInclude Include="..\..\..\tree234.h" />
     <ClInclude Include="..\..\..\version.h" />
