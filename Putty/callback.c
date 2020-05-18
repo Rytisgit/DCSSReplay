@@ -5,7 +5,7 @@
 
 #include <stddef.h>
 
-#include "putty.h"
+#include "PUTTY.H"
 
 struct callback {
     struct callback *next;

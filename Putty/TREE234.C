@@ -29,7 +29,7 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include "tree234.h"
+#include "TREE234.H"
 
 #ifdef TEST
 #define LOG(x) (printf x)
@@ -40,7 +40,7 @@
                      (n) * sizeof(type)))
 #define sfree(ptr) free(ptr)
 #else
-#include "puttymem.h"
+#include "PUTTYMEM.H"
 #define LOG(x)
 #endif
 

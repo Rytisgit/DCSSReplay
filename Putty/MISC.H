@@ -5,7 +5,7 @@
 #ifndef PUTTY_MISC_H
 #define PUTTY_MISC_H
 
-#include "puttymem.h"
+#include "PUTTYMEM.H"
 
 #include <stdio.h>		       /* for FILE * */
 #include <stdarg.h>		       /* for va_list */
