@@ -116,6 +116,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="TileOverrideForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TileOverrideForm.Designer.cs">
+      <DependentUpon>TileOverrideForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="VisualDesigns\ProgressBar.cs" />
     <Compile Include="PlayerForm.cs">
     </Compile>
@@ -128,6 +134,9 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TileOverrideForm.resx">
+      <DependentUpon>TileOverrideForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

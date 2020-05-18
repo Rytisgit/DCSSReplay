@@ -31,16 +31,19 @@ namespace TtyRecMonkey
         private TimeSpan MaxDelayBetweenPackets = new TimeSpan(0,0,0,0,500);//millisecondss
         private int FrameStepCount;
         private int ConsoleSwitchLevel = 1;
+        private TileOverrideForm tileoverrideform;
 
         public PlayerForm()
-        {
+        { 
             this.Icon = Properties.Resource1.dcssreplay;
             frameGenerator = new MainGenerator();
+            tileoverrideform = new TileOverrideForm();
             Visible = true;
         }
 
         void OpenFile()
         {
+            
             Thread mt = new Thread(o =>
             {
                 var open = new OpenFileDialog()
@@ -207,7 +210,7 @@ namespace TtyRecMonkey
                             {
                                 try
                                 {
-                                    bmp = frameGenerator.GenerateImage(frame, ConsoleSwitchLevel).ToBitmap();
+                                    bmp = frameGenerator.GenerateImage(frame, ConsoleSwitchLevel, tileoverrideform.tileoverides).ToBitmap();
                                     Update2(bmp);
                                     frameGenerator.isGeneratingFrame = false;
                                     frame = null;
@@ -256,6 +259,7 @@ namespace TtyRecMonkey
 
                 case Keys.Escape: using (ttyrecDecoder) { } ttyrecDecoder = null; break;
                 case Keys.Control | Keys.C: PlayerDownloadWindow(); break;
+                case Keys.Control | Keys.T: TileOverrideWindow(); break;
                 case Keys.Control | Keys.O: OpenFile(); break;
                 case Keys.Alt | Keys.Enter:
                     if (FormBorderStyle == FormBorderStyle.None)
@@ -316,6 +320,11 @@ namespace TtyRecMonkey
                     break;
             }
             base.OnKeyDown(e);
+        }
+
+        private void TileOverrideWindow()
+        {
+            tileoverrideform.Visible = true;
         }
 
         private void PlayerDownloadWindow()
