@@ -92,7 +92,9 @@ namespace FrameGenerator
 #if true //Memory Limit Mode
                 GC.Collect();
 #endif
+                var base64String = Convert.ToBase64String(image.Encode(SKEncodedImageFormat.Png, 80).ToArray());
                 return image;
+                
             }
                 return null;
         }
