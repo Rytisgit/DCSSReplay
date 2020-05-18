@@ -15,8 +15,8 @@ namespace InputParser
         const int GameViewHeight = 17;
 
         private static char GetCharacter(TerminalCharacter character) => character.Character == 55328 ? ' ' : character.Character;
-        private static string GetColoredCharacter(TerminalCharacter character) => GetCharacter(character) + Enum.GetName(typeof(ColorList2), character.ForegroundPaletteIndex);
-        private static string GetBackgroundColor(TerminalCharacter character) => Enum.GetName(typeof(ColorList2), character.BackgroundPaletteIndex);
+        private static string GetColoredCharacter(TerminalCharacter character) => GetCharacter(character) + Enum.GetName(typeof(ColorListEnum), character.ForegroundPaletteIndex);
+        private static string GetBackgroundColor(TerminalCharacter character) => Enum.GetName(typeof(ColorListEnum), character.BackgroundPaletteIndex);
 
         private static LayoutType GetLayoutType(TerminalCharacter[,] characters, out string newlocation)
         {
