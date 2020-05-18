@@ -63,6 +63,25 @@ namespace FrameGenerator.Extensions
             return fullstring;
         }
 
+        public static void OverideTiles(this Model model, Dictionary<string, string> tileOverides)
+        {
+            foreach(var key in tileOverides.Keys)
+            {
+                for (int i = 0; i < model.TileNames.Length; i++)
+                {
+                    if (model.TileNames[i].Contains(key))
+                    {
+                        System.Console.WriteLine(key);
+                       // System.Console.WriteLine(model.TileNames[i]);
+                        string newtile = tileOverides[key] + model.TileNames[i].Substring(1);
+                        model.TileNames[i] = newtile;
+                        System.Console.WriteLine(model.TileNames[i]);
+                    }
+                }
+            }       
+        }
+
+
         public static bool IsWallOrFloor(this string tilename) => tilename[0] == '#' || tilename[0] == '.' || tilename[0] == ',' || tilename[0] == '*' || tilename[0] == '≈';
     }
 }

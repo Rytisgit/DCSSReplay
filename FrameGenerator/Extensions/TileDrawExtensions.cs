@@ -58,11 +58,15 @@ namespace FrameGenerator.Extensions
             return false;
         }
 
-        public static bool TryDrawCachedTile(this string tile, string highlight, Cacher outOfSightCache, List<char> noCache, out SKBitmap lastSeen, out bool Cached)
+        public static bool TryDrawCachedTile(this string tile, string highlight, Cacher outOfSightCache, List<char> noCache, List<string> list, out SKBitmap lastSeen, out bool Cached)
         {
             Cached = false;
             lastSeen = null;
             if (noCache.Contains(tile[0]))
+            {
+                return false;
+            }
+            if (list.Contains(tile))
             {
                 return false;
             }
@@ -142,6 +146,7 @@ namespace FrameGenerator.Extensions
 
             using (SKCanvas g = new SKCanvas(tileToDraw))
             {
+                g.Clear(SKColors.Black);
                 if (tile.StartsWith("@BL")) return false;//player tile draw override TODO
                 var isHighlighted = FixHighlight(tile, background, out var correctTile);
                 string pngName;
