@@ -1,0 +1,37 @@
+        BLACK,//0 (black if sleeping? color is background for monster list?)
+        RED,  CLOUD_FIRE
+        GREEN, CLOUD_MEPHITIC if qaz CLOUD_DUST
+        BROWN, CLOUD_DUST
+        BLUE, CLOUD_COLD
+        MAGENTA, if § neg tloc hybrid else CLOUD_NEGATIVE_ENERGY
+        CYAN, CLOUD_SPECTRAL
+        LIGHTGREY, if salt CLOUD_SALT CLOUD_GREY_SMOKE if cloud god CLOUD_STORM
+        DARKGREY, CLOUD_MIASMA, if shoals CLOUD_INK if cloud god CLOUD_STORM
+        LIGHTRED, CLOUD_FIRE
+        LIGHTGREEN,CLOUD_POISON
+        YELLOW, if § CLOUD_FIRE else CLOUD_ACID  if gold dust status CLOUD_GOLD_DUST
+        LIGHTBLUE,CLOUD_COLD
+        LIGHTMAGENTA, CLOUD_MUTAGENIC
+        LIGHTCYAN, CLOUD_SPECTRAL
+        WHITE, if § salt CLOUD_SALT  if § d or lair CLOUD_PETRIFY, else if § and pan? TILE_CLOUD_YELLOW_SMOKE else if § CLOUD_COLD if gold dust status CLOUD_GOLD_DUST 
+		
+TORNADO:	
+
+tornado1 LIGHTRED  LIGHTCYAN LIGHTBLUE  WHITE 
+tornado2 RED CYAN BLUE LIGHTGREY
+
+
+split into paths for different tiles
+test of type by function / enum into the correct path
+
+magical condensation random clouds - caused by ood, maybe should change when orb spiders on screen
+
+add lost health indicator per turn/ its in but somehow buggy lol
+
+P - plant
+
+add held weapon?
+
+map is offset sometimes
+
+recolor tiles based on background color (selectors, travels paths, bolts)

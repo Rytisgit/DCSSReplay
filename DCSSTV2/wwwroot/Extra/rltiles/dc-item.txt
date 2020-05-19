@@ -1,0 +1,1075 @@
+# A note on variations. To create additional variations for weapons or armour,
+# simply create 1-5 images, e.g.:
+#
+#    weapon_normal WEP_SOME_WEAPON
+#    weapon_shiny
+#    weapon_runed
+#    weapon_glowing
+#    weapon_randart
+#
+# If only the first linrune has a define on it, then the following images will be
+# considered as variations. If you don't have five, images will be reused for
+# multiple types. See tilepick.cc for more details.
+
+##### Artefacts (fixed and unrandart)
+%include dc-unrand.txt
+
+urand_wyrmbane1 UNRAND_WYRMBANE1
+urand_wyrmbane2 UNRAND_WYRMBANE2
+urand_wyrmbane3 UNRAND_WYRMBANE3
+urand_wyrmbane4 UNRAND_WYRMBANE4
+
+#####NORMAL
+%sdir item/weapon
+%rim 0
+##Maces and Flails
+club WPN_CLUB
+club2
+mace1 WPN_MACE
+mace2
+mace3
+mace_large1 WPN_GREAT_MACE
+mace_large2
+mace_large3
+flail1 WPN_FLAIL
+flail2
+flail3
+dire_flail1 WPN_DIRE_FLAIL
+dire_flail2
+dire_flail3
+morningstar1 WPN_MORNINGSTAR
+morningstar2
+morningstar3
+eveningstar1 WPN_EVENINGSTAR
+eveningstar2
+eveningstar3
+bullwhip WPN_WHIP
+bullwhip2
+bullwhip3
+giant_club WPN_GIANT_CLUB
+giant_club2
+giant_club3
+giant_spiked_club WPN_GIANT_SPIKED_CLUB
+giant_spiked_club2
+giant_spiked_club3
+demon_whip WPN_DEMON_WHIP
+demon_whip2
+demon_whip3
+sacred_scourge WPN_SACRED_SCOURGE
+
+##Short Blades
+dagger WPN_DAGGER
+dagger2
+dagger3
+short_sword1 WPN_SHORT_SWORD
+short_sword2
+short_sword3
+rapier1 WPN_RAPIER
+rapier2
+rapier3
+quickblade1 WPN_QUICK_BLADE
+quickblade2
+quickblade3
+
+##Long Blades
+falchion1 WPN_FALCHION
+falchion2
+falchion3
+scimitar1 WPN_SCIMITAR
+scimitar2
+scimitar3
+long_sword1 WPN_LONG_SWORD
+long_sword2
+long_sword3
+greatsword1 WPN_GREAT_SWORD
+greatsword2
+greatsword3
+double_sword WPN_DOUBLE_SWORD
+double_sword2
+double_sword3
+triple_sword WPN_TRIPLE_SWORD
+triple_sword2
+triple_sword3
+demon_blade WPN_DEMON_BLADE
+demon_blade2
+demon_blade3
+blessed_blade WPN_BLESSED_BLADE
+
+##Axes
+hand_axe1 WPN_HAND_AXE
+hand_axe2
+hand_axe3
+war_axe1 WPN_WAR_AXE
+war_axe2
+war_axe3
+broad_axe1 WPN_BROAD_AXE
+broad_axe2
+broad_axe3
+battle_axe1 WPN_BATTLEAXE
+battle_axe2
+battle_axe3
+executioner_axe1 WPN_EXECUTIONERS_AXE
+executioner_axe2
+executioner_axe3
+
+##Polearms
+spear1 WPN_SPEAR
+spear2
+spear3
+trident1 WPN_TRIDENT
+trident2
+trident3
+halberd1 WPN_HALBERD
+halberd2
+halberd3
+scythe1 WPN_SCYTHE
+scythe2
+scythe3
+glaive1 WPN_GLAIVE
+glaive2
+glaive3
+bardiche1 WPN_BARDICHE
+bardiche2
+bardiche3
+demon_trident WPN_DEMON_TRIDENT
+demon_trident2
+demon_trident3
+trishula WPN_TRISHULA
+
+##Staves
+staff WPN_STAFF
+quarterstaff WPN_QUARTERSTAFF
+quarterstaff2
+quarterstaff3
+lajatang1 WPN_LAJATANG
+lajatang2
+lajatang3
+
+staff_mummy WPN_STAFF_MUMMY
+%rim 1
+
+
+##Ranged
+%sdir item/weapon/ranged
+blowgun1 WPN_BLOWGUN
+blowgun2
+
+sling1 WPN_HUNTING_SLING
+sling2
+sling3
+%rim 0
+fustibalus1 WPN_FUSTIBALUS
+fustibalus2
+fustibalus3
+
+shortbow1 WPN_SHORTBOW
+shortbow2
+shortbow3
+longbow1 WPN_LONGBOW
+longbow2
+longbow3
+
+hand_crossbow WPN_HAND_CROSSBOW
+hand_crossbow2
+hand_crossbow3
+arbalest1 WPN_ARBALEST
+arbalest2
+arbalest3
+triple_crossbow WPN_TRIPLE_CROSSBOW
+triple_crossbow2
+
+%sdir item/weapon/brands
+%rim 0
+# The order of weapon brands must be identical to the one defined
+# in item-prop-enum.h.
+i-flaming BRAND_FLAMING BRAND_WEP_FIRST
+i-freezing BRAND_FREEZING
+i-holy_wrath BRAND_HOLY_WRATH
+i-electrocution BRAND_ELECTROCUTION
+# Remove _slaying brands when TAG_MAJOR_VERSION > 34
+i-confusion BRAND_ORC_SLAYING
+i-confusion BRAND_DRAGON_SLAYING
+# End removals
+i-venom BRAND_VENOM
+i-protection BRAND_PROTECTION
+i-draining BRAND_DRAINING
+i-speed BRAND_SPEED
+i-vorpal BRAND_VORPAL
+# Remove the BRAND_FLAME and BRAND_FROST lines (but not the tiles, which are
+# still used for melee weapons) when TAG_MAJOR_VERSION > 34
+i-flaming BRAND_FLAME
+i-freezing BRAND_FROST
+i-vampirism BRAND_VAMPIRISM
+i-pain BRAND_PAIN
+%rim 1
+i-antimagic BRAND_ANTIMAGIC
+%rim 0
+i-distortion BRAND_DISTORTION
+# Remove confusion when TAG_MAJOR_VERSION > 34
+i-confusion BRAND_REACHING
+# Remove returning when TAG_MAJOR_VERSION > 34
+i-returning BRAND_RETURNING
+i-chaos BRAND_CHAOS
+# Remove evasion when TAG_MAJOR_VERSION > 34
+i-evasion BRAND_EVASION
+# Remove confusion down when TAG_MAJOR_VERSION > 34
+i-confusion BRAND_CONFUSION
+i-penetration BRAND_PENETRATION
+i-reaping BRAND_REAPING BRAND_WEP_LAST
+# missile-only brands, order doesn't matter
+i-dispersal BRAND_DISPERSAL
+i-explosion BRAND_EXPLOSION
+i-venom BRAND_POISONED
+i-curare BRAND_CURARE
+i-electrocution BRAND_ELECTRIC
+# Remove sickness, slowingr, paralysis, and sleep when TAG_MAJOR_VERSION > 34
+i-sickness BRAND_SICKNESS
+i-slowing BRAND_SLOWING
+i-paralysis BRAND_PARALYSIS
+i-frenzy BRAND_FRENZY
+i-sleep BRAND_SLEEP
+i-blinding BRAND_BLINDING
+%rim 1
+%sdir item/weapon/ranged
+
+######OBJ_MISSILES
+stone MI_STONE
+# flying stone
+effect/stone0 MI_STONE0
+
+sling_bullet1 MI_SLING_BULLET
+sling_bullet2
+steel_sling_bullet1 MI_SLING_BULLET_STEEL
+steel_sling_bullet2
+silver_sling_bullet1 MI_SLING_BULLET_SILVER
+silver_sling_bullet2
+# flying bullets
+effect/sling_bullet0 MI_SLING_BULLET0
+effect/sling_bullet_runed0
+effect/steel_sling_bullet0 MI_SLING_BULLET_STEEL0
+effect/steel_sling_bullet_runed0
+effect/silver_sling_bullet0 MI_SLING_BULLET_SILVER0
+effect/silver_sling_bullet_runed0
+
+arrow1 MI_ARROW
+arrow2
+steel_arrow1 MI_ARROW_STEEL
+steel_arrow2
+silver_arrow1 MI_ARROW_SILVER
+silver_arrow2
+# flying arrows
+effect/arrow0 MI_ARROW0
+effect/arrow1 MI_ARROW1
+effect/arrow2 MI_ARROW2
+effect/arrow3 MI_ARROW3
+effect/arrow4 MI_ARROW4
+effect/arrow5 MI_ARROW5
+effect/arrow6 MI_ARROW6
+effect/arrow7 MI_ARROW7
+
+crossbow_bolt1 MI_BOLT
+crossbow_bolt2
+steel_crossbow_bolt1 MI_BOLT_STEEL
+steel_crossbow_bolt2
+silver_crossbow_bolt1 MI_BOLT_SILVER
+silver_crossbow_bolt2
+# flying bolts
+effect/bolt0 MI_BOLT0
+effect/bolt1 MI_BOLT1
+effect/bolt2 MI_BOLT2
+effect/bolt3 MI_BOLT3
+effect/bolt4 MI_BOLT4
+effect/bolt5 MI_BOLT5
+effect/bolt6 MI_BOLT6
+effect/bolt7 MI_BOLT7
+
+%rim 0
+boomerang1 MI_BOOMERANG
+boomerang2
+silver_boomerang MI_BOOMERANG_SILVER
+# flying boomerangs
+effect/boomerang0 MI_BOOMERANG0
+effect/boomerang1 MI_BOOMERANG1
+effect/boomerang2 MI_BOOMERANG2
+effect/boomerang3 MI_BOOMERANG3
+
+%rim 1
+dart1 MI_DART
+dart2
+dart-p MI_DART_P
+dart-c MI_DART_CURARE
+# flying needles
+effect/needle0 MI_DART0
+effect/needle1 MI_DART1
+effect/needle2 MI_DART2
+effect/needle3 MI_DART3
+effect/needle4 MI_DART4
+effect/needle5 MI_DART5
+effect/needle6 MI_DART6
+effect/needle7 MI_DART7
+
+%rim 0
+javelin1 MI_JAVELIN
+javelin2
+steel_javelin1 MI_JAVELIN_STEEL
+steel_javelin2
+silver_javelin1 MI_JAVELIN_SILVER
+silver_javelin2
+%rim 1
+# flying javelins
+effect/javelin0 MI_JAVELIN0
+effect/javelin1 MI_JAVELIN1
+effect/javelin2 MI_JAVELIN2
+effect/javelin3 MI_JAVELIN3
+effect/javelin4 MI_JAVELIN4
+effect/javelin5 MI_JAVELIN5
+effect/javelin6 MI_JAVELIN6
+effect/javelin7 MI_JAVELIN7
+
+throwing_net MI_THROWING_NET
+# flying nets
+effect/throwing_net0 MI_THROWING_NET0
+effect/throwing_net1 MI_THROWING_NET1
+effect/throwing_net2 MI_THROWING_NET2
+effect/throwing_net3 MI_THROWING_NET3
+effect/throwing_net4 MI_THROWING_NET4
+effect/throwing_net5 MI_THROWING_NET5
+effect/throwing_net6 MI_THROWING_NET6
+effect/throwing_net7 MI_THROWING_NET7
+
+%rim 0
+rock MI_LARGE_ROCK
+# flying rock
+effect/rock0 MI_LARGE_ROCK0
+
+######OBJ_ARMOUR
+%sdir item/armour
+robe1 ARM_ROBE ARM_ROBE_FIRST
+robe2 ARM_ROBE_LAST
+robe_ego1 ARM_ROBE_EGO_FIRST
+robe_ego2 ARM_ROBE_EGO_LAST
+robe_art1 ARM_ROBE_ART_FIRST
+robe_art2 ARM_ROBE_ART_LAST
+
+leather_armour1 ARM_LEATHER_ARMOUR
+leather_armour2
+leather_armour3
+
+ring_mail1 ARM_RING_MAIL
+ring_mail2
+ring_mail3
+
+scale_mail1 ARM_SCALE_MAIL
+scale_mail2
+scale_mail3
+
+chain_mail1 ARM_CHAIN_MAIL
+chain_mail2
+chain_mail3
+
+plate1 ARM_PLATE_ARMOUR
+plate2
+plate3
+
+crystal_plate ARM_CRYSTAL_PLATE_ARMOUR
+crystal_plate2
+crystal_plate3
+
+animal_skin1 ARM_ANIMAL_SKIN
+animal_skin2
+animal_skin3
+
+troll_leather_armour ARM_TROLL_LEATHER_ARMOUR
+red_dragon_scale_mail ARM_FIRE_DRAGON_ARMOUR
+ice_dragon_armour ARM_ICE_DRAGON_ARMOUR
+silver_dragon_scale_mail ARM_STEAM_DRAGON_ARMOUR
+acid_dragon_armour ARM_ACID_DRAGON_ARMOUR
+quicksilver_dragon_scale_mail ARM_QUICKSILVER_DRAGON_ARMOUR
+blue_dragon_scale_mail ARM_STORM_DRAGON_ARMOUR
+shadow_dragon_scale_mail ARM_SHADOW_DRAGON_ARMOUR
+gold_dragon_armour ARM_GOLD_DRAGON_ARMOUR
+swamp_dragon_armour ARM_SWAMP_DRAGON_ARMOUR
+pearl_dragon_armour ARM_PEARL_DRAGON_ARMOUR
+
+deep_troll_leather DEEP_TROLL_LEATHER
+iron_troll_leather IRON_TROLL_LEATHER
+
+%rim 1
+cloak1_leather ARM_CLOAK
+cloak2
+cloak3
+cloak4
+
+scarf1 ARM_SCARF
+scarf2_1
+scarf2_2
+scarf2_3
+scarf3
+
+%sdir item/armour/bardings
+naga_barding_blue ARM_NAGA_BARDING
+naga_barding_metal
+naga_barding_magenta
+naga_barding_red
+centaur_barding_blue ARM_CENTAUR_BARDING
+centaur_barding_metal
+centaur_barding_magenta
+centaur_barding_red
+
+%sdir item/armour/shields
+%rim 0
+buckler1 ARM_BUCKLER
+buckler2
+buckler3
+%rim 1
+
+buckler_spriggan ARM_BUCKLER_SPRIGGAN
+
+shield1 ARM_SHIELD
+shield2
+shield3
+
+large_shield1 ARM_LARGE_SHIELD
+large_shield2
+large_shield3
+
+shield_dd SHIELD_DEEP_DWARF
+shield_dd_scion SHIELD_DEEP_DWARF_SCION
+lshield_dd_dk LARGE_SHIELD_DEEP_DWARF_DEATH_KNIGHT
+%rim 0
+shield_donald SHIELD_DONALD
+lshield_louise LSHIELD_LOUISE
+%rim 1
+
+%sdir item/armour/headgear
+#####ARM_HELMET
+elven_leather_helm THELM_CAP
+cap_jester THELM_CAP_JESTER
+
+%rim 0
+hat1 THELM_HAT
+hat2
+hat3
+
+helmet1 THELM_HELM THELM_FIRST
+helmet2
+helmet3
+helmet4
+helmet5 THELM_LAST
+helmet_ego1 THELM_EGO_FIRST
+helmet_ego2
+helmet_ego3
+helmet_ego4 THELM_EGO_LAST
+helmet_art1 THELM_ART_FIRST
+helmet_art2
+helmet_art3 THELM_ART_LAST
+
+%sdir item/armour
+###### GLOVES
+glove1 ARM_GLOVES
+glove2
+glove3
+glove4
+glove5
+
+###### BOOTS
+%rim 1
+boots1_brown ARM_BOOTS
+boots2_jackboots
+boots3_stripe
+boots4_green
+
+### Armour brands
+# The order of armour brands must be identical to the one defined
+# in item-prop-enum.h.
+%sdir item/armour/brands
+i-running BRAND_ARM_RUNNING BRAND_ARM_FIRST
+i-fire-res BRAND_ARM_FIRE_RESISTANCE
+i-cold-res BRAND_ARM_COLD_RESISTANCE
+i-poison-res BRAND_ARM_POISON_RESISTANCE
+i-see-invis BRAND_ARM_SEE_INVISIBLE
+i-invisibility BRAND_ARM_INVISIBILITY
+i-strength BRAND_ARM_STRENGTH
+i-dexterity BRAND_ARM_DEXTERITY
+i-intelligence BRAND_ARM_INTELLIGENCE
+i-ponderous BRAND_ARM_PONDEROUSNESS
+i-flying BRAND_ARM_FLYING
+i-magic-res BRAND_ARM_MAGIC_RESISTANCE
+i-protection BRAND_ARM_PROTECTION
+%rim 0
+i-stealth BRAND_ARM_STEALTH
+%rim 1
+i-resistance BRAND_ARM_RESISTANCE
+i-positive-energy BRAND_ARM_POSITIVE_ENERGY
+i-archmagi BRAND_ARM_ARCHMAGI
+# Remove preservation when TAG_MAJOR_VERSION > 34
+i-preservation BRAND_ARM_PRESERVATION
+i-reflection BRAND_ARM_REFLECTION
+i-spirit BRAND_ARM_SPIRIT_SHIELD
+i-archery BRAND_ARM_ARCHERY
+# Remove jumping when TAG_MAJOR_VERSION > 34
+i-jumping BRAND_ARM_JUMPING
+i-repulsion BRAND_ARM_REPULSION
+i-cloud-immune BRAND_ARM_CLOUD_IMMUNE BRAND_ARM_LAST
+
+###########OBJ_WANDS
+%sdir item/wand
+%rim 0
+gem_iron WAND_OFFSET UNSEEN_WAND
+gem_brass
+gem_bone
+gem_wood
+gem_copper
+gem_gold
+gem_silver
+gem_bronze
+gem_ivory
+gem_glass
+gem_lead
+gem_plastic
+%rim 1
+
+%sdir item/wand
+#### These must be in the same order as the enum in item-prop-enum.h!
+# Remove REMOVEMEs when TAG_MAJOR_VERSION > 34
+i-flame WAND_FLAME WAND_ID_FIRST
+i-flame WAND_REMOVEME
+i-slowing WAND_REMOVEME9
+i-hasting WAND_REMOVEME7
+i-flame WAND_REMOVEME2
+i-heal_wounds WAND_REMOVEME6
+i-paralysis WAND_PARALYSIS
+i-flame WAND_REMOVEME3
+i-flame WAND_REMOVEME4
+i-confusion WAND_REMOVEME10
+i-flame WAND_REMOVEME5
+i-digging WAND_DIGGING
+i-iceblast WAND_ICEBLAST
+i-teleportation WAND_REMOVEME8
+i-lightning WAND_REMOVEME11
+i-polymorph WAND_POLYMORPH
+i-enslavement WAND_ENSLAVEMENT
+i-acid WAND_ACID
+i-random_effects WAND_RANDOM_EFFECTS
+i-disintegration WAND_DISINTEGRATION
+i-clouds WAND_CLOUDS
+i-scattershot WAND_SCATTERSHOT WAND_ID_LAST
+
+#################OBJ_FOOD
+%sdir item/food
+bread_ration FOOD_RATION UNSEEN_FOOD FOOD_RATION_FIRST FOOD_RATION_INVENTORY
+meat_ration
+cheese
+honeycomb FOOD_HONEYCOMB
+sausage
+pizza FOOD_PIZZA
+beef_jerky
+apple FOOD_FRUIT_FIRST FOOD_APPLE
+apricot
+banana
+choko
+grape
+lemon
+orange
+pear
+snozzcumber
+strawberry FOOD_FRUIT_LAST
+fruit FOOD_FRUIT_INVENTORY FOOD_RATION_LAST
+
+%rim 0
+bone_humanoid1 FOOD_BONE_HUMANOID
+bone_humanoid2
+bone_humanoid3
+bone_humanoid4
+bone1 FOOD_BONE
+bone2
+bone3
+bone4
+%rim 1
+chunk FOOD_CHUNK
+%back chunk
+chunk_brands/i-decay FOOD_CHUNK_ROTTING
+chunk_brands/i-forbidden FOOD_CHUNK_FORBIDDEN
+chunk_brands/i-inedible FOOD_CHUNK_INEDIBLE
+%back none
+chunk_brands/i-decay FOOD_ROTTING
+chunk_brands/i-forbidden FOOD_FORBIDDEN
+chunk_brands/i-inedible FOOD_INEDIBLE
+
+#################OBJ_UNKNOWN_I
+##################OBJ_SCROLLS
+%sdir item/scroll
+scroll SCROLL UNSEEN_SCROLL
+
+#### These must be in the same order as the enum in item-prop-enum.h!
+%sdir item/scroll
+%back scroll-yellow
+i-identify SCR_IDENTIFY SCR_ID_FIRST
+%back scroll-purple
+i-teleportation SCR_TELEPORTATION
+%back scroll-blue
+i-fear SCR_FEAR
+%back scroll-grey
+i-noise SCR_NOISE
+%back scroll-yellow
+i-remove_curse SCR_REMOVE_CURSE
+# aka scroll of summoning
+%back scroll-brown
+i-unholy_creation SCR_UNHOLY_CREATION
+%back scroll-green
+i-enchant-weapon SCR_ENCHANT_WEAPON
+i-enchant_armour SCR_ENCHANT_ARMOUR
+%back scroll-red
+i-torment SCR_TORMENT
+%back scroll-grey
+i-random_uselessness SCR_RANDOM_USELESSNESS
+%back scroll-grey
+#### Remove curse foo when TAG_MAJOR_VERSION > 34
+i-curse_weapon SCR_CURSE_WEAPON
+i-curse_armour SCR_CURSE_ARMOUR
+i-immolation SCR_IMMOLATION
+%back scroll-purple
+i-blinking SCR_BLINKING
+%back scroll-yellow
+i-magic_mapping SCR_MAGIC_MAPPING
+%back scroll-blue
+i-fog SCR_FOG
+%back scroll-cyan
+i-acquirement SCR_ACQUIREMENT
+%back scroll-green
+# Remove enchant weapon II when TAG_MAJOR_VERSION > 34
+i-enchant-weapon SCR_ENCHANT_WEAPON_II
+i-brand-weapon SCR_BRAND_WEAPON
+# Remove recharging when TAG_MAJOR_VERSION > 34
+i-recharging SCR_RECHARGING
+# Remove enchant weapon III when TAG_MAJOR_VERSION > 34
+i-enchant-weapon SCR_ENCHANT_WEAPON_III
+%back scroll-red
+i-holy_word SCR_HOLY_WORD
+i-vulnerability SCR_VULNERABILITY
+%back scroll-red
+i-silence SCR_SILENCE
+%back scroll-yellow
+i-amnesia SCR_AMNESIA
+%back scroll-grey
+#### Remove curse foo when TAG_MAJOR_VERSION > 34
+# Don't forget to update SCR_ID_LAST
+i-curse-jewellery SCR_CURSE_JEWELLERY SCR_ID_LAST
+%back none
+
+##################OBJ_JEWELLERY
+############ring
+%sdir item/ring
+%rim 0
+wooden RING_NORMAL_OFFSET UNSEEN_RING
+silver
+gold
+iron
+steel
+tourmaline
+brass
+copper
+granite
+ivory
+ruby
+tiger_eye
+jade
+glass
+agate
+clay
+diamond
+emerald
+gold_green
+gold_red
+opal
+pearl
+coral
+gold_blue
+plain_red
+plain_yellow
+plain_black
+bronze
+moonstone
+
+###########randarts
+%sdir item/ring/randarts
+four-colour RING_RANDART_OFFSET
+green
+ice
+blood
+dark
+red-blue
+double
+anvil
+eye
+flower
+zircon
+fire
+pink
+bronze-flower
+snake
+
+###########icons
+%sdir item/ring
+#### These must be in the same order as the enum in item-prop-enum.h!
+# Remove regeneration when TAG_MAJOR_VERSION > 34 (and mark protection as 1st)
+i-protection RING_REGENERATION RING_ID_FIRST
+i-protection RING_PROTECTION
+i-r-fire RING_PROTECTION_FROM_FIRE
+i-r-poison RING_POISON_RESISTANCE
+i-r-cold RING_PROTECTION_FROM_COLD
+i-str RING_STRENGTH
+i-slaying RING_SLAYING
+i-see-invis RING_SEE_INVISIBLE
+i-r-corrosion RING_RESIST_CORROSION
+i-attention RING_ATTENTION
+i-teleport RING_TELEPORTATION
+i-evasion RING_EVASION
+# Remove sustat when TAG_MAJOR_VERSION > 34
+i-s-attr RING_SUSTAIN_ATTRIBUTES
+i-stealth RING_STEALTH
+i-dex RING_DEXTERITY
+i-int RING_INTELLIGENCE
+i-wizardry RING_WIZARDRY
+i-magical-power RING_MAGICAL_POWER
+i-flight RING_FLIGHT
+i-life-protection RING_LIFE_PROTECTION
+i-r-magic RING_PROTECTION_FROM_MAGIC
+i-fire RING_FIRE
+i-ice RING_ICE
+# remove teleport control when TAG_MAJOR_VERSION > 34 and mark ice as last
+i-c-teleport RING_TELEPORT_CONTROL RING_ID_LAST
+
+############amulets
+%sdir item/amulet
+sapphire AMU_NORMAL_OFFSET UNSEEN_AMULET
+zirconium
+golden
+emerald
+garnet
+bronze
+brass
+copper
+ruby
+citrine
+bone
+platinum
+jade
+flourescent
+amethyst
+cameo
+pearl
+blue
+peridot
+jasper
+diamond
+malachite
+steel
+cabochon
+silver
+soapstone
+lapis_lazuli
+filigree
+beryl
+
+###########randarts
+%sdir item/amulet/randarts
+azure AMU_RANDART_OFFSET
+cluster
+drop
+knot
+scarab
+skull
+spider
+sun
+
+###########icons
+%sdir item/amulet
+# These must be in the same order as the enum in item-prop-enum.h!
+# remove REMOVEMEs when TAG_MAJOR_VERSION > 34
+i-rage AMU_RAGE AMU_ID_FIRST
+i-harm AMU_HARM
+i-acrobat AMU_ACROBAT
+i-m-regeneration AMU_MANA_REGENERATION
+i-gourmand AMU_THE_GOURMAND
+i-rage AMU_REMOVEME1
+i-rage AMU_REMOVEME2
+i-inaccuracy AMU_INACCURACY
+i-rage AMU_NOTHING
+i-spirit AMU_GUARDIAN_SPIRIT
+i-faith AMU_FAITH
+i-reflection AMU_REFLECTION
+i-regeneration AMU_REGENERATION AMU_ID_LAST
+
+####################OBJ_POTIONS
+%sdir item/potion
+unknown POTION_OFFSET UNSEEN_POTION
+brilliant_blue
+black
+silver
+cyan
+magenta
+orange
+dark
+ruby
+yellow
+emerald
+brown
+pink
+white
+bubbly
+cloudy
+effervescent
+fizzy
+golden
+murky
+puce
+purple_red
+sky_blue
+
+%sdir item/potion
+%back i-label
+# These must be in the same order as the enum in enum.h!
+i-curing POT_CURING POT_ID_FIRST
+i-heal-wounds POT_HEAL_WOUNDS
+i-haste POT_HASTE
+i-might POT_MIGHT
+i-brilliance POT_BRILLIANCE
+i-agility POT_AGILITY
+# please remove these 3 when TAG_MAJOR_VERSION is bumped
+i-gain-strength POT_REMOVEME2
+i-gain-dexterity POT_REMOVEME3
+i-gain-intelligence POT_REMOVEME4
+i-flight POT_FLIGHT
+# please remove POT_POISON when TAG_MAJOR_VERSION is bumped
+i-poison POT_POISON
+i-slowing POT_SLOWING
+i-cancel POT_CANCELLATION
+i-ambrosia POT_AMBROSIA
+i-invisibility POT_INVISIBILITY
+# Remove porridge when TAG_MAJOR_VERSION > 34
+i-porridge POT_PORRIDGE
+i-degeneration POT_DEGENERATION
+# please remove these 2 when TAG_MAJOR_VERSION is bumped
+i-decay POT_REMOVEME5
+i-confusion POT_REMOVE_ME
+i-experience POT_EXPERIENCE
+i-magic POT_MAGIC
+# remove these 2 when TAG_MAJOR_VERSION is bumped
+i-restore-abilities POT_REMOVEME6
+i-strong-poison POT_REMOVEME7
+i-berserk-rage POT_BERSERK_RAGE
+# please remove POT_CURE_MUTATION when TAG_MAJOR_VERSION is bumped
+i-cure-mutation POT_REMOVEME8
+i-mutation POT_MUTATION
+i-resistance POT_RESISTANCE
+# Remove all blood blood when TAG_MAJOR_VERSION > 34
+i-blood POT_BLOOD
+i-coagulated-blood POT_BLOOD_COAGULATED
+i-lignify POT_LIGNIFY
+# Remove beneficial mutation and update POT_ID_LAST when TAG_MAJOR_VERSION > 34
+i-good-mutation POT_REMOVEME9 POT_ID_LAST
+%back none
+%rim 1
+
+####################OBJ_UNKNOWN_II
+#####################OBJ_BOOKS
+%sdir item/book
+light_gray BOOK_OFFSET UNSEEN_BOOK
+dark_blue
+dark_green
+cyan
+red
+purple
+tan
+book_of_the_dead
+dark_gray
+light_blue
+light_green
+turquoise
+pink
+magenta
+yellow
+white
+parchment
+leather
+tan
+plaid
+light_brown
+dark_brown
+bronze
+copper
+silver
+gold
+metal_blue
+metal_cyan
+metal_green
+cloth
+############manuals
+manual1 BOOK_MANUAL
+manual2
+# randarts
+%sdir item/book/artefact
+wrinkled BOOK_RANDART_OFFSET
+vellum
+velvet
+thick
+buckle
+bookmark
+thin
+
+#####################OBJ_STAVES
+%sdir item/staff
+staff00 STAFF_OFFSET UNSEEN_STAFF
+staff01
+staff02
+staff03
+staff04
+staff05
+staff06
+staff07
+staff08
+staff09
+
+# These must be in the same order as the enum in item-prop-enum.h!
+i-staff_wizardry STAFF_WIZARDRY STAFF_ID_FIRST
+i-staff_power STAFF_POWER
+i-staff_fire STAFF_FIRE
+i-staff_cold STAFF_COLD
+i-staff_poison STAFF_POISON
+i-staff_energy STAFF_ENERGY
+i-staff_death STAFF_DEATH
+i-staff_conjuration STAFF_CONJURATION
+# Remove when TAG_MAJOR_VERSION > 34
+i-staff_enchantment STAFF_ENCHANTMENT
+i-staff_summoning STAFF_SUMMONING
+i-staff_air STAFF_AIR
+# Remove channeling and update STAFF_ID_LAST when TAG_MAJOR_VERSION > 34
+i-staff_earth STAFF_EARTH
+%rim 0
+i-staff_channeling STAFF_CHANNELING STAFF_ID_LAST
+
+# Remove rods TAG_MAJOR_VERSION > 34
+%sdir item/rod
+rod00 ROD
+rod01
+rod02
+rod03
+rod04
+rod05
+rod06
+rod07
+rod08
+rod09
+
+# These must be in the same order as the enum in item-prop-enum.h!
+%sdir misc
+error ROD_LIGHTNING ROD_ID_FIRST
+error ROD_SUMMONING
+error ROD_IGNITION
+error ROD_CLOUDS
+error ROD_DESTRUCTION
+error ROD_INACCURACY
+error ROD_WARDING
+error ROD_SHADOWS
+error ROD_IRON
+error ROD_VENOM ROD_ID_LAST
+%rim 1
+
+#OBJ_ORBS
+%sdir item/misc
+misc_orb ORB UNSEEN_ORB
+misc_orb2
+uncollected_orb UNCOLLECTED_ORB
+
+#OBJ_MISCELLANY
+misc_bottle MISC_BOTTLED_EFREET
+%rim 0
+misc_crystal MISC_CRYSTAL_BALL_OF_ENERGY UNSEEN_MISC
+misc_fan MISC_FAN_OF_GALES
+misc_fan_inert MISC_FAN_OF_GALES_INERT
+misc_lamp MISC_LAMP_OF_FIRE
+misc_lamp_inert MISC_LAMP_OF_FIRE_INERT
+# Remove stone when TAG_MAJOR_VERSION > 34
+misc_stone MISC_STONE_OF_TREMORS
+misc_stone_inert MISC_STONE_OF_TREMORS_INERT
+misc_phial MISC_PHIAL_OF_FLOODS
+misc_phial_inert MISC_PHIAL_OF_FLOODS_INERT
+misc_lightning_rod MISC_LIGHTNING_ROD
+misc_lightning_rod_inert MISC_LIGHTNING_ROD_INERT
+%rim 1
+# Remove when TAG_MAJOR_VERSION > 34
+misc_lantern MISC_LANTERN_OF_SHADOWS
+misc_horn MISC_HORN_OF_GERYON
+misc_box MISC_BOX_OF_BEASTS
+%rim 0
+misc_sack MISC_SACK_OF_SPIDERS
+misc_phantom_mirror MISC_PHANTOM_MIRROR
+misc_zigfig MISC_ZIGGURAT
+misc_quad MISC_QUAD_DAMAGE
+%sdir item/misc/runes
+generic MISC_RUNE_OF_ZOT
+rune_tartarus RUNE_TARTARUS
+rune_cocytus RUNE_COCYTUS
+rune_dis RUNE_DIS
+rune_gehenna RUNE_GEHENNA
+rune_cerebov RUNE_CEREBOV
+rune_gloorx_vloq RUNE_GLOORX_VLOQ
+rune_mnoleg RUNE_MNOLEG
+rune_lom_lobon RUNE_LOM_LOBON
+rune_snake RUNE_SNAKE
+rune_swamp RUNE_SWAMP
+rune_shoals RUNE_SHOALS
+rune_spider RUNE_SPIDER
+rune_slime RUNE_SLIME
+rune_vaults RUNE_VAULTS
+rune_tomb RUNE_TOMB
+rune_abyss RUNE_ABYSS
+rune_demonic_1 RUNE_DEMONIC
+rune_demonic_2
+rune_demonic_3
+rune_demonic_4
+rune_demonic_5
+rune_demonic_6
+rune_elven RUNE_ELVEN
+
+%sdir item/misc/uncollected_runes
+generic MISC_UNCOLLECTED_RUNE_OF_ZOT
+rune_tartarus UNCOLLECTED_RUNE_TARTARUS
+rune_cocytus UNCOLLECTED_RUNE_COCYTUS
+rune_dis UNCOLLECTED_RUNE_DIS
+rune_gehenna UNCOLLECTED_RUNE_GEHENNA
+rune_cerebov UNCOLLECTED_RUNE_CEREBOV
+rune_gloorx_vloq UNCOLLECTED_RUNE_GLOORX_VLOQ
+rune_mnoleg UNCOLLECTED_RUNE_MNOLEG
+rune_lom_lobon UNCOLLECTED_RUNE_LOM_LOBON
+rune_snake UNCOLLECTED_RUNE_SNAKE
+rune_swamp UNCOLLECTED_RUNE_SWAMP
+rune_shoals UNCOLLECTED_RUNE_SHOALS
+rune_spider UNCOLLECTED_RUNE_SPIDER
+rune_slime UNCOLLECTED_RUNE_SLIME
+rune_vaults UNCOLLECTED_RUNE_VAULTS
+rune_tomb UNCOLLECTED_RUNE_TOMB
+rune_abyss UNCOLLECTED_RUNE_ABYSS
+rune_demonic UNCOLLECTED_RUNE_DEMONIC
+rune_elven UNCOLLECTED_RUNE_ELVEN
+
+#OBJ_CORPSES
+#handled in dc-corpse.txt
+
+#OBJ_GOLD
+%sdir item/gold
+01 GOLD01
+02 GOLD02
+03 GOLD03
+04 GOLD04
+05 GOLD05
+06 GOLD06
+07 GOLD07
+08 GOLD08
+09 GOLD09
+10 GOLD10
+16 GOLD16
+19 GOLD19
+23 GOLD23
+25 GOLD25
