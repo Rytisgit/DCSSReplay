@@ -424,8 +424,7 @@ namespace InputParser
             sideData.NextLevel = next.ToString();
 
             var split = noiseOrGold.ToString().Split(':');
-            sideData.NoisyGold = split.Length > 1 ? split[1] : "noise here"; 
-
+            sideData.NoisyGold = split.Length > 1 ? split[1] : "noise here";
             var parsed = sideData.Place.Split(':');
             bool found = false;
             foreach (var location in Locations.locations)
@@ -441,6 +440,7 @@ namespace InputParser
             {
                 sideData.Place += ":" + parsed[1];
             }
+           
             return sideData;
         }
     }
