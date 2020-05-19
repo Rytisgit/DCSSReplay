@@ -17,3 +17,5 @@ Packages/
 /Putty/WINDOWS/putty.aps
 *.so
 *.recipe
+/DCSSTV/wwwroot/*
+/Putty/WINDOWS/VS2012/putty/*

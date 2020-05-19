@@ -8,8 +8,20 @@
 #include "../../../TERMINAL.H"
 #include "../../../PUTTY.H"
 
-#define EXPORT(rt) __declspec(dllexport) rt
 
+#if defined DLLEXPORTS
+#if defined WIN32
+#define EXPORT(rt) __declspec(dllexport) rt
+#else
+#define EXPORT(rt) extern rt __attribute__((visibility("default")))
+#endif
+#else
+#if defined WIN32
+#define EXPORT(rt) __declspec(dllexport) rt
+#else
+#define EXPORT(rt) extern rt
+#endif
+#endif
 extern Conf *conf;
 
 static Conf* get_default_config() {
