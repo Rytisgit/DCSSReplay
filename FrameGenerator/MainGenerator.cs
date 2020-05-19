@@ -47,7 +47,6 @@ namespace FrameGenerator
 
         public MainGenerator(string gameLocation = @"..\..\..\Extra")
         {
-
             _characterdata = ReadFromFile.GetDictionaryFromFile(gameLocation + @"/racepng.txt");
             _features = ReadFromFile.GetDictionaryFromFile(gameLocation + @"/features.txt");
             _cloudtiles = ReadFromFile.GetDictionaryFromFile(gameLocation + @"/clouds.txt");
@@ -73,20 +72,19 @@ namespace FrameGenerator
             _weaponpng = ReadFromFile.GetWeaponPNG(gameLocation);
         }
 
-        public SKBitmap GenerateImage(TerminalCharacter[,] chars, int consoleLevel = 1)
+        public SKBitmap GenerateImage(TerminalCharacter[,] chars, int consoleLevel = 1, Dictionary<string, string> tileoverides = null)
         {
             //return DrawFrame(new Model());
             if (chars != null)
             {
 
                 var model = consoleLevel != 3 ? Parser.ParseData(chars) : Parser.ParseData(chars, true);
-
+                model.OverideTiles(tileoverides);
                 if (model.Layout == LayoutType.Normal && consoleLevel == 2)
                 {
                     model.Layout = LayoutType.ConsoleSwitch;
                 }
                 
-
                 var image = DrawFrame(model);
                 
 #if true //Memory Limit Mode
@@ -102,7 +100,6 @@ namespace FrameGenerator
         private SKBitmap DrawFrame(Model model)
         {
             SKBitmap currentFrame = new SKBitmap(1602, 1050);
-
             switch (model.Layout)
             {
                 case LayoutType.Normal:
@@ -414,14 +411,22 @@ namespace FrameGenerator
             {
                 var font = new SKPaint {
                     Typeface = SKTypeface.FromFamilyName("Courier New"),
-                    TextSize = 12
+                    TextSize = 12,
+                    IsAntialias = true,
                 };
                 var darkPen = new SKPaint() { 
-                Color = new SKColor(255, 125, 98, 60),
+                Color = SKColors.Black,
                 StrokeWidth = 2,
                 Style = SKPaintStyle.StrokeAndFill
                 };
                 var rect2 = new SKRect(25, 25, 25+ 1000, 25 + 430);
+                g.DrawRect(rect2, darkPen);
+                darkPen = new SKPaint()
+                {
+                    Color = new SKColor(255, 125, 98, 60),
+                    StrokeWidth = 2,
+                    Style = SKPaintStyle.Stroke
+                };
                 g.DrawRect(rect2, darkPen);
 
                 float x = 50;
@@ -606,7 +611,8 @@ namespace FrameGenerator
             var font = new SKPaint
             {
                 Typeface = SKTypeface.FromFamilyName("Courier New"),
-                TextSize = 16
+                TextSize = 16,
+                IsAntialias = true,
             };
             var yellow = new SKColor(252, 233, 79);
             var gray = new SKColor(186, 189, 182);
@@ -698,9 +704,27 @@ namespace FrameGenerator
 
             if (!_floorpng.TryGetValue(CurrentLocationFloorAndWallName[1], out var floor)) return false;
 
+            
+            
             using (SKCanvas characterg = new SKCanvas(CharacterSKBitmap))
             {
                 var rect = new SKRect(0, 0, floor.Width, floor.Height);
+
+                if(model.SideData.Statuses1.ToLower().Contains("water"))
+                {
+                    _outOfSightCache.TryGetLastSeenBitmapByChar('≈', out var lastSeen);
+                    if(lastSeen!=null) floor = lastSeen;
+                    else if(!_alldngnpng.TryGetValue("shallow_water", out floor)) return false;
+                }
+                else if(model.SideData.Statuses1.ToLower().Contains("lava"))
+                {
+                    if (!_alldngnpng.TryGetValue("lava08", out floor)) return false;
+                }
+                else if(model.SideData.Statuses1.ToLower().Contains("net"))
+                {
+                    if (!_alldngnpng.TryGetValue("net_trap", out floor)) return false;
+                }
+
                 characterg.DrawBitmap(floor, rect);
 
                 foreach (string status in BasicStatusArray)
@@ -802,7 +826,7 @@ namespace FrameGenerator
             bool cached = false;
             if (tile.TryDrawWallOrFloor(tileHighlight, wall, floor, wallAndFloorColors, out drawnTile) ||
                 tile.TryDrawMonster(tileHighlight, overrides, _monsterpng, _miscallaneous, floor, out drawnTile, out brandToDraw) ||//first try drawing overrides, that include blue color monsters, and monsters in sight
-                tile.TryDrawCachedTile(tileHighlight, _outOfSightCache, new List<char> {'!', '?', '=', '"', '$', ')', '[', '_', '}', '/', '(', ':', '|', '%', '÷', '†'}, out drawnTile, out cached) ||
+                tile.TryDrawCachedTile(tileHighlight, _outOfSightCache, new List<char> {'!', '?', '=', '"', '$', ')', '[', '_', '}', '/', '(', ':', '|', '%', '÷', '†'}, new List<string> { "≈RED"}, out drawnTile, out cached) ||
                 tile.TryDrawMonster(tileHighlight, _monsterdata, _monsterpng, _miscallaneous, floor, out drawnTile, out brandToDraw) ||//draw the rest of the monsters
                 tile.TryDrawFeature(tileHighlight, _features, _alldngnpng, _miscallaneous, floor, wall, out drawnTile) ||
                 tile.TryDrawCloud(_cloudtiles, _alleffects, floor, model.SideData, model.MonsterData, out drawnTile) ||
