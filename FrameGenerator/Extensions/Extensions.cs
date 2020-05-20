@@ -65,6 +65,7 @@ namespace FrameGenerator.Extensions
 
         public static void OverideTiles(this Model model, Dictionary<string, string> tileOverides)
         {
+            if (tileOverides == null) return;
             foreach(var key in tileOverides.Keys)
             {
                 for (int i = 0; i < model.TileNames.Length; i++)
