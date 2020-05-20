@@ -1,6 +1,7 @@
 ﻿@page "/"
 @inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment env
 @inject IJSRuntime jsRuntime
+@using BlazorInputFile
 @using FrameGenerator;
 @using SkiaSharp;
 @using System;
@@ -10,12 +11,15 @@
 @using System.IO;
 
 
-    
+
 <div class="test" @onkeydown="@KeyDown" tabindex="0" @ref="myDiv">
-    <button  @onclick="StartCountdown" @ref="btn">@text</button>
+    <button @onclick="StartCountdown" @ref="btn">@text</button>
     <img width="1602" height="768" alt="DCSSTVIMG" src="data:image/png;base64,@imreBase64Data">
 </div>
 
+<InputFile OnChange="HandleSelection" />
+
+<p>@status</p>
 
 
 
@@ -39,10 +43,11 @@
     public TimeSpan Seek;
     public List<string> files = new List<string>();
     public IEnumerable<Stream> streams;
+    TimeSpan delay = TimeSpan.Zero;
     protected override async Task OnInitializedAsync()
     {
 
-        var delay = TimeSpan.Zero;
+        delay = TimeSpan.Zero;
         //byte[] byteData = System.IO.File.ReadAllBytes(env.WebRootPath + @"\Extra\play.png");
         //imreBase64Data = Convert.ToBase64String(byteData);
         frameGenerator = new MainGenerator(env.WebRootPath + @"\Extra");
@@ -50,7 +55,6 @@
         streams = files.TtyrecToStream();
         ttyrecDecoder = new TtyRecKeyframeDecoder(80, 24, streams, delay, MaxDelayBetweenPackets);
     }
-
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -106,7 +110,25 @@
 
         }
     }
+    string status;
+    List<Stream> stream = new List<Stream>();
+    async Task HandleSelection(IFileListEntry[] files)
+    {
+        var file = files.FirstOrDefault();
+        if (file != null)
+        {
+            stream.Clear();
+            var ms = new MemoryStream();
+            await file.Data.CopyToAsync(ms);
+            status = $"Finished loading {file.Size} bytes from {file.Name}";
 
+            stream.Add(ms);
+            ttyrecDecoder = new TtyRecKeyframeDecoder(80, 24, stream, delay, MaxDelayBetweenPackets);
+            PlaybackSpeed = +1;
+            Seek = TimeSpan.Zero;
+            StartCountdown();
+        }
+    }
 
     @functions {
         string ToBase64String(SKBitmap bmp)
@@ -118,8 +140,8 @@
 
         async Task StartCountdown()
         {
-            if (PlaybackSpeed != 0) { PausedSpeed = PlaybackSpeed; PlaybackSpeed = 0; text = "Play"; }
-            else { PlaybackSpeed = PausedSpeed; text = "Pause"; }
+            //if (PlaybackSpeed != 0) { PausedSpeed = PlaybackSpeed; PlaybackSpeed = 0; text = "Play"; }
+           // else { PlaybackSpeed = PausedSpeed; text = "Pause"; }
             while (true)
             {
                 await Task.Delay(5);
@@ -199,9 +221,6 @@
 
             }
         }
-
-
-
 
 
     }
