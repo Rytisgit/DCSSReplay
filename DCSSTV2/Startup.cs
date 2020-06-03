@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using DCSSTV2.Data;
+using SkiaSharp;
+using Blazor.FileReader;
 
 namespace DCSSTV2
 {
@@ -28,6 +30,7 @@ namespace DCSSTV2
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddFileReaderService();
             services.AddSingleton<WeatherForecastService>();
         }
 

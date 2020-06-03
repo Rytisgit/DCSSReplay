@@ -90,7 +90,7 @@ namespace FrameGenerator
 #if true //Memory Limit Mode
                 GC.Collect();
 #endif
-                var base64String = Convert.ToBase64String(image.Encode(SKEncodedImageFormat.Png, 80).ToArray());
+                //var base64String = Convert.ToBase64String(image.Encode(SKEncodedImageFormat.Png, 80).ToArray());
                 return image;
                 
             }
@@ -99,7 +99,7 @@ namespace FrameGenerator
 
         private SKBitmap DrawFrame(Model model)
         {
-            SKBitmap currentFrame = new SKBitmap(1602, 1050);
+            SKBitmap currentFrame = new SKBitmap(1602, 768);
             switch (model.Layout)
             {
                 case LayoutType.Normal:
@@ -518,7 +518,7 @@ namespace FrameGenerator
             var currentY = startY - yWidth * yResize;
             var font = new SKPaint
             {
-                Typeface = SKTypeface.FromFamilyName("Courier New"),
+                Typeface = SKTypeface.FromFamilyName("Mono", 10, 5, SKFontStyleSlant.Upright),
                 TextSize = fontSize
             };
 
@@ -531,7 +531,7 @@ namespace FrameGenerator
                 }
                 else currentX += yWidth * xResize;
 
-                g.WriteCharacter(model.TileNames[i], font, currentX, currentY, model.HighlightColors[i], 5);
+                g.WriteCharacter(model.TileNames[i], font, currentX, currentY, model.HighlightColors[i], 3);
 
 
             }

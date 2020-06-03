@@ -19,8 +19,9 @@ namespace FrameGenerator.Extensions
             var black = ColorList.GetColor("BLACK");
             var yellow = ColorList.GetColor("YELLOW");
             var brown = ColorList.GetColor("BROWN");
+            var LIGHTGREY = ColorList.GetColor("LIGHTGREY");
             var color = ColorList.GetColor(backgroundColor);
-            if (color != black)
+            if (color != black && color != LIGHTGREY)
             {
                 if (color == brown)
                 {
@@ -34,7 +35,7 @@ namespace FrameGenerator.Extensions
                 };
                 g.DrawRect(rect, recpaint);
             }
-            WriteCharacter(g, coloredCharacter, font, x, y);
+            WriteCharacter(g, coloredCharacter, font, x - OffsetY, y);
         }
 
         public static SKCanvas WriteSideDataInfo(this SKCanvas g, string title, string info, SKPaint font, float x, float y)

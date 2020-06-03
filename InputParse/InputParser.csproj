@@ -6,10 +6,11 @@
     <AssemblyName>InputParser</AssemblyName>
     <RootNamespace>InputParser</RootNamespace>
     <Version>0.7.0</Version>
+    <Configurations>Debug;Release;LinuxRelease</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SkiaSharp" Version="1.68.2.1" />
+    <PackageReference Include="SkiaSharp" Version="1.68.3" />
   </ItemGroup>
 
   <ItemGroup>
