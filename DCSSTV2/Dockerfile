@@ -6,8 +6,9 @@ EXPOSE 80
 EXPOSE 443
 RUN apt-get update && apt-get install -y libfontconfig1 && apt-get install fontconfig
 RUN apt-get install ncurses-term
-ENV TERM=xterm-256color
-RUN export TERM=xterm-256color
+RUN apt-get install -y libgtk-3-dev
+ENV TERM=putty-256color
+RUN export TERM=putty-256color
 
 RUN echo "alias ls='ls --color=auto'" >> /root/.bashrc
 RUN echo "alias grep='grep --color=auto'" >> /root/.bashrc
