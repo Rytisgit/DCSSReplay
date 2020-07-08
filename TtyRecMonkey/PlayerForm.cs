@@ -161,6 +161,7 @@ namespace TtyRecMonkey
 
         void MainLoop()
         {
+            Thread.Sleep(5);
             var now = DateTime.Now;
 
             PreviousFrames.Add(now);
@@ -258,9 +259,15 @@ namespace TtyRecMonkey
             {
 
                 case Keys.Escape: using (ttyrecDecoder) { } ttyrecDecoder = null; break;
-                case Keys.Control | Keys.C: PlayerDownloadWindow(); break;
+                case Keys.Control | Keys.G: PlayerDownloadWindow(); break;
                 case Keys.Control | Keys.T: TileOverrideWindow(); break;
                 case Keys.Control | Keys.O: OpenFile(); break;
+                case Keys.Control | Keys.F:
+                    foreach (var result in ttyrecDecoder.SearchPackets("corr", 5))
+                    {
+                        Console.WriteLine(result);
+                    }
+                    break;
                 case Keys.Alt | Keys.Enter:
                     if (FormBorderStyle == FormBorderStyle.None)
                     {
