@@ -16,6 +16,7 @@ using TtyRecDecoder;
 using System.Drawing.Imaging;
 using ICSharpCode.SharpZipLib.GZip;
 using SkiaSharp.Views.Desktop;
+using TtyRecMonkey.Windows;
 
 namespace TtyRecMonkey
 {
@@ -24,6 +25,7 @@ namespace TtyRecMonkey
     {
         private const int TimeStepLengthMS = 5000;
         PlayerSearchForm playerSearch;
+        ReplayTextSearchForm replayTextSearchForm;
         private readonly MainGenerator frameGenerator;
         private readonly List<DateTime> PreviousFrames = new List<DateTime>();
         private Bitmap bmp = new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
@@ -262,12 +264,7 @@ namespace TtyRecMonkey
                 case Keys.Control | Keys.G: PlayerDownloadWindow(); break;
                 case Keys.Control | Keys.T: TileOverrideWindow(); break;
                 case Keys.Control | Keys.O: OpenFile(); break;
-                case Keys.Control | Keys.F:
-                    foreach (var result in ttyrecDecoder.SearchPackets("corr", 5))
-                    {
-                        Console.WriteLine(result);
-                    }
-                    break;
+                case Keys.Control | Keys.F: ReplayTextSearchWindow(); break;
                 case Keys.Alt | Keys.Enter:
                     if (FormBorderStyle == FormBorderStyle.None)
                     {
@@ -342,8 +339,14 @@ namespace TtyRecMonkey
             playerSearch.DownloadButton.Click += DownloadTTyRec;
         }
 
+        private void ReplayTextSearchWindow()
+        {
+            replayTextSearchForm = new ReplayTextSearchForm(ttyrecDecoder);
+            replayTextSearchForm.Visible = true;
+        }
 
-        
+
+
         private async void DownloadTTyRec(object sender, EventArgs e)
         {
             await playerSearch.DownloadFileAsync(sender, e); 

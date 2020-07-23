@@ -112,13 +112,14 @@ namespace DisplayWindow
             var progress = start.TotalMilliseconds / end.TotalMilliseconds;
         if(progress>0)
             {
-                var rect = new Rectangle(e.ClipRectangle.Left,
-          e.ClipRectangle.Top,
-          (int)(SeekBar.Width * progress),
-          SeekBar.Height);
-          e.Graphics.DrawRectangle(Pens.DarkBlue,rect
-          );
-          e.Graphics.FillRectangle(new SolidBrush(Color.DarkBlue), rect);
+                var rect = new Rectangle(
+                    e.ClipRectangle.Left,
+                    e.ClipRectangle.Top, 
+                    (int)(SeekBar.Width * progress),
+                    SeekBar.Height
+                );
+                e.Graphics.DrawRectangle(Pens.DarkBlue, rect);
+                e.Graphics.FillRectangle(new SolidBrush(Color.DarkBlue), rect);
             }
         }
         private  void SeekBar_MouseDown(object sender, MouseEventArgs e)
