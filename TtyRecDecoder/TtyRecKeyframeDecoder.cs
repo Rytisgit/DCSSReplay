@@ -39,6 +39,7 @@ namespace TtyRecDecoder
         public int Keyframes { get; private set; }
         public int Width { get; private set; }
         public int Height { get; private set; }
+        public IEnumerable<Tuple<int, string>> SearchResults { get; private set; } = new List<Tuple<int, string>>();
 
         public TtyRecFrame CurrentFrame;
         private int LastActiveRangeStart = int.MaxValue;
@@ -246,7 +247,7 @@ namespace TtyRecDecoder
             CurrentFrame.Index = i;
         }
 
-        public IEnumerable<Tuple<int, string>> SearchPackets(string searchPhrase, int extraCharacters)
+        public void SearchPackets(string searchPhrase, int extraCharacters)
         {
             var searchResults = new List<Tuple<int, string>>();
             lock (LoadPacketBuffer)
@@ -258,7 +259,7 @@ namespace TtyRecDecoder
                     Packets.AddRange(apr);
                 }
             }
-            if (Packets.Count <= 0) return searchResults;
+            if (Packets.Count <= 0) return;
 
             for (int packetIndex = 0; packetIndex < PacketCount; packetIndex++)
             {
@@ -276,7 +277,7 @@ namespace TtyRecDecoder
                 }
             }
 
-            return searchResults;
+            SearchResults = searchResults;
         }
 
         public TtyRecKeyframeDecoder(int w, int h, IEnumerable<Stream> streams, TimeSpan between_stream_delay, TimeSpan between_packets_delay)
