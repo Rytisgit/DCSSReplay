@@ -28,6 +28,7 @@ namespace TtyRecDecoder
         private TimeSpan LoadBetweenStreamDelay;
         private TimeSpan LoadBetweenPacketsDelay;
         private volatile bool LoadCancel;
+        public TimeSpan SeekTime;
 
         private readonly List<AnnotatedPacket> Packets = new List<AnnotatedPacket>();
         public int PacketCount { get { return Packets.Count; } 
@@ -245,6 +246,32 @@ namespace TtyRecDecoder
             CurrentFrame.SinceStart = Packets[i].SinceStart;
             CurrentFrame.Data = Packets[i].DecodedCache;
             CurrentFrame.Index = i;
+        }
+
+        public void GoToFrame(int frameIndex)
+        {
+            lock (LoadPacketBuffer)
+            {
+                while (LoadPacketBuffer.Count > 0)
+                {
+                    var apr = LoadPacketBuffer.Dequeue();
+                    Keyframes += apr.Count(ap => ap.IsKeyframe);
+                    Packets.AddRange(apr);
+                }
+            }
+            if (Packets.Count <= 0) return;
+
+            var nextFrameIndex = frameIndex;
+            var nextFrameTime = Packets[nextFrameIndex > 0 ? nextFrameIndex : 0].SinceStart;
+
+            DumpChunksAround(nextFrameTime);
+            var i = nextFrameTime == CurrentFrame.SinceStart ? BinarySearchIndexFrame(Packets, ap => ap.SinceStart > nextFrameTime) : BinarySearchIndexFrame(Packets, ap => ap.SinceStart >= nextFrameTime);
+            if (i == -1) i = 0;
+            Debug.Assert(Packets[i].DecodedCache != null);
+            CurrentFrame.SinceStart = Packets[i].SinceStart;
+            CurrentFrame.Data = Packets[i].DecodedCache;
+            CurrentFrame.Index = i;
+            SeekTime = CurrentFrame.SinceStart;
         }
 
         public void SearchPackets(string searchPhrase, int extraCharacters)

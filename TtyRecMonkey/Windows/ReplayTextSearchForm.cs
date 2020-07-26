@@ -8,40 +8,43 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TtyRecDecoder;
+using Xamarin.Forms;
+using Xamarin.Forms.Platform.WPF.Extensions;
 
 namespace TtyRecMonkey.Windows
 {
     public partial class ReplayTextSearchForm : Form
     {
         DataTable table = new DataTable();
-        private readonly TtyRecKeyframeDecoder ttyRecKeyframeDecoder;
+        private readonly TtyRecKeyframeDecoder ttyrecDecoder;
 
         public ReplayTextSearchForm(TtyRecKeyframeDecoder ttyRecKeyframeDecoder)
         {
             InitializeComponent();
-            table.Columns.Add("Search Result", typeof(String));
-            table.Columns.Add("Found Text", typeof(String));
+            table.Columns.Add("TimeStamp", typeof(String));
+            table.Columns.Add("SearchResult", typeof(String));
             dataGridView1.AllowUserToAddRows = false;
-            this.ttyRecKeyframeDecoder = ttyRecKeyframeDecoder;
+            this.ttyrecDecoder = ttyRecKeyframeDecoder;
+            textBox1.Focus();
         }
 
-        private void label1_Click(object sender, EventArgs e)
+        private void Search()
         {
-
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(textBox1.Text)) MessageBox.Show("Search is empty");
+            if (string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text.Length < 2) MessageBox.Show("Search at least 3 characters");
             else
             {
                 while (dataGridView1.Rows.Count > 0)
                 {
                     dataGridView1.Rows.Remove(dataGridView1.Rows[0]);
                 }
-                ttyRecKeyframeDecoder.SearchPackets(textBox1.Text, 5);
-                AddDataRows(ttyRecKeyframeDecoder.SearchResults);
+                ttyrecDecoder.SearchPackets(textBox1.Text, 5);
+                AddDataRows(ttyrecDecoder.SearchResults);
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Search();
         }
 
         private void AddDataRows(IEnumerable<Tuple<int, string>> searchResults)
@@ -55,6 +58,33 @@ namespace TtyRecMonkey.Windows
             //dataGridView1.Size = new Size((int)(ClientSize.Width - 50), (int)(ClientSize.Height - 200));
             //dataGridView1.Columns[0].Width = (int)(dataGridView1.Width * 0.6);
             dataGridView1.Visible = true;
+        }
+
+        private void ReplayTextSearchForm_Enter(object sender, EventArgs e)
+        {
+            textBox1.Focus();
+        }
+
+        private void ReplayTextSearchForm_Activated(object sender, EventArgs e)
+        {
+            textBox1.Focus();
+        }
+
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            //   bool resize = (WindowState == FormWindowState.Normal) && (ClientSize == ActiveSize);
+
+            switch (e.KeyData)
+            {
+                case Keys.Control | Keys.F: this.Visible = false; break;
+            }
+            base.OnKeyDown(e);
+        }
+
+        private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            ttyrecDecoder.GoToFrame(int.Parse((string)table.Rows[e.RowIndex].ItemArray[0]) );
         }
     }
 }
