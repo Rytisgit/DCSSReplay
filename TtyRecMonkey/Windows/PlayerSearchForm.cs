@@ -15,7 +15,7 @@ using System.Windows.Forms;
 
 namespace TtyRecMonkey
 {
-    public partial class PlayerSearchForm : Form
+    public partial class  PlayerSearchForm : Form
     {
        
         public Dictionary<string, Stream> ext = new Dictionary<string, Stream>();

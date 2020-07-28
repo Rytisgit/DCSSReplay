@@ -16,6 +16,7 @@ using TtyRecDecoder;
 using System.Drawing.Imaging;
 using ICSharpCode.SharpZipLib.GZip;
 using SkiaSharp.Views.Desktop;
+using TtyRecMonkey.Windows;
 
 namespace TtyRecMonkey
 {
@@ -24,6 +25,7 @@ namespace TtyRecMonkey
     {
         private const int TimeStepLengthMS = 5000;
         PlayerSearchForm playerSearch;
+        ReplayTextSearchForm replayTextSearchForm;
         private readonly MainGenerator frameGenerator;
         private readonly List<DateTime> PreviousFrames = new List<DateTime>();
         private Bitmap bmp = new Bitmap(1602, 1050, PixelFormat.Format32bppArgb);
@@ -85,7 +87,7 @@ namespace TtyRecMonkey
             var streams = TtyrecToStream(files);
             ttyrecDecoder = new TtyRecKeyframeDecoder(80, 24, streams, delay, MaxDelayBetweenPackets);
             PlaybackSpeed = +1;
-            Seek = TimeSpan.Zero;
+            ttyrecDecoder.SeekTime = TimeSpan.Zero;
         }
 
         private IEnumerable<Stream> TtyrecToStream(string[] files)
@@ -161,6 +163,7 @@ namespace TtyRecMonkey
 
         void MainLoop()
         {
+            Thread.Sleep(5);
             var now = DateTime.Now;
 
             PreviousFrames.Add(now);
@@ -173,27 +176,27 @@ namespace TtyRecMonkey
             {
                 ShowControls(false);
 
-                Seek += TimeSpan.FromSeconds(dt * PlaybackSpeed);
+                ttyrecDecoder.SeekTime += TimeSpan.FromSeconds(dt * PlaybackSpeed);
 
-                if (Seek > ttyrecDecoder.Length)
+                if (ttyrecDecoder.SeekTime > ttyrecDecoder.Length)
                 {
-                    Seek = ttyrecDecoder.Length;
+                    ttyrecDecoder.SeekTime = ttyrecDecoder.Length;
                 }
-                if (Seek < TimeSpan.Zero)
+                if (ttyrecDecoder.SeekTime < TimeSpan.Zero)
                 {
-                    Seek = TimeSpan.Zero;
+                    ttyrecDecoder.SeekTime = TimeSpan.Zero;
                 }
 
                 if (FrameStepCount != 0)
                 {
                     ttyrecDecoder.FrameStep(FrameStepCount); //step frame index by count
-                    Seek = ttyrecDecoder.CurrentFrame.SinceStart;
+                    ttyrecDecoder.SeekTime = ttyrecDecoder.CurrentFrame.SinceStart;
                     FrameStepCount = 0;
                 }
                 else
                 {
 
-                    ttyrecDecoder.Seek(Seek);
+                    ttyrecDecoder.Seek(ttyrecDecoder.SeekTime);
 
                 }
 
@@ -239,7 +242,7 @@ namespace TtyRecMonkey
             }
                 UpdateTitle(string.Format("DCSSReplay -- {0} FPS -- {1} @ {2} of {3} ({4} keyframes {5} packets) -- Speed {6}",
                      PreviousFrames.Count,
-                     PrettyTimeSpan(Seek),
+                     PrettyTimeSpan(ttyrecDecoder.SeekTime),
                      ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.CurrentFrame.SinceStart),
                      ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.Length),
                      ttyrecDecoder == null ? "N/A" : ttyrecDecoder.Keyframes.ToString(),
@@ -258,9 +261,10 @@ namespace TtyRecMonkey
             {
 
                 case Keys.Escape: using (ttyrecDecoder) { } ttyrecDecoder = null; break;
-                case Keys.Control | Keys.C: PlayerDownloadWindow(); break;
+                case Keys.Control | Keys.G: PlayerDownloadWindow(); break;
                 case Keys.Control | Keys.T: TileOverrideWindow(); break;
                 case Keys.Control | Keys.O: OpenFile(); break;
+                case Keys.Control | Keys.F: ReplayTextSearchWindow(); break;
                 case Keys.Alt | Keys.Enter:
                     if (FormBorderStyle == FormBorderStyle.None)
                     {
@@ -299,11 +303,11 @@ namespace TtyRecMonkey
                     break;
 
                 case Keys.Left:
-                    Seek -= Seek - TimeSpan.FromMilliseconds(TimeStepLengthMS) > TimeSpan.Zero ? TimeSpan.FromMilliseconds(TimeStepLengthMS) : TimeSpan.Zero;
+                    ttyrecDecoder.SeekTime -= ttyrecDecoder.SeekTime - TimeSpan.FromMilliseconds(TimeStepLengthMS) > TimeSpan.Zero ? TimeSpan.FromMilliseconds(TimeStepLengthMS) : TimeSpan.Zero;
                     break;
 
                 case Keys.Right:
-                    Seek += Seek + TimeSpan.FromMilliseconds(TimeStepLengthMS) < ttyrecDecoder.Length ? TimeSpan.FromMilliseconds(TimeStepLengthMS) : ttyrecDecoder.Length;
+                    ttyrecDecoder.SeekTime += ttyrecDecoder.SeekTime + TimeSpan.FromMilliseconds(TimeStepLengthMS) < ttyrecDecoder.Length ? TimeSpan.FromMilliseconds(TimeStepLengthMS) : ttyrecDecoder.Length;
                     break;
 
                 case Keys.A:
@@ -335,8 +339,16 @@ namespace TtyRecMonkey
             playerSearch.DownloadButton.Click += DownloadTTyRec;
         }
 
+        private void ReplayTextSearchWindow()
+        {
+            if (replayTextSearchForm == null || replayTextSearchForm.IsDisposed) { replayTextSearchForm = new ReplayTextSearchForm(ttyrecDecoder); }
+            replayTextSearchForm.Visible = true;
+            replayTextSearchForm.BringToFront();
+            replayTextSearchForm.Focus();
+        }
 
-        
+
+
         private async void DownloadTTyRec(object sender, EventArgs e)
         {
             await playerSearch.DownloadFileAsync(sender, e); 
@@ -345,7 +357,7 @@ namespace TtyRecMonkey
             var delay = TimeSpan.Zero;
             ttyrecDecoder = new TtyRecKeyframeDecoder(80, 24, streams, delay, MaxDelayBetweenPackets);
             PlaybackSpeed = +1;
-            Seek = TimeSpan.Zero;
+            ttyrecDecoder.SeekTime = TimeSpan.Zero;
         }
    
 
