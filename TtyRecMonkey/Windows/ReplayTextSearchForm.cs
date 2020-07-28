@@ -30,7 +30,13 @@ namespace TtyRecMonkey.Windows
 
         private void Search()
         {
-            if (string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text.Length < 2) MessageBox.Show("Search at least 3 characters");
+            if (string.IsNullOrWhiteSpace(textBox1.Text) || textBox1.Text.Length < 2) {
+                while (dataGridView1.Rows.Count > 0)
+                {
+                    dataGridView1.Rows.Remove(dataGridView1.Rows[0]);
+                }
+                AddDataRows(new List<Tuple<int, string>> { new Tuple<int, string> (0, "Search at least 3 characters.")});
+            }
             else
             {
                 while (dataGridView1.Rows.Count > 0)
@@ -38,7 +44,14 @@ namespace TtyRecMonkey.Windows
                     dataGridView1.Rows.Remove(dataGridView1.Rows[0]);
                 }
                 ttyrecDecoder.SearchPackets(textBox1.Text, 5);
-                AddDataRows(ttyrecDecoder.SearchResults);
+                if (ttyrecDecoder.SearchResults.Count() < 1)
+                {
+                    AddDataRows(new List<Tuple<int, string>> { new Tuple<int, string>(0, "No matches found.") });
+                }
+                else
+                {
+                    AddDataRows(ttyrecDecoder.SearchResults);
+                } 
             }
         }
 
