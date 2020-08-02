@@ -96,12 +96,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration.cs" />
+    <Compile Include="Windows\ConfigurationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\ConfigurationForm.Designer.cs">
+      <DependentUpon>ConfigurationForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Windows\DCSSReplayWindow.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Windows\DCSSReplayWindow.Designer.cs">
       <DependentUpon>DCSSReplayWindow.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Windows\ConfigurationForm.resx">
+      <DependentUpon>ConfigurationForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Windows\PlayerSearchForm.resx">
       <DependentUpon>PlayerSearchForm.cs</DependentUpon>
     </EmbeddedResource>
