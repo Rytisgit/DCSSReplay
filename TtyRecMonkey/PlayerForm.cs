@@ -23,7 +23,7 @@ namespace TtyRecMonkey
     [System.ComponentModel.DesignerCategory("")]
     public class PlayerForm : DCSSReplayWindow
     {
-        private const int TimeStepLengthMS = 5000;
+        private int TimeStepLengthMS = 5000;
         PlayerSearchForm playerSearch;
         ReplayTextSearchForm replayTextSearchForm;
         private readonly MainGenerator frameGenerator;
@@ -33,6 +33,7 @@ namespace TtyRecMonkey
         private TimeSpan MaxDelayBetweenPackets = new TimeSpan(0,0,0,0,500);//millisecondss
         private int FrameStepCount;
         private int ConsoleSwitchLevel = 1;
+        private int framerateControlTimeout = 5;
         private TileOverrideForm tileoverrideform;
 
         public PlayerForm()
@@ -40,6 +41,8 @@ namespace TtyRecMonkey
             this.Icon = Properties.Resource1.dcssreplay;
             frameGenerator = new MainGenerator();
             tileoverrideform = new TileOverrideForm();
+            Configuration.Load(this);
+            AfterConfiguration();
             Visible = true;
         }
 
@@ -163,7 +166,7 @@ namespace TtyRecMonkey
 
         void MainLoop()
         {
-            Thread.Sleep(5);
+            Thread.Sleep(framerateControlTimeout);
             var now = DateTime.Now;
 
             PreviousFrames.Add(now);
@@ -240,17 +243,36 @@ namespace TtyRecMonkey
                 Update2(null);
 
             }
-                UpdateTitle(string.Format("DCSSReplay -- {0} FPS -- {1} @ {2} of {3} ({4} keyframes {5} packets) -- Speed {6}",
-                     PreviousFrames.Count,
-                     PrettyTimeSpan(ttyrecDecoder.SeekTime),
-                     ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.CurrentFrame.SinceStart),
-                     ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.Length),
-                     ttyrecDecoder == null ? "N/A" : ttyrecDecoder.Keyframes.ToString(),
-                     ttyrecDecoder == null ? "N/A" : ttyrecDecoder.PacketCount.ToString(),
-                     PlaybackSpeed)
-                );
-                UpdateTime(ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.CurrentFrame.SinceStart),
-                      ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.Length));
+            UpdateTitle(
+                $"DCSSReplay -- {PreviousFrames?.Count} " +
+                $"FPS -- {(ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.SeekTime)) } " +
+                $"@ {(ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.CurrentFrame.SinceStart))} " +
+                $"of {(ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.Length))} " +
+                $"({(ttyrecDecoder == null ? "N/A" : ttyrecDecoder.Keyframes.ToString())} " +
+                $"keyframes {(ttyrecDecoder == null ? "N/A" : ttyrecDecoder.PacketCount.ToString())} packets) -- Speed {PlaybackSpeed}"
+            );
+            UpdateTime(ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.CurrentFrame.SinceStart),
+                  ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.Length));
+        }
+
+
+        void Reconfigure()
+        {
+            var cfg = new ConfigurationForm();
+            if (cfg.ShowDialog(this) == DialogResult.OK) AfterConfiguration();
+        }
+
+        void AfterConfiguration()
+        {
+            TimeStepLengthMS = Configuration.Main.TimeStepLengthMS;
+            framerateControlTimeout = Configuration.Main.framerateControlTimeout;
+
+            if (MaxDelayBetweenPackets == new TimeSpan(0, 0, 0, 0, Configuration.Main.MaxDelayBetweenPackets)) return;
+
+            ttyrecDecoder = null;
+
+            MaxDelayBetweenPackets = new TimeSpan(0, 0, 0, 0, Configuration.Main.MaxDelayBetweenPackets);
+
         }
 
         protected override void OnKeyDown(KeyEventArgs e)
@@ -265,6 +287,7 @@ namespace TtyRecMonkey
                 case Keys.Control | Keys.T: TileOverrideWindow(); break;
                 case Keys.Control | Keys.O: OpenFile(); break;
                 case Keys.Control | Keys.F: ReplayTextSearchWindow(); break;
+                case Keys.Control | Keys.C: Reconfigure(); break;
                 case Keys.Alt | Keys.Enter:
                     if (FormBorderStyle == FormBorderStyle.None)
                     {
