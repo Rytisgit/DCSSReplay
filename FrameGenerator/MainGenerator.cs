@@ -640,7 +640,7 @@ namespace FrameGenerator
             .WriteSideDataInfo("Dex: ", model.SideData.Dexterity, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
             lineCount++;
             g.WriteSideDataInfo("XL: ", model.SideData.ExperienceLevel, font, 32 * model.LineLength, lineCount * lineHeight)
-            .WriteSideDataInfo(" Next: ", model.SideData.ExperienceLevel, font, 32 * model.LineLength + font.MeasureText("XL: " + model.SideData.ExperienceLevel), lineCount * lineHeight)
+            .WriteSideDataInfo(" Next: ", model.SideData.NextLevel, font, 32 * model.LineLength + font.MeasureText("XL: " + model.SideData.NextLevel), lineCount * lineHeight)
             .WriteSideDataInfo("Place: ", model.SideData.Place, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
             lineCount++;
             (int.TryParse(model.SideData.NoisyGold, out _) ? 
@@ -649,9 +649,9 @@ namespace FrameGenerator
             .WriteSideDataInfo("Time: ", model.SideData.Time, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
             lineCount++;
 
-            g.WriteSideDataInfo("Wp: ", model.SideData.Weapon.Substring(0, 35), font, 32 * model.LineLength, lineCount * lineHeight);
+            g.WriteSideDataInfo("Wp: ", model.SideData.Weapon.Substring(0, 38), font, 32 * model.LineLength, lineCount * lineHeight);
             lineCount++;
-            var substring = model.SideData.Weapon.Substring(35);
+            var substring = model.SideData.Weapon.Substring(38);
             font.Color = gray;
             if (!string.IsNullOrWhiteSpace(substring))
             {
@@ -659,9 +659,9 @@ namespace FrameGenerator
                 lineCount++;
             }
 
-            g.WriteSideDataInfo("Qv: ", model.SideData.Quiver.Substring(0, 35), font, 32 * model.LineLength, lineCount * lineHeight);
+            g.WriteSideDataInfo("Qv: ", model.SideData.Quiver.Substring(0, 38), font, 32 * model.LineLength, lineCount * lineHeight);
             lineCount++;
-            substring = model.SideData.Quiver.Substring(35);
+            substring = model.SideData.Quiver.Substring(38);
             if (!string.IsNullOrWhiteSpace(substring))
             {
                 g.DrawText(substring, 32 * model.LineLength + font.MeasureText("Qv: "), lineCount * lineHeight + font.TextSize, font);

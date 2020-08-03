@@ -1,4 +1,5 @@
-﻿using FrameGenerator.Models;
+﻿using System;
+using FrameGenerator.Models;
 using System.Collections.Generic;
 using SkiaSharp;
 using System.IO;
@@ -133,7 +134,7 @@ namespace FrameGenerator.FileReading
         {
             var dict = new Dictionary<string, SKBitmap>();
             List<string> pngFiles = Directory.GetFiles(folder, "*.png*", SearchOption.AllDirectories).ToList();
-            var files = Directory.GetFiles(folder, "*.png", SearchOption.TopDirectoryOnly).ToList();
+            var files = Directory.GetFiles(folder.Substring(0, folder.IndexOf("Extra", StringComparison.OrdinalIgnoreCase)+5), "*.png", SearchOption.TopDirectoryOnly).ToList();
             pngFiles.AddRange(files);
             foreach (var file in pngFiles)
             {
