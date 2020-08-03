@@ -649,9 +649,9 @@ namespace FrameGenerator
             .WriteSideDataInfo("Time: ", model.SideData.Time, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
             lineCount++;
 
-            g.WriteSideDataInfo("Wp: ", model.SideData.Weapon.Substring(0, 35), font, 32 * model.LineLength, lineCount * lineHeight);
+            g.WriteSideDataInfo("Wp: ", model.SideData.Weapon.Substring(0, 38), font, 32 * model.LineLength, lineCount * lineHeight);
             lineCount++;
-            var substring = model.SideData.Weapon.Substring(35);
+            var substring = model.SideData.Weapon.Substring(38);
             font.Color = gray;
             if (!string.IsNullOrWhiteSpace(substring))
             {
@@ -659,9 +659,9 @@ namespace FrameGenerator
                 lineCount++;
             }
 
-            g.WriteSideDataInfo("Qv: ", model.SideData.Quiver.Substring(0, 35), font, 32 * model.LineLength, lineCount * lineHeight);
+            g.WriteSideDataInfo("Qv: ", model.SideData.Quiver.Substring(0, 38), font, 32 * model.LineLength, lineCount * lineHeight);
             lineCount++;
-            substring = model.SideData.Quiver.Substring(35);
+            substring = model.SideData.Quiver.Substring(38);
             if (!string.IsNullOrWhiteSpace(substring))
             {
                 g.DrawText(substring, 32 * model.LineLength + font.MeasureText("Qv: "), lineCount * lineHeight + font.TextSize, font);
