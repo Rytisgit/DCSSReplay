@@ -31,7 +31,7 @@ grate
 #WHITE
 endless_salt1
 #LIGHTGREY
-stone_smooth2
+stone2_gray3
 #RED
 wall
 #BROWN
@@ -63,6 +63,10 @@ lava08
 ≈BLUE
 deep_water
 ≈CYAN
+shallow_water
+≈GREEN
+shallow_water
+≈LIGHTGREEN
 shallow_water
 ≈LIGHTCYAN
 shoals_shallow_water9
@@ -206,3 +210,5 @@ blue_fountain2
 dry_fountain
 }LIGHTBLUE
 sparkling_fountain
+∆GREEN
+unseen_item

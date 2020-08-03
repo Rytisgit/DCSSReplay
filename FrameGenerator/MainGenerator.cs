@@ -640,7 +640,7 @@ namespace FrameGenerator
             .WriteSideDataInfo("Dex: ", model.SideData.Dexterity, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
             lineCount++;
             g.WriteSideDataInfo("XL: ", model.SideData.ExperienceLevel, font, 32 * model.LineLength, lineCount * lineHeight)
-            .WriteSideDataInfo(" Next: ", model.SideData.ExperienceLevel, font, 32 * model.LineLength + font.MeasureText("XL: " + model.SideData.ExperienceLevel), lineCount * lineHeight)
+            .WriteSideDataInfo(" Next: ", model.SideData.NextLevel, font, 32 * model.LineLength + font.MeasureText("XL: " + model.SideData.NextLevel), lineCount * lineHeight)
             .WriteSideDataInfo("Place: ", model.SideData.Place, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
             lineCount++;
             (int.TryParse(model.SideData.NoisyGold, out _) ? 
