@@ -26,7 +26,7 @@ namespace FrameGenerator.Extensions
                 {
                     color = yellow;
                 }
-                var rect = SKRect.Create(x,y+4,13f,16f);
+                var rect = SKRect.Create(x,y +6,15f,20f);
                 var recpaint = new SKPaint
                 {
                     Style = SKPaintStyle.Fill,

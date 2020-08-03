@@ -85,7 +85,7 @@ rect_gray0
 TROVE
 vault0
 rect_gray0
-LABYRINTH
+A LABYRINTH
 lab-rock0
 gauntlet0
 GAUNTLET
