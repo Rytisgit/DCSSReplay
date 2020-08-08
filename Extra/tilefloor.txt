@@ -23,10 +23,10 @@ TARTARUS
 cobalt_rock1
 black_cobalt01
 CRYPT
-brick_gray0
+crypt0
 crypt_domino_1a
 TOMB
-undead0
+tomb0
 tomb0
 HELL
 hell01
