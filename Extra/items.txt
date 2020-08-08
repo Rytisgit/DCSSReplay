@@ -87,7 +87,7 @@ green
 =YELLOW
 fire
 =LIGHTBLUE
-ice
+clay
 =LIGHTMAGENTA
 pink
 =LIGHTCYAN
