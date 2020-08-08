@@ -51,8 +51,8 @@ namespace InputParser
                 place.Append(GetCharacter(characters[i, 0]));
             }
             mapLocation = place.ToString();
-            if (!mapLocation.Contains("of")) return LayoutType.TextOnly;
-            foreach (var location in Locations.locations)
+            if (!mapLocation.Contains("of") || !mapLocation.Contains("level")) return LayoutType.TextOnly;
+             foreach (var location in Locations.locations)
             {
                 if (mapLocation.Contains(location.Substring(0, 3)))
                 {
@@ -353,10 +353,13 @@ namespace InputParser
             {
                 name.Append(GetCharacter(characters[i, 0]));
                 race.Append(GetCharacter(characters[i, 1]));
-                weapon.Append(GetCharacter(characters[i, 9]));
-                quiver.Append(GetCharacter(characters[i, 10]));
                 status.Append(GetCharacter(characters[i, 11]));
                 status2.Append(GetCharacter(characters[i, 12]));
+            }
+            for (int i = 37; i < 80; i++)
+            {
+                weapon.Append(GetCharacter(characters[i, 9]));
+                quiver.Append(GetCharacter(characters[i, 10]));
             }
             for (int i = 40; i < 44; i++)
             {

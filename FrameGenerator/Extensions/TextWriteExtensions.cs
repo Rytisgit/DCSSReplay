@@ -26,7 +26,7 @@ namespace FrameGenerator.Extensions
                 {
                     color = yellow;
                 }
-                var rect = SKRect.Create(x,y +6,15f,20f);
+                var rect = SKRect.Create(x,y + OffsetY + 5, font.TextSize * 0.9f, font.TextSize * 0.9f);
                 var recpaint = new SKPaint
                 {
                     Style = SKPaintStyle.Fill,
@@ -34,7 +34,7 @@ namespace FrameGenerator.Extensions
                 };
                 g.DrawRect(rect, recpaint);
             }
-            WriteCharacter(g, coloredCharacter, font, x, y);
+            WriteCharacter(g, coloredCharacter, font, x, y + OffsetY);
         }
 
         public static SKCanvas WriteSideDataInfo(this SKCanvas g, string title, string info, SKPaint font, float x, float y)
