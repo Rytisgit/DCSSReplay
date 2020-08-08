@@ -27,6 +27,7 @@ namespace TtyRecMonkey
         public PlayerSearchForm()
         {
             InitializeComponent();
+            table.Columns.Add("ID", typeof(Int32));
             table.Columns.Add("Date", typeof(String));
             table.Columns.Add("Progress", typeof(Int32));
             dataGridView1.AllowUserToAddRows = false;
@@ -54,14 +55,21 @@ namespace TtyRecMonkey
                         if (href.Contains("ttyrec")) linkList.Add(href);
 
                     }
+
+                    int i = 0;
                     foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//a[text()]"))
                     {
-                        if(node.InnerText.Contains("ttyrec")) table.Rows.Add(node.InnerText.Split(new string[] { ".t" }, StringSplitOptions.None)[0], 0);
+                        if (node.InnerText.Contains("ttyrec"))
+                        {
+                            table.Rows.Add(i, node.InnerText.Split(new string[] {".t"}, StringSplitOptions.None)[0], 0);
+                            i++;
+                        }
                     }
                     dataGridView1.DataSource = table;
-                    dataGridView1.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                    dataGridView1.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                     dataGridView1.Size = new Size((int)(ClientSize.Width - 50), (int)(ClientSize.Height - 200));
-                    dataGridView1.Columns[0].Width = (int)(dataGridView1.Width * 0.6);
+                    dataGridView1.Columns[0].Width = (int)(dataGridView1.Width * 0.1);
+                    dataGridView1.Columns[1].Width = (int)(dataGridView1.Width * 0.5);
                     dataGridView1.Visible = true;
 
                 }
@@ -92,12 +100,11 @@ namespace TtyRecMonkey
 
         private void PlayerSearch_Resize(object sender, EventArgs e)
         {
-            if (dataGridView1.Visible) 
-            { 
+            if (!dataGridView1.Visible) return;
             dataGridView1.Size = new Size(ClientSize.Width - 50, ClientSize.Height - 200);
-            dataGridView1.Columns[0].Width = (int)(dataGridView1.Width*0.6);
-            dataGridView1.Columns[1].Width = (int)(dataGridView1.Width *0.4);
-            }
+            dataGridView1.Columns[1].Width = (int)(dataGridView1.Width*0.5);
+            dataGridView1.Columns[2].Width = (int)(dataGridView1.Width *0.4);
+            dataGridView1.Columns[0].Width = (int)(dataGridView1.Width * 0.1);
         }
 
         
@@ -107,7 +114,7 @@ namespace TtyRecMonkey
             if (dataGridView1.CurrentCell != null && dataGridView1.CurrentCell.Value != null)
             {
 
-                string href = linkList[dataGridView1.CurrentCell.RowIndex];
+                string href = linkList[(int)dataGridView1.CurrentRow.Cells[0].Value];
                 if (href[0] == '.') href = href.Substring(2);
                 var Uri = new Uri(hostsite + playername + href);
               //  if (href.Contains("http")) Uri = new Uri(href);
@@ -139,7 +146,7 @@ namespace TtyRecMonkey
 
         void wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e, int row)
         {
-            dataGridView1.Rows[row].Cells[1].Value = e.ProgressPercentage;
+            dataGridView1.Rows[row].Cells[2].Value = e.ProgressPercentage;
         }
 
         private void Filter_TextChanged(object sender, EventArgs e)
@@ -186,7 +193,7 @@ namespace TtyRecMonkey
 
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
-            Filter.Text = dateTimePicker1.Value.Year.ToString()+"-"+dateTimePicker1.Value.Month.ToString()+"-"+dateTimePicker1.Value.Day.ToString();
+            Filter.Text = dateTimePicker1.Value.Date.Date.ToShortDateString();
         }
     }
 }
