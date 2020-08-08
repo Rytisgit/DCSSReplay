@@ -92,7 +92,8 @@ namespace FrameGenerator
 #endif
                 return image;
             }
-                return null;
+
+            return null;
         }
 
         private SKBitmap DrawFrame(Model model)
@@ -391,7 +392,7 @@ namespace FrameGenerator
                 float y = 0;
                 for (int j = 0; j < model.LineLength; j++)//write out first line as text
                 {
-                    g.WriteCharacter(model.TileNames[j], font, x, y);
+                    g.WriteCharacter(model.TileNames[j], font, x, y, model.HighlightColors[j]);
                     x += 20;
                 }
                 var overrides = GetOverridesForFrame(model.MonsterData, model.Location);
@@ -529,7 +530,7 @@ namespace FrameGenerator
                 }
                 else currentX += yWidth * xResize;
 
-                g.WriteCharacter(model.TileNames[i], font, currentX, currentY, model.HighlightColors[i], 5);
+                g.WriteCharacter(model.TileNames[i], font, currentX, currentY, model.HighlightColors[i], 3);
 
 
             }
@@ -556,23 +557,18 @@ namespace FrameGenerator
                         }
                         else
                         {
-                            g.WriteCharacter(monsterlist.MonsterDisplay[i], font, x, currentLineY);//not found write as string
+                            g.WriteCharacter(monsterlist.MonsterDisplay[i], font, x, currentLineY, monsterlist.MonsterBackground[i]);//not found write as string
                         }
                         x += 32;
-                    }
-                    foreach (var monster in monsterlist.MonsterDisplay)//draw all monsters in 1 line
-                    {
-
-
                     }
                     var otherx = x;
                     foreach (var backgroundColor in monsterlist.MonsterBackground.Skip(monsterlist.MonsterDisplay.Length))
                     {
-                        //g.PaintBackground(backgroundColor, font, otherx, currentLineY + 4);
+                        g.WriteCharacter(" ", font, otherx, currentLineY + 4, backgroundColor);//paint health as a background color
                         otherx += 12;
                     }
 
-                    foreach (var coloredCharacter in monsterlist.MonsterText)//write all text in 1 line
+                    foreach (var coloredCharacter in monsterlist.MonsterText)//write all name text in 1 line
                     {
                         g.WriteCharacter(coloredCharacter, font, x, currentLineY + 4);
                         x += 12;
@@ -649,24 +645,12 @@ namespace FrameGenerator
             .WriteSideDataInfo("Time: ", model.SideData.Time, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
             lineCount++;
 
-            g.WriteSideDataInfo("Wp: ", model.SideData.Weapon.Substring(0, 38), font, 32 * model.LineLength, lineCount * lineHeight);
+            const int maxWeaponNameLength = 43;
+            g.WriteSideDataInfo("Wp: ", model.SideData.Weapon.Substring(0, maxWeaponNameLength), font, 32 * model.LineLength, lineCount * lineHeight);
             lineCount++;
-            var substring = model.SideData.Weapon.Substring(38);
-            font.Color = gray;
-            if (!string.IsNullOrWhiteSpace(substring))
-            {
-                g.DrawText(substring, 32 * model.LineLength + font.MeasureText("Wp: "), lineCount * lineHeight + font.TextSize, font);
-                lineCount++;
-            }
 
-            g.WriteSideDataInfo("Qv: ", model.SideData.Quiver.Substring(0, 38), font, 32 * model.LineLength, lineCount * lineHeight);
+            g.WriteSideDataInfo("Qv: ", model.SideData.Quiver.Substring(0, maxWeaponNameLength), font, 32 * model.LineLength, lineCount * lineHeight);
             lineCount++;
-            substring = model.SideData.Quiver.Substring(38);
-            if (!string.IsNullOrWhiteSpace(substring))
-            {
-                g.DrawText(substring, 32 * model.LineLength + font.MeasureText("Qv: "), lineCount * lineHeight + font.TextSize, font);
-                lineCount++;
-            }
 
             var x = 32 * model.LineLength;
             foreach (var coloredChar in model.SideDataColored.Statuses1)
