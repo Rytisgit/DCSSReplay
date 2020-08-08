@@ -53,7 +53,7 @@ namespace DisplayWindow
             this.pictureBox2.BackColor = System.Drawing.Color.Black;
             this.pictureBox2.Location = new System.Drawing.Point(0, 0);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(1602, 722);
+            this.pictureBox2.Size = new System.Drawing.Size(1602, 774);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
@@ -92,7 +92,7 @@ namespace DisplayWindow
             this.panel1.Controls.Add(this.EndTimeLabel);
             this.panel1.Controls.Add(this.SeekBar);
             this.panel1.Controls.Add(this.StartTimeLabel);
-            this.panel1.Location = new System.Drawing.Point(0, 710);
+            this.panel1.Location = new System.Drawing.Point(0, 762);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1602, 50);
             this.panel1.TabIndex = 12;
@@ -142,7 +142,7 @@ namespace DisplayWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1602, 759);
+            this.ClientSize = new System.Drawing.Size(1602, 811);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBox2);

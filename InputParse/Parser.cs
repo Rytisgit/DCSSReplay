@@ -131,7 +131,7 @@ namespace InputParser
 
         private static LogData[] ParseLogLines(TerminalCharacter[,] characters)
         {
-            var loglines = new LogData[6] { new LogData(), new LogData(), new LogData(), new LogData(), new LogData(), new LogData() };
+            var loglines = new LogData[7] { new LogData(), new LogData(), new LogData(), new LogData(), new LogData(), new LogData(), new LogData() };
             StringBuilder logLine = new StringBuilder();
             var logText = new List<string>();
             var logBackground = new List<string>();
