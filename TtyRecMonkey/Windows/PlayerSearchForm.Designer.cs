@@ -92,7 +92,7 @@
             "crawl.akrasiac.org",
             "crawl.berotato.org",
             "webzook.net",
-            "dobrazupa.org",
+            "crawl.project357.org",
             "crawl.develz.org",
             "crawl.xtahua.com",
             "crawl.kelbi.org",
