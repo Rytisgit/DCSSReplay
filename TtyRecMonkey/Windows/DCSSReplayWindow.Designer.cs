@@ -76,7 +76,7 @@ namespace DisplayWindow
             this.StartTimeLabel.AutoSize = true;
             this.StartTimeLabel.BackColor = System.Drawing.Color.Silver;
             this.StartTimeLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.StartTimeLabel.ForeColor = System.Drawing.Color.White;
+            this.StartTimeLabel.ForeColor = System.Drawing.Color.Black;
             this.StartTimeLabel.Location = new System.Drawing.Point(53, 17);
             this.StartTimeLabel.Name = "StartTimeLabel";
             this.StartTimeLabel.Size = new System.Drawing.Size(44, 17);
@@ -118,7 +118,7 @@ namespace DisplayWindow
             this.EndTimeLabel.AutoSize = true;
             this.EndTimeLabel.BackColor = System.Drawing.Color.Silver;
             this.EndTimeLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.EndTimeLabel.ForeColor = System.Drawing.Color.White;
+            this.EndTimeLabel.ForeColor = System.Drawing.Color.Black;
             this.EndTimeLabel.Location = new System.Drawing.Point(1546, 17);
             this.EndTimeLabel.Name = "EndTimeLabel";
             this.EndTimeLabel.Size = new System.Drawing.Size(44, 17);
@@ -129,7 +129,7 @@ namespace DisplayWindow
             // 
             this.SeekBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.SeekBar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.SeekBar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(89)))), ((int)(((byte)(89)))), ((int)(((byte)(89)))));
             this.SeekBar.Location = new System.Drawing.Point(118, 18);
             this.SeekBar.Name = "SeekBar";
             this.SeekBar.Size = new System.Drawing.Size(1422, 16);
