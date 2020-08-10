@@ -49,6 +49,7 @@ namespace TtyRecMonkey
                 {
                     HtmlWeb hw = new HtmlWeb();
                     HtmlAgilityPack.HtmlDocument doc = hw.Load(website);
+
                     foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//a[@href]"))
                     {
                         string href = node.GetAttributeValue("href", null);
@@ -61,16 +62,24 @@ namespace TtyRecMonkey
                     {
                         if (node.InnerText.Contains("ttyrec"))
                         {
-                            table.Rows.Add(i, node.InnerText.Split(new string[] {".t"}, StringSplitOptions.None)[0], 0);
+                            table.Rows.Add(i, node.InnerText.Split(new string[] { ".t" }, StringSplitOptions.None)[0], 0);
                             i++;
                         }
                     }
-                    dataGridView1.DataSource = table;
-                    dataGridView1.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                    dataGridView1.Size = new Size((int)(ClientSize.Width - 50), (int)(ClientSize.Height - 200));
-                    dataGridView1.Columns[0].Width = (int)(dataGridView1.Width * 0.1);
-                    dataGridView1.Columns[1].Width = (int)(dataGridView1.Width * 0.5);
-                    dataGridView1.Visible = true;
+                    if (i != 0)
+                    {
+                        dataGridView1.DataSource = table;
+                        dataGridView1.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                        dataGridView1.Size = new Size((int)(ClientSize.Width - 50), (int)(ClientSize.Height - 200));
+                        dataGridView1.Columns[0].Width = (int)(dataGridView1.Width * 0.1);
+                        dataGridView1.Columns[1].Width = (int)(dataGridView1.Width * 0.5);
+                        dataGridView1.Visible = true;
+                    }
+                    else
+                    {
+                        MessageBox.Show("No TTyRecs Found");
+                    }
+
 
                 }
                 else
@@ -171,7 +180,7 @@ namespace TtyRecMonkey
                     hostsite = "https://webzook.net/soup/ttyrecs/";
                     break;
                 case 4:
-                    hostsite = "https://termcast.shalott.org/ttyrecs/dobrazupa.org/ttyrec/";
+                    hostsite = "https://crawl.project357.org/ttyrec/";
                     break;
                 case 5:
                     hostsite = "http://crawl.develz.org/ttyrecs/";
