@@ -682,9 +682,9 @@ namespace FrameGenerator
             if (!_characterpng.TryGetValue(pngName, out SKBitmap png)) return false;
 
             string[] location = model.SideData.Place.Split(':'); //TODO add floor is lava and water based on status
-            if (!_floorandwall.TryGetValue(location[0].ToUpper(), out var CurrentLocationFloorAndWallName)) return false;
+            if (!_floorandwall.TryGetValue(location[0].ToUpper(), out var currentLocationFloorAndWallName)) return false;
 
-            if (!_floorpng.TryGetValue(CurrentLocationFloorAndWallName[1], out var floor)) return false;
+            if (!_floorpng.TryGetValue(currentLocationFloorAndWallName[1], out var floor)) return false;
 
             
             
@@ -701,10 +701,6 @@ namespace FrameGenerator
                 else if(model.SideData.Statuses1.ToLower().Contains("lava"))
                 {
                     if (!_alldngnpng.TryGetValue("lava08", out floor)) return false;
-                }
-                else if(model.SideData.Statuses1.ToLower().Contains("net"))
-                {
-                    if (!_alldngnpng.TryGetValue("net_trap", out floor)) return false;
                 }
 
                 characterg.DrawBitmap(floor, rect);
@@ -727,6 +723,19 @@ namespace FrameGenerator
                 if (_weaponpng.TryGetValue(model.SideData.Weapon.ParseUniqueWeaponName(), out png)) characterg.DrawBitmap(png, rect);
 
                 else if (_weaponpng.TryGetValue(model.SideData.Weapon.GetNonUniqueWeaponName(_weapondata), out png)) characterg.DrawBitmap(png, rect);
+
+                else if (model.SideData.Statuses1.ToLower().Contains("held"))
+                {
+                    if (location.Contains("Spider"))
+                    {
+                        if (_alldngnpng.TryGetValue("cobweb_none_0", out var cobweb)) characterg.DrawBitmap(cobweb, rect);
+                    }
+                    else
+                    {
+                        if (_alldngnpng.TryGetValue("net_trap", out var net)) characterg.DrawBitmap(net, rect);
+                    }
+                    
+                }
 
                 var rect2 = new SKRect(x, y, x + (CharacterSKBitmap.Width * resize), y + (CharacterSKBitmap.Height * resize));
                 g.DrawBitmap(CharacterSKBitmap, rect2);
@@ -810,7 +819,7 @@ namespace FrameGenerator
                 tile.TryDrawMonster(tileHighlight, overrides, _monsterpng, _miscallaneous, floor, out drawnTile, out brandToDraw) ||//first try drawing overrides, that include blue color monsters, and monsters in sight
                 tile.TryDrawCachedTile(tileHighlight, _outOfSightCache, new List<char> {'!', '?', '=', '"', '$', ')', '[', '_', '}', '/', '(', ':', '|', '%', '÷', '†'}, new List<string> { "≈RED"}, out drawnTile, out cached) ||
                 tile.TryDrawMonster(tileHighlight, _monsterdata, _monsterpng, _miscallaneous, floor, out drawnTile, out brandToDraw) ||//draw the rest of the monsters
-                tile.TryDrawFeature(tileHighlight, _features, _alldngnpng, _miscallaneous, floor, wall, out drawnTile) ||
+                tile.TryDrawFeature(tileHighlight, _features, _alldngnpng, _miscallaneous, floor, wall, model.Location, out drawnTile) ||
                 tile.TryDrawCloud(_cloudtiles, _alleffects, floor, model.SideData, model.MonsterData, out drawnTile) ||
                 tile.TryDrawItem(tileHighlight, _itemdata, _itempng, _miscallaneous, floor, model.Location, out drawnTile)) 
             {
