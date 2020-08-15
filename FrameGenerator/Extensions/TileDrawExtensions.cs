@@ -162,7 +162,7 @@ namespace FrameGenerator.Extensions
             return true;
         }
 
-        public static bool TryDrawFeature(this string tile, string background, Dictionary<string, string> featureData, Dictionary<string, SKBitmap> allDungeonPngs, Dictionary<string, SKBitmap> misc, SKBitmap floor, SKBitmap wall, out SKBitmap tileToDraw)
+        public static bool TryDrawFeature(this string tile, string background, Dictionary<string, string> featureData, Dictionary<string, SKBitmap> allDungeonPngs, Dictionary<string, SKBitmap> misc, SKBitmap floor, SKBitmap wall, string location, out SKBitmap tileToDraw)
         {
 
             var highlighted = FixHighlight(tile, background, out var correctTile);
@@ -200,7 +200,16 @@ namespace FrameGenerator.Extensions
                     return true;
                 }
 
-                if (!allDungeonPngs.TryGetValue(pngName, out SKBitmap png)) return false;
+                SKBitmap png = null;
+
+                if (pngName == "net" && location.Contains("Spider"))
+                {
+                    if (!allDungeonPngs.TryGetValue("cobweb_NESW", out png)) return false;
+                }
+                else
+                {
+                    if (!allDungeonPngs.TryGetValue(pngName, out png)) return false;
+                }
 
                 g.DrawBitmap(floor, new SKRect(0, 0, floor.Width, floor.Height));
                 g.DrawBitmap(png, new SKRect(0, 0, png.Width, png.Height));
