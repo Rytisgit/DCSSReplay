@@ -20,6 +20,9 @@ namespace TtyRecMonkey
         public int TimeStepLengthMS = 5000;
         public int MaxDelayBetweenPackets = 500;//millisecondss
         public int framerateControlTimeout = 5;
+        public bool OpenNone = true;
+        public bool OpenFileSelect = false;
+        public bool OpenDownload = false;
 
         [OptionalField] public Font GdiFont;
 

@@ -15,6 +15,7 @@ using System.Windows.Forms;
 using TtyRecDecoder;
 using System.Drawing.Imaging;
 using ICSharpCode.SharpZipLib.GZip;
+using SharpCompress.Compressors.Xz;
 using SkiaSharp.Views.Desktop;
 using TtyRecMonkey.Windows;
 
@@ -101,31 +102,32 @@ namespace TtyRecMonkey
                 if (Path.GetExtension(f) == ".ttyrec") return File.OpenRead(f);
                 Stream streamCompressed = File.OpenRead(f);
                 Stream streamUncompressed = new MemoryStream();
-                if (Path.GetExtension(f) == ".bz2")
+                switch
+                (Path.GetExtension(f))
                 {
-                   try
-                    {
-                        BZip2.Decompress(streamCompressed, streamUncompressed, false);
-                    }
-                    catch
-                    {
-                        MessageBox.Show("The file is corrupted or not supported");
-                    }
-                    return streamUncompressed;
+                    case ".bz2":
+                        try
+                        {
+                            BZip2.Decompress(streamCompressed, streamUncompressed, false);
+                        }
+                        catch
+                        {
+                            MessageBox.Show("The file is corrupted or not supported");
+                        }
+                        return streamUncompressed;
+                    case ".gz":
+                        try
+                        {
+                            GZip.Decompress(streamCompressed, streamUncompressed, false);
+                        }
+                        catch
+                        {
+                            MessageBox.Show("The file is corrupted or not supported");
+                        }
+                        return streamUncompressed;
+                    default:
+                        return null;
                 }
-                if (Path.GetExtension(f) == ".gz")
-                { 
-                    try
-                    {
-                        GZip.Decompress(streamCompressed, streamUncompressed, false);
-                    }
-                    catch
-                    {
-                        MessageBox.Show("The file is corrupted or not supported");
-                    }
-                    return streamUncompressed;
-                }
-                return null;
             });
         }
         private IEnumerable<Stream> TtyrecToStream(Dictionary<string, Stream> s)
@@ -153,6 +155,21 @@ namespace TtyRecMonkey
                     try
                     {
                         GZip.Decompress(streamCompressed, streamUncompressed, false);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("The file is corrupted or not supported");
+                    }
+                    return streamUncompressed;
+                }
+                if (f.Key == "xz")
+                {
+                    try
+                    {
+                        var unzip = new XZStream(streamCompressed);
+                        var stream = new byte[unzip.Length];
+                        unzip.Read(stream, 0, (int) unzip.Length);
+                        streamUncompressed = new MemoryStream(stream, true);
                     }
                     catch
                     {
@@ -256,13 +273,13 @@ namespace TtyRecMonkey
         }
 
 
-        void Reconfigure()
+        private void Reconfigure()
         {
             var cfg = new ConfigurationForm();
             if (cfg.ShowDialog(this) == DialogResult.OK) AfterConfiguration();
         }
 
-        void AfterConfiguration()
+        private void AfterConfiguration()
         {
             TimeStepLengthMS = Configuration.Main.TimeStepLengthMS;
             framerateControlTimeout = Configuration.Main.framerateControlTimeout;
@@ -407,7 +424,7 @@ namespace TtyRecMonkey
             return string.Format("{0:0,0}PB", bytes);
         }
 
-        void Loop()
+        private void Loop()
         {
             while (run)
             {
@@ -415,11 +432,21 @@ namespace TtyRecMonkey
             }
         }
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             using var form = new PlayerForm();
             if (args.Length > 0) form.DoOpenFiles(args);
-            else form.OpenFile();
+            else
+            {
+                if (Configuration.Main.OpenFileSelect)
+                {
+                    form.OpenFile();
+                }
+                else if (Configuration.Main.OpenDownload)
+                {
+                    form.PlayerDownloadWindow();
+                }
+            }
             Thread m_Thread = new Thread(() => form.Loop());
             m_Thread.Start();
             Application.Run(form);
