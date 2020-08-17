@@ -125,7 +125,7 @@ namespace TtyRecMonkey
 
                 string href = linkList[(int)dataGridView1.CurrentRow.Cells[0].Value];
                 if (href[0] == '.') href = href.Substring(2);
-                var Uri = new Uri(hostsite + playername + href);
+                var Uri = href.Contains("http") ? new Uri(href) : new Uri(hostsite + playername + href);
               //  if (href.Contains("http")) Uri = new Uri(href);
                 WebClient wc = new WebClient();
                 try
