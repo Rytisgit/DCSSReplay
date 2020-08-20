@@ -585,7 +585,7 @@ namespace FrameGenerator
             var font = new SKPaint
             {
                 Typeface = SKTypeface.FromFamilyName("Courier New"),
-                TextSize = 16
+                TextSize = 18
             };
             for (int i = 0; i < model.LogData.Length; i++)
             {
@@ -605,7 +605,7 @@ namespace FrameGenerator
             var font = new SKPaint
             {
                 Typeface = SKTypeface.FromFamilyName("Courier New"),
-                TextSize = 16,
+                TextSize = 18,
                 IsAntialias = true,
             };
             var yellow = new SKColor(252, 233, 79);
