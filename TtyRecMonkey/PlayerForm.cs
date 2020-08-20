@@ -177,6 +177,7 @@ namespace TtyRecMonkey
                     }
                     return streamUncompressed;
                 }
+                MessageBox.Show("The file is corrupted or not supported");
                 return null;
             });
         }
@@ -392,7 +393,7 @@ namespace TtyRecMonkey
         private async void DownloadTTyRec(object sender, EventArgs e)
         {
             await playerSearch.DownloadFileAsync(sender, e); 
-            var streams = TtyrecToStream(playerSearch.ext);
+            var streams = TtyrecToStream(playerSearch.TtyrecStreamDictionary);
 
             var delay = TimeSpan.Zero;
             ttyrecDecoder = new TtyRecKeyframeDecoder(80, 24, streams, delay, MaxDelayBetweenPackets);
