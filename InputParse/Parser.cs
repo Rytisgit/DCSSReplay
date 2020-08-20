@@ -23,47 +23,31 @@ namespace InputParser
             StringBuilder place = new StringBuilder();
             bool found = false;
 
-            string sideLocation;
             newlocation = "";
             for (int i = 61; i < FullWidth; i++)
             {
                 place.Append(GetCharacter(characters[i, 7]));
             }
-            sideLocation = place.ToString();
+            var sideLocation = place.ToString();
             foreach (var location in Locations.locations)
             {
-                if (sideLocation.Contains(location.Substring(0, 3)))
-                {
-                    newlocation = location;
-                    sideLocation = location;
-                    found = true;
-                    break;
-                }
-            }
-            if (found)
-            {
+                if (!sideLocation.Contains(location.Substring(0, 3))) continue;
+                newlocation = location;
                 return LayoutType.Normal;
             }
+
             place = new StringBuilder();
-            string mapLocation;
-            for (int i = 0; i < 30; i++)
+            for (var i = 0; i < FullWidth; i++)
             {
                 place.Append(GetCharacter(characters[i, 0]));
             }
-            mapLocation = place.ToString();
-            if (!mapLocation.Contains("of") || !mapLocation.Contains("level")) return LayoutType.TextOnly;
-             foreach (var location in Locations.locations)
+            if (!place.ToString().Contains("Press ?")) return LayoutType.TextOnly;
+
+            var mapLocation = place.ToString().Substring(0, 30);
+            foreach (var location in Locations.locations)
             {
-                if (mapLocation.Contains(location.Substring(0, 3)))
-                {
-                    newlocation = location;
-                    mapLocation = location;
-                    found = true;
-                    break;
-                }
-            }
-            if (found)
-            {
+                if (!mapLocation.Contains(location.Substring(0, 3))) continue;
+                newlocation = location;
                 return LayoutType.MapOnly;
             }
             return LayoutType.TextOnly;

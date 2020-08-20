@@ -671,7 +671,7 @@ namespace FrameGenerator
         public bool DrawPlayer(SKCanvas g, Model model, float x, float y, float resize = 1)
         {
 
-            string[] BasicStatusArray = { "bat", "dragon", "ice", "mushroom", "pig", "shadow", "spider" };
+            string[] BasicStatusArray = { "bat", "dragon", "ice", "mushroom", "pig", "shadow", "spider", "tree" };
             string[] CompStatusArray = { "lich", "statue" };
 
             string characterRace = model.SideData.Race.Substring(0, 6);

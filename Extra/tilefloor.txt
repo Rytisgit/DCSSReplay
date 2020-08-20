@@ -88,7 +88,7 @@ rect_gray0
 A LABYRINTH
 lab-rock0
 gauntlet0
-GAUNTLET
+A GAUNTLET
 lab-rock0
 gauntlet0
 SEWER

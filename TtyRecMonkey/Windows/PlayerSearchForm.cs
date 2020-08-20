@@ -17,8 +17,7 @@ namespace TtyRecMonkey
 {
     public partial class  PlayerSearchForm : Form
     {
-       
-        public Dictionary<string, Stream> ext = new Dictionary<string, Stream>();
+        public readonly Dictionary<string, Stream> TtyrecStreamDictionary = new Dictionary<string, Stream>();
         public MemoryStream str = new MemoryStream();
         private List<string> linkList = new List<string>();
         DataTable table = new DataTable();
@@ -62,7 +61,7 @@ namespace TtyRecMonkey
                     {
                         if (node.InnerText.Contains("ttyrec"))
                         {
-                            table.Rows.Add(i, node.InnerText.Split(new string[] { ".t" }, StringSplitOptions.None)[0], 0);
+                            table.Rows.Add(i+1, node.InnerText.Split(new string[] { ".t" }, StringSplitOptions.None)[0], 0);
                             i++;
                         }
                     }
@@ -119,20 +118,19 @@ namespace TtyRecMonkey
         
         public async Task DownloadFileAsync (object send, EventArgs arg)
         {
-            ext.Clear();
+            TtyrecStreamDictionary.Clear();
             if (dataGridView1.CurrentCell != null && dataGridView1.CurrentCell.Value != null)
             {
 
-                string href = linkList[(int)dataGridView1.CurrentRow.Cells[0].Value];
+                var href = linkList[(int)dataGridView1.CurrentRow.Cells[0].Value];
                 if (href[0] == '.') href = href.Substring(2);
-                var Uri = href.Contains("http") ? new Uri(href) : new Uri(hostsite + playername + href);
-              //  if (href.Contains("http")) Uri = new Uri(href);
-                WebClient wc = new WebClient();
+                var uri = href.Contains("http") ? new Uri(href) : new Uri(hostsite + playername + href);
+                var wc = new WebClient();
                 try
                 {
                     wc.DownloadProgressChanged += (sender, e) => wc_DownloadProgressChanged(sender, e, dataGridView1.CurrentCell.RowIndex);
                     wc.DownloadDataCompleted += wc_DownloadDataCompleted;
-                    await wc.DownloadDataTaskAsync(Uri);
+                    await wc.DownloadDataTaskAsync(uri);
                 }
                 catch
                 {
@@ -145,10 +143,10 @@ namespace TtyRecMonkey
         {
             if (e.Error == null && !e.Cancelled)
             {
-                string href = linkList[dataGridView1.CurrentCell.RowIndex];
+                string href = linkList[(int)dataGridView1.CurrentRow.Cells[0].Value];
                 MessageBox.Show("Download Completed");
                 str = new MemoryStream(e.Result);
-                ext.Add(href.Split(new string[] { "." }, StringSplitOptions.None).Last(),str);
+                TtyrecStreamDictionary.Add(href.Split(new string[] { "." }, StringSplitOptions.None).Last(),str);
             }
             else MessageBox.Show("file could not be downloaded");
         }
