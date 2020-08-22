@@ -97,7 +97,7 @@ namespace TtyRecMonkey.Windows
 
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            ttyrecDecoder.GoToFrame(int.Parse((string)table.Rows[e.RowIndex].ItemArray[0]) );
+            ttyrecDecoder.GoToFrame(int.Parse((string)table.Rows[e.RowIndex].ItemArray[0])+1 );
         }
     }
 }
