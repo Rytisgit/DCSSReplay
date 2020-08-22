@@ -331,7 +331,7 @@ namespace FrameGenerator
             var font = new SKPaint
             {
                 Typeface = SKTypeface.FromFamilyName("Courier New"),
-                TextSize = 16
+                TextSize = 20
             };
             foreach (var monsterlist in model.MonsterData)
             {
@@ -394,7 +394,7 @@ namespace FrameGenerator
             var font = new SKPaint
             {
                 Typeface = SKTypeface.FromFamilyName("Courier New"),
-                TextSize = 18,
+                TextSize = 20,
                 IsAntialias = true,
             };
             var yellow = new SKColor(252, 233, 79);
@@ -405,15 +405,15 @@ namespace FrameGenerator
 
             font.Color = yellow;
 
-            g.DrawText(model.SideData.Name, 32 * model.LineLength, lineCount * lineHeight + font.TextSize, font);
+            g.DrawText(model.SideData.Name, 32 * model.LineLength, lineCount * lineHeight + font.TextSize - 5, font);
             lineCount++;
-            g.DrawText(model.SideData.Race, 32 * model.LineLength, lineCount * lineHeight + font.TextSize, font);
+            g.DrawText(model.SideData.Race, 32 * model.LineLength, lineCount * lineHeight + font.TextSize - 5, font);
             lineCount++;
             g.WriteSideDataInfo("Health: ", model.SideData.Health.ToString() + '/' + model.SideData.MaxHealth.ToString(), font, 32 * model.LineLength, lineCount * lineHeight)
-            .DrawPercentageBar(model.SideData.Health, model.SideData.MaxHealth, prevHP, SKColors.Green, SKColors.Red, 32 * (model.LineLength + 8), lineCount * lineHeight);
+            .DrawPercentageBar(model.SideData.Health, model.SideData.MaxHealth, prevHP, SKColors.Green, SKColors.Red, 32 * (model.LineLength + 8), lineCount * lineHeight + 5);
             lineCount++;
             g.WriteSideDataInfo("Mana: ", model.SideData.Magic.ToString() + '/' + model.SideData.MaxMagic.ToString(), font, 32 * model.LineLength, lineCount * lineHeight)
-            .DrawPercentageBar(model.SideData.Magic, model.SideData.MaxMagic, prevMP, SKColors.Blue, SKColors.BlueViolet, 32 * (model.LineLength + 8), lineCount * lineHeight);
+            .DrawPercentageBar(model.SideData.Magic, model.SideData.MaxMagic, prevMP, SKColors.Blue, SKColors.BlueViolet, 32 * (model.LineLength + 8), lineCount * lineHeight + 5);
             lineCount++;
             g.WriteSideDataInfo("AC: ", model.SideData.ArmourClass, font, 32 * model.LineLength, lineCount * lineHeight)
             .WriteSideDataInfo("Str: ", model.SideData.Strength, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
