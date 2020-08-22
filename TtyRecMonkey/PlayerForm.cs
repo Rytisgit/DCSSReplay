@@ -251,7 +251,7 @@ namespace TtyRecMonkey
                 $"@ {(ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.CurrentFrame.SinceStart))} " +
                 $"of {(ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.Length))} " +
                 $"({(ttyrecDecoder == null ? "N/A" : ttyrecDecoder.Keyframes.ToString())} " +
-                $"keyframes {(ttyrecDecoder == null ? "N/A" : ttyrecDecoder.PacketCount.ToString())} packets) -- Speed {ttyrecDecoder.PlaybackSpeed}"
+                $"keyframes {(ttyrecDecoder == null ? "N/A" : ttyrecDecoder.PacketCount.ToString())} packets) -- Speed {ttyrecDecoder?.PlaybackSpeed}"
             );
             UpdateTime(ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.CurrentFrame.SinceStart),
                   ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.Length));
