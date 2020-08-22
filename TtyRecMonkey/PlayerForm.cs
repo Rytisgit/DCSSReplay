@@ -225,7 +225,7 @@ namespace TtyRecMonkey
                                 }
                                 catch (Exception ex)
                                 {
-                                    Console.WriteLine(ex.Message);
+                                    Console.WriteLine(ex.StackTrace);
                                     //generator.GenerateImage(savedFrame);
                                     frameGenerator.isGeneratingFrame = false;
                                 }
