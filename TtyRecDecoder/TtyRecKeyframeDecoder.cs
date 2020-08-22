@@ -40,12 +40,28 @@ namespace TtyRecDecoder
         public int Keyframes { get; private set; }
         public int Width { get; private set; }
         public int Height { get; private set; }
+        public double PlaybackSpeed { get; set; }
+        public double PausedSpeed { get; set; }
+        
         public IEnumerable<Tuple<int, string>> SearchResults { get; private set; } = new List<Tuple<int, string>>();
 
         public TtyRecFrame CurrentFrame;
         private int LastActiveRangeStart = int.MaxValue;
         private int LastActiveRangeEnd = int.MinValue;
-         
+
+        public void Pause()
+        {
+            if (PlaybackSpeed == 0) return;
+            PausedSpeed = PlaybackSpeed;
+            PlaybackSpeed = 0;
+
+        }
+
+        public void Unpause()
+        {
+            PlaybackSpeed = PausedSpeed;
+        }
+
         public void Dispose()
         {
             // n.b. Resize uses this -- we may need to refactor if we need to do something permanent
@@ -265,13 +281,14 @@ namespace TtyRecDecoder
             var nextFrameTime = Packets[nextFrameIndex > 0 ? nextFrameIndex : 0].SinceStart;
 
             DumpChunksAround(nextFrameTime);
-            var i = nextFrameTime == CurrentFrame.SinceStart ? BinarySearchIndexFrame(Packets, ap => ap.SinceStart > nextFrameTime) : BinarySearchIndexFrame(Packets, ap => ap.SinceStart >= nextFrameTime);
+            var i = BinarySearchIndexFrame(Packets, ap => ap.SinceStart > nextFrameTime); //find closest full(non-partial) frame containing the frame from this frame index
             if (i == -1) i = 0;
             Debug.Assert(Packets[i].DecodedCache != null);
             CurrentFrame.SinceStart = Packets[i].SinceStart;
             CurrentFrame.Data = Packets[i].DecodedCache;
             CurrentFrame.Index = i;
             SeekTime = CurrentFrame.SinceStart;
+            Pause();
         }
 
         public void SearchPackets(string searchPhrase, int extraCharacters)

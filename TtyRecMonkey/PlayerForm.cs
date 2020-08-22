@@ -90,7 +90,7 @@ namespace TtyRecMonkey
          
             var streams = TtyrecToStream(files);
             ttyrecDecoder = new TtyRecKeyframeDecoder(80, 24, streams, delay, MaxDelayBetweenPackets);
-            PlaybackSpeed = +1;
+            ttyrecDecoder.PlaybackSpeed = +1;
             ttyrecDecoder.SeekTime = TimeSpan.Zero;
         }
 
@@ -181,7 +181,7 @@ namespace TtyRecMonkey
             {
                 ShowControls(false);
 
-                ttyrecDecoder.SeekTime += TimeSpan.FromSeconds(dt * PlaybackSpeed);
+                ttyrecDecoder.SeekTime += TimeSpan.FromSeconds(dt * ttyrecDecoder.PlaybackSpeed);
 
                 if (ttyrecDecoder.SeekTime > ttyrecDecoder.Length)
                 {
@@ -251,7 +251,7 @@ namespace TtyRecMonkey
                 $"@ {(ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.CurrentFrame.SinceStart))} " +
                 $"of {(ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.Length))} " +
                 $"({(ttyrecDecoder == null ? "N/A" : ttyrecDecoder.Keyframes.ToString())} " +
-                $"keyframes {(ttyrecDecoder == null ? "N/A" : ttyrecDecoder.PacketCount.ToString())} packets) -- Speed {PlaybackSpeed}"
+                $"keyframes {(ttyrecDecoder == null ? "N/A" : ttyrecDecoder.PacketCount.ToString())} packets) -- Speed {ttyrecDecoder.PlaybackSpeed}"
             );
             UpdateTime(ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.CurrentFrame.SinceStart),
                   ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.Length));
@@ -304,26 +304,26 @@ namespace TtyRecMonkey
                     e.SuppressKeyPress = true; // also supresses annoying dings
                     break;
 
-                case Keys.Z: PlaybackSpeed = -100; break;
-                case Keys.X: PlaybackSpeed = -10; break;
-                case Keys.C: PlaybackSpeed = -1; break;
-                case Keys.B: PlaybackSpeed = +1; break;
-                case Keys.N: PlaybackSpeed = +10; break;
-                case Keys.M: PlaybackSpeed += +100; break;
+                case Keys.Z: ttyrecDecoder.PlaybackSpeed = -100; break;
+                case Keys.X: ttyrecDecoder.PlaybackSpeed = -10; break;
+                case Keys.C: ttyrecDecoder.PlaybackSpeed = -1; break;
+                case Keys.B: ttyrecDecoder.PlaybackSpeed = +1; break;
+                case Keys.N: ttyrecDecoder.PlaybackSpeed = +10; break;
+                case Keys.M: ttyrecDecoder.PlaybackSpeed += +100; break;
 
-                case Keys.F: PlaybackSpeed -= 1; break;//progresive increase/decrease
-                case Keys.G: PlaybackSpeed += 1; break;
+                case Keys.F: ttyrecDecoder.PlaybackSpeed -= 1; break;//progresive increase/decrease
+                case Keys.G: ttyrecDecoder.PlaybackSpeed += 1; break;
 
-                case Keys.D: PlaybackSpeed -= 0.2; break;//progresive increase/decrease
-                case Keys.H: PlaybackSpeed += 0.2; break;
+                case Keys.D: ttyrecDecoder.PlaybackSpeed -= 0.2; break;//progresive increase/decrease
+                case Keys.H: ttyrecDecoder.PlaybackSpeed += 0.2; break;
 
                 case Keys.Oemcomma: 
-                    if (PlaybackSpeed != 0) { PausedSpeed = PlaybackSpeed; PlaybackSpeed = 0; } //pause when frame stepping
+                    if (ttyrecDecoder.PlaybackSpeed != 0) {  ttyrecDecoder.Pause(); } //pause when frame stepping
                     FrameStepCount -= 1;//FrameStep -1 
                     break;
 
                 case Keys.OemPeriod:
-                    if (PlaybackSpeed != 0) { PausedSpeed = PlaybackSpeed; PlaybackSpeed = 0; }//pause when frame stepping
+                    if (ttyrecDecoder.PlaybackSpeed != 0) { ttyrecDecoder.Pause(); }//pause when frame stepping
                     FrameStepCount += 1; //FrameStep +1
                     break;
 
@@ -381,7 +381,7 @@ namespace TtyRecMonkey
 
             var delay = TimeSpan.Zero;
             ttyrecDecoder = new TtyRecKeyframeDecoder(80, 24, streams, delay, MaxDelayBetweenPackets);
-            PlaybackSpeed = +1;
+            ttyrecDecoder.PlaybackSpeed = +1;
             ttyrecDecoder.SeekTime = TimeSpan.Zero;
         }
    
