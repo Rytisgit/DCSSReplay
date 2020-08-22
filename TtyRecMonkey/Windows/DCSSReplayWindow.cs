@@ -14,7 +14,6 @@ namespace DisplayWindow
    
         public static Thread m_Thread;
         public  TtyRecKeyframeDecoder ttyrecDecoder = null;
-        public double PlaybackSpeed, PausedSpeed;
         private delegate void SafeCallDelegate(Bitmap frame);
         private delegate void SafeCallDelegateTitle(string title);
         private delegate void SafeCallDelegateTitle2(string title, string title2);
@@ -159,8 +158,8 @@ namespace DisplayWindow
 
         public void PlayButton_Click(object sender, System.EventArgs e)
         {
-            if (PlaybackSpeed != 0) { PlayButton.Image = Image.FromFile(@"..\..\..\Extra\play.png"); PausedSpeed = PlaybackSpeed; PlaybackSpeed = 0; }
-            else { PlayButton.Image = Image.FromFile(@"..\..\..\Extra\pause.png"); PlaybackSpeed = PausedSpeed; }
+            if (ttyrecDecoder.PlaybackSpeed != 0) { PlayButton.Image = Image.FromFile(@"..\..\..\Extra\play.png"); ttyrecDecoder.Pause(); }
+            else { PlayButton.Image = Image.FromFile(@"..\..\..\Extra\pause.png"); ttyrecDecoder.Unpause(); }
         }
 
     }
