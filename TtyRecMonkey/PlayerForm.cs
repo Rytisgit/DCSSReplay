@@ -101,85 +101,69 @@ namespace TtyRecMonkey
                
                 if (Path.GetExtension(f) == ".ttyrec") return File.OpenRead(f);
                 Stream streamCompressed = File.OpenRead(f);
-                Stream streamUncompressed = new MemoryStream();
-                switch
-                (Path.GetExtension(f))
-                {
-                    case ".bz2":
-                        try
-                        {
-                            BZip2.Decompress(streamCompressed, streamUncompressed, false);
-                        }
-                        catch
-                        {
-                            MessageBox.Show("The file is corrupted or not supported");
-                        }
-                        return streamUncompressed;
-                    case ".gz":
-                        try
-                        {
-                            GZip.Decompress(streamCompressed, streamUncompressed, false);
-                        }
-                        catch
-                        {
-                            MessageBox.Show("The file is corrupted or not supported");
-                        }
-                        return streamUncompressed;
-                    default:
-                        return null;
-                }
+                return DecompressedStream(Path.GetExtension(f), streamCompressed);
             });
         }
         private IEnumerable<Stream> TtyrecToStream(Dictionary<string, Stream> s)
         {
             return s.Select(f =>
             {
-
                 if (f.Key=="ttyrec") return f.Value;
                 Stream streamCompressed = f.Value;
-                Stream streamUncompressed = new MemoryStream();
-                if (f.Key == "bz2")
-                {
-                    try
-                    {
-                        BZip2.Decompress(streamCompressed, streamUncompressed, false);
-                    }
-                    catch
-                    {
-                        MessageBox.Show("The file is corrupted or not supported");
-                    }
-                    return streamUncompressed;
-                }
-                if (f.Key == "gz")
-                {
-                    try
-                    {
-                        GZip.Decompress(streamCompressed, streamUncompressed, false);
-                    }
-                    catch
-                    {
-                        MessageBox.Show("The file is corrupted or not supported");
-                    }
-                    return streamUncompressed;
-                }
-                if (f.Key == "xz")
-                {
-                    try
-                    {
-                        var unzip = new XZStream(streamCompressed);
-                        var stream = new byte[unzip.Length];
-                        unzip.Read(stream, 0, (int) unzip.Length);
-                        streamUncompressed = new MemoryStream(stream, true);
-                    }
-                    catch
-                    {
-                        MessageBox.Show("The file is corrupted or not supported");
-                    }
-                    return streamUncompressed;
-                }
-                MessageBox.Show("The file is corrupted or not supported");
-                return null;
+                return DecompressedStream(f.Key, streamCompressed);
             });
+        }
+
+        private static Stream DecompressedStream(string compressionType, Stream streamCompressed)
+        {
+            Stream streamUncompressed = new MemoryStream();
+            if (compressionType == "bz2")
+            {
+                try
+                {
+                    BZip2.Decompress(streamCompressed, streamUncompressed, false);
+                }
+                catch
+                {
+                    MessageBox.Show("The file is corrupted or not supported");
+                }
+
+                return streamUncompressed;
+            }
+
+            if (compressionType == "gz")
+            {
+                try
+                {
+                    GZip.Decompress(streamCompressed, streamUncompressed, false);
+                }
+                catch
+                {
+                    MessageBox.Show("The file is corrupted or not supported");
+                }
+
+                return streamUncompressed;
+            }
+
+            if (compressionType == "xz")
+            {
+                try
+                {
+                    var unzip = new XZStream(streamCompressed);
+                    var stream = new byte[unzip.Length];
+                    unzip.Read(stream, 0, (int) unzip.Length);
+                    streamUncompressed = new MemoryStream(stream, true);
+                }
+                catch
+                {
+                    MessageBox.Show("The file is corrupted or not supported");
+                }
+
+                return streamUncompressed;
+            }
+
+            MessageBox.Show("The file is corrupted or not supported");
+            return null;
         }
 
         void MainLoop()
