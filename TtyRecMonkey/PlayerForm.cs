@@ -15,7 +15,6 @@ using System.Windows.Forms;
 using TtyRecDecoder;
 using System.Drawing.Imaging;
 using ICSharpCode.SharpZipLib.GZip;
-using SharpCompress.Compressors.Xz;
 using SkiaSharp.Views.Desktop;
 using TtyRecMonkey.Windows;
 
@@ -56,7 +55,7 @@ namespace TtyRecMonkey
                 {
                     CheckFileExists = true,
                     DefaultExt = "ttyrec",
-                    Filter = "TtyRec Files|*.ttyrec;*.bz2|All Files|*",
+                    Filter = @"TtyRec Files|*.ttyrec;*.ttyrec.bz2;*.ttyrec.gz|All Files|*",
                     Multiselect = false,
                     RestoreDirectory = true,
                     Title = "Select a TtyRec to play"
@@ -98,7 +97,6 @@ namespace TtyRecMonkey
         {
             return files.Select(f =>
             {
-               
                 if (Path.GetExtension(f) == ".ttyrec") return File.OpenRead(f);
                 Stream streamCompressed = File.OpenRead(f);
                 return DecompressedStream(Path.GetExtension(f), streamCompressed);
@@ -117,52 +115,38 @@ namespace TtyRecMonkey
         private static Stream DecompressedStream(string compressionType, Stream streamCompressed)
         {
             Stream streamUncompressed = new MemoryStream();
-            if (compressionType == "bz2")
+            try
             {
-                try
+                switch (compressionType)
                 {
-                    BZip2.Decompress(streamCompressed, streamUncompressed, false);
-                }
-                catch
-                {
-                    MessageBox.Show("The file is corrupted or not supported");
-                }
+                    case ".bz2":
+                    {
+                        BZip2.Decompress(streamCompressed, streamUncompressed, false);
+                        return streamUncompressed;
+                    }
 
-                return streamUncompressed;
+                    case ".gz":
+                    {
+                        GZip.Decompress(streamCompressed, streamUncompressed, false);
+                        return streamUncompressed;
+                    }
+
+                    case ".xz":
+                    {
+                        MessageBox.Show("Please extract to .ttyrec before running");
+                        return null;
+                        }
+
+                    default:
+                        MessageBox.Show("The file is corrupted or not supported");
+                        return null;
+                }
+            }
+            catch
+            {
+                MessageBox.Show("The file is corrupted or not supported");
             }
 
-            if (compressionType == "gz")
-            {
-                try
-                {
-                    GZip.Decompress(streamCompressed, streamUncompressed, false);
-                }
-                catch
-                {
-                    MessageBox.Show("The file is corrupted or not supported");
-                }
-
-                return streamUncompressed;
-            }
-
-            if (compressionType == "xz")
-            {
-                try
-                {
-                    var unzip = new XZStream(streamCompressed);
-                    var stream = new byte[unzip.Length];
-                    unzip.Read(stream, 0, (int) unzip.Length);
-                    streamUncompressed = new MemoryStream(stream, true);
-                }
-                catch
-                {
-                    MessageBox.Show("The file is corrupted or not supported");
-                }
-
-                return streamUncompressed;
-            }
-
-            MessageBox.Show("The file is corrupted or not supported");
             return null;
         }
 
