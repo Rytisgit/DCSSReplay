@@ -97,9 +97,10 @@ namespace TtyRecMonkey
         {
             return files.Select(f =>
             {
-                if (Path.GetExtension(f) == ".ttyrec") return File.OpenRead(f);
+                var extension = Path.GetExtension(f).Replace(".", "");
+                if (extension == "ttyrec") return File.OpenRead(f);
                 Stream streamCompressed = File.OpenRead(f);
-                return DecompressedStream(Path.GetExtension(f), streamCompressed);
+                return DecompressedStream(extension, streamCompressed);
             });
         }
         private IEnumerable<Stream> TtyrecToStream(Dictionary<string, Stream> s)
@@ -119,19 +120,19 @@ namespace TtyRecMonkey
             {
                 switch (compressionType)
                 {
-                    case ".bz2":
+                    case "bz2":
                     {
                         BZip2.Decompress(streamCompressed, streamUncompressed, false);
                         return streamUncompressed;
                     }
 
-                    case ".gz":
+                    case "gz":
                     {
                         GZip.Decompress(streamCompressed, streamUncompressed, false);
                         return streamUncompressed;
                     }
 
-                    case ".xz":
+                    case "xz":
                     {
                         MessageBox.Show("Please extract to .ttyrec before running");
                         return null;
@@ -270,7 +271,7 @@ namespace TtyRecMonkey
 
                 case Keys.Escape: using (ttyrecDecoder) { } ttyrecDecoder = null; break;
                 case Keys.Control | Keys.G: PlayerDownloadWindow(); break;
-                case Keys.Control | Keys.T: TileOverrideWindow(); break;
+                //case Keys.Control | Keys.T: TileOverrideWindow(); break;
                 case Keys.Control | Keys.O: OpenFile(); break;
                 case Keys.Control | Keys.F: ReplayTextSearchWindow(); break;
                 case Keys.Control | Keys.C: Reconfigure(); break;
