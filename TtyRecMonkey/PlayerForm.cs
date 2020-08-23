@@ -134,7 +134,7 @@ namespace TtyRecMonkey
 
                     case "xz":
                     {
-                        MessageBox.Show("Please extract to .ttyrec before running");
+                        MessageBox.Show(" .XZ is not supported, download and extract to .ttyrec before running");
                         return null;
                         }
 
