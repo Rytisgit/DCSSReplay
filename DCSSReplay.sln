@@ -37,15 +37,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PuttySharp", "PuttySharp\Pu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TtyRecDecoder", "TtyRecDecoder\TtyRecDecoder.csproj", "{519ACC71-26B1-4312-AD42-231965817F20}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PuttyDLL.Android", "Putty.Android\Putty.Android.vcxproj", "{CB0A5249-3A72-4019-8F76-0A25371883E8}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SlimPutty", "SlimPutty\SlimPutty.vcxitems", "{B827B9A1-9934-42C6-96D1-532E87369D1C}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		SlimPutty\SlimPutty.vcxitems*{8f44624a-d188-4188-b9aa-5f99f20723e1}*SharedItemsImports = 4
 		SlimPutty\SlimPutty.vcxitems*{b827b9a1-9934-42c6-96d1-532e87369d1c}*SharedItemsImports = 9
-		SlimPutty\SlimPutty.vcxitems*{cb0a5249-3a72-4019-8f76-0a25371883e8}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -228,34 +225,6 @@ Global
 		{519ACC71-26B1-4312-AD42-231965817F20}.Release|x64.Build.0 = Release|Any CPU
 		{519ACC71-26B1-4312-AD42-231965817F20}.Release|x86.ActiveCfg = Release|Any CPU
 		{519ACC71-26B1-4312-AD42-231965817F20}.Release|x86.Build.0 = Release|Any CPU
-		{CB0A5249-3A72-4019-8F76-0A25371883E8}.Debug|Any CPU.ActiveCfg = Release|x86
-		{CB0A5249-3A72-4019-8F76-0A25371883E8}.Debug|ARM.ActiveCfg = Release|ARM
-		{CB0A5249-3A72-4019-8F76-0A25371883E8}.Debug|ARM.Build.0 = Release|ARM
-		{CB0A5249-3A72-4019-8F76-0A25371883E8}.Debug|ARM64.ActiveCfg = Release|ARM64
-		{CB0A5249-3A72-4019-8F76-0A25371883E8}.Debug|ARM64.Build.0 = Release|ARM64
-		{CB0A5249-3A72-4019-8F76-0A25371883E8}.Debug|x64.ActiveCfg = Release|x64
-		{CB0A5249-3A72-4019-8F76-0A25371883E8}.Debug|x64.Build.0 = Release|x64
-		{CB0A5249-3A72-4019-8F76-0A25371883E8}.Debug|x86.ActiveCfg = Release|x86
-		{CB0A5249-3A72-4019-8F76-0A25371883E8}.Debug|x86.Build.0 = Release|x86
-		{CB0A5249-3A72-4019-8F76-0A25371883E8}.PuttyDllDebug|Any CPU.ActiveCfg = Release|x86
-		{CB0A5249-3A72-4019-8F76-0A25371883E8}.PuttyDllDebug|Any CPU.Build.0 = Release|x86
-		{CB0A5249-3A72-4019-8F76-0A25371883E8}.PuttyDllDebug|ARM.ActiveCfg = Debug|ARM
-		{CB0A5249-3A72-4019-8F76-0A25371883E8}.PuttyDllDebug|ARM.Build.0 = Debug|ARM
-		{CB0A5249-3A72-4019-8F76-0A25371883E8}.PuttyDllDebug|ARM64.ActiveCfg = Debug|ARM64
-		{CB0A5249-3A72-4019-8F76-0A25371883E8}.PuttyDllDebug|ARM64.Build.0 = Debug|ARM64
-		{CB0A5249-3A72-4019-8F76-0A25371883E8}.PuttyDllDebug|x64.ActiveCfg = Debug|x64
-		{CB0A5249-3A72-4019-8F76-0A25371883E8}.PuttyDllDebug|x64.Build.0 = Debug|x64
-		{CB0A5249-3A72-4019-8F76-0A25371883E8}.PuttyDllDebug|x86.ActiveCfg = Debug|x86
-		{CB0A5249-3A72-4019-8F76-0A25371883E8}.PuttyDllDebug|x86.Build.0 = Debug|x86
-		{CB0A5249-3A72-4019-8F76-0A25371883E8}.Release|Any CPU.ActiveCfg = Release|x86
-		{CB0A5249-3A72-4019-8F76-0A25371883E8}.Release|ARM.ActiveCfg = Release|ARM
-		{CB0A5249-3A72-4019-8F76-0A25371883E8}.Release|ARM.Build.0 = Release|ARM
-		{CB0A5249-3A72-4019-8F76-0A25371883E8}.Release|ARM64.ActiveCfg = Release|ARM64
-		{CB0A5249-3A72-4019-8F76-0A25371883E8}.Release|ARM64.Build.0 = Release|ARM64
-		{CB0A5249-3A72-4019-8F76-0A25371883E8}.Release|x64.ActiveCfg = Release|x64
-		{CB0A5249-3A72-4019-8F76-0A25371883E8}.Release|x64.Build.0 = Release|x64
-		{CB0A5249-3A72-4019-8F76-0A25371883E8}.Release|x86.ActiveCfg = Release|x86
-		{CB0A5249-3A72-4019-8F76-0A25371883E8}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

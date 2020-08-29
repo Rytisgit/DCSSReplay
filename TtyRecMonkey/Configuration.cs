@@ -24,18 +24,11 @@ namespace TtyRecMonkey
         public bool OpenFileSelect = false;
         public bool OpenDownload = false;
 
-        [OptionalField] public Font GdiFont;
 
         public ConfigurationData1()
         {
-            FillOptionals(default(StreamingContext));
         }
 
-        [OnDeserialized]
-        void FillOptionals(StreamingContext sc)
-        {
-            if (GdiFont == null) GdiFont = new Font("Courier New", 11f);
-        }
     }
 
     static class Configuration
