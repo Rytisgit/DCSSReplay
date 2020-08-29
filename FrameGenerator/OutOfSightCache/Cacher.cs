@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
+using SkiaSharp;
 using System.Linq;
 
 namespace FrameGenerator.OutOfSightCache
@@ -8,16 +8,16 @@ namespace FrameGenerator.OutOfSightCache
     public class Cacher
     {
         private string LocationOfCache { get; set; }
-        public Dictionary<char, Bitmap> OutofSightCache { get; set; }
+        public Dictionary<char, SKBitmap> OutofSightCache { get; set; }
 
         public Cacher()
         {
-            OutofSightCache = new Dictionary<char, Bitmap>();
+            OutofSightCache = new Dictionary<char, SKBitmap>();
             LocationOfCache = "";
         }
 
 
-        public void UpdateCache(List<Tuple<string, Bitmap>> lastDrawnFrameKeyValues)
+        public void UpdateCache(List<Tuple<string, SKBitmap>> lastDrawnFrameKeyValues)
         {
             var orderedList = lastDrawnFrameKeyValues
                 .OrderBy((tile) => tile.Item1[0])
@@ -25,7 +25,7 @@ namespace FrameGenerator.OutOfSightCache
                 .GroupBy((tile) => tile.Item1[0])
                 .Select((mostCommonKeyvalueForChar) => {
                     var firstFromGroup = mostCommonKeyvalueForChar.First();
-                    return new Tuple<char, Bitmap>(firstFromGroup.Item1[0], firstFromGroup.Item2);
+                    return new Tuple<char, SKBitmap>(firstFromGroup.Item1[0], firstFromGroup.Item2);
                     }
                 );
             foreach (var lastSeenImage in orderedList)
@@ -36,7 +36,7 @@ namespace FrameGenerator.OutOfSightCache
                 }
             }
         }
-        public bool TryGetLastSeenBitmapByChar(char key, out Bitmap lastSeen)
+        public bool TryGetLastSeenBitmapByChar(char key, out SKBitmap lastSeen)
         {
             //TODO Track Cache Hits
             return OutofSightCache.TryGetValue(key, out lastSeen);

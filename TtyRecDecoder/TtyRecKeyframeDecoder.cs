@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 
 namespace TtyRecDecoder
@@ -19,7 +20,6 @@ namespace TtyRecDecoder
         public int Index;
     }
 
-
     public class TtyRecKeyframeDecoder : IDisposable
     {
         private readonly Queue<IEnumerable<AnnotatedPacket>> LoadPacketBuffer = new Queue<IEnumerable<AnnotatedPacket>>();
@@ -28,24 +28,40 @@ namespace TtyRecDecoder
         private TimeSpan LoadBetweenStreamDelay;
         private TimeSpan LoadBetweenPacketsDelay;
         private volatile bool LoadCancel;
+        public TimeSpan SeekTime;
 
         private readonly List<AnnotatedPacket> Packets = new List<AnnotatedPacket>();
-        public int PacketCount { get { return Packets.Count; } }
+        public int PacketCount { get { return Packets.Count; } 
+        }
         public TimeSpan Length
         {
-            get
-            {
-                return Packets.Count > 0 ? Packets.Last().SinceStart : TimeSpan.Zero;
-            }
+            get { return Packets.Count > 0 ? Packets.Last().SinceStart : TimeSpan.Zero; }
         }
         public int Keyframes { get; private set; }
         public int Width { get; private set; }
         public int Height { get; private set; }
+        public double PlaybackSpeed { get; set; }
+        public double PausedSpeed { get; set; }
+        
+        public IEnumerable<Tuple<int, string>> SearchResults { get; private set; } = new List<Tuple<int, string>>();
 
         public TtyRecFrame CurrentFrame;
         private int LastActiveRangeStart = int.MaxValue;
         private int LastActiveRangeEnd = int.MinValue;
-         
+
+        public void Pause()
+        {
+            if (PlaybackSpeed == 0) return;
+            PausedSpeed = PlaybackSpeed;
+            PlaybackSpeed = 0;
+
+        }
+
+        public void Unpause()
+        {
+            PlaybackSpeed = PausedSpeed;
+        }
+
         public void Dispose()
         {
             // n.b. Resize uses this -- we may need to refactor if we need to do something permanent
@@ -246,6 +262,66 @@ namespace TtyRecDecoder
             CurrentFrame.SinceStart = Packets[i].SinceStart;
             CurrentFrame.Data = Packets[i].DecodedCache;
             CurrentFrame.Index = i;
+        }
+
+        public void GoToFrame(int frameIndex)
+        {
+            lock (LoadPacketBuffer)
+            {
+                while (LoadPacketBuffer.Count > 0)
+                {
+                    var apr = LoadPacketBuffer.Dequeue();
+                    Keyframes += apr.Count(ap => ap.IsKeyframe);
+                    Packets.AddRange(apr);
+                }
+            }
+            if (Packets.Count <= 0) return;
+
+            var nextFrameIndex = frameIndex;
+            var nextFrameTime = Packets[nextFrameIndex > 0 ? nextFrameIndex : 0].SinceStart;
+
+            DumpChunksAround(nextFrameTime);
+            var i = BinarySearchIndexFrame(Packets, ap => ap.SinceStart > nextFrameTime); //find closest full(non-partial) frame containing the frame from this frame index
+            if (i == -1) i = 0;
+            Debug.Assert(Packets[i].DecodedCache != null);
+            CurrentFrame.SinceStart = Packets[i].SinceStart;
+            CurrentFrame.Data = Packets[i].DecodedCache;
+            CurrentFrame.Index = i;
+            SeekTime = CurrentFrame.SinceStart;
+            Pause();
+        }
+
+        public void SearchPackets(string searchPhrase, int extraCharacters)
+        {
+            var searchResults = new List<Tuple<int, string>>();
+            lock (LoadPacketBuffer)
+            {
+                while (LoadPacketBuffer.Count > 0)
+                {
+                    var apr = LoadPacketBuffer.Dequeue();
+                    Keyframes += apr.Count(ap => ap.IsKeyframe);
+                    Packets.AddRange(apr);
+                }
+            }
+            if (Packets.Count <= 0) return;
+
+            for (int packetIndex = 0; packetIndex < PacketCount; packetIndex++)
+            {
+                var decoded = Encoding.UTF8.GetString(Packets[packetIndex].Payload);
+                var index = decoded.IndexOf(searchPhrase, StringComparison.OrdinalIgnoreCase);
+                if (index >= 0)
+                {
+                    var start = index - extraCharacters;
+                    var end = index + searchPhrase.Length + extraCharacters;
+
+                    var substringIndex = start >= 0 ? start : 0;
+                    var substringLength = end < decoded.Length ? end - substringIndex : decoded.Length - substringIndex;
+
+                    searchResults.Add(new Tuple<int, string>(packetIndex, decoded.Substring(substringIndex, substringLength)));
+                }
+            }
+
+            SearchResults = searchResults;
         }
 
         public TtyRecKeyframeDecoder(int w, int h, IEnumerable<Stream> streams, TimeSpan between_stream_delay, TimeSpan between_packets_delay)

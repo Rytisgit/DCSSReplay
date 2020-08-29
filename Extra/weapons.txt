@@ -77,7 +77,7 @@ trishula
 dagger
 dagger_slant
 quick blade
-dagger
+dagger_hand
 rapier
 rapier
 short sword

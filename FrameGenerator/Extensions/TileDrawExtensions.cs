@@ -2,59 +2,55 @@
 using InputParser;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
+using SkiaSharp;
 
 namespace FrameGenerator.Extensions
 {
     public static class TileDrawExtensions
     {
-        public static bool TryDrawWallOrFloor(this string tile, Bitmap wall, Bitmap floor, out Bitmap tileToDraw)
+        public static bool TryDrawWallOrFloor(this string tile, string background, SKBitmap wall, SKBitmap floor, string[] wallAndFloorColors, out SKBitmap tileToDraw)
         {
-            tileToDraw = new Bitmap(32, 32, PixelFormat.Format32bppArgb);
+            var highlighted = FixHighlight(tile, background, out var correctTile);
+            tileToDraw = new SKBitmap(32, 32);
 
-            using (Graphics g = Graphics.FromImage(tileToDraw))
+            using (SKCanvas g = new SKCanvas(tileToDraw))
             {
-                if (tile == "#BLUE")
+                if (correctTile == "#BLUE")
                 {
-                    g.DrawImage(wall, 0, 0, wall.Width, wall.Height);
-                    var blueTint = new SolidBrush(Color.FromArgb(150, 0, 0, 0));
-                    g.FillRectangle(blueTint, 0, 0, wall.Width, wall.Height);
+                    g.DrawBitmap(wall, new SKRect(0, 0, wall.Width, wall.Height));
+                    g.DrawColor(new SKColor(0, 0, 0, 150), SKBlendMode.Overlay);
                     return true;
                 }
 
-                if (tile[0] == '#' && !tile.Equals("#LIGHTCYAN"))
+                if (correctTile[0] == '#' && correctTile.Substring(1).Equals(wallAndFloorColors[0]))
                 {
-                    g.DrawImage(wall, 0, 0, wall.Width, wall.Height);
+                    g.DrawBitmap(wall, new SKRect(0, 0, wall.Width, wall.Height));
                     return true;
                 }
 
-                if (tile == ".BLUE")
+                if (correctTile == ".BLUE")
                 {
-                    g.DrawImage(floor, 0, 0, floor.Width, floor.Height);
-                    var blueTint = new SolidBrush(Color.FromArgb(150, 0, 0, 0));
-                    g.FillRectangle(blueTint, 0, 0, floor.Width, floor.Height);
+                    g.DrawBitmap(floor, new SKRect(0, 0, floor.Width, floor.Height));
+                    g.DrawColor(new SKColor(0, 0, 0, 150), SKBlendMode.Overlay);
                     return true;
                 }
 
-                if (tile[0] == '.')
+                if (correctTile[0] == '.' && correctTile.Substring(1).Equals(wallAndFloorColors[1]))
                 {
-                    g.DrawImage(floor, 0, 0, floor.Width, floor.Height);
+                    g.DrawBitmap(floor, new SKRect(0, 0, floor.Width, floor.Height));
                     return true;
                 }
 
-                if (tile == "*BLUE")
+                if (correctTile == "*BLUE")
                 {
-                    g.DrawImage(wall, 0, 0, wall.Width, wall.Height);
-                    var blueTint = new SolidBrush(Color.FromArgb(40, 30, 30, 200));
-                    g.FillRectangle(blueTint, 0, 0, wall.Width, wall.Height);
+                    g.DrawBitmap(wall, new SKRect(0, 0, wall.Width, wall.Height));
+                    g.DrawColor(new SKColor(40, 30, 30, 200), SKBlendMode.Overlay);
                     return true;
                 }
-                if (tile == ",BLUE")
+                if (correctTile == ",BLUE")
                 {
-                    g.DrawImage(floor, 0, 0, floor.Width, floor.Height);
-                    var blueTint = new SolidBrush(Color.FromArgb(40, 20, 20, 200));
-                    g.FillRectangle(blueTint, 0, 0, floor.Width, floor.Height);
+                    g.DrawBitmap(floor, new SKRect(0, 0, floor.Width, floor.Height));
+                    g.DrawColor(new SKColor(40, 20, 20, 200), SKBlendMode.Overlay);
                     return true;
                 }
             }
@@ -62,25 +58,38 @@ namespace FrameGenerator.Extensions
             return false;
         }
 
-        public static bool TryDrawCachedTile(this string tile, Cacher outOfSightCache, out Bitmap lastSeen, out bool Cached)
+        public static bool TryDrawCachedTile(this string tile, string highlight, Cacher outOfSightCache, List<char> noCache, List<string> list, out SKBitmap lastSeen, out bool Cached)
         {
-            //add highlight check?
-            if (tile.Substring(1) == Enum.GetName(typeof(ColorList2), ColorList2.BLUE) && outOfSightCache.TryGetLastSeenBitmapByChar(tile[0], out lastSeen))
+            Cached = false;
+            lastSeen = null;
+            if (noCache.Contains(tile[0]))
+            {
+                return false;
+            }
+            if (list.Contains(tile))
+            {
+                return false;
+            }
+            if (tile.Substring(1) == Enum.GetName(typeof(ColorListEnum), ColorListEnum.BLUE) && outOfSightCache.TryGetLastSeenBitmapByChar(tile[0], out lastSeen))
             {
                 Cached = true;
                 return true;
             }
-            Cached = false;
-            lastSeen = null;
+            if (tile.Substring(1) == Enum.GetName(typeof(ColorListEnum), ColorListEnum.BLACK) && highlight != Enum.GetName(typeof(ColorListEnum), ColorListEnum.BLACK) &&
+                outOfSightCache.TryGetLastSeenBitmapByChar(tile[0], out lastSeen))
+            {
+                return true;
+            }
+            
             return false;
         }
         
 
-        public static bool TryDrawMonster(this string tile, string background, Dictionary<string, string> monsterData, Dictionary<string, Bitmap> monsterPng, Bitmap floor, out Bitmap tileToDraw)
+        public static bool TryDrawMonster(this string tile, string background, Dictionary<string, string> monsterData, Dictionary<string, SKBitmap> monsterPng, Dictionary<string, SKBitmap> miscPng, SKBitmap floor, out SKBitmap tileToDraw, out SKBitmap BrandToDraw)
         {
-            tileToDraw = new Bitmap(32, 32, PixelFormat.Format32bppArgb);
-
-            using (Graphics g = Graphics.FromImage(tileToDraw))
+            tileToDraw = new SKBitmap(32, 32);
+            BrandToDraw = null;
+            using (SKCanvas g = new SKCanvas(tileToDraw))
             {
                 var isHighlighted = FixHighlight(tile, background, out var correctTile);
 
@@ -90,24 +99,54 @@ namespace FrameGenerator.Extensions
                 //{
                 //    if (item.Key[0] == '*') Console.WriteLine(item.Key);
                 //}
-                if (!monsterPng.TryGetValue(pngName, out Bitmap png)) return false;
+                if (!monsterPng.TryGetValue(pngName, out SKBitmap png)) return false;
                 //foreach (var monsterTileName in monsterData)
                 //{
-                //    if (!monsterPng.TryGetValue(monsterTileName.Value, out Bitmap temp)) Console.WriteLine(monsterTileName.Key + " badPngName: " + monsterTileName.Value);
+                //    if (!monsterPng.TryGetValue(monsterTileName.Value, out SKBitmap temp)) Console.WriteLine(monsterTileName.Key + " badPngName: " + monsterTileName.Value);
                 //}
 
-                g.DrawImage(floor, 0, 0, floor.Width, floor.Height);
-                g.DrawImage(png, 0, 0, png.Width, png.Height);
+                if (tile.Substring(1) != Enum.GetName(typeof(ColorListEnum), ColorListEnum.BLACK))
+                {
+
+                    //if (background == Enum.GetName(typeof(ColorList2), ColorList2.BROWN))//idk
+                    //{
+                    //    miscPng.TryGetValue("good_neutral", out BrandToDraw);
+                    //}
+                    if (background == Enum.GetName(typeof(ColorListEnum), ColorListEnum.LIGHTGREY))
+                    {
+                        miscPng.TryGetValue("neutral", out BrandToDraw);
+                    }
+                    if (background == Enum.GetName(typeof(ColorListEnum), ColorListEnum.BROWN))
+                    {
+                        miscPng.TryGetValue("may_stab_brand", out BrandToDraw);
+                    }
+                    if (background == Enum.GetName(typeof(ColorListEnum), ColorListEnum.GREEN))
+                    {
+                        miscPng.TryGetValue("friendly", out BrandToDraw);
+                    }
+                    if (background == Enum.GetName(typeof(ColorListEnum), ColorListEnum.YELLOW))
+                    {
+                        miscPng.TryGetValue("may_stab_brand", out BrandToDraw);
+                    }
+                    if (background == Enum.GetName(typeof(ColorListEnum), ColorListEnum.BLUE))
+                    {
+                        miscPng.TryGetValue("sleeping", out BrandToDraw);
+                    }
+                }
+                var rect = new SKRect(0, 0, floor.Width, floor.Width);
+                g.DrawBitmap(floor, rect);
+                g.DrawBitmap(png, rect);
             }
             return true;
         }
 
-        public static bool TryDrawMonster(this string tile, string background, Dictionary<string, string> monsterData, Dictionary<string, Bitmap> monsterPng, Dictionary<string, string> overrides, out Bitmap tileToDraw)
+        public static bool TryDrawMonster(this string tile, string background, Dictionary<string, string> monsterData, Dictionary<string, SKBitmap> monsterPng, Dictionary<string, string> overrides, out SKBitmap tileToDraw)
         {
-            tileToDraw = new Bitmap(32, 32, PixelFormat.Format32bppArgb);
+            tileToDraw = new SKBitmap(32, 32);
 
-            using (Graphics g = Graphics.FromImage(tileToDraw))
+            using (SKCanvas g = new SKCanvas(tileToDraw))
             {
+                g.Clear(SKColors.Black);
                 if (tile.StartsWith("@BL")) return false;//player tile draw override TODO
                 var isHighlighted = FixHighlight(tile, background, out var correctTile);
                 string pngName;
@@ -115,31 +154,72 @@ namespace FrameGenerator.Extensions
                 {
                     if (!monsterData.TryGetValue(correctTile, out pngName)) return false;
                 }
-                if (!monsterPng.TryGetValue(pngName, out Bitmap png)) return false;
+                if (!monsterPng.TryGetValue(pngName, out SKBitmap png)) return false;
 
-                g.DrawImage(png, 0, 0, png.Width, png.Height);
+                g.DrawBitmap(png, new SKRect(0, 0, png.Width, png.Height));
+
             }
             return true;
         }
 
-        public static bool TryDrawFeature(this string tile, Dictionary<string, string> featureData, Dictionary<string, Bitmap> allDungeonPngs, Bitmap floor, out Bitmap tileToDraw)
+        public static bool TryDrawFeature(this string tile, string background, Dictionary<string, string> featureData, Dictionary<string, SKBitmap> allDungeonPngs, Dictionary<string, SKBitmap> misc, SKBitmap floor, SKBitmap wall, string location, out SKBitmap tileToDraw)
         {
-            tileToDraw = new Bitmap(32, 32, PixelFormat.Format32bppArgb);
 
-            using (Graphics g = Graphics.FromImage(tileToDraw))
+            var highlighted = FixHighlight(tile, background, out var correctTile);
+            tileToDraw = new SKBitmap(32, 32);
+
+            using (SKCanvas g = new SKCanvas(tileToDraw))
             {
-                if (!featureData.TryGetValue(tile, out var pngName)) return false;
-                if (!allDungeonPngs.TryGetValue(pngName, out Bitmap png)) return false;
 
-                g.DrawImage(floor, 0, 0, floor.Width, floor.Height);
-                g.DrawImage(png, 0, 0, png.Width, png.Height);
+                if (!featureData.TryGetValue(correctTile, out var pngName)) return false;
+                if (pngName == "wall")
+                {
+                    g.DrawBitmap(wall, new SKRect(0, 0, wall.Width, wall.Height));
+
+                    if (correctTile == "#RED")
+                    {
+                        if (misc.TryGetValue("blood_red00", out SKBitmap blood))
+                        {
+                            g.DrawBitmap(blood, new SKRect(0, 0, blood.Width, blood.Height));
+                        }
+                        return true;
+                    }
+                }
+               
+
+                if (pngName == "floor")
+                {
+                    g.DrawBitmap(floor, new SKRect(0, 0, floor.Width, floor.Height));
+                    if (correctTile.Substring(1) == Enum.GetName(typeof(ColorListEnum), ColorListEnum.RED))
+                    {
+                        if (misc.TryGetValue("blood_puddle_red", out SKBitmap blood))
+                        { 
+                            g.DrawBitmap(blood, new SKRect(0, 0, blood.Width, blood.Height)); 
+                        }
+                    }
+                    return true;
+                }
+
+                SKBitmap png = null;
+
+                if (pngName == "net" && location.Contains("Spider"))
+                {
+                    if (!allDungeonPngs.TryGetValue("cobweb_NESW", out png)) return false;
+                }
+                else
+                {
+                    if (!allDungeonPngs.TryGetValue(pngName, out png)) return false;
+                }
+
+                g.DrawBitmap(floor, new SKRect(0, 0, floor.Width, floor.Height));
+                g.DrawBitmap(png, new SKRect(0, 0, png.Width, png.Height));
             }
             return true;
         }
 
         private static bool FixHighlight(string tile, string backgroundColor, out string correctTile)//if highlighted, returns fixed string
         {
-            if (backgroundColor.Equals(Enum.GetName(typeof(ColorList2), ColorList2.BLACK)) || !tile.Substring(1).Equals(Enum.GetName(typeof(ColorList2), ColorList2.BLACK)))
+            if (backgroundColor == null || backgroundColor.Equals(Enum.GetName(typeof(ColorListEnum), ColorListEnum.BLACK)) || !tile.Substring(1).Equals(Enum.GetName(typeof(ColorListEnum), ColorListEnum.BLACK)))
             {
                 correctTile = tile;
                 return false;
@@ -151,52 +231,52 @@ namespace FrameGenerator.Extensions
             return true;
         }
 
-        public static bool TryDrawItem(this string tile, string background, Dictionary<string, string> itemData, Dictionary<string, Bitmap> itemPngs, Dictionary<string, Bitmap> miscPngs, Bitmap floor, string location, out Bitmap tileToDraw)
+        public static bool TryDrawItem(this string tile, string background, Dictionary<string, string> itemData, Dictionary<string, SKBitmap> itemPngs, Dictionary<string, SKBitmap> miscPngs, SKBitmap floor, string location, out SKBitmap tileToDraw)
         {
-            tileToDraw = new Bitmap(32, 32, PixelFormat.Format32bppArgb);
+            tileToDraw = new SKBitmap(32, 32);
 
-            using (Graphics g = Graphics.FromImage(tileToDraw))
+            using (SKCanvas g = new SKCanvas(tileToDraw))
             {
                 var isHighlighted = FixHighlight(tile, background, out var correctTile);
-                Bitmap underneathIcon;
+                SKBitmap underneathIcon;
 
                 if (!itemData.TryGetValue(correctTile, out var pngName)) return false;
 
-                g.DrawImage(floor, 0, 0, floor.Width, floor.Height);
+                g.DrawBitmap(floor, new SKRect(0, 0, floor.Width, floor.Height));
 
                 var demonicWeaponLocations = new List<string>() { "Hell", "Dis", "Gehenna", "Cocytus", "Tartarus", "Vaults", "Depths" };
 
                 if (correctTile[0] == ')' //is weapon
-                    && correctTile.Substring(1).Equals(Enum.GetName(typeof(ColorList2), ColorList2.LIGHTRED)) //is lightred
+                    && correctTile.Substring(1).Equals(Enum.GetName(typeof(ColorListEnum), ColorListEnum.LIGHTRED)) //is lightred
                     && demonicWeaponLocations.Contains(location)) // is in a location with a lot of demon weapons
                 {
-                    if (itemPngs.TryGetValue("demon_blade2", out Bitmap demonBlade))
+                    if (itemPngs.TryGetValue("demon_blade2", out SKBitmap demonBlade))
                     {
-                        g.DrawImage(demonBlade, 0, 0, demonBlade.Width, demonBlade.Height);
+                        g.DrawBitmap(demonBlade, new SKRect(0, 0, demonBlade.Width, demonBlade.Height));
 
-                        if (isHighlighted && miscPngs.TryGetValue("something_under", out underneathIcon)) g.DrawImage(underneathIcon, 0, 0, underneathIcon.Width, underneathIcon.Height);
+                        if (isHighlighted && miscPngs.TryGetValue("something_under", out underneathIcon)) g.DrawBitmap(underneathIcon, new SKRect(0, 0, underneathIcon.Width, underneathIcon.Height));
                         return true;
                     }
                 }
 
-                if (!itemPngs.TryGetValue(pngName, out Bitmap png)) return false;
+                if (!itemPngs.TryGetValue(pngName, out SKBitmap png)) return false;
 
-                g.DrawImage(png, 0, 0, png.Width, png.Height);
+                g.DrawBitmap(png, new SKRect(0, 0, png.Width, png.Height));
 
-                if (isHighlighted && miscPngs.TryGetValue("something_under", out underneathIcon)) g.DrawImage(underneathIcon, 0, 0, underneathIcon.Width, underneathIcon.Height);
+                if (isHighlighted && miscPngs.TryGetValue("something_under", out underneathIcon)) g.DrawBitmap(underneathIcon, new SKRect(0, 0, underneathIcon.Width, underneathIcon.Height));
             }
             return true;
         }
 
-        public static bool TryDrawCloud(this string tile, Dictionary<string, string> cloudData, Dictionary<string, Bitmap> effectPngs, Bitmap floor, SideData sideData, MonsterData[] monsterData, out Bitmap tileToDraw)
+        public static bool TryDrawCloud(this string tile, Dictionary<string, string> cloudData, Dictionary<string, SKBitmap> effectPngs, SKBitmap floor, SideData sideData, MonsterData[] monsterData, out SKBitmap tileToDraw)
         {
-            tileToDraw = new Bitmap(32, 32, PixelFormat.Format32bppArgb);
+            tileToDraw = new SKBitmap(32, 32);
 
-            using (Graphics g = Graphics.FromImage(tileToDraw))
+            using (SKCanvas g = new SKCanvas(tileToDraw))
             {
                 if (!cloudData.TryGetValue(tile, out var nam)) return false; //check if valid cloud
 
-                g.DrawImage(floor, 0, 0, floor.Width, floor.Height);
+                g.DrawBitmap(floor, new SKRect(0, 0, floor.Width, floor.Height));
 
                 //check special rules first before drawing normal
 
@@ -208,30 +288,30 @@ namespace FrameGenerator.Extensions
                 if (sideData.Statuses1.Contains("Torna") || sideData.Statuses2.Contains("Torna"))//tornado override
                 {
                     var t1Colors = new List<string>() {
-                            Enum.GetName(typeof(ColorList2), ColorList2.LIGHTRED),
-                            Enum.GetName(typeof(ColorList2), ColorList2.LIGHTCYAN),
-                            Enum.GetName(typeof(ColorList2), ColorList2.LIGHTBLUE),
-                            Enum.GetName(typeof(ColorList2), ColorList2.WHITE) };
+                            Enum.GetName(typeof(ColorListEnum), ColorListEnum.LIGHTRED),
+                            Enum.GetName(typeof(ColorListEnum), ColorListEnum.LIGHTCYAN),
+                            Enum.GetName(typeof(ColorListEnum), ColorListEnum.LIGHTBLUE),
+                            Enum.GetName(typeof(ColorListEnum), ColorListEnum.WHITE) };
                     var t2Colors = new List<string>() {
-                            Enum.GetName(typeof(ColorList2), ColorList2.RED),
-                            Enum.GetName(typeof(ColorList2), ColorList2.CYAN),
-                            Enum.GetName(typeof(ColorList2), ColorList2.BLUE),
-                            Enum.GetName(typeof(ColorList2), ColorList2.LIGHTGREY) };
+                            Enum.GetName(typeof(ColorListEnum), ColorListEnum.RED),
+                            Enum.GetName(typeof(ColorListEnum), ColorListEnum.CYAN),
+                            Enum.GetName(typeof(ColorListEnum), ColorListEnum.BLUE),
+                            Enum.GetName(typeof(ColorListEnum), ColorListEnum.LIGHTGREY) };
 
                     if (t1Colors.Contains(tileColor))
                     {
                         if (effectPngs.TryGetValue("tornado1", out var bmp))
                         {
-                            g.DrawImage(bmp, 0, 0, bmp.Width, bmp.Height);
+                            g.DrawBitmap(bmp, new SKRect(0, 0, bmp.Width, bmp.Height));
                             return true;
                         }
                     }
 
                     if (t2Colors.Contains(tileColor))
                     {
-                        if (effectPngs.TryGetValue("tornado2", out Bitmap bmp))
+                        if (effectPngs.TryGetValue("tornado2", out SKBitmap bmp))
                         {
-                            g.DrawImage(bmp, 0, 0, bmp.Width, bmp.Height);
+                            g.DrawBitmap(bmp, new SKRect(0, 0, bmp.Width, bmp.Height));
                             return true;
                         }
                     }
@@ -240,16 +320,16 @@ namespace FrameGenerator.Extensions
                 if (sideData.Place.Contains("Salt"))
                 {
                     var colors = new List<string>() {
-                    Enum.GetName(typeof(ColorList2), ColorList2.LIGHTGREY),
-                    Enum.GetName(typeof(ColorList2), ColorList2.WHITE) };
+                    Enum.GetName(typeof(ColorListEnum), ColorListEnum.LIGHTGREY),
+                    Enum.GetName(typeof(ColorListEnum), ColorListEnum.WHITE) };
 
                     if (tile[0].Equals('§'))
                     {
                         if (colors.Contains(tileColor))
                         {
-                            if (effectPngs.TryGetValue("cloud_grey_smoke", out Bitmap bmp))
+                            if (effectPngs.TryGetValue("cloud_grey_smoke", out SKBitmap bmp))
                             {
-                                g.DrawImage(bmp, 0, 0, bmp.Width, bmp.Height);
+                                g.DrawBitmap(bmp, new SKRect(0, 0, bmp.Width, bmp.Height));
                                 return true;
                             }
                         }
@@ -260,26 +340,26 @@ namespace FrameGenerator.Extensions
                 {
 
                     var stormColors = new List<string>() {
-                    Enum.GetName(typeof(ColorList2), ColorList2.LIGHTGREY),
-                    Enum.GetName(typeof(ColorList2), ColorList2.DARKGREY) };
+                    Enum.GetName(typeof(ColorListEnum), ColorListEnum.LIGHTGREY),
+                    Enum.GetName(typeof(ColorListEnum), ColorListEnum.DARKGREY) };
 
                     if (tile[0].Equals(durationChar[3]))
                     {
                         if (stormColors.Contains(tileColor))
                         {
-                            if (effectPngs.TryGetValue("cloud_storm2", out Bitmap bmp))
+                            if (effectPngs.TryGetValue("cloud_storm2", out SKBitmap bmp))
                             {
-                                g.DrawImage(bmp, 0, 0, bmp.Width, bmp.Height);
+                                g.DrawBitmap(bmp, new SKRect(0, 0, bmp.Width, bmp.Height));
                                 return true;
                             }
                         }
                     }
 
-                    if (tileColor == Enum.GetName(typeof(ColorList2), ColorList2.GREEN)) //replace poison cloud with dust
+                    if (tileColor == Enum.GetName(typeof(ColorListEnum), ColorListEnum.GREEN)) //replace poison cloud with dust
                     {
-                        if (effectPngs.TryGetValue("cloud_dust" + durationLength[tile[0]], out Bitmap bmp))
+                        if (effectPngs.TryGetValue("cloud_dust" + durationLength[tile[0]], out SKBitmap bmp))
                         {
-                            g.DrawImage(bmp, 0, 0, bmp.Width, bmp.Height);
+                            g.DrawBitmap(bmp, new SKRect(0, 0, bmp.Width, bmp.Height));
                             return true;
                         }
                     }
@@ -288,11 +368,11 @@ namespace FrameGenerator.Extensions
 
                 if (monsterData.MonsterIsVisible("catob"))//when catoblepass is on screen, white clouds are calcifiyng
                 {
-                    if (tile[0].Equals(durationChar[3]) && tileColor.Equals(Enum.GetName(typeof(ColorList2), ColorList2.WHITE)))
+                    if (tile[0].Equals(durationChar[3]) && tileColor.Equals(Enum.GetName(typeof(ColorListEnum), ColorListEnum.WHITE)))
                     {
-                        if (effectPngs.TryGetValue("cloud_calc_dust2", out Bitmap bmp))
+                        if (effectPngs.TryGetValue("cloud_calc_dust2", out SKBitmap bmp))
                         {
-                            g.DrawImage(bmp, 0, 0, bmp.Width, bmp.Height);
+                            g.DrawBitmap(bmp, new SKRect(0, 0, bmp.Width, bmp.Height));
                             return true;
                         }
 
@@ -301,11 +381,11 @@ namespace FrameGenerator.Extensions
 
                 if (sideData.Place.Contains("Shoal"))//in shoals darkgrey clouds are ink
                 {
-                    if (tile[0].Equals(durationChar[3]) && tileColor.Equals(Enum.GetName(typeof(ColorList2), ColorList2.DARKGREY)))
+                    if (tile[0].Equals(durationChar[3]) && tileColor.Equals(Enum.GetName(typeof(ColorListEnum), ColorListEnum.DARKGREY)))
                     {
-                        if (effectPngs.TryGetValue("ink_full", out Bitmap bmp))
+                        if (effectPngs.TryGetValue("ink_full", out SKBitmap bmp))
                         {
-                            g.DrawImage(bmp, 0, 0, bmp.Width, bmp.Height);
+                            g.DrawBitmap(bmp, new SKRect(0, 0, bmp.Width, bmp.Height));
                             return true;
                         }
                     }
@@ -313,11 +393,11 @@ namespace FrameGenerator.Extensions
 
                 if (monsterData.MonsterIsVisible("ophan"))//ophans make holy flame
                 {
-                    if (tile[0].Equals(durationChar[3]) && tileColor.Equals(Enum.GetName(typeof(ColorList2), ColorList2.WHITE)))
+                    if (tile[0].Equals(durationChar[3]) && tileColor.Equals(Enum.GetName(typeof(ColorListEnum), ColorListEnum.WHITE)))
                     {
-                        if (effectPngs.TryGetValue("cloud_yellow_smoke", out Bitmap bmp))
+                        if (effectPngs.TryGetValue("cloud_yellow_smoke", out SKBitmap bmp))
                         {
-                            g.DrawImage(bmp, 0, 0, bmp.Width, bmp.Height);
+                            g.DrawBitmap(bmp, new SKRect(0, 0, bmp.Width, bmp.Height));
                             return true;
                         }
 
@@ -327,22 +407,22 @@ namespace FrameGenerator.Extensions
                 if (sideData.Statuses1.Contains("Storm") || sideData.Statuses2.Contains("Storm"))//wu jian heavenly storm
                 {
                     var stormColors = new List<string>() {
-                    Enum.GetName(typeof(ColorList2), ColorList2.WHITE),
-                    Enum.GetName(typeof(ColorList2), ColorList2.YELLOW)};
+                    Enum.GetName(typeof(ColorListEnum), ColorListEnum.WHITE),
+                    Enum.GetName(typeof(ColorListEnum), ColorListEnum.YELLOW)};
 
                     if (stormColors.Contains(tileColor))
                     {
-                        if (effectPngs.TryGetValue("cloud_gold_dust" + durationLength[tile[0]], out Bitmap bmp))
+                        if (effectPngs.TryGetValue("cloud_gold_dust" + durationLength[tile[0]], out SKBitmap bmp))
                         {
-                            g.DrawImage(bmp, 0, 0, bmp.Width, bmp.Height);
+                            g.DrawBitmap(bmp, new SKRect(0, 0, bmp.Width, bmp.Height));
                             return true;
                         }
                     }
                 }
 
-                if (!effectPngs.TryGetValue(nam, out Bitmap chr)) return false;
+                if (!effectPngs.TryGetValue(nam, out SKBitmap chr)) return false;
 
-                g.DrawImage(chr, 0, 0, chr.Width, chr.Height);
+                g.DrawBitmap(chr, new SKRect(0, 0, chr.Width, chr.Height));
             }
             return true;
         }
