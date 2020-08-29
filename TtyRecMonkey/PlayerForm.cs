@@ -15,7 +15,6 @@ using System.Windows.Forms;
 using TtyRecDecoder;
 using System.Drawing.Imaging;
 using ICSharpCode.SharpZipLib.GZip;
-using SharpCompress.Compressors.Xz;
 using SkiaSharp.Views.Desktop;
 using TtyRecMonkey.Windows;
 
@@ -56,7 +55,7 @@ namespace TtyRecMonkey
                 {
                     CheckFileExists = true,
                     DefaultExt = "ttyrec",
-                    Filter = "TtyRec Files|*.ttyrec;*.bz2|All Files|*",
+                    Filter = @"TtyRec Files|*.ttyrec;*.ttyrec.bz2;*.ttyrec.gz|All Files|*",
                     Multiselect = false,
                     RestoreDirectory = true,
                     Title = "Select a TtyRec to play"
@@ -90,7 +89,7 @@ namespace TtyRecMonkey
          
             var streams = TtyrecToStream(files);
             ttyrecDecoder = new TtyRecKeyframeDecoder(80, 24, streams, delay, MaxDelayBetweenPackets);
-            PlaybackSpeed = +1;
+            ttyrecDecoder.PlaybackSpeed = +1;
             ttyrecDecoder.SeekTime = TimeSpan.Zero;
         }
 
@@ -98,87 +97,58 @@ namespace TtyRecMonkey
         {
             return files.Select(f =>
             {
-               
-                if (Path.GetExtension(f) == ".ttyrec") return File.OpenRead(f);
+                var extension = Path.GetExtension(f).Replace(".", "");
+                if (extension == "ttyrec") return File.OpenRead(f);
                 Stream streamCompressed = File.OpenRead(f);
-                Stream streamUncompressed = new MemoryStream();
-                switch
-                (Path.GetExtension(f))
-                {
-                    case ".bz2":
-                        try
-                        {
-                            BZip2.Decompress(streamCompressed, streamUncompressed, false);
-                        }
-                        catch
-                        {
-                            MessageBox.Show("The file is corrupted or not supported");
-                        }
-                        return streamUncompressed;
-                    case ".gz":
-                        try
-                        {
-                            GZip.Decompress(streamCompressed, streamUncompressed, false);
-                        }
-                        catch
-                        {
-                            MessageBox.Show("The file is corrupted or not supported");
-                        }
-                        return streamUncompressed;
-                    default:
-                        return null;
-                }
+                return DecompressedStream(extension, streamCompressed);
             });
         }
         private IEnumerable<Stream> TtyrecToStream(Dictionary<string, Stream> s)
         {
             return s.Select(f =>
             {
-
                 if (f.Key=="ttyrec") return f.Value;
                 Stream streamCompressed = f.Value;
-                Stream streamUncompressed = new MemoryStream();
-                if (f.Key == "bz2")
+                return DecompressedStream(f.Key, streamCompressed);
+            });
+        }
+
+        private static Stream DecompressedStream(string compressionType, Stream streamCompressed)
+        {
+            Stream streamUncompressed = new MemoryStream();
+            try
+            {
+                switch (compressionType)
                 {
-                    try
+                    case "bz2":
                     {
                         BZip2.Decompress(streamCompressed, streamUncompressed, false);
+                        return streamUncompressed;
                     }
-                    catch
-                    {
-                        MessageBox.Show("The file is corrupted or not supported");
-                    }
-                    return streamUncompressed;
-                }
-                if (f.Key == "gz")
-                {
-                    try
+
+                    case "gz":
                     {
                         GZip.Decompress(streamCompressed, streamUncompressed, false);
+                        return streamUncompressed;
                     }
-                    catch
+
+                    case "xz":
                     {
+                        MessageBox.Show(" .XZ is not supported, download and extract to .ttyrec before running");
+                        return null;
+                        }
+
+                    default:
                         MessageBox.Show("The file is corrupted or not supported");
-                    }
-                    return streamUncompressed;
+                        return null;
                 }
-                if (f.Key == "xz")
-                {
-                    try
-                    {
-                        var unzip = new XZStream(streamCompressed);
-                        var stream = new byte[unzip.Length];
-                        unzip.Read(stream, 0, (int) unzip.Length);
-                        streamUncompressed = new MemoryStream(stream, true);
-                    }
-                    catch
-                    {
-                        MessageBox.Show("The file is corrupted or not supported");
-                    }
-                    return streamUncompressed;
-                }
-                return null;
-            });
+            }
+            catch
+            {
+                MessageBox.Show("The file is corrupted or not supported");
+            }
+
+            return null;
         }
 
         void MainLoop()
@@ -196,7 +166,7 @@ namespace TtyRecMonkey
             {
                 ShowControls(false);
 
-                ttyrecDecoder.SeekTime += TimeSpan.FromSeconds(dt * PlaybackSpeed);
+                ttyrecDecoder.SeekTime += TimeSpan.FromSeconds(dt * ttyrecDecoder.PlaybackSpeed);
 
                 if (ttyrecDecoder.SeekTime > ttyrecDecoder.Length)
                 {
@@ -240,7 +210,7 @@ namespace TtyRecMonkey
                                 }
                                 catch (Exception ex)
                                 {
-                                    Console.WriteLine(ex.Message);
+                                    Console.WriteLine(ex.StackTrace);
                                     //generator.GenerateImage(savedFrame);
                                     frameGenerator.isGeneratingFrame = false;
                                 }
@@ -266,7 +236,7 @@ namespace TtyRecMonkey
                 $"@ {(ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.CurrentFrame.SinceStart))} " +
                 $"of {(ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.Length))} " +
                 $"({(ttyrecDecoder == null ? "N/A" : ttyrecDecoder.Keyframes.ToString())} " +
-                $"keyframes {(ttyrecDecoder == null ? "N/A" : ttyrecDecoder.PacketCount.ToString())} packets) -- Speed {PlaybackSpeed}"
+                $"keyframes {(ttyrecDecoder == null ? "N/A" : ttyrecDecoder.PacketCount.ToString())} packets) -- Speed {ttyrecDecoder?.PlaybackSpeed}"
             );
             UpdateTime(ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.CurrentFrame.SinceStart),
                   ttyrecDecoder == null ? "N/A" : PrettyTimeSpan(ttyrecDecoder.Length));
@@ -301,7 +271,7 @@ namespace TtyRecMonkey
 
                 case Keys.Escape: using (ttyrecDecoder) { } ttyrecDecoder = null; break;
                 case Keys.Control | Keys.G: PlayerDownloadWindow(); break;
-                case Keys.Control | Keys.T: TileOverrideWindow(); break;
+                //case Keys.Control | Keys.T: TileOverrideWindow(); break;
                 case Keys.Control | Keys.O: OpenFile(); break;
                 case Keys.Control | Keys.F: ReplayTextSearchWindow(); break;
                 case Keys.Control | Keys.C: Reconfigure(); break;
@@ -319,26 +289,26 @@ namespace TtyRecMonkey
                     e.SuppressKeyPress = true; // also supresses annoying dings
                     break;
 
-                case Keys.Z: PlaybackSpeed = -100; break;
-                case Keys.X: PlaybackSpeed = -10; break;
-                case Keys.C: PlaybackSpeed = -1; break;
-                case Keys.B: PlaybackSpeed = +1; break;
-                case Keys.N: PlaybackSpeed = +10; break;
-                case Keys.M: PlaybackSpeed += +100; break;
+                case Keys.Z: ttyrecDecoder.PlaybackSpeed = -100; break;
+                case Keys.X: ttyrecDecoder.PlaybackSpeed = -10; break;
+                case Keys.C: ttyrecDecoder.PlaybackSpeed = -1; break;
+                case Keys.B: ttyrecDecoder.PlaybackSpeed = +1; break;
+                case Keys.N: ttyrecDecoder.PlaybackSpeed = +10; break;
+                case Keys.M: ttyrecDecoder.PlaybackSpeed += +100; break;
 
-                case Keys.F: PlaybackSpeed -= 1; break;//progresive increase/decrease
-                case Keys.G: PlaybackSpeed += 1; break;
+                case Keys.F: ttyrecDecoder.PlaybackSpeed -= 1; break;//progresive increase/decrease
+                case Keys.G: ttyrecDecoder.PlaybackSpeed += 1; break;
 
-                case Keys.D: PlaybackSpeed -= 0.2; break;//progresive increase/decrease
-                case Keys.H: PlaybackSpeed += 0.2; break;
+                case Keys.D: ttyrecDecoder.PlaybackSpeed -= 0.2; break;//progresive increase/decrease
+                case Keys.H: ttyrecDecoder.PlaybackSpeed += 0.2; break;
 
                 case Keys.Oemcomma: 
-                    if (PlaybackSpeed != 0) { PausedSpeed = PlaybackSpeed; PlaybackSpeed = 0; } //pause when frame stepping
+                    if (ttyrecDecoder.PlaybackSpeed != 0) {  ttyrecDecoder.Pause(); } //pause when frame stepping
                     FrameStepCount -= 1;//FrameStep -1 
                     break;
 
                 case Keys.OemPeriod:
-                    if (PlaybackSpeed != 0) { PausedSpeed = PlaybackSpeed; PlaybackSpeed = 0; }//pause when frame stepping
+                    if (ttyrecDecoder.PlaybackSpeed != 0) { ttyrecDecoder.Pause(); }//pause when frame stepping
                     FrameStepCount += 1; //FrameStep +1
                     break;
 
@@ -392,11 +362,11 @@ namespace TtyRecMonkey
         private async void DownloadTTyRec(object sender, EventArgs e)
         {
             await playerSearch.DownloadFileAsync(sender, e); 
-            var streams = TtyrecToStream(playerSearch.ext);
+            var streams = TtyrecToStream(playerSearch.TtyrecStreamDictionary);
 
             var delay = TimeSpan.Zero;
             ttyrecDecoder = new TtyRecKeyframeDecoder(80, 24, streams, delay, MaxDelayBetweenPackets);
-            PlaybackSpeed = +1;
+            ttyrecDecoder.PlaybackSpeed = +1;
             ttyrecDecoder.SeekTime = TimeSpan.Zero;
         }
    

@@ -8,8 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TtyRecDecoder;
-using Xamarin.Forms;
-using Xamarin.Forms.Platform.WPF.Extensions;
 
 namespace TtyRecMonkey.Windows
 {
@@ -97,7 +95,7 @@ namespace TtyRecMonkey.Windows
 
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            ttyrecDecoder.GoToFrame(int.Parse((string)table.Rows[e.RowIndex].ItemArray[0]) );
+            ttyrecDecoder.GoToFrame(int.Parse((string)table.Rows[e.RowIndex].ItemArray[0])+1 );
         }
     }
 }
