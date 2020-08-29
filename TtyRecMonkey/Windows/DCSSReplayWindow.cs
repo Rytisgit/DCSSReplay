@@ -159,8 +159,10 @@ namespace DisplayWindow
         public void PlayButton_Click(object sender, System.EventArgs e)
         {
             this.ActiveControl = null;
+            if (ttyrecDecoder == null) return;
             if (ttyrecDecoder.PlaybackSpeed != 0) { PlayButton.Image = Image.FromFile(@"..\..\..\Extra\play.png"); ttyrecDecoder.Pause(); }
             else { PlayButton.Image = Image.FromFile(@"..\..\..\Extra\pause.png"); ttyrecDecoder.Unpause(); }
+
         }
 
     }
