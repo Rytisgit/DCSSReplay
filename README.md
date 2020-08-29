@@ -13,7 +13,7 @@
 Ctrl+O        Open a ttyrec from filesystem
 Ctrl+G        Open ttyrec download window
 Ctrl+C        Open Configuration window
-Ctrl+C        Open ttyrec search window
+Ctrl+F        Open ttyrec event search window
 Escape        Close ttyrec and return here
 Alt+Enter     Toggle fullscreen
 A / S         Switch Tile to console / Full Console Mode
