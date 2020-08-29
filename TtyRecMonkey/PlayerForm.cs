@@ -269,12 +269,26 @@ namespace TtyRecMonkey
             switch (e.KeyData)
             {
 
-                case Keys.Escape: using (ttyrecDecoder) { } ttyrecDecoder = null; break;
-                case Keys.Control | Keys.G: PlayerDownloadWindow(); break;
+                case Keys.Escape:
+                    using (ttyrecDecoder)
+                    {
+                    }
+
+                    ttyrecDecoder = null;
+                    break;
+                case Keys.Control | Keys.G:
+                    PlayerDownloadWindow();
+                    break;
                 //case Keys.Control | Keys.T: TileOverrideWindow(); break;
-                case Keys.Control | Keys.O: OpenFile(); break;
-                case Keys.Control | Keys.F: ReplayTextSearchWindow(); break;
-                case Keys.Control | Keys.C: Reconfigure(); break;
+                case Keys.Control | Keys.O:
+                    OpenFile();
+                    break;
+                case Keys.Control | Keys.F:
+                    ReplayTextSearchWindow();
+                    break;
+                case Keys.Control | Keys.C:
+                    Reconfigure();
+                    break;
                 case Keys.Alt | Keys.Enter:
                     if (FormBorderStyle == FormBorderStyle.None)
                     {
@@ -286,53 +300,63 @@ namespace TtyRecMonkey
                         FormBorderStyle = FormBorderStyle.None;
                         WindowState = FormWindowState.Maximized;
                     }
+
                     e.SuppressKeyPress = true; // also supresses annoying dings
                     break;
-
-                case Keys.Z: ttyrecDecoder.PlaybackSpeed = -100; break;
-                case Keys.X: ttyrecDecoder.PlaybackSpeed = -10; break;
-                case Keys.C: ttyrecDecoder.PlaybackSpeed = -1; break;
-                case Keys.B: ttyrecDecoder.PlaybackSpeed = +1; break;
-                case Keys.N: ttyrecDecoder.PlaybackSpeed = +10; break;
-                case Keys.M: ttyrecDecoder.PlaybackSpeed += +100; break;
-
-                case Keys.F: ttyrecDecoder.PlaybackSpeed -= 1; break;//progresive increase/decrease
-                case Keys.G: ttyrecDecoder.PlaybackSpeed += 1; break;
-
-                case Keys.D: ttyrecDecoder.PlaybackSpeed -= 0.2; break;//progresive increase/decrease
-                case Keys.H: ttyrecDecoder.PlaybackSpeed += 0.2; break;
-
-                case Keys.Oemcomma: 
-                    if (ttyrecDecoder.PlaybackSpeed != 0) {  ttyrecDecoder.Pause(); } //pause when frame stepping
-                    FrameStepCount -= 1;//FrameStep -1 
-                    break;
-
-                case Keys.OemPeriod:
-                    if (ttyrecDecoder.PlaybackSpeed != 0) { ttyrecDecoder.Pause(); }//pause when frame stepping
-                    FrameStepCount += 1; //FrameStep +1
-                    break;
-
-                case Keys.Left:
-                    ttyrecDecoder.SeekTime -= ttyrecDecoder.SeekTime - TimeSpan.FromMilliseconds(TimeStepLengthMS) > TimeSpan.Zero ? TimeSpan.FromMilliseconds(TimeStepLengthMS) : TimeSpan.Zero;
-                    break;
-
-                case Keys.Right:
-                    ttyrecDecoder.SeekTime += ttyrecDecoder.SeekTime + TimeSpan.FromMilliseconds(TimeStepLengthMS) < ttyrecDecoder.Length ? TimeSpan.FromMilliseconds(TimeStepLengthMS) : ttyrecDecoder.Length;
-                    break;
-
-                case Keys.A:
-                    ConsoleSwitchLevel = ConsoleSwitchLevel != 2 ? 2 : 1;//switch console and tile windows around when in normal layout mode
-                    break;
-
-                case Keys.S:
-                    ConsoleSwitchLevel = ConsoleSwitchLevel != 3 ? 3 : 1;//switch to full console mode ound when in normal layout mode
-                    break;
-
-                case Keys.V://Play / Pause
-                case Keys.Space:
-                    PlayButton_Click(new object(), e);
-                    break;
             }
+
+            if (ttyrecDecoder != null)
+            {
+                switch (e.KeyData)
+                {
+                    case Keys.Z: ttyrecDecoder.PlaybackSpeed = -100; break;
+                    case Keys.X: ttyrecDecoder.PlaybackSpeed = -10; break;
+                    case Keys.C: ttyrecDecoder.PlaybackSpeed = -1; break;
+                    case Keys.B: ttyrecDecoder.PlaybackSpeed = +1; break;
+                    case Keys.N: ttyrecDecoder.PlaybackSpeed = +10; break;
+                    case Keys.M: ttyrecDecoder.PlaybackSpeed += +100; break;
+
+                    case Keys.F: ttyrecDecoder.PlaybackSpeed -= 1; break;//progresive increase/decrease
+                    case Keys.G: ttyrecDecoder.PlaybackSpeed += 1; break;
+
+                    case Keys.D: ttyrecDecoder.PlaybackSpeed -= 0.2; break;//progresive increase/decrease
+                    case Keys.H: ttyrecDecoder.PlaybackSpeed += 0.2; break;
+
+                    case Keys.Oemcomma:
+                        if (ttyrecDecoder.PlaybackSpeed != 0) { ttyrecDecoder.Pause(); } //pause when frame stepping
+                        FrameStepCount -= 1;//FrameStep -1 
+                        break;
+
+                    case Keys.OemPeriod:
+                        if (ttyrecDecoder.PlaybackSpeed != 0) { ttyrecDecoder.Pause(); }//pause when frame stepping
+                        FrameStepCount += 1; //FrameStep +1
+                        break;
+
+                    case Keys.Left:
+                        ttyrecDecoder.SeekTime -= ttyrecDecoder.SeekTime - TimeSpan.FromMilliseconds(TimeStepLengthMS) > TimeSpan.Zero ? TimeSpan.FromMilliseconds(TimeStepLengthMS) : TimeSpan.Zero;
+                        break;
+
+                    case Keys.Right:
+                        ttyrecDecoder.SeekTime += ttyrecDecoder.SeekTime + TimeSpan.FromMilliseconds(TimeStepLengthMS) < ttyrecDecoder.Length ? TimeSpan.FromMilliseconds(TimeStepLengthMS) : ttyrecDecoder.Length;
+                        break;
+
+                    case Keys.A:
+                        ConsoleSwitchLevel = ConsoleSwitchLevel != 2 ? 2 : 1;//switch console and tile windows around when in normal layout mode
+                        break;
+
+                    case Keys.S:
+                        ConsoleSwitchLevel = ConsoleSwitchLevel != 3 ? 3 : 1;//switch to full console mode ound when in normal layout mode
+                        break;
+
+                    case Keys.V://Play / Pause
+                    case Keys.Space:
+                        PlayButton_Click(new object(), e);
+                        break;
+                }
+
+                
+            }
+            
             base.OnKeyDown(e);
         }
 
