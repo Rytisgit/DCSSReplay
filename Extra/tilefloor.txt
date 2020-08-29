@@ -13,20 +13,20 @@ floor_vines0
 DWARF
 relief0
 limestone0
-Hall of Blades
+HALL OF BLADES
 relief0
 mesh0
-Elven Halls
+ELVEN HALLS
 relief0
 mesh0
 TARTARUS
 cobalt_rock1
 black_cobalt01
 CRYPT
-brick_gray0
+crypt0
 crypt_domino_1a
 TOMB
-undead0
+tomb0
 tomb0
 HELL
 hell01
@@ -40,7 +40,7 @@ rough_red0
 COCYTUS
 ice_wall0
 frozen0
-Orcish Mines
+ORCISH MINES
 orc0
 orc0
 LAIR
@@ -85,10 +85,10 @@ rect_gray0
 TROVE
 vault0
 rect_gray0
-LABYRINTH
+A LABYRINTH
 lab-rock0
 gauntlet0
-GAUNTLET
+A GAUNTLET
 lab-rock0
 gauntlet0
 SEWER

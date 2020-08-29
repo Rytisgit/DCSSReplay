@@ -15,55 +15,39 @@ namespace InputParser
         const int GameViewHeight = 17;
 
         private static char GetCharacter(TerminalCharacter character) => character.Character == 55328 ? ' ' : character.Character;
-        private static string GetColoredCharacter(TerminalCharacter character) => GetCharacter(character) + Enum.GetName(typeof(ColorList2), character.ForegroundPaletteIndex);
-        private static string GetBackgroundColor(TerminalCharacter character) => Enum.GetName(typeof(ColorList2), character.BackgroundPaletteIndex);
+        private static string GetColoredCharacter(TerminalCharacter character) => GetCharacter(character) + Enum.GetName(typeof(ColorListEnum), character.ForegroundPaletteIndex);
+        private static string GetBackgroundColor(TerminalCharacter character) => Enum.GetName(typeof(ColorListEnum), character.BackgroundPaletteIndex);
 
         private static LayoutType GetLayoutType(TerminalCharacter[,] characters, out string newlocation)
         {
             StringBuilder place = new StringBuilder();
             bool found = false;
 
-            string sideLocation;
             newlocation = "";
             for (int i = 61; i < FullWidth; i++)
             {
                 place.Append(GetCharacter(characters[i, 7]));
             }
-            sideLocation = place.ToString();
+            var sideLocation = place.ToString();
             foreach (var location in Locations.locations)
             {
-                if (sideLocation.Contains(location.Substring(0, 3)))
-                {
-                    newlocation = location;
-                    sideLocation = location;
-                    found = true;
-                    break;
-                }
-            }
-            if (found)
-            {
+                if (!sideLocation.Contains(location.Substring(0, 3))) continue;
+                newlocation = location;
                 return LayoutType.Normal;
             }
+
             place = new StringBuilder();
-            string mapLocation;
-            for (int i = 0; i < 30; i++)
+            for (var i = 0; i < FullWidth; i++)
             {
                 place.Append(GetCharacter(characters[i, 0]));
             }
-            mapLocation = place.ToString();
-            if (!mapLocation.Contains("of")) return LayoutType.TextOnly;
+            if (!place.ToString().Contains("Press ?")) return LayoutType.TextOnly;
+
+            var mapLocation = place.ToString().Substring(0, 30);
             foreach (var location in Locations.locations)
             {
-                if (mapLocation.Contains(location.Substring(0, 3)))
-                {
-                    newlocation = location;
-                    mapLocation = location;
-                    found = true;
-                    break;
-                }
-            }
-            if (found)
-            {
+                if (!mapLocation.Contains(location.Substring(0, 3))) continue;
+                newlocation = location;
                 return LayoutType.MapOnly;
             }
             return LayoutType.TextOnly;
@@ -131,7 +115,7 @@ namespace InputParser
 
         private static LogData[] ParseLogLines(TerminalCharacter[,] characters)
         {
-            var loglines = new LogData[6] { new LogData(), new LogData(), new LogData(), new LogData(), new LogData(), new LogData() };
+            var loglines = new LogData[7] { new LogData(), new LogData(), new LogData(), new LogData(), new LogData(), new LogData(), new LogData() };
             StringBuilder logLine = new StringBuilder();
             var logText = new List<string>();
             var logBackground = new List<string>();
@@ -353,10 +337,13 @@ namespace InputParser
             {
                 name.Append(GetCharacter(characters[i, 0]));
                 race.Append(GetCharacter(characters[i, 1]));
-                weapon.Append(GetCharacter(characters[i, 9]));
-                quiver.Append(GetCharacter(characters[i, 10]));
                 status.Append(GetCharacter(characters[i, 11]));
                 status2.Append(GetCharacter(characters[i, 12]));
+            }
+            for (int i = 37; i < 80; i++)
+            {
+                weapon.Append(GetCharacter(characters[i, 9]));
+                quiver.Append(GetCharacter(characters[i, 10]));
             }
             for (int i = 40; i < 44; i++)
             {
@@ -424,8 +411,7 @@ namespace InputParser
             sideData.NextLevel = next.ToString();
 
             var split = noiseOrGold.ToString().Split(':');
-            sideData.NoisyGold = split.Length > 1 ? split[1] : "noise here"; 
-
+            sideData.NoisyGold = split.Length > 1 ? split[1] : "noise here";
             var parsed = sideData.Place.Split(':');
             bool found = false;
             foreach (var location in Locations.locations)
@@ -441,6 +427,7 @@ namespace InputParser
             {
                 sideData.Place += ":" + parsed[1];
             }
+           
             return sideData;
         }
     }

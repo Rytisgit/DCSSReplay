@@ -9,8 +9,8 @@
 #ifndef PUTTY_TERMINAL_H
 #define PUTTY_TERMINAL_H
 
-#include "tree234.h"
-
+#include "TREE234.H"
+#include "PUTTY.H"
 struct beeptime {
     struct beeptime *next;
     unsigned long ticks;
