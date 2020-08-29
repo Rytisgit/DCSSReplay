@@ -12,7 +12,6 @@ namespace TtyRecMonkey
 {
     public partial class ConfigurationForm : Form
     {
-        Font LastGdiFont;
 
         public ConfigurationForm()
         {
@@ -46,38 +45,6 @@ namespace TtyRecMonkey
             Configuration.Save(this);
             DialogResult = DialogResult.OK;
             Close();
-        }
-
-        private void buttonChangeFont_Click(object sender, EventArgs e)
-        {
-            var dialog = new FontDialog()
-            {
-                AllowScriptChange = true,
-                AllowSimulations = true
-                ,
-                AllowVectorFonts = true
-                ,
-                AllowVerticalFonts = true
-                ,
-                Font = (LastGdiFont == null) ? Configuration.Main.GdiFont : LastGdiFont
-                ,
-                FontMustExist = true
-                ,
-                ShowColor = false
-            };
-            var result = dialog.ShowDialog(this);
-            if (result != DialogResult.OK) return;
-            var font = LastGdiFont = dialog.Font;
-
-            Size touse = new Size(0, 0);
-            for (char ch = (char)0; ch < (char)255; ++ch)
-            {
-                if ("\u0001 \t\n\r".Contains(ch)) continue; // annoying outliers
-                var m = TextRenderer.MeasureText(ch.ToString(), font, Size.Empty, TextFormatFlags.NoPadding);
-                touse.Width = Math.Max(touse.Width, m.Width);
-                touse.Height = Math.Max(touse.Height, m.Height);
-            }
-
         }
 
         private void labelTargetChunksMemory_Click(object sender, EventArgs e)

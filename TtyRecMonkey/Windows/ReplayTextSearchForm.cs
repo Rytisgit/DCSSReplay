@@ -8,8 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TtyRecDecoder;
-using Xamarin.Forms;
-using Xamarin.Forms.Platform.WPF.Extensions;
 
 namespace TtyRecMonkey.Windows
 {
