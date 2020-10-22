@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using SkiaSharp;
 using System.IO;
 using System.Linq;
+using InputParser.Decorators;
 
 namespace FrameGenerator
 {
@@ -77,7 +78,6 @@ namespace FrameGenerator
             //return DrawFrame(new Model());
             if (chars != null)
             {
-
                 var model = consoleLevel != 3 ? Parser.ParseData(chars) : Parser.ParseData(chars, true);
                 model.OverideTiles(tileoverides);
                 if (model.Layout == LayoutType.Normal && consoleLevel == 2)
