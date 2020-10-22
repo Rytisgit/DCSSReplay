@@ -13,12 +13,10 @@ namespace InputParser.Decorators
 
         public override Model ParseData(TerminalCharacter[,] characters)
         {
-            base.model.ParseData(characters);
-            if (!(base.model is Model)) return new Model();
-            var model = (Model)base.model;
-            model.SideData = ParseSideData(characters);
-            model.SideDataColored = ParseColoredSideData(characters);
-            return model;
+            var parsedModel = base.model.ParseData(characters);
+            parsedModel.SideData = ParseSideData(characters);
+            parsedModel.SideDataColored = ParseColoredSideData(characters);
+            return parsedModel;
         }
 
         private static SideDataColored ParseColoredSideData(TerminalCharacter[,] characters)

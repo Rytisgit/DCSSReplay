@@ -14,11 +14,10 @@ namespace InputParser.Decorators
 
         public override Model ParseData(TerminalCharacter[,] characters)
         {
-            base.model.ParseData(characters);
+            var parsedModel = base.model.ParseData(characters);
             if (!(base.model is Model)) return new Model();
-            var model = (Model)base.model;
-            model.MonsterData = ParseMonsterDisplay(characters);
-            return model;
+            parsedModel.MonsterData = ParseMonsterDisplay(characters);
+            return parsedModel;
         }
 
         private static MonsterData[] ParseMonsterDisplay(TerminalCharacter[,] characters)

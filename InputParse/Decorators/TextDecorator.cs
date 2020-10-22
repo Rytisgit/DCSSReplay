@@ -11,13 +11,11 @@ namespace InputParser.Decorators
         public TextDecorator(IParser model): base(model)
         { 
         }
-        public virtual Model ParseData(TerminalCharacter[,] characters)
+        public override Model ParseData(TerminalCharacter[,] characters)
         {
-            base.model.ParseData(characters);
-            if (!(base.model is Model)) return new Model();
-            var model = (Model)base.model;
-            model.Layout = LayoutType.ConsoleFull;
-            model.LineLength = FullWidth;
+            var parsedModel = base.model.ParseData(characters);
+            parsedModel.Layout = LayoutType.ConsoleFull;
+            parsedModel.LineLength = FullWidth;
             var coloredStrings = new string[FullWidth * FullHeight];
             var curentChar = 0;
             try
@@ -28,7 +26,7 @@ namespace InputParser.Decorators
                     coloredStrings[curentChar] = GetColoredCharacter(characters[i, j]);
                     curentChar++;
                 }
-                model.TileNames = coloredStrings;
+                parsedModel.TileNames = coloredStrings;
 
             }
             catch (Exception)
@@ -40,7 +38,7 @@ namespace InputParser.Decorators
 
                 return new Model();
             }
-            return model;
+            return parsedModel;
         }
     }
 }

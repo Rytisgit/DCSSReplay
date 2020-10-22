@@ -13,10 +13,9 @@ namespace InputParser.Decorators
 
         public override Model ParseData(TerminalCharacter[,] characters)
         {
-            base.model.ParseData(characters);
+            var parsedModel = base.model.ParseData(characters);
             if (!(base.model is Model)) return new Model();
-            var model = (Model) base.model;
-            model.LineLength = GameViewWidth;
+            parsedModel.LineLength = GameViewWidth;
             var coloredStrings = new string[GameViewWidth * GameViewHeight];
             var highlightColorStrings = new string[GameViewWidth * GameViewHeight];
             var curentChar = 0;
@@ -31,8 +30,8 @@ namespace InputParser.Decorators
                     curentChar++;
                 }
 
-                model.TileNames = coloredStrings;
-                model.HighlightColors = highlightColorStrings;
+                parsedModel.TileNames = coloredStrings;
+                parsedModel.HighlightColors = highlightColorStrings;
             }
             catch (Exception)
             {
@@ -45,7 +44,7 @@ namespace InputParser.Decorators
                 return new Model();
             }
 
-            return model;
+            return parsedModel;
 
         }
     }

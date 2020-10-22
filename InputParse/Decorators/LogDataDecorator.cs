@@ -13,11 +13,10 @@ namespace InputParser.Decorators
 
         public override Model ParseData(TerminalCharacter[,] characters)
         {
-            base.model.ParseData(characters);
-            if (!(base.model is Model)) return new Model();
-            var model = (Model)base.model;
-            model.LogData = ParseLogLines(characters);
-            return model;
+            var parsedModel = base.model.ParseData(characters);
+            if (!(parsedModel is Model)) return new Model();
+            parsedModel.LogData = ParseLogLines(characters);
+            return parsedModel;
         }
 
         private static LogData[] ParseLogLines(TerminalCharacter[,] characters)

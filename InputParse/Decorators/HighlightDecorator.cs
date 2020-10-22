@@ -11,11 +11,10 @@ namespace InputParser.Decorators
         public HighLightDecorator(IParser model) : base(model) {}
         public override Model ParseData(TerminalCharacter[,] characters)
         {
-            base.model.ParseData(characters);
-            if (!(base.model is Model)) return new Model();
-            var model = (Model)base.model;
-            model.Layout = LayoutType.ConsoleFull;
-            model.LineLength = FullWidth;
+            var parsedModel = base.model.ParseData(characters);
+            if (!(parsedModel is Model)) return new Model();
+            parsedModel.Layout = LayoutType.ConsoleFull;
+            parsedModel.LineLength = FullWidth;
 
             var highlight = new string[FullWidth * FullHeight];
             var curentChar = 0;
@@ -27,7 +26,7 @@ namespace InputParser.Decorators
                     highlight[curentChar] = GetBackgroundColor(characters[i, j]);
                     curentChar++;
                 }
-                model.HighlightColors = highlight;
+                parsedModel.HighlightColors = highlight;
             }
             catch (Exception)
             {
@@ -38,7 +37,7 @@ namespace InputParser.Decorators
 
                 return new Model();
             }
-            return model;
+            return parsedModel;
         }
     }
 }
