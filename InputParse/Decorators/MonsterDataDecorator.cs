@@ -8,14 +8,13 @@ using static InputParser.Constant.Helpers;
 
 namespace InputParser.Decorators
 {
-    class MonsterDataDecorator : AbstractDecorator
+    public class MonsterDataDecorator : AbstractDecorator
     {
-        public MonsterDataDecorator(Model model) : base(model) { }
+        public MonsterDataDecorator(IParser model) : base(model) { }
 
         public override Model ParseData(TerminalCharacter[,] characters)
         {
-            var parsedModel = base.model.ParseData(characters);
-            if (!(base.model is Model)) return new Model();
+            var parsedModel = base.ParseData(characters);
             parsedModel.MonsterData = ParseMonsterDisplay(characters);
             return parsedModel;
         }

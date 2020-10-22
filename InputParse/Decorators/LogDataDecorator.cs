@@ -7,14 +7,13 @@ using static InputParser.Constant.Helpers;
 
 namespace InputParser.Decorators
 {
-    class LogDataDecorator : AbstractDecorator
+    public class LogDataDecorator : AbstractDecorator
     {
         public LogDataDecorator(IParser model) : base(model) { }
 
         public override Model ParseData(TerminalCharacter[,] characters)
         {
-            var parsedModel = base.model.ParseData(characters);
-            if (!(parsedModel is Model)) return new Model();
+            var parsedModel = base.ParseData(characters);
             parsedModel.LogData = ParseLogLines(characters);
             return parsedModel;
         }

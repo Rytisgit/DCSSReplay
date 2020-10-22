@@ -7,13 +7,13 @@ using static InputParser.Constant.Helpers;
 
 namespace InputParser.Decorators
 {
-    class SideDataDecorator : AbstractDecorator
+    public class SideDataDecorator : AbstractDecorator
     {
-        public SideDataDecorator(Model model) : base(model) { }
+        public SideDataDecorator(IParser model) : base(model) { }
 
         public override Model ParseData(TerminalCharacter[,] characters)
         {
-            var parsedModel = base.model.ParseData(characters);
+            var parsedModel = base.ParseData(characters);
             parsedModel.SideData = ParseSideData(characters);
             parsedModel.SideDataColored = ParseColoredSideData(characters);
             return parsedModel;

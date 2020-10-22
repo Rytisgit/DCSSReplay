@@ -2,19 +2,18 @@
 using InputParser.Abstract;
 using Putty;
 using static InputParser.Constant.Helpers;
+ 
+
 
 namespace InputParser.Decorators
 {
-    class GameViewParser : AbstractDecorator
+    public class GameViewDecorator : AbstractDecorator
     {
-        public GameViewParser(IParser Imodel) : base(Imodel)
-        {
-        }
+        public GameViewDecorator(IParser model) : base(model) { }
 
         public override Model ParseData(TerminalCharacter[,] characters)
         {
-            var parsedModel = base.model.ParseData(characters);
-            if (!(base.model is Model)) return new Model();
+            var parsedModel = base.ParseData(characters);
             parsedModel.LineLength = GameViewWidth;
             var coloredStrings = new string[GameViewWidth * GameViewHeight];
             var highlightColorStrings = new string[GameViewWidth * GameViewHeight];

@@ -1,6 +1,7 @@
 ﻿using Putty;
 using System;
 using System.Text;
+using InputParser.Abstract;
 using InputParser.Constant;
 using InputParser.Decorators;
 using static InputParser.Constant.Helpers;
@@ -49,39 +50,32 @@ namespace InputParser
         {
             if (chars == null) throw new ArgumentNullException("TerminalCharacter array is null");
 
-            var model = new Model();
-            switch ((GetLayoutType(chars, consoleFull, out var location)))
+            switch (GetLayoutType(chars, consoleFull, out var location))
             {
                 case LayoutType.Normal:
                 {
-                    model = new GameViewParser(model).ParseData(chars);
-                    model = new SideDataDecorator(model).ParseData(chars);
-                    model = new LogDataDecorator(model).ParseData(chars);
-                    model = new MonsterDataDecorator(model).ParseData(chars);
+                    var model = new MonsterDataDecorator(new LogDataDecorator(new SideDataDecorator(new GameViewDecorator(new BaseParser())))).ParseData(chars);
                     model.Layout = LayoutType.Normal;
                     model.Location = location;
                     return model;
                 }
                 case LayoutType.TextOnly:
                 {
-                    model = new TextDecorator(model).ParseData(chars);
-                    model = new HighLightDecorator(model).ParseData(chars);
+                    var model = new HighLightDecorator(new TextDecorator(new BaseParser())).ParseData(chars);
                     model.Layout = LayoutType.TextOnly;
                     return model;
                 }
                     
                 case LayoutType.MapOnly:
                 {
-                    model = new TextDecorator(model).ParseData(chars);
-                    model = new HighLightDecorator(model).ParseData(chars);
+                    var model = new HighLightDecorator(new TextDecorator(new BaseParser())).ParseData(chars);
                     model.Layout = LayoutType.MapOnly;
                     model.Location = location;
                     return model;
                 }
                 case LayoutType.ConsoleFull:
                 {
-                    model = new TextDecorator(model).ParseData(chars);
-                    model = new HighLightDecorator(model).ParseData(chars);
+                    var model = new HighLightDecorator(new TextDecorator(new BaseParser())).ParseData(chars);
                     model.Layout = LayoutType.ConsoleFull;
                     return model;
                 }

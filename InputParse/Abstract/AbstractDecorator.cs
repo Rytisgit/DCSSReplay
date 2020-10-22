@@ -2,18 +2,18 @@
 
 namespace InputParser.Abstract
 {
-    public class AbstractDecorator : IParser
+    public abstract class AbstractDecorator : IParser
     {
-        protected IParser model; 
+        private readonly IParser _model;
 
         public AbstractDecorator(IParser model)
         {
-            this.model = model;
+            _model = model;
         }
 
         public virtual Model ParseData(TerminalCharacter[,] chars)
         {
-            return model.ParseData(chars);
+            return _model.ParseData(chars);
         }
     }
 }

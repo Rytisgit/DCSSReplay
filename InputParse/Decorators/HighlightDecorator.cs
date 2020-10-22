@@ -6,13 +6,12 @@ using static InputParser.Constant.Helpers;
 
 namespace InputParser.Decorators
 {
-    partial class HighLightDecorator : AbstractDecorator
+    public class HighLightDecorator : AbstractDecorator
     {
-        public HighLightDecorator(IParser model) : base(model) {}
+        public HighLightDecorator(IParser model) : base(model) { }
         public override Model ParseData(TerminalCharacter[,] characters)
         {
-            var parsedModel = base.model.ParseData(characters);
-            if (!(parsedModel is Model)) return new Model();
+            var parsedModel = base.ParseData(characters);
             parsedModel.Layout = LayoutType.ConsoleFull;
             parsedModel.LineLength = FullWidth;
 

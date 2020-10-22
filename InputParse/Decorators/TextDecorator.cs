@@ -8,12 +8,10 @@ namespace InputParser.Decorators
 {
     public class TextDecorator : AbstractDecorator
     {
-        public TextDecorator(IParser model): base(model)
-        { 
-        }
+        public TextDecorator(IParser model) : base(model) { }
         public override Model ParseData(TerminalCharacter[,] characters)
         {
-            var parsedModel = base.model.ParseData(characters);
+            var parsedModel = base.ParseData(characters);
             parsedModel.Layout = LayoutType.ConsoleFull;
             parsedModel.LineLength = FullWidth;
             var coloredStrings = new string[FullWidth * FullHeight];
