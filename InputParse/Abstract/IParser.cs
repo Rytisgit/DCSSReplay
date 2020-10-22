@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Putty;
+﻿using Putty;
 
-namespace InputParser
+namespace InputParser.Abstract
 {
     public interface IParser
     {

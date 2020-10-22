@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using InputParser.Abstract;
 using Putty;
-using static InputParser.Helpers;
+using static InputParser.Constant.Helpers;
 
 namespace InputParser.Decorators
 {

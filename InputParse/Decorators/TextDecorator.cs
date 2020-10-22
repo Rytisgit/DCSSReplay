@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using InputParser.Abstract;
+using InputParser.Constant;
 using Putty;
-using static InputParser.Helpers;
+using static InputParser.Constant.Helpers;
 
 namespace InputParser.Decorators
 {

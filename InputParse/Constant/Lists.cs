@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using SkiaSharp;
 
-namespace InputParser
+namespace InputParser.Constant
 {
     public enum LayoutType
     {

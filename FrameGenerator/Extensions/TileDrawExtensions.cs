@@ -2,6 +2,7 @@
 using InputParser;
 using System;
 using System.Collections.Generic;
+using InputParser.Constant;
 using SkiaSharp;
 
 namespace FrameGenerator.Extensions

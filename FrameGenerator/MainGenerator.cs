@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using SkiaSharp;
 using System.IO;
 using System.Linq;
+using InputParser.Constant;
 using InputParser.Decorators;
 
 namespace FrameGenerator

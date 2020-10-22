@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Putty;
-using static InputParser.Helpers;
+﻿using Putty;
 
-namespace InputParser.Decorators
+namespace InputParser.Abstract
 {
     public class AbstractDecorator : IParser
     {

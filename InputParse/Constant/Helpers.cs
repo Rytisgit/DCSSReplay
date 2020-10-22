@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Putty;
 
-namespace InputParser
+namespace InputParser.Constant
 {
     public static class Helpers
     {

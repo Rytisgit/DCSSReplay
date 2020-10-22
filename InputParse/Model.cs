@@ -1,5 +1,6 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using InputParser.Abstract;
+using InputParser.Constant;
 using Putty;
 
 namespace InputParser

@@ -1,4 +1,5 @@
 ﻿using InputParser;
+using InputParser.Constant;
 using SkiaSharp;
 
 namespace FrameGenerator.Extensions

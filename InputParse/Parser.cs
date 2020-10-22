@@ -1,10 +1,9 @@
 ﻿using Putty;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
+using InputParser.Constant;
 using InputParser.Decorators;
-using static InputParser.Helpers;
+using static InputParser.Constant.Helpers;
 
 namespace InputParser
 {
