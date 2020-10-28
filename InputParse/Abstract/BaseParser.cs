@@ -2,10 +2,10 @@
 
 namespace InputParser.Abstract
 {
-    public class BaseDecorator : IParser
+    public class BaseParser : IParser
     {
 
-        public BaseDecorator()
+        public BaseParser()
         {
         }
 
