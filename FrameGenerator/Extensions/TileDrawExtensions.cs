@@ -1,9 +1,9 @@
 ﻿using FrameGenerator.OutOfSightCache;
 using InputParser;
-using System;
-using System.Collections.Generic;
 using InputParser.Constant;
 using SkiaSharp;
+using System;
+using System.Collections.Generic;
 
 namespace FrameGenerator.Extensions
 {
@@ -11,7 +11,7 @@ namespace FrameGenerator.Extensions
     {
         public static bool TryDrawWallOrFloor(this string tile, string background, SKBitmap wall, SKBitmap floor, string[] wallAndFloorColors, out SKBitmap tileToDraw)
         {
-            var highlighted = FixHighlight(tile, background, out var correctTile);
+            var correctTile = ApplyBackgroundColorIfTileIsHighlighted(tile, background);
             tileToDraw = new SKBitmap(32, 32);
 
             using (SKCanvas g = new SKCanvas(tileToDraw))
@@ -81,10 +81,9 @@ namespace FrameGenerator.Extensions
             {
                 return true;
             }
-            
+
             return false;
         }
-        
 
         public static bool TryDrawMonster(this string tile, string background, Dictionary<string, string> monsterData, Dictionary<string, SKBitmap> monsterPng, Dictionary<string, SKBitmap> miscPng, SKBitmap floor, out SKBitmap tileToDraw, out SKBitmap BrandToDraw)
         {
@@ -92,7 +91,7 @@ namespace FrameGenerator.Extensions
             BrandToDraw = null;
             using (SKCanvas g = new SKCanvas(tileToDraw))
             {
-                var isHighlighted = FixHighlight(tile, background, out var correctTile);
+                var correctTile = ApplyBackgroundColorIfTileIsHighlighted(tile, background);
 
                 if (!monsterData.TryGetValue(correctTile, out var pngName)) return false;
 
@@ -108,7 +107,6 @@ namespace FrameGenerator.Extensions
 
                 if (tile.Substring(1) != Enum.GetName(typeof(ColorListEnum), ColorListEnum.BLACK))
                 {
-
                     //if (background == Enum.GetName(typeof(ColorList2), ColorList2.BROWN))//idk
                     //{
                     //    miscPng.TryGetValue("good_neutral", out BrandToDraw);
@@ -149,7 +147,7 @@ namespace FrameGenerator.Extensions
             {
                 g.Clear(SKColors.Black);
                 if (tile.StartsWith("@BL")) return false;//player tile draw override TODO
-                var isHighlighted = FixHighlight(tile, background, out var correctTile);
+                var correctTile = ApplyBackgroundColorIfTileIsHighlighted(tile, background);
                 string pngName;
                 if (!overrides.TryGetValue(correctTile, out pngName))
                 {
@@ -158,20 +156,17 @@ namespace FrameGenerator.Extensions
                 if (!monsterPng.TryGetValue(pngName, out SKBitmap png)) return false;
 
                 g.DrawBitmap(png, new SKRect(0, 0, png.Width, png.Height));
-
             }
             return true;
         }
 
         public static bool TryDrawFeature(this string tile, string background, Dictionary<string, string> featureData, Dictionary<string, SKBitmap> allDungeonPngs, Dictionary<string, SKBitmap> misc, SKBitmap floor, SKBitmap wall, string location, out SKBitmap tileToDraw)
         {
-
-            var highlighted = FixHighlight(tile, background, out var correctTile);
+            var correctTile = ApplyBackgroundColorIfTileIsHighlighted(tile, background);
             tileToDraw = new SKBitmap(32, 32);
 
             using (SKCanvas g = new SKCanvas(tileToDraw))
             {
-
                 if (!featureData.TryGetValue(correctTile, out var pngName)) return false;
                 if (pngName == "wall")
                 {
@@ -186,7 +181,6 @@ namespace FrameGenerator.Extensions
                         return true;
                     }
                 }
-               
 
                 if (pngName == "floor")
                 {
@@ -194,8 +188,8 @@ namespace FrameGenerator.Extensions
                     if (correctTile.Substring(1) == Enum.GetName(typeof(ColorListEnum), ColorListEnum.RED))
                     {
                         if (misc.TryGetValue("blood_puddle_red", out SKBitmap blood))
-                        { 
-                            g.DrawBitmap(blood, new SKRect(0, 0, blood.Width, blood.Height)); 
+                        {
+                            g.DrawBitmap(blood, new SKRect(0, 0, blood.Width, blood.Height));
                         }
                     }
                     return true;
@@ -218,18 +212,20 @@ namespace FrameGenerator.Extensions
             return true;
         }
 
-        private static bool FixHighlight(string tile, string backgroundColor, out string correctTile)//if highlighted, returns fixed string
+        private static bool IsHighlighted(string previous, string current)
         {
-            if (backgroundColor == null || backgroundColor.Equals(Enum.GetName(typeof(ColorListEnum), ColorListEnum.BLACK)) || !tile.Substring(1).Equals(Enum.GetName(typeof(ColorListEnum), ColorListEnum.BLACK)))
+            return previous != current;
+        }
+
+        private static string ApplyBackgroundColorIfTileIsHighlighted(string tile, string backgroundColor)
+        {
+            if (backgroundColor == null ||
+                backgroundColor.Equals(Enum.GetName(typeof(ColorListEnum), ColorListEnum.BLACK)) ||
+                !tile.Substring(1).Equals(Enum.GetName(typeof(ColorListEnum), ColorListEnum.BLACK)))
             {
-                correctTile = tile;
-                return false;
+                return tile;
             }
-            else
-            {
-                correctTile = tile[0] + backgroundColor;
-            }
-            return true;
+            return tile[0] + backgroundColor;
         }
 
         public static bool TryDrawItem(this string tile, string background, Dictionary<string, string> itemData, Dictionary<string, SKBitmap> itemPngs, Dictionary<string, SKBitmap> miscPngs, SKBitmap floor, string location, out SKBitmap tileToDraw)
@@ -238,7 +234,8 @@ namespace FrameGenerator.Extensions
 
             using (SKCanvas g = new SKCanvas(tileToDraw))
             {
-                var isHighlighted = FixHighlight(tile, background, out var correctTile);
+                var correctTile = ApplyBackgroundColorIfTileIsHighlighted(tile, background);
+                var isHighlighted = IsHighlighted(tile, correctTile);
                 SKBitmap underneathIcon;
 
                 if (!itemData.TryGetValue(correctTile, out var pngName)) return false;
@@ -339,7 +336,6 @@ namespace FrameGenerator.Extensions
 
                 if (sideData.Race.Contains("of Qazlal"))
                 {
-
                     var stormColors = new List<string>() {
                     Enum.GetName(typeof(ColorListEnum), ColorListEnum.LIGHTGREY),
                     Enum.GetName(typeof(ColorListEnum), ColorListEnum.DARKGREY) };
@@ -364,7 +360,6 @@ namespace FrameGenerator.Extensions
                             return true;
                         }
                     }
-
                 }
 
                 if (monsterData.MonsterIsVisible("catob"))//when catoblepass is on screen, white clouds are calcifiyng
@@ -376,7 +371,6 @@ namespace FrameGenerator.Extensions
                             g.DrawBitmap(bmp, new SKRect(0, 0, bmp.Width, bmp.Height));
                             return true;
                         }
-
                     }
                 }
 
@@ -401,7 +395,6 @@ namespace FrameGenerator.Extensions
                             g.DrawBitmap(bmp, new SKRect(0, 0, bmp.Width, bmp.Height));
                             return true;
                         }
-
                     }
                 }
 
