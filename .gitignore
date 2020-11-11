@@ -17,3 +17,4 @@ Packages/
 /Putty/WINDOWS/putty.aps
 *.so
 *.recipe
+/.sonarqube/*
