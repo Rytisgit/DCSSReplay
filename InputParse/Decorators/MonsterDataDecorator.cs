@@ -19,7 +19,7 @@ namespace InputParser.Decorators
             return parsedModel;
         }
 
-        private static MonsterData[] ParseMonsterDisplay(TerminalCharacter[,] characters)
+        private static MonsterData[] ParseMonsterDisplay(TerminalCharacter[,] chars)
         {
             List<MonsterData> monsterDataList = new List<MonsterData>(4);
             StringBuilder monsterLine = new StringBuilder();
@@ -32,9 +32,9 @@ namespace InputParser.Decorators
             {
                 for (int i = GameViewWidth + 4; i < AlmostFullWidth; i++, currentChar++)
                 {
-                    monsterLine.Append(GetCharacter(characters[i, lineIndex + lineOffset]));
-                    monsterLineColored.Add(GetColoredCharacter(characters[i, lineIndex + lineOffset]));
-                    monsterLineBackground.Add(GetBackgroundColor(characters[i, lineIndex + lineOffset]));
+                    monsterLine.Append(GetCharacter(chars[i, lineIndex + lineOffset]));
+                    monsterLineColored.Add(GetColoredCharacter(chars[i, lineIndex + lineOffset]));
+                    monsterLineBackground.Add(GetBackgroundColor(chars[i, lineIndex + lineOffset]));
                 }
                 monsterDataList.Add(FormatMonsterData(monsterLine.ToString(), monsterLineColored.ToArray(), monsterLineBackground.ToArray()));
                 monsterLine.Clear();

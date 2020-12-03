@@ -9,9 +9,9 @@ namespace InputParser.Decorators
     public class TextDecorator : AbstractDecorator
     {
         public TextDecorator(IParser model) : base(model) { }
-        public override Model ParseData(TerminalCharacter[,] characters)
+        public override Model ParseData(TerminalCharacter[,] chars)
         {
-            var parsedModel = base.ParseData(characters);
+            var parsedModel = base.ParseData(chars);
             parsedModel.Layout = LayoutType.ConsoleFull;
             parsedModel.LineLength = FullWidth;
             var coloredStrings = new string[FullWidth * FullHeight];
@@ -21,7 +21,7 @@ namespace InputParser.Decorators
                 for (int j = 0; j < FullHeight; j++)
                 for (int i = 0; i < FullWidth; i++)
                 {
-                    coloredStrings[curentChar] = GetColoredCharacter(characters[i, j]);
+                    coloredStrings[curentChar] = GetColoredCharacter(chars[i, j]);
                     curentChar++;
                 }
                 parsedModel.TileNames = coloredStrings;
@@ -29,7 +29,7 @@ namespace InputParser.Decorators
             }
             catch (Exception)
             {
-                foreach (var item in characters)
+                foreach (var item in chars)
                 {
                     if (item.ForegroundPaletteIndex > 15) Console.WriteLine(item.ForegroundPaletteIndex + item.ForegroundPaletteIndex);
                 }

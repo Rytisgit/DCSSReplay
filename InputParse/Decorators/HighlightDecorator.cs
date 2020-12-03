@@ -9,9 +9,9 @@ namespace InputParser.Decorators
     public class HighLightDecorator : AbstractDecorator
     {
         public HighLightDecorator(IParser model) : base(model) { }
-        public override Model ParseData(TerminalCharacter[,] characters)
+        public override Model ParseData(TerminalCharacter[,] chars)
         {
-            var parsedModel = base.ParseData(characters);
+            var parsedModel = base.ParseData(chars);
             parsedModel.Layout = LayoutType.ConsoleFull;
             parsedModel.LineLength = FullWidth;
 
@@ -20,16 +20,19 @@ namespace InputParser.Decorators
             try
             {
                 for (int j = 0; j < FullHeight; j++)
-                for (int i = 0; i < FullWidth; i++)
                 {
-                    highlight[curentChar] = GetBackgroundColor(characters[i, j]);
-                    curentChar++;
+                    for (int i = 0; i < FullWidth; i++)
+                    {
+                        highlight[curentChar] = GetBackgroundColor(chars[i, j]);
+                        curentChar++;
+                    }
                 }
+
                 parsedModel.HighlightColors = highlight;
             }
             catch (Exception)
             {
-                foreach (var item in characters)
+                foreach (var item in chars)
                 {
                     if (item.ForegroundPaletteIndex > 15) Console.WriteLine(item.ForegroundPaletteIndex + item.ForegroundPaletteIndex);
                 }

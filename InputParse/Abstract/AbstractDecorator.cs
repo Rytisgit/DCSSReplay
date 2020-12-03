@@ -6,7 +6,7 @@ namespace InputParser.Abstract
     {
         private readonly IParser _model;
 
-        public AbstractDecorator(IParser model)
+        protected AbstractDecorator(IParser model)
         {
             _model = model;
         }

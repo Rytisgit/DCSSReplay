@@ -9,7 +9,7 @@ namespace InputParser.Abstract
         {
         }
 
-        public Model ParseData(TerminalCharacter[,] characters)
+        public Model ParseData(TerminalCharacter[,] chars)
         {
             return new Model();
         }
