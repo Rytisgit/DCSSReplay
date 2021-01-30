@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
@@ -32,6 +33,7 @@ namespace DCSSTV2
             services.AddServerSideBlazor();
             services.AddFileReaderService();
             services.AddSingleton<WeatherForecastService>();
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls13 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -19,3 +19,4 @@ Packages/
 *.recipe
 /DCSSTV/wwwroot/*
 /Putty/WINDOWS/VS2012/putty/*
+.sonarqube/*
