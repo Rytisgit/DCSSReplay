@@ -50,6 +50,5 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Putty\WILDCARD.C">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\Putty\WCWIDTH.C" />
   </ItemGroup>
 </Project>

@@ -28,7 +28,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Putty\TERMINAL.C" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Putty\TREE234.C" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Putty\VERSION.C" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\Putty\WCWIDTH.C" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Putty\WILDCARD.C" />
   </ItemGroup>
 </Project>

@@ -1,16 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-
-  <ItemGroup>
-    <EmbeddedResource Include="libPuttyDLL.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>4567b6c5-d8ee-42f3-b502-49f025287fcf</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <Configurations>Debug;Release;LinuxRelease</Configurations>
+    <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="libPuttyDLL.dll.old" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack" Version="1.11.23" />
