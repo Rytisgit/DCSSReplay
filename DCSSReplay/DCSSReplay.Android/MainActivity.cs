@@ -11,8 +11,6 @@ using System.Threading.Tasks;
 using ICSharpCode.SharpZipLib.Zip;
 using System.IO;
 using Android;
-using System.Drawing;
-using SkiaSharp.Views.Forms;
 using Putty;
 
 namespace DCSSReplay.Droid

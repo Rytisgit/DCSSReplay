@@ -20,9 +20,8 @@ namespace FrameGenerator.Extensions
             var black = ColorList.GetColor("BLACK");
             var yellow = ColorList.GetColor("YELLOW");
             var brown = ColorList.GetColor("BROWN");
-            var LIGHTGREY = ColorList.GetColor("LIGHTGREY");
             var color = ColorList.GetColor(backgroundColor);
-            if (color != black && color != LIGHTGREY)
+            if (color != black)
             {
                 if (color == brown)
                 {
