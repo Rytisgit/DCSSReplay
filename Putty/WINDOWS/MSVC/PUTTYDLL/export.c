@@ -15,7 +15,7 @@
 #define EXPORT(rt) extern rt
 #endif
 
-extern Conf *conf;
+extern Conf* conf;
 
 static Conf* get_default_config() {
 	/*if (!conf) {
@@ -26,27 +26,12 @@ static Conf* get_default_config() {
 	return conf;*/
 	return NULL;
 }
-//void CreateConsole()
-//{
-//	if (!AllocConsole()) {
-//		// Add some error handling here.
-//		// You can call GetLastError() to get more info about the error.
-//		return;
-//	}
-//
-//	// std::cout, std::clog, std::cerr, std::cin
-//	FILE* fDummy;
-//	freopen_s(&fDummy, "CONOUT$", "w", stdout);
-//	freopen_s(&fDummy, "CONOUT$", "w", stderr);
-//	freopen_s(&fDummy, "CONIN$", "r", stdin);
-//
-//}
+
 EXPORT(Terminal*) CreatePuttyTerminal(int w, int h) {
 	int i;
 	struct unicode_data* unicode;
 	Terminal* terminal;
-	//CreateConsole();
-	//printf("TESTSSETSETSETSET");
+	
 	unicode = snew(struct unicode_data);
 	memset(unicode, 0, sizeof(struct unicode_data));
 
@@ -61,25 +46,25 @@ EXPORT(Terminal*) CreatePuttyTerminal(int w, int h) {
 	return terminal;
 }
 
-static void copy_termlines( tree234* dest, tree234* src ) {
-	int w,h,x,y;
-	termline *srctl, *desttl;
+static void copy_termlines(tree234* dest, tree234* src) {
+	int w, h, x, y;
+	termline* srctl, * desttl;
 
-	h = min(count234(dest),count234(src));
-	for ( y=0 ; y<h ; ++y ) {
-		srctl =index234(src ,y);
-		desttl=index234(dest,y);
-		w = min(srctl->cols,desttl->cols);
-		for ( x=0 ; x<w ; ++x ) desttl->chars[x] = srctl->chars[x];
-		desttl->cc_free   = srctl->cc_free;
-		desttl->cols      = srctl->cols;
-		desttl->lattr     = srctl->lattr;
-		desttl->size      = srctl->size;
-		desttl->temporary = srctl->temporary;
+	h = min(count234(dest), count234(src));
+	for (y = 0; y < h; ++y) {
+		srctl = index234(src, y);
+		desttl = index234(dest, y);
+		w = min(srctl->cols, desttl->cols);
+		for (x = 0; x < w; ++x) desttl->chars[x] = srctl->chars[x];
+		desttl->cc_free		= srctl->cc_free;
+		desttl->cols		= srctl->cols;
+		desttl->lattr		= srctl->lattr;
+		desttl->size		= srctl->size;
+		desttl->temporary	= srctl->temporary;
 	}
 }
 
-EXPORT(Terminal*) ClonePuttyTerminal( Terminal* term ) {
+EXPORT(Terminal*) ClonePuttyTerminal(Terminal* term) {
 	struct unicode_data* unicode;
 	Terminal* clone;
 	Terminal  restore;
