@@ -352,7 +352,7 @@
                             {
                                 try
                                 {
-                                    imreBase64Data = ToBase64String(frameGenerator.GenerateImage(frame, 3));
+                                    imreBase64Data = ToBase64String(frameGenerator.GenerateImage(frame));
                                     frameGenerator.isGeneratingFrame = false;
                                     frame = null;
                                     InvokeAsync(StateHasChanged);
