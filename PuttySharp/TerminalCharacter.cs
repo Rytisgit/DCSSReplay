@@ -23,14 +23,9 @@ namespace Putty
         //private uint? fixed_attr;//for some reason linux compiled puttydll returns attr and cc_next switched, so we need to have a central attribute to check for color
 
         public char Character { get { return (char)chr; } }
-        public char Attributes
-        {
-            get
-            {
-                //fixed_attr ??= attr != 0 ? attr : (uint) cc_next;
-                return (char) (attr | cc_next);
-            }
-        }
+        public uint Attributes =>
+            //fixed_attr ??= attr != 0 ? attr : (uint) cc_next;
+            (attr | (uint)cc_next);
 
         public bool Blink { get { return (0x200000u & Attributes) != 0; } }
         public bool Wide { get { return (0x400000u & Attributes) != 0; } }
@@ -40,9 +35,5 @@ namespace Putty
         public bool Reverse { get { return (0x100000u & Attributes) != 0; } }
         public int ForegroundPaletteIndex { get { var fg = (0x0001FFu & Attributes) >> 0; if (fg < 16 && Bold) fg |= 8; if (fg > 255 && Bold) fg |= 1; return (int)fg; } } // TODO: Reverse modes
         public int BackgroundPaletteIndex { get { var bg = (0x03FE00u & Attributes) >> 9; if (bg < 16 && Blink) bg |= 8; if (bg > 255 && Blink) bg |= 1; return (int)bg; } }
-        public string copy
-        {
-            get { return $"new List<int>{{{chr},{attr},{cc_next}}},"; }
-        }
     }
 }
