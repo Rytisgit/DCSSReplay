@@ -14,8 +14,6 @@ namespace DisplayWindow
    
         public static Thread m_Thread;
         public  TtyRecKeyframeDecoder ttyrecDecoder = null;
-        public double PlaybackSpeed, PausedSpeed;
-        public  TimeSpan Seek;
         private delegate void SafeCallDelegate(Bitmap frame);
         private delegate void SafeCallDelegateTitle(string title);
         private delegate void SafeCallDelegateTitle2(string title, string title2);
@@ -112,13 +110,14 @@ namespace DisplayWindow
             var progress = start.TotalMilliseconds / end.TotalMilliseconds;
         if(progress>0)
             {
-                var rect = new Rectangle(e.ClipRectangle.Left,
-          e.ClipRectangle.Top,
-          (int)(SeekBar.Width * progress),
-          SeekBar.Height);
-          e.Graphics.DrawRectangle(Pens.DarkBlue,rect
-          );
-          e.Graphics.FillRectangle(new SolidBrush(Color.DarkBlue), rect);
+                var rect = new Rectangle(
+                    e.ClipRectangle.Left,
+                    e.ClipRectangle.Top, 
+                    (int)(SeekBar.Width * progress),
+                    SeekBar.Height
+                );
+                e.Graphics.DrawRectangle(Pens.DarkBlue, rect);
+                e.Graphics.FillRectangle(new SolidBrush(Color.DarkBlue), rect);
             }
         }
         private  void SeekBar_MouseDown(object sender, MouseEventArgs e)
@@ -140,7 +139,7 @@ namespace DisplayWindow
             {
                 var MouseCoordinates = SeekBar.PointToClient(Cursor.Position);
                 double progress = (double)(MouseCoordinates.X) / SeekBar.Width;
-                Seek = new TimeSpan((long)(ttyrecDecoder.Length.Ticks * progress));
+                ttyrecDecoder.SeekTime = new TimeSpan((long)(ttyrecDecoder.Length.Ticks * progress));
             }
         }
 
@@ -159,8 +158,11 @@ namespace DisplayWindow
 
         public void PlayButton_Click(object sender, System.EventArgs e)
         {
-            if (PlaybackSpeed != 0) { PlayButton.Image = Image.FromFile(@"..\..\..\Extra\play.png"); PausedSpeed = PlaybackSpeed; PlaybackSpeed = 0; }
-            else { PlayButton.Image = Image.FromFile(@"..\..\..\Extra\pause.png"); PlaybackSpeed = PausedSpeed; }
+            this.ActiveControl = null;
+            if (ttyrecDecoder == null) return;
+            if (ttyrecDecoder.PlaybackSpeed != 0) { PlayButton.Image = Image.FromFile(@"..\..\..\Extra\play.png"); ttyrecDecoder.Pause(); }
+            else { PlayButton.Image = Image.FromFile(@"..\..\..\Extra\pause.png"); ttyrecDecoder.Unpause(); }
+
         }
 
     }

@@ -15,10 +15,9 @@ using System.Windows.Forms;
 
 namespace TtyRecMonkey
 {
-    public partial class PlayerSearchForm : Form
+    public partial class  PlayerSearchForm : Form
     {
-       
-        public Dictionary<string, Stream> ext = new Dictionary<string, Stream>();
+        public readonly Dictionary<string, Stream> TtyrecStreamDictionary = new Dictionary<string, Stream>();
         public MemoryStream str = new MemoryStream();
         private List<string> linkList = new List<string>();
         DataTable table = new DataTable();
@@ -27,6 +26,7 @@ namespace TtyRecMonkey
         public PlayerSearchForm()
         {
             InitializeComponent();
+            table.Columns.Add("ID", typeof(Int32));
             table.Columns.Add("Date", typeof(String));
             table.Columns.Add("Progress", typeof(Int32));
             dataGridView1.AllowUserToAddRows = false;
@@ -48,21 +48,37 @@ namespace TtyRecMonkey
                 {
                     HtmlWeb hw = new HtmlWeb();
                     HtmlAgilityPack.HtmlDocument doc = hw.Load(website);
+
                     foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//a[@href]"))
                     {
                         string href = node.GetAttributeValue("href", null);
                         if (href.Contains("ttyrec")) linkList.Add(href);
 
                     }
+
+                    int i = 0;
                     foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//a[text()]"))
                     {
-                        if(node.InnerText.Contains("ttyrec")) table.Rows.Add(node.InnerText.Split(new string[] { ".t" }, StringSplitOptions.None)[0], 0);
+                        if (node.InnerText.Contains("ttyrec"))
+                        {
+                            table.Rows.Add(i+1, node.InnerText.Split(new string[] { ".t" }, StringSplitOptions.None)[0], 0);
+                            i++;
+                        }
                     }
-                    dataGridView1.DataSource = table;
-                    dataGridView1.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                    dataGridView1.Size = new Size((int)(ClientSize.Width - 50), (int)(ClientSize.Height - 200));
-                    dataGridView1.Columns[0].Width = (int)(dataGridView1.Width * 0.6);
-                    dataGridView1.Visible = true;
+                    if (i != 0)
+                    {
+                        dataGridView1.DataSource = table;
+                        dataGridView1.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                        dataGridView1.Size = new Size((int)(ClientSize.Width - 50), (int)(ClientSize.Height - 200));
+                        dataGridView1.Columns[0].Width = (int)(dataGridView1.Width * 0.1);
+                        dataGridView1.Columns[1].Width = (int)(dataGridView1.Width * 0.5);
+                        dataGridView1.Visible = true;
+                    }
+                    else
+                    {
+                        MessageBox.Show("No TTyRecs Found");
+                    }
+
 
                 }
                 else
@@ -92,31 +108,29 @@ namespace TtyRecMonkey
 
         private void PlayerSearch_Resize(object sender, EventArgs e)
         {
-            if (dataGridView1.Visible) 
-            { 
+            if (!dataGridView1.Visible) return;
             dataGridView1.Size = new Size(ClientSize.Width - 50, ClientSize.Height - 200);
-            dataGridView1.Columns[0].Width = (int)(dataGridView1.Width*0.6);
-            dataGridView1.Columns[1].Width = (int)(dataGridView1.Width *0.4);
-            }
+            dataGridView1.Columns[1].Width = (int)(dataGridView1.Width*0.5);
+            dataGridView1.Columns[2].Width = (int)(dataGridView1.Width *0.4);
+            dataGridView1.Columns[0].Width = (int)(dataGridView1.Width * 0.1);
         }
 
         
         public async Task DownloadFileAsync (object send, EventArgs arg)
         {
-            ext.Clear();
+            TtyrecStreamDictionary.Clear();
             if (dataGridView1.CurrentCell != null && dataGridView1.CurrentCell.Value != null)
             {
 
-                string href = linkList[dataGridView1.CurrentCell.RowIndex];
+                var href = linkList[(int)dataGridView1.CurrentRow.Cells[0].Value];
                 if (href[0] == '.') href = href.Substring(2);
-                var Uri = new Uri(hostsite + playername + href);
-              //  if (href.Contains("http")) Uri = new Uri(href);
-                WebClient wc = new WebClient();
+                var uri = href.Contains("http") ? new Uri(href) : new Uri(hostsite + playername + href);
+                var wc = new WebClient();
                 try
                 {
                     wc.DownloadProgressChanged += (sender, e) => wc_DownloadProgressChanged(sender, e, dataGridView1.CurrentCell.RowIndex);
                     wc.DownloadDataCompleted += wc_DownloadDataCompleted;
-                    await wc.DownloadDataTaskAsync(Uri);
+                    await wc.DownloadDataTaskAsync(uri);
                 }
                 catch
                 {
@@ -129,17 +143,17 @@ namespace TtyRecMonkey
         {
             if (e.Error == null && !e.Cancelled)
             {
-                string href = linkList[dataGridView1.CurrentCell.RowIndex];
+                string href = linkList[(int)dataGridView1.CurrentRow.Cells[0].Value];
                 MessageBox.Show("Download Completed");
                 str = new MemoryStream(e.Result);
-                ext.Add(href.Split(new string[] { "." }, StringSplitOptions.None).Last(),str);
+                TtyrecStreamDictionary.Add(href.Split(new string[] { "." }, StringSplitOptions.None).Last(),str);
             }
             else MessageBox.Show("file could not be downloaded");
         }
 
         void wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e, int row)
         {
-            dataGridView1.Rows[row].Cells[1].Value = e.ProgressPercentage;
+            dataGridView1.Rows[row].Cells[2].Value = e.ProgressPercentage;
         }
 
         private void Filter_TextChanged(object sender, EventArgs e)
@@ -164,7 +178,7 @@ namespace TtyRecMonkey
                     hostsite = "https://webzook.net/soup/ttyrecs/";
                     break;
                 case 4:
-                    hostsite = "https://termcast.shalott.org/ttyrecs/dobrazupa.org/ttyrec/";
+                    hostsite = "https://crawl.project357.org/ttyrec/";
                     break;
                 case 5:
                     hostsite = "http://crawl.develz.org/ttyrecs/";
@@ -186,7 +200,7 @@ namespace TtyRecMonkey
 
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
-            Filter.Text = dateTimePicker1.Value.Year.ToString()+"-"+dateTimePicker1.Value.Month.ToString()+"-"+dateTimePicker1.Value.Day.ToString();
+            Filter.Text = dateTimePicker1.Value.Date.Date.ToShortDateString();
         }
     }
 }

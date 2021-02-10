@@ -3,15 +3,22 @@
 // See the file LICENSE.txt for copying permission.
 
 using System.Diagnostics;
+using System.Dynamic;
 
 namespace Putty
 {
     [DebuggerDisplay("{Character} {Attributes}")]
     public struct TerminalCharacter
     {
-        private readonly uint chr;
-        private readonly uint attr;
-        private readonly int cc_next;
+        public TerminalCharacter(uint chr, uint attr, int cc_next)
+        {
+            this.chr = chr;
+            this.attr = attr;
+            this.cc_next = cc_next;
+        }
+        private uint chr { get; set; }
+        private uint attr { get; set; }
+        private int cc_next { get; set; }
 
         //private uint? fixed_attr;//for some reason linux compiled puttydll returns attr and cc_next switched, so we need to have a central attribute to check for color
 
@@ -33,5 +40,9 @@ namespace Putty
         public bool Reverse { get { return (0x100000u & Attributes) != 0; } }
         public int ForegroundPaletteIndex { get { var fg = (0x0001FFu & Attributes) >> 0; if (fg < 16 && Bold) fg |= 8; if (fg > 255 && Bold) fg |= 1; return (int)fg; } } // TODO: Reverse modes
         public int BackgroundPaletteIndex { get { var bg = (0x03FE00u & Attributes) >> 9; if (bg < 16 && Blink) bg |= 8; if (bg > 255 && Blink) bg |= 1; return (int)bg; } }
+        public string copy
+        {
+            get { return $"new List<int>{{{chr},{attr},{cc_next}}},"; }
+        }
     }
 }

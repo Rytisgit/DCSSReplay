@@ -1,5 +1,4 @@
 # DCSSReplay - A visual TtyRec player for DCSS
-## We've entered Beta but theres still so much left to do.
 
 ![Screenshot](https://github.com/Rytisgit/DCSSReplay/blob/0.7.0/.projnfo/screenshots/thumbnail0.7.png?raw=true)
 
@@ -10,22 +9,29 @@
 ## Keyboard Shortcuts
 
 ```
-ZXCVBNM    Alter Playback speed (-100x, -10x, -1x, Pause/Resume, 1x, 10x, 100x)
-M          Increase Playback speed by +100, stacks
-V/SPACE      Pause/Resume
-F/G         Increase/Decrease Playback speed by 1 (-1x, +1x)
-D/H         Increase/Decrease Playback speed by 0.2 (-0.2x, +0.2x)
-Ctrl+O     Open a ttyrec file from your computer
-Escape     Close ttyrec and return To Main menu
-Alt+Enter  Toggle fullscreen
+                    CONTROLS
+Ctrl+O        Open a ttyrec from filesystem
+Ctrl+G        Open ttyrec download window
+Ctrl+C        Open Configuration window
+Ctrl+F        Open ttyrec event search window
+Escape        Close ttyrec and return here
+Alt+Enter     Toggle fullscreen
+A / S         Switch Tile to console / Full Console Mode
 
-, (Comma)     Frame Step Back 1
-. (Dot)       Frame Step Forward 1
+                PLAYBACK CONTROLS
+ZXC           Play backwards at x100, x10, or x1 speed
+V, SPACE      Play / Pause"
+BNM           Play forwards at 1x, x10, or x100 speed
+M can stack repeatedly to go forward in time
 
-Left Arrow    Time Backward 5 Seconds
-Right Arrow   Time Forward 5 Seconds
-                  
-A / S     Switch Tile to console / Full Console Mode
+F / G         Adjust speed by +/- 1
+D / H         Adjust speed by +/- 0.2
+ 
+, (Comma)     Frame Step Back
+. (Dot)       Frame Step Back
+
+Left Arrow    Time Step Backward 5 Seconds
+Right Arrow   Time Step Forward 5 Seconds
 ```
 
 ## Contact
@@ -43,14 +49,14 @@ I Used VS 2019 Enterprise, should work for older versions as well
 - Open DCSSReplay.sln
 - Select the project TtyRecMonkey and make it your startup project before running.
 - restore nuget packages
-- rebuild the solution
+- rebuild the solution to trigger the PuttyDLL build
 - it should now work
 
 ## Project Layout
 
-### PuttyDLL - MaulingMonkey
+### PuttyDLL - MaulingMonkey, Rytisgit
 
-PuttyDLL is a native C project which is almost a direct replica of PUTTY.DSP project from the official PuTTY source code.
+PuttyDLL is a native C project which is takes the inner workings of the PUTTY.DSP project from the official PuTTY source code.
 
 Key differences:
 
@@ -61,6 +67,7 @@ Key differences:
 - export.c has been added which exposes methods for PuttySharp (C#) to PInvoke
 - Other source files may be modified to expose more to export.c -- should be mostly cosmetic/making availbe outside the TU
 - Overrided encoding check, to always output UTF-8, since DCSS TtyRecs are in that format
+- Removed all of the platform specific code, all interface elements, leaving only the code needed to run it and decode the ttyrec data stream
 
 
 ### PuttySharp - MaulingMonkey
@@ -95,7 +102,7 @@ The Big One - Takes all the custom rules along with the Model for each frame and
 
 Looks similar quite often.
 
-Was a really big mess before the big refactoring, now is just a bit of a mess, but its getting better.
+Is just a bit of a mess in general.
 
 ### Installer - Rytisgit 
 - Creates .msi installers for releases.

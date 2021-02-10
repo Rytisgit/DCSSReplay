@@ -116,19 +116,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DCSSReplayWindow.cs">
+    <Compile Include="Configuration.cs" />
+    <Compile Include="Windows\ConfigurationForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DCSSReplayWindow.Designer.cs">
+    <Compile Include="Windows\ConfigurationForm.Designer.cs">
+      <DependentUpon>ConfigurationForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\DCSSReplayWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\DCSSReplayWindow.Designer.cs">
       <DependentUpon>DCSSReplayWindow.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="PlayerSearchForm.resx">
+    <EmbeddedResource Include="Windows\ConfigurationForm.resx">
+      <DependentUpon>ConfigurationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\PlayerSearchForm.resx">
       <DependentUpon>PlayerSearchForm.cs</DependentUpon>
     </EmbeddedResource>
-    <Compile Include="PlayerSearchForm.cs">
+    <Compile Include="Windows\PlayerSearchForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PlayerSearchForm.Designer.cs">
+    <Compile Include="Windows\PlayerSearchForm.Designer.cs">
       <DependentUpon>PlayerSearchForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
@@ -136,10 +146,16 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="TileOverrideForm.cs">
+    <Compile Include="Windows\ReplayTextSearchForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TileOverrideForm.Designer.cs">
+    <Compile Include="Windows\ReplayTextSearchForm.Designer.cs">
+      <DependentUpon>ReplayTextSearchForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\TileOverrideForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\TileOverrideForm.Designer.cs">
       <DependentUpon>TileOverrideForm.cs</DependentUpon>
     </Compile>
     <Compile Include="VisualDesigns\ProgressBar.cs" />
@@ -155,7 +171,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="TileOverrideForm.resx">
+    <EmbeddedResource Include="Windows\ReplayTextSearchForm.resx">
+      <DependentUpon>ReplayTextSearchForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\TileOverrideForm.resx">
       <DependentUpon>TileOverrideForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
@@ -198,7 +217,7 @@
     <Content Include="Files\dcssreplay.ico" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="DCSSReplayWindow.resx">
+    <EmbeddedResource Include="Windows\DCSSReplayWindow.resx">
       <DependentUpon>DCSSReplayWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resource1.resx">

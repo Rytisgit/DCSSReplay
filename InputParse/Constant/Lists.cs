@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using SkiaSharp;
 
-namespace InputParser
+namespace InputParser.Constant
 {
     public enum LayoutType
     {
@@ -35,9 +35,9 @@ namespace InputParser
 
     public static class Locations
     {
-        public static List<string> locations = new List<string> { "Dungeon","Temple","Orcish Mines","Elven Halls","Lair","Swamp","Shoals","Snake Pit",
+        public static readonly List<string> locations = new List<string> { "Dungeon","Temple","Orcish Mines","Elven Halls","Lair","Swamp","Shoals","Snake Pit",
     "Spider Nest","Slime Pits","Vaults","Hall of Blades","Crypt","Tomb","Hell","Dis","Gehenna","Cocytus","Tartarus","Zot","Abyss","Pandemonium",
-   "Ziggurat", "Bazaar","Trove","Sewer","Ossuary","Bailey","Ice Cave","Volcano","Wizlab","Depths","Desolation of Salt"};
+   "Ziggurat", "Bazaar","Trove","Sewer","Ossuary","Bailey","Ice Cave","Volcano","Wizlab","Depths","Desolation of Salt", "a Labyrinth", "a Gauntlet"};
     }
     public class ColorList
     {

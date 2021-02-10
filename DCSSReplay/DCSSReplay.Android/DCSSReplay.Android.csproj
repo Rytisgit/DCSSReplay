@@ -140,10 +140,6 @@
       <Project>{519acc71-26b1-4312-ad42-231965817f20}</Project>
       <Name>TtyRecDecoder</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DCSSReplay\DCSSReplay.csproj">
-      <Project>{4d673517-d6ab-429c-ab59-331a9b4103d6}</Project>
-      <Name>DCSSReplay</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

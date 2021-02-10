@@ -53,8 +53,8 @@ namespace DisplayWindow
             this.pictureBox2.BackColor = System.Drawing.Color.Black;
             this.pictureBox2.Location = new System.Drawing.Point(0, 0);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(1602, 722);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox2.Size = new System.Drawing.Size(1602, 774);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
             // 
@@ -66,7 +66,7 @@ namespace DisplayWindow
             this.label1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.label1.Location = new System.Drawing.Point(12, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(764, 529);
+            this.label1.Size = new System.Drawing.Size(738, 529);
             this.label1.TabIndex = 1;
             this.label1.Text = resources.GetString("label1.Text");
             // 
@@ -76,7 +76,7 @@ namespace DisplayWindow
             this.StartTimeLabel.AutoSize = true;
             this.StartTimeLabel.BackColor = System.Drawing.Color.Silver;
             this.StartTimeLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.StartTimeLabel.ForeColor = System.Drawing.Color.White;
+            this.StartTimeLabel.ForeColor = System.Drawing.Color.Black;
             this.StartTimeLabel.Location = new System.Drawing.Point(53, 17);
             this.StartTimeLabel.Name = "StartTimeLabel";
             this.StartTimeLabel.Size = new System.Drawing.Size(44, 17);
@@ -92,7 +92,7 @@ namespace DisplayWindow
             this.panel1.Controls.Add(this.EndTimeLabel);
             this.panel1.Controls.Add(this.SeekBar);
             this.panel1.Controls.Add(this.StartTimeLabel);
-            this.panel1.Location = new System.Drawing.Point(0, 710);
+            this.panel1.Location = new System.Drawing.Point(0, 762);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1602, 50);
             this.panel1.TabIndex = 12;
@@ -118,7 +118,7 @@ namespace DisplayWindow
             this.EndTimeLabel.AutoSize = true;
             this.EndTimeLabel.BackColor = System.Drawing.Color.Silver;
             this.EndTimeLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.EndTimeLabel.ForeColor = System.Drawing.Color.White;
+            this.EndTimeLabel.ForeColor = System.Drawing.Color.Black;
             this.EndTimeLabel.Location = new System.Drawing.Point(1546, 17);
             this.EndTimeLabel.Name = "EndTimeLabel";
             this.EndTimeLabel.Size = new System.Drawing.Size(44, 17);
@@ -129,7 +129,7 @@ namespace DisplayWindow
             // 
             this.SeekBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.SeekBar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.SeekBar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(89)))), ((int)(((byte)(89)))), ((int)(((byte)(89)))));
             this.SeekBar.Location = new System.Drawing.Point(118, 18);
             this.SeekBar.Name = "SeekBar";
             this.SeekBar.Size = new System.Drawing.Size(1422, 16);
@@ -142,7 +142,7 @@ namespace DisplayWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1602, 759);
+            this.ClientSize = new System.Drawing.Size(1602, 811);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBox2);

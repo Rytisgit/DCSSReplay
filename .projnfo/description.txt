@@ -1,1 +1,1 @@
-PuTTY based TtyRec player written in C# using SlimDX
+PuTTY based TtyRec player written in C# using SkiaSharp

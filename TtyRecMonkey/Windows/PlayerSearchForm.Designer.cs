@@ -36,11 +36,12 @@
             this.DownloadButton = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Progress = new Sample.DataGridViewProgressColumn();
             this.dataGridViewProgressColumn1 = new Sample.DataGridViewProgressColumn();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.Filter = new System.Windows.Forms.TextBox();
+            this.ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Progress = new Sample.DataGridViewProgressColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -50,9 +51,9 @@
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(12, 20);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(123, 18);
+            this.label1.Size = new System.Drawing.Size(226, 18);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Input player name";
+            this.label1.Text = "Input player name(case sensitive)";
             // 
             // PlayerNametextBox
             // 
@@ -60,12 +61,12 @@
             this.PlayerNametextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.HistoryList;
             this.PlayerNametextBox.Location = new System.Drawing.Point(15, 41);
             this.PlayerNametextBox.Name = "PlayerNametextBox";
-            this.PlayerNametextBox.Size = new System.Drawing.Size(127, 20);
+            this.PlayerNametextBox.Size = new System.Drawing.Size(220, 20);
             this.PlayerNametextBox.TabIndex = 1;
             // 
             // SearchButton
             // 
-            this.SearchButton.Location = new System.Drawing.Point(308, 32);
+            this.SearchButton.Location = new System.Drawing.Point(368, 32);
             this.SearchButton.Name = "SearchButton";
             this.SearchButton.Size = new System.Drawing.Size(106, 34);
             this.SearchButton.TabIndex = 2;
@@ -77,7 +78,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(156, 20);
+            this.label2.Location = new System.Drawing.Point(238, 19);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(94, 18);
             this.label2.TabIndex = 4;
@@ -91,12 +92,12 @@
             "crawl.akrasiac.org",
             "crawl.berotato.org",
             "webzook.net",
-            "dobrazupa.org",
+            "crawl.project357.org",
             "crawl.develz.org",
             "crawl.xtahua.com",
             "crawl.kelbi.org",
             "lazy-life.ddo.jp"});
-            this.comboBox1.Location = new System.Drawing.Point(159, 40);
+            this.comboBox1.Location = new System.Drawing.Point(241, 40);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(121, 21);
             this.comboBox1.TabIndex = 5;
@@ -105,7 +106,7 @@
             // DownloadButton
             // 
             this.DownloadButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.DownloadButton.Location = new System.Drawing.Point(308, 389);
+            this.DownloadButton.Location = new System.Drawing.Point(368, 389);
             this.DownloadButton.Name = "DownloadButton";
             this.DownloadButton.Size = new System.Drawing.Size(106, 37);
             this.DownloadButton.TabIndex = 6;
@@ -126,14 +127,44 @@
             // 
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.ID,
             this.Date,
             this.Progress});
             this.dataGridView1.Location = new System.Drawing.Point(15, 115);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.Size = new System.Drawing.Size(390, 259);
+            this.dataGridView1.Size = new System.Drawing.Size(459, 259);
             this.dataGridView1.TabIndex = 3;
             this.dataGridView1.Visible = false;
+            // 
+            // dataGridViewProgressColumn1
+            // 
+            this.dataGridViewProgressColumn1.DataPropertyName = "Progress";
+            this.dataGridViewProgressColumn1.HeaderText = "Progress";
+            this.dataGridViewProgressColumn1.Name = "dataGridViewProgressColumn1";
+            // 
+            // dateTimePicker1
+            // 
+            this.dateTimePicker1.Location = new System.Drawing.Point(241, 79);
+            this.dateTimePicker1.Name = "dateTimePicker1";
+            this.dateTimePicker1.Size = new System.Drawing.Size(27, 20);
+            this.dateTimePicker1.TabIndex = 9;
+            this.dateTimePicker1.ValueChanged += new System.EventHandler(this.dateTimePicker1_ValueChanged);
+            // 
+            // Filter
+            // 
+            this.Filter.Location = new System.Drawing.Point(69, 79);
+            this.Filter.Name = "Filter";
+            this.Filter.Size = new System.Drawing.Size(166, 20);
+            this.Filter.TabIndex = 10;
+            this.Filter.TextChanged += new System.EventHandler(this.Filter_TextChanged);
+            // 
+            // ID
+            // 
+            this.ID.DataPropertyName = "ID";
+            this.ID.HeaderText = "ID";
+            this.ID.Name = "ID";
+            this.ID.ReadOnly = true;
             // 
             // Date
             // 
@@ -149,33 +180,11 @@
             this.Progress.Name = "Progress";
             this.Progress.ReadOnly = true;
             // 
-            // dataGridViewProgressColumn1
-            // 
-            this.dataGridViewProgressColumn1.DataPropertyName = "Progress";
-            this.dataGridViewProgressColumn1.HeaderText = "Progress";
-            this.dataGridViewProgressColumn1.Name = "dataGridViewProgressColumn1";
-            // 
-            // dateTimePicker1
-            // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(202, 79);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(41, 20);
-            this.dateTimePicker1.TabIndex = 9;
-            this.dateTimePicker1.ValueChanged += new System.EventHandler(this.dateTimePicker1_ValueChanged);
-            // 
-            // Filter
-            // 
-            this.Filter.Location = new System.Drawing.Point(69, 79);
-            this.Filter.Name = "Filter";
-            this.Filter.Size = new System.Drawing.Size(127, 20);
-            this.Filter.TabIndex = 10;
-            this.Filter.TextChanged += new System.EventHandler(this.Filter_TextChanged);
-            // 
             // PlayerSearchForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(449, 438);
+            this.ClientSize = new System.Drawing.Size(509, 438);
             this.Controls.Add(this.Filter);
             this.Controls.Add(this.dateTimePicker1);
             this.Controls.Add(this.label3);
@@ -209,6 +218,7 @@
         private Sample.DataGridViewProgressColumn dataGridViewProgressColumn1;
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
         private System.Windows.Forms.TextBox Filter;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ID;
         private System.Windows.Forms.DataGridViewTextBoxColumn Date;
         private Sample.DataGridViewProgressColumn Progress;
     }

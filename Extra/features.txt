@@ -29,9 +29,9 @@ transparent_wall
 #LIGHTBLUE
 grate
 #WHITE
-endless_salt1
+stone2_gray3
 #LIGHTGREY
-stone_smooth2
+stone2_gray3
 #RED
 wall
 #BROWN
@@ -63,6 +63,10 @@ lava08
 ≈BLUE
 deep_water
 ≈CYAN
+shallow_water
+≈GREEN
+shallow_water
+≈LIGHTGREEN
 shallow_water
 ≈LIGHTCYAN
 shoals_shallow_water9
@@ -161,11 +165,11 @@ sealed_stair_down
 >LIGHTCYAN
 abyssal_stair
 ⌠BLUE
-fountain_blue
+blue_fountain
 ⌠LIGHTBLUE
-fountain_sparkling
+sparkling_fountain
 ⌠RED
-fountain_blood
+blood_fountain
 ⌠LIGHTGREY
 dry_fountain
 ♣RED
@@ -206,3 +210,5 @@ blue_fountain2
 dry_fountain
 }LIGHTBLUE
 sparkling_fountain
+∆GREEN
+unseen_item

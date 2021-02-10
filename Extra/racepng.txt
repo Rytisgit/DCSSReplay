@@ -74,3 +74,5 @@ Barach
 frog_m
 Mummy 
 mummy_m
+Palent
+centaur_lightgrey_m

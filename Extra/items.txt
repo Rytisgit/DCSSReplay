@@ -87,7 +87,7 @@ green
 =YELLOW
 fire
 =LIGHTBLUE
-ice
+clay
 =LIGHTMAGENTA
 pink
 =LIGHTCYAN
@@ -506,3 +506,5 @@ corpse
 corpse
  CYAN
 unseen_monster
+∆GREEN
+unseen_item

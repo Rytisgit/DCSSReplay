@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using SkiaSharp;
 using System.IO;
 using System.Linq;
+using InputParser.Constant;
+using InputParser.Decorators;
 
 namespace FrameGenerator
 {
@@ -77,7 +79,6 @@ namespace FrameGenerator
             //return DrawFrame(new Model());
             if (chars != null)
             {
-
                 var model = consoleLevel != 3 ? Parser.ParseData(chars) : Parser.ParseData(chars, true);
                 model.OverideTiles(tileoverides);
                 if (model.Layout == LayoutType.Normal && consoleLevel == 2)
@@ -94,7 +95,8 @@ namespace FrameGenerator
                 return image;
                 
             }
-                return null;
+
+            return null;
         }
 
         private SKBitmap DrawFrame(Model model)
@@ -141,242 +143,31 @@ namespace FrameGenerator
             var finalOverrides = new Dictionary<string, string>();
             foreach (var monsterLine in monsters)
             {
-                if (!monsterLine.Empty)
+                if (monsterLine.Empty) continue;
+
+                var rules = _namedMonsterOverrideData.Where(
+                    monsterOverride
+                        => !string.IsNullOrWhiteSpace(monsterOverride.Name) &&
+                           monsterLine.MonsterTextRaw.Contains(monsterOverride.Name.Substring(0, monsterOverride.Name.Length - 2)));
+
+                foreach (var tileOverride in rules.ToList().Where(
+                    rule => string.IsNullOrWhiteSpace(rule.Location) || rule.Location == location).SelectMany(rule => rule.TileNameOverrides))
                 {
-                    var rules = _namedMonsterOverrideData.Where((o) =>
-                    {
-                        if (string.IsNullOrWhiteSpace(o.Name)) return false;
-                        else return monsterLine.MonsterTextRaw.Contains(o.Name.Substring(0, o.Name.Length - 2));
-                    });
-                    foreach (var rule in rules.ToList())
-                    {
-                        if (string.IsNullOrWhiteSpace(rule.Location) || rule.Location == location)
-                        {
-                            foreach (var tileOverride in rule.TileNameOverrides)
-                            {
-                                finalOverrides.Add(tileOverride.Key, tileOverride.Value);
-                            }
-                        }
-                    }
-                    if (monsterLine.MonsterTextRaw.Contains("Klown"))
-                    {
-                            finalOverrides.Add("pBLACK","killer_klown_yellow");
-                            finalOverrides.Add("pRED","killer_klown_red");
-                            finalOverrides.Add("pGREEN","killer_klown_green");
-                            finalOverrides.Add("pBROWN","killer_klown_yellow");
-                            finalOverrides.Add("pBLUE","killer_klown_blue");
-                            finalOverrides.Add("pMAGENTA","killer_klown_purple");
-                            finalOverrides.Add("pCYAN","killer_klown_blue");
-                            finalOverrides.Add("pLIGHTGREY","killer_klown_green");
-                            finalOverrides.Add("pDARKGREY","killer_klown_yellow");
-                            finalOverrides.Add("pLIGHTRED","killer_klown_red");
-                            finalOverrides.Add("pLIGHTGREEN","killer_klown_green");
-                            finalOverrides.Add("pYELLOW","killer_klown_yellow");
-                            finalOverrides.Add("pLIGHTBLUE","killer_klown_blue");
-                            finalOverrides.Add("pLIGHTMAGENTA","killer_klown_purple");
-                            finalOverrides.Add("pLIGHTCYAN","killer_klown_blue");
-                            finalOverrides.Add("pWHITE","killer_klown_purple");
-                    }
-                    if (monsterLine.MonsterTextRaw.Contains("chaos"))
-                    {
-                        foreach (var monstertileName in monsterLine.MonsterDisplay)
-                        {
-                            var pngName = "";
-                            switch (monstertileName.Substring(1))
-                            {
-                                case "BLACK": pngName = "chaos_spawn4"; break;
-                                case "RED": pngName = "chaos_spawn1"; break;
-                                case "GREEN": pngName = "chaos_spawn5"; break;
-                                case "BROWN": pngName = "chaos_spawn4"; break;
-                                case "BLUE": pngName = "chaos_spawn3"; break;
-                                case "MAGENTA": pngName = "chaos_spawn2"; break;
-                                case "CYAN": pngName = "chaos_spawn3"; break;
-                                case "LIGHTGREY": pngName = "chaos_spawn5"; break;
-                                case "DARKGREY": pngName = "chaos_spawn4"; break;
-                                case "LIGHTRED": pngName = "chaos_spawn1"; break;
-                                case "LIGHTGREEN": pngName = "chaos_spawn5"; break;
-                                case "YELLOW": pngName = "chaos_spawn4"; break;
-                                case "LIGHTBLUE": pngName = "chaos_spawn3"; break;
-                                case "LIGHTMAGENTA": pngName = "chaos_spawn2"; break;
-                                case "LIGHTCYAN": pngName = "chaos_spawn3"; break;
-                                case "WHITE": pngName = "chaos_spawn2"; break;
-                                default: pngName = "chaos_spawn4"; break;
-                            }
-                            finalOverrides.Add(monstertileName, pngName);
-                        }
-                    }
-                    if (monsterLine.MonsterTextRaw.Contains("spatial"))
-                    {
-                        foreach (var monstertileName in monsterLine.MonsterDisplay)//can be maelstron on screen and vortex not in list of monster, but ehhh
-                        {
-                            var pngName = "";
-                            switch (monstertileName.Substring(1))
-                            {
-                                case "BLACK": pngName = "spatial_vortex1"; break;
-                                case "RED": pngName = "spatial_vortex1"; break;
-                                case "GREEN": pngName = "spatial_vortex1"; break;
-                                case "BROWN": pngName = "spatial_vortex1"; break;
-                                case "BLUE": pngName = "spatial_vortex2"; break;
-                                case "MAGENTA": pngName = "spatial_vortex2"; break;
-                                case "CYAN": pngName = "spatial_vortex2"; break;
-                                case "LIGHTGREY": pngName = "spatial_vortex2"; break;
-                                case "DARKGREY": pngName = "spatial_vortex3"; break;
-                                case "LIGHTRED": pngName = "spatial_vortex3"; break;
-                                case "LIGHTGREEN": pngName = "spatial_vortex3"; break;
-                                case "YELLOW": pngName = "spatial_vortex3"; break;
-                                case "LIGHTBLUE": pngName = "spatial_vortex3"; break;
-                                case "LIGHTMAGENTA": pngName = "spatial_vortex4"; break;
-                                case "LIGHTCYAN": pngName = "spatial_vortex4"; break;
-                                case "WHITE": pngName = "spatial_vortex4"; break;
-                                default: pngName = "spatial_vortex3"; break;
-                            }
-                            finalOverrides.Add(monstertileName, pngName);
-                        }
-                    }
-                    if (monsterLine.MonsterTextRaw.Contains("Tiamat"))
-                    {
-                        foreach (var monstertileName in monsterLine.MonsterDisplay)//well these colours are wrong
-                        {
-                            var pngName = "";
-                            switch (monstertileName.Substring(1))
-                            {
-                                case "BLACK": pngName = "tiamat_black"; break;
-                                case "RED": pngName = "tiamat_red"; break;
-                                case "GREEN": pngName = "tiamat_green"; break;
-                                case "BROWN": pngName = "tiamat_black"; break;
-                                case "BLUE": pngName = "tiamat_mottled"; break;
-                                case "MAGENTA": pngName = "tiamat_purple"; break;
-                                case "CYAN": pngName = "tiamat_pale"; break;
-                                case "LIGHTGREY": pngName = "tiamat_grey"; break;
-                                case "DARKGREY": pngName = "tiamat_pale"; break;
-                                case "LIGHTRED": pngName = "tiamat_red"; break;
-                                case "LIGHTGREEN": pngName = "tiamat_green"; break;
-                                case "YELLOW": pngName = "tiamat_yellow"; break;
-                                case "LIGHTBLUE": pngName = "tiamat_black"; break;
-                                case "LIGHTMAGENTA": pngName = "tiamat_mottled"; break;
-                                case "LIGHTCYAN": pngName = "tiamat_pale"; break;
-                                case "WHITE": pngName = "tiamat_white"; break;
-                                default: pngName = "tiamat_yellow"; break;
-                            }
-                            finalOverrides.Add(monstertileName, pngName);
-                        }
-                    }
-                    if (monsterLine.MonsterTextRaw.Contains("Yiuf"))
-                    {
-                        foreach (var monstertileName in monsterLine.MonsterDisplay)
-                        {
-                            finalOverrides.Add(monstertileName, "crazy_yiuf");
-                        }
-                    }
-                    if (monsterLine.MonsterTextRaw.Contains("slime"))
-                    {
-                        if (monsterLine.MonsterTextRaw.Contains("large"))
-                        {
-                            if (monsterLine.MonsterTextRaw.Contains("very"))
-                            {
-                                foreach (var monstertileName in monsterLine.MonsterDisplay)
-                                {
-                                    finalOverrides.Add(monstertileName, "slime_creature3");
-                                }
-                            }
-                            else
-                            {
-                                foreach (var monstertileName in monsterLine.MonsterDisplay)
-                                {
-                                    finalOverrides.Add(monstertileName, "slime_creature2");
-                                }
-                            }
-                        }
-                        if (monsterLine.MonsterTextRaw.Contains("enorm"))
-                        {
-                            foreach (var monstertileName in monsterLine.MonsterDisplay)
-                            {
-                                finalOverrides.Add(monstertileName, "slime_creature4");
-                            }
-                        }
-                        if (monsterLine.MonsterTextRaw.Contains("titan"))
-                        {
-                            foreach (var monstertileName in monsterLine.MonsterDisplay)
-                            {
-                                finalOverrides.Add(monstertileName, "slime_creature5");
-                            }
-                        }
-
-                    }
-                    if (monsterLine.MonsterTextRaw.Contains("ugly") && monsterLine.MonsterDisplay[0][0] == 'u')
-                    {
-                        if (monsterLine.MonsterTextRaw.Contains("very"))
-                        {
-                            foreach (var monstertileName in monsterLine.MonsterDisplay)//can be maelstron on screen and vortex not in list of monster, but ehhh
-                            {
-                                var pngName = "";
-                                switch (monstertileName.Substring(1))
-                                {
-                                    case "BLACK": pngName = "very_ugly_thing"; break;
-                                    case "RED": pngName = "very_ugly_thing"; break;
-                                    case "GREEN": pngName = "very_ugly_thing2"; break;
-                                    case "BROWN": pngName = "very_ugly_thing1"; break;
-                                    case "BLUE": pngName = "very_ugly_thing3"; break;
-                                    case "MAGENTA": pngName = "very_ugly_thing4"; break;
-                                    case "CYAN": pngName = "very_ugly_thing3"; break;
-                                    case "LIGHTGREY": pngName = "very_ugly_thing5"; break;
-                                    case "DARKGREY": pngName = "very_ugly_thing1"; break;
-                                    case "LIGHTRED": pngName = "very_ugly_thing"; break;
-                                    case "LIGHTGREEN": pngName = "very_ugly_thing2"; break;
-                                    case "YELLOW": pngName = "very_ugly_thing1"; break;
-                                    case "LIGHTBLUE": pngName = "very_ugly_thing3"; break;
-                                    case "LIGHTMAGENTA": pngName = "very_ugly_thing4"; break;
-                                    case "LIGHTCYAN": pngName = "very_ugly_thing3"; break;
-                                    case "WHITE": pngName = "very_ugly_thing5"; break;
-                                    default: pngName = "very_ugly_thing5"; break;
-                                }
-                                finalOverrides.Add(monstertileName, pngName);
-                            }
-                        }
-                        else
-                        {
-                            foreach (var monstertileName in monsterLine.MonsterDisplay)//can be maelstron on screen and vortex not in list of monster, but ehhh
-                            {
-                                var pngName = "";
-                                switch (monstertileName.Substring(1))
-                                {
-                                    case "BLACK": pngName = "ugly_thing"; break;
-                                    case "RED": pngName = "ugly_thing"; break;
-                                    case "GREEN": pngName = "ugly_thing2"; break;
-                                    case "BROWN": pngName = "ugly_thing1"; break;
-                                    case "BLUE": pngName = "ugly_thing3"; break;
-                                    case "MAGENTA": pngName = "ugly_thing4"; break;
-                                    case "CYAN": pngName = "ugly_thing3"; break;
-                                    case "LIGHTGREY": pngName = "ugly_thing5"; break;
-                                    case "DARKGREY": pngName = "ugly_thing1"; break;
-                                    case "LIGHTRED": pngName = "ugly_thing"; break;
-                                    case "LIGHTGREEN": pngName = "ugly_thing2"; break;
-                                    case "YELLOW": pngName = "ugly_thing1"; break;
-                                    case "LIGHTBLUE": pngName = "ugly_thing3"; break;
-                                    case "LIGHTMAGENTA": pngName = "ugly_thing4"; break;
-                                    case "LIGHTCYAN": pngName = "ugly_thing3"; break;
-                                    case "WHITE": pngName = "ugly_thing5"; break;
-                                    default: pngName = "ugly_thing5"; break;
-                                }
-                                finalOverrides.Add(monstertileName, pngName);
-                            }
-                        }
-
-                    }
+                    finalOverrides.Add(tileOverride.Key, tileOverride.Value);
                 }
+
+                finalOverrides.AddColorDependantOverrides(monsterLine);
             }
-            foreach (var rule in _namedMonsterOverrideData)//no monster name in rule
+           
+            foreach (var tileOverride in _namedMonsterOverrideData.Where(
+                rule => string.IsNullOrWhiteSpace(rule.Name) && rule.Location == location).SelectMany(rule => rule.TileNameOverrides))
             {
-                if (string.IsNullOrWhiteSpace(rule.Name) && rule.Location == location)
-                {
-                    foreach (var tileOverride in rule.TileNameOverrides)
-                    {
-                        finalOverrides.Add(tileOverride.Key, tileOverride.Value);
-                    }
-                }
+                finalOverrides.Add(tileOverride.Key, tileOverride.Value); //add all overrides for current location that arent for specific monsters
             }
+
             return finalOverrides;
         }
+
 
         private SKBitmap DrawMap(Model model)
         {
@@ -393,7 +184,7 @@ namespace FrameGenerator
                 float y = 0;
                 for (int j = 0; j < model.LineLength; j++)//write out first line as text
                 {
-                    g.WriteCharacter(model.TileNames[j], font, x, y);
+                    g.WriteCharacter(model.TileNames[j], font, x, y, model.HighlightColors[j]);
                     x += 20;
                 }
                 var overrides = GetOverridesForFrame(model.MonsterData, model.Location);
@@ -543,7 +334,7 @@ namespace FrameGenerator
             var font = new SKPaint
             {
                 Typeface = SKTypeface.FromFamilyName("Courier New"),
-                TextSize = 16
+                TextSize = 20
             };
             foreach (var monsterlist in model.MonsterData)
             {
@@ -558,23 +349,18 @@ namespace FrameGenerator
                         }
                         else
                         {
-                            g.WriteCharacter(monsterlist.MonsterDisplay[i], font, x, currentLineY);//not found write as string
+                            g.WriteCharacter(monsterlist.MonsterDisplay[i], font, x, currentLineY, monsterlist.MonsterBackground[i]);//not found write as string
                         }
                         x += 32;
-                    }
-                    foreach (var monster in monsterlist.MonsterDisplay)//draw all monsters in 1 line
-                    {
-
-
                     }
                     var otherx = x;
                     foreach (var backgroundColor in monsterlist.MonsterBackground.Skip(monsterlist.MonsterDisplay.Length))
                     {
-                        //g.PaintBackground(backgroundColor, font, otherx, currentLineY + 4);
+                        g.WriteCharacter(" ", font, otherx, currentLineY + 4, backgroundColor);//paint health as a background color
                         otherx += 12;
                     }
 
-                    foreach (var coloredCharacter in monsterlist.MonsterText)//write all text in 1 line
+                    foreach (var coloredCharacter in monsterlist.MonsterText)//write all name text in 1 line
                     {
                         g.WriteCharacter(coloredCharacter, font, x, currentLineY + 4);
                         x += 12;
@@ -591,7 +377,7 @@ namespace FrameGenerator
             var font = new SKPaint
             {
                 Typeface = SKTypeface.FromFamilyName("Courier New"),
-                TextSize = 16
+                TextSize = 18
             };
             for (int i = 0; i < model.LogData.Length; i++)
             {
@@ -611,7 +397,7 @@ namespace FrameGenerator
             var font = new SKPaint
             {
                 Typeface = SKTypeface.FromFamilyName("Courier New"),
-                TextSize = 16,
+                TextSize = 20,
                 IsAntialias = true,
             };
             var yellow = new SKColor(252, 233, 79);
@@ -622,15 +408,15 @@ namespace FrameGenerator
 
             font.Color = yellow;
 
-            g.DrawText(model.SideData.Name, 32 * model.LineLength, lineCount * lineHeight + font.TextSize, font);
+            g.DrawText(model.SideData.Name, 32 * model.LineLength, lineCount * lineHeight + font.TextSize - 5, font);
             lineCount++;
-            g.DrawText(model.SideData.Race, 32 * model.LineLength, lineCount * lineHeight + font.TextSize, font);
+            g.DrawText(model.SideData.Race, 32 * model.LineLength, lineCount * lineHeight + font.TextSize - 5, font);
             lineCount++;
             g.WriteSideDataInfo("Health: ", model.SideData.Health.ToString() + '/' + model.SideData.MaxHealth.ToString(), font, 32 * model.LineLength, lineCount * lineHeight)
-            .DrawPercentageBar(model.SideData.Health, model.SideData.MaxHealth, prevHP, SKColors.Green, SKColors.Red, 32 * (model.LineLength + 8), lineCount * lineHeight);
+            .DrawPercentageBar(model.SideData.Health, model.SideData.MaxHealth, prevHP, SKColors.Green, SKColors.Red, 32 * (model.LineLength + 8), lineCount * lineHeight + 5);
             lineCount++;
             g.WriteSideDataInfo("Mana: ", model.SideData.Magic.ToString() + '/' + model.SideData.MaxMagic.ToString(), font, 32 * model.LineLength, lineCount * lineHeight)
-            .DrawPercentageBar(model.SideData.Magic, model.SideData.MaxMagic, prevMP, SKColors.Blue, SKColors.BlueViolet, 32 * (model.LineLength + 8), lineCount * lineHeight);
+            .DrawPercentageBar(model.SideData.Magic, model.SideData.MaxMagic, prevMP, SKColors.Blue, SKColors.BlueViolet, 32 * (model.LineLength + 8), lineCount * lineHeight + 5);
             lineCount++;
             g.WriteSideDataInfo("AC: ", model.SideData.ArmourClass, font, 32 * model.LineLength, lineCount * lineHeight)
             .WriteSideDataInfo("Str: ", model.SideData.Strength, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
@@ -642,7 +428,7 @@ namespace FrameGenerator
             .WriteSideDataInfo("Dex: ", model.SideData.Dexterity, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
             lineCount++;
             g.WriteSideDataInfo("XL: ", model.SideData.ExperienceLevel, font, 32 * model.LineLength, lineCount * lineHeight)
-            .WriteSideDataInfo(" Next: ", model.SideData.ExperienceLevel, font, 32 * model.LineLength + font.MeasureText("XL: " + model.SideData.ExperienceLevel), lineCount * lineHeight)
+            .WriteSideDataInfo(" Next: ", model.SideData.NextLevel, font, 32 * model.LineLength + font.MeasureText("XL: " + model.SideData.NextLevel), lineCount * lineHeight)
             .WriteSideDataInfo("Place: ", model.SideData.Place, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
             lineCount++;
             (int.TryParse(model.SideData.NoisyGold, out _) ? 
@@ -651,24 +437,12 @@ namespace FrameGenerator
             .WriteSideDataInfo("Time: ", model.SideData.Time, font, 32 * (model.LineLength + 8), lineCount * lineHeight);
             lineCount++;
 
-            g.WriteSideDataInfo("Wp: ", model.SideData.Weapon.Substring(0, 35), font, 32 * model.LineLength, lineCount * lineHeight);
+            const int maxWeaponNameLength = 43;
+            g.WriteSideDataInfo("Wp: ", model.SideData.Weapon.Substring(0, maxWeaponNameLength), font, 32 * model.LineLength, lineCount * lineHeight);
             lineCount++;
-            var substring = model.SideData.Weapon.Substring(35);
-            font.Color = gray;
-            if (!string.IsNullOrWhiteSpace(substring))
-            {
-                g.DrawText(substring, 32 * model.LineLength + font.MeasureText("Wp: "), lineCount * lineHeight + font.TextSize, font);
-                lineCount++;
-            }
 
-            g.WriteSideDataInfo("Qv: ", model.SideData.Quiver.Substring(0, 35), font, 32 * model.LineLength, lineCount * lineHeight);
+            g.WriteSideDataInfo("Qv: ", model.SideData.Quiver.Substring(0, maxWeaponNameLength), font, 32 * model.LineLength, lineCount * lineHeight);
             lineCount++;
-            substring = model.SideData.Quiver.Substring(35);
-            if (!string.IsNullOrWhiteSpace(substring))
-            {
-                g.DrawText(substring, 32 * model.LineLength + font.MeasureText("Qv: "), lineCount * lineHeight + font.TextSize, font);
-                lineCount++;
-            }
 
             var x = 32 * model.LineLength;
             foreach (var coloredChar in model.SideDataColored.Statuses1)
@@ -689,7 +463,7 @@ namespace FrameGenerator
         public bool DrawPlayer(SKCanvas g, Model model, float x, float y, float resize = 1)
         {
 
-            string[] BasicStatusArray = { "bat", "dragon", "ice", "mushroom", "pig", "shadow", "spider" };
+            string[] BasicStatusArray = { "bat", "dragon", "ice", "mushroom", "pig", "shadow", "spider", "tree" };
             string[] CompStatusArray = { "lich", "statue" };
 
             string characterRace = model.SideData.Race.Substring(0, 6);
@@ -700,9 +474,9 @@ namespace FrameGenerator
             if (!_characterpng.TryGetValue(pngName, out SKBitmap png)) return false;
 
             string[] location = model.SideData.Place.Split(':'); //TODO add floor is lava and water based on status
-            if (!_floorandwall.TryGetValue(location[0].ToUpper(), out var CurrentLocationFloorAndWallName)) return false;
+            if (!_floorandwall.TryGetValue(location[0].ToUpper(), out var currentLocationFloorAndWallName)) return false;
 
-            if (!_floorpng.TryGetValue(CurrentLocationFloorAndWallName[1], out var floor)) return false;
+            if (!_floorpng.TryGetValue(currentLocationFloorAndWallName[1], out var floor)) return false;
 
             
             
@@ -719,10 +493,6 @@ namespace FrameGenerator
                 else if(model.SideData.Statuses1.ToLower().Contains("lava"))
                 {
                     if (!_alldngnpng.TryGetValue("lava08", out floor)) return false;
-                }
-                else if(model.SideData.Statuses1.ToLower().Contains("net"))
-                {
-                    if (!_alldngnpng.TryGetValue("net_trap", out floor)) return false;
                 }
 
                 characterg.DrawBitmap(floor, rect);
@@ -745,6 +515,19 @@ namespace FrameGenerator
                 if (_weaponpng.TryGetValue(model.SideData.Weapon.ParseUniqueWeaponName(), out png)) characterg.DrawBitmap(png, rect);
 
                 else if (_weaponpng.TryGetValue(model.SideData.Weapon.GetNonUniqueWeaponName(_weapondata), out png)) characterg.DrawBitmap(png, rect);
+
+                else if (model.SideData.Statuses1.ToLower().Contains("held"))
+                {
+                    if (location.Contains("Spider"))
+                    {
+                        if (_alldngnpng.TryGetValue("cobweb_none_0", out var cobweb)) characterg.DrawBitmap(cobweb, rect);
+                    }
+                    else
+                    {
+                        if (_alldngnpng.TryGetValue("net_trap", out var net)) characterg.DrawBitmap(net, rect);
+                    }
+                    
+                }
 
                 var rect2 = new SKRect(x, y, x + (CharacterSKBitmap.Width * resize), y + (CharacterSKBitmap.Height * resize));
                 g.DrawBitmap(CharacterSKBitmap, rect2);
@@ -828,7 +611,7 @@ namespace FrameGenerator
                 tile.TryDrawMonster(tileHighlight, overrides, _monsterpng, _miscallaneous, floor, out drawnTile, out brandToDraw) ||//first try drawing overrides, that include blue color monsters, and monsters in sight
                 tile.TryDrawCachedTile(tileHighlight, _outOfSightCache, new List<char> {'!', '?', '=', '"', '$', ')', '[', '_', '}', '/', '(', ':', '|', '%', '÷', '†'}, new List<string> { "≈RED"}, out drawnTile, out cached) ||
                 tile.TryDrawMonster(tileHighlight, _monsterdata, _monsterpng, _miscallaneous, floor, out drawnTile, out brandToDraw) ||//draw the rest of the monsters
-                tile.TryDrawFeature(tileHighlight, _features, _alldngnpng, _miscallaneous, floor, wall, out drawnTile) ||
+                tile.TryDrawFeature(tileHighlight, _features, _alldngnpng, _miscallaneous, floor, wall, model.Location, out drawnTile) ||
                 tile.TryDrawCloud(_cloudtiles, _alleffects, floor, model.SideData, model.MonsterData, out drawnTile) ||
                 tile.TryDrawItem(tileHighlight, _itemdata, _itempng, _miscallaneous, floor, model.Location, out drawnTile)) 
             {
