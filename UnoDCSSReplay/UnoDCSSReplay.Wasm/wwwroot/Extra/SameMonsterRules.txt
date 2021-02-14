@@ -1,0 +1,20 @@
+//TODO player ghosts instead of ghost.png
+//todo player illusion mara @WHITE
+//todo 8ETC_ICE bcolored: block_of_ice //glaciate 8BLUE block_of_ice
+
+
+//get colour from visible monster list, insert override for that color
+PETC_RANDOM bcolored: demonic_plant //where do demonic plants spawn
+
+//undefines
+PCOLOUR_UNDEF bcolored: toadstool
+(COLOUR_UNDEF bcolored: dancing_weapon
+&COLOUR_UNDEF bcolored: pandemonium_lord
+
+//tentacles
+//if Forest STatus: 
+*LIGHTGREEN vine_segment_E_NW
+
+//undefines
+wCOLOUR_UNDEF bcolored: eldritch_tentacle_S
+*COLOUR_UNDEF bcolored: eldritch_tentacle_segment_E_S
