@@ -9,17 +9,7 @@
     xmlns:views="using:SkiaSharp.Views.UWP"
     mc:Ignorable="d not_win">
     <Page.Resources>
-        <Style x:Key="ShellButton" TargetType="ButtonBase">
-            <Setter Property="Background" Value="Transparent" />
-            <!--<Setter Property="BorderBrush" Value="{x:Null}" />-->
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Margin" Value="0" />
-            <Setter Property="Width" Value="{ThemeResource PaneToggleButtonHeight}" />
-            <Setter Property="Height" Value="{ThemeResource PaneToggleButtonWidth}" />
-            <Setter Property="HorizontalAlignment" Value="Left" />
-            <Setter Property="VerticalAlignment" Value="Top" />
-        </Style>
-        <SolidColorBrush x:Key="XamarinLightBlue" Color="#3498DB" />
+        
     </Page.Resources>
 
     <Grid>
