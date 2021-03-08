@@ -11,6 +11,7 @@
 @using System.IO;
 @using HtmlAgilityPack;
 @using System.Net;
+@using FrameGenerator.FileReading
 @inject IFileReaderService fileReaderService
 
 <div class="test" @onkeydown="@KeyDown" tabindex="0" @ref="myDiv">
@@ -85,7 +86,7 @@
         delay = TimeSpan.Zero;
         byte[] byteData = System.IO.File.ReadAllBytes(env.WebRootPath + @"/Extra/play.png");
         //imreBase64Data = Convert.ToBase64String(byteData);
-        frameGenerator = new MainGenerator(env.WebRootPath + @"/Extra");
+        frameGenerator = new MainGenerator(new ReadFromFile(),env.WebRootPath + @"/Extra");
         files.Add(env.WebRootPath + @"/neopolispart1.ttyrec");
         streams = files.TtyrecToStream();
         ttyrecDecoder = new TtyRecKeyframeDecoder(80, 24, streams, delay, MaxDelayBetweenPackets);

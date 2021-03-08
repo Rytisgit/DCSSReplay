@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Threading;
 using TtyRecDecoder;
 using System.IO;
+using FrameGenerator.FileReading;
 
 namespace SkiaSharpFormsDemos.Bitmaps
 {
@@ -34,7 +35,7 @@ namespace SkiaSharpFormsDemos.Bitmaps
         public ImageView(Stream file)
         {
             Title = "Fill Rectangle";
-            frameGenerator = new MainGenerator(System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), @"Extra"));
+            frameGenerator = new MainGenerator(new ReadFromFile(),System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), @"Extra"));
             canvasView.PaintSurface += OnCanvasViewPaintSurface;
             Content = canvasView;
             fileStream = file;

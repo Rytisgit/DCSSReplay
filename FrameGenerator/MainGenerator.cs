@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using SkiaSharp;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using InputParser.Constant;
 using InputParser.Decorators;
 
@@ -16,29 +17,31 @@ namespace FrameGenerator
 {
     public class MainGenerator
     {
+        private readonly IReadFromFileAsync ReadFromFile;
         private const int BottomRightStartX = 1065;
         private const int BottomRightStartY = 468;
         public string Folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "DCSSReplay");
         public bool isGeneratingFrame = false;
-        private readonly Dictionary<string, string> _monsterdata;
-        private readonly List<NamedMonsterOverride> _namedMonsterOverrideData;
-        private readonly Dictionary<string, string> _characterdata;
-        private readonly Dictionary<string, string[]> _floorandwall;
-        private readonly Dictionary<string, string[]> _floorandwallColor;
-        private readonly Dictionary<string, string> _features;
-        private readonly Dictionary<string, string> _cloudtiles;
-        private readonly Dictionary<string, string> _itemdata;
-        private readonly Dictionary<string, string> _weapondata;
-        private readonly Dictionary<string, SKBitmap> _monsterpng;
-        private readonly Cacher _outOfSightCache;
-        private readonly Dictionary<string, SKBitmap> _characterpng;
-        private readonly Dictionary<string, SKBitmap> _weaponpng;
-        private readonly Dictionary<string, SKBitmap> _itempng;
-        private readonly Dictionary<string, SKBitmap> _alldngnpng;
-        private readonly Dictionary<string, SKBitmap> _alleffects;
-        private readonly Dictionary<string, SKBitmap> _miscallaneous;
-        private readonly Dictionary<string, SKBitmap> _floorpng;
-        private readonly Dictionary<string, SKBitmap> _wallpng;
+        private bool NeedRefreshDictionaries = true;
+        private Dictionary<string, string> _monsterdata;
+        private List<NamedMonsterOverride> _namedMonsterOverrideData;
+        private Dictionary<string, string> _characterdata;
+        private Dictionary<string, string[]> _floorandwall;
+        private Dictionary<string, string[]> _floorandwallColor;
+        private Dictionary<string, string> _features;
+        private Dictionary<string, string> _cloudtiles;
+        private Dictionary<string, string> _itemdata;
+        private Dictionary<string, string> _weapondata;
+        private Dictionary<string, SKBitmap> _monsterpng;
+        private Cacher _outOfSightCache;
+        private Dictionary<string, SKBitmap> _characterpng;
+        private Dictionary<string, SKBitmap> _weaponpng;
+        private Dictionary<string, SKBitmap> _itempng;
+        private Dictionary<string, SKBitmap> _alldngnpng;
+        private Dictionary<string, SKBitmap> _alleffects;
+        private Dictionary<string, SKBitmap> _miscallaneous;
+        private Dictionary<string, SKBitmap> _floorpng;
+        private Dictionary<string, SKBitmap> _wallpng;
         private SKBitmap _lastframe = new SKBitmap(1602, 1050);
         private int previousHP = 0;
         private int previousMP = 0;
@@ -47,8 +50,9 @@ namespace FrameGenerator
         public static SKBitmap CharacterSKBitmap = new SKBitmap(32, 32);
         
 
-        public MainGenerator(string gameLocation = @"..\..\..\Extra")
+        public MainGenerator(IReadFromFile fileReader, string gameLocation = @"..\..\..\Extra")
         {
+            var ReadFromFile = fileReader;
             _characterdata = ReadFromFile.GetDictionaryFromFile(gameLocation + @"/racepng.txt");
             _features = ReadFromFile.GetDictionaryFromFile(gameLocation + @"/features.txt");
             _cloudtiles = ReadFromFile.GetDictionaryFromFile(gameLocation + @"/clouds.txt");
@@ -60,18 +64,59 @@ namespace FrameGenerator
             _monsterdata = ReadFromFile.GetMonsterData(gameLocation + @"/mon-data.h", gameLocation + @"/monsteroverrides.txt");
             _namedMonsterOverrideData = ReadFromFile.GetNamedMonsterOverrideData(gameLocation + @"/namedmonsteroverrides.txt");
 
-            _floorpng = ReadFromFile.GetSKBitmapDictionaryFromFolder(gameLocation + @"/rltiles/dngn/floor");
-            _wallpng = ReadFromFile.GetSKBitmapDictionaryFromFolder(gameLocation + @"/rltiles/dngn/wall");
-            _alldngnpng = ReadFromFile.GetSKBitmapDictionaryFromFolder(gameLocation + @"/rltiles/dngn");
-            _alleffects = ReadFromFile.GetSKBitmapDictionaryFromFolder(gameLocation + @"/rltiles/effect");
-            _miscallaneous = ReadFromFile.GetSKBitmapDictionaryFromFolder(gameLocation + @"/rltiles/misc");
-            _itempng = ReadFromFile.GetSKBitmapDictionaryFromFolder(gameLocation + @"/rltiles/item");
+            _floorpng = ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "dngn", "floor"));
+            _wallpng = ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "dngn", "wall"));
+            _alldngnpng = ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "dngn"));
+            _alleffects = ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "effect"));
+            _miscallaneous = ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "misc"));
+            _itempng = ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "item"));
 
             _characterpng = ReadFromFile.GetCharacterPNG(gameLocation);
             _monsterpng = ReadFromFile.GetMonsterPNG(gameLocation);
 
             _outOfSightCache = new Cacher();
             _weaponpng = ReadFromFile.GetWeaponPNG(gameLocation);
+        }
+
+        public MainGenerator(IReadFromFileAsync fileReader, int test)
+        {
+            ReadFromFile = fileReader;
+        }
+
+        public async Task InitialiseGenerator()
+        {
+            var gameLocation = "Extra";
+            if (!NeedRefreshDictionaries) return;
+            else NeedRefreshDictionaries = false;
+            _characterdata = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/racepng.txt");
+            _features = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/features.txt");
+            _cloudtiles = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/clouds.txt");
+            _itemdata = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/items.txt");
+            _weapondata = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/weapons.txt");
+
+            _floorandwall = await ReadFromFile.GetFloorAndWallNamesForDungeons(gameLocation + @"/tilefloor.txt");
+            _floorandwallColor = await ReadFromFile.GetFloorAndWallNamesForDungeons(gameLocation + @"/tilefloorColors.txt");
+            _monsterdata = await ReadFromFile.GetMonsterData(gameLocation + @"/mon-data.h", gameLocation + @"/monsteroverrides.txt");
+            _namedMonsterOverrideData = await ReadFromFile.GetNamedMonsterOverrideData(gameLocation + @"/namedmonsteroverrides.txt");
+
+            _floorpng = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "dngn", "floor"));
+            _wallpng = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "dngn", "wall"));
+            _alldngnpng = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "dngn"));
+            _alleffects = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "effect"));
+            _miscallaneous = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "misc"));
+            _itempng = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "item"));
+
+            _characterpng = await ReadFromFile.GetCharacterPNG(gameLocation);
+            _monsterpng = await ReadFromFile.GetMonsterPNG(gameLocation);
+
+            _outOfSightCache = new Cacher();
+            _weaponpng = await ReadFromFile.GetWeaponPNG(gameLocation);
+        }
+
+        public async Task ReinitializeGenerator()
+        {
+            NeedRefreshDictionaries = true;
+            await InitialiseGenerator();
         }
 
         public SKBitmap GenerateImage(TerminalCharacter[,] chars, int consoleLevel = 1, Dictionary<string, string> tileoverides = null)

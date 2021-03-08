@@ -4,25 +4,70 @@ using System.Collections.Generic;
 using SkiaSharp;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FrameGenerator.FileReading
 {
-    public static class ReadFromFile
+    public interface IReadFromFile
     {
-        public static Dictionary<string, string> GetDictionaryFromFile(string path)
+        public Dictionary<string, string> GetDictionaryFromFile(string path);
+
+        public Dictionary<string, string> GetMonsterData(string file, string monsterOverrideFile);
+
+        public Dictionary<string, string> GetWeaponData(string file);
+
+        public List<NamedMonsterOverride> GetNamedMonsterOverrideData(string monsterOverrideFile);
+
+        public Dictionary<string, string[]> GetFloorAndWallNamesForDungeons(string file);
+
+        public Dictionary<string, SKBitmap> GetSKBitmapDictionaryFromFolder(string folder);
+
+        public Dictionary<string, SKBitmap> GetCharacterPNG(string gameLocation);
+
+        public Dictionary<string, SKBitmap> GetMonsterPNG(string gameLocation);
+
+        public Dictionary<string, SKBitmap> GetWeaponPNG(string gameLocation);
+
+    }
+    public interface IReadFromFileAsync
+    {
+        public Task<Dictionary<string, string>> GetDictionaryFromFile(string path);
+
+        public Task<Dictionary<string, string>> GetMonsterData(string file, string monsterOverrideFile);
+
+        public Task<Dictionary<string, string>> GetWeaponData(string file);
+
+        public Task<List<NamedMonsterOverride>> GetNamedMonsterOverrideData(string monsterOverrideFile);
+
+        public Task<Dictionary<string, string[]>> GetFloorAndWallNamesForDungeons(string file);
+
+        public Task<Dictionary<string, SKBitmap>> GetSKBitmapDictionaryFromFolder(string folder);
+
+        public Task<Dictionary<string, SKBitmap>> GetCharacterPNG(string gameLocation);
+               
+        public Task<Dictionary<string, SKBitmap>> GetMonsterPNG(string gameLocation);
+               
+        public Task<Dictionary<string, SKBitmap>> GetWeaponPNG(string gameLocation);
+
+    }
+
+    public class ReadFromFile : IReadFromFile
+    {
+        public Dictionary<string, string> GetDictionaryFromFile(string path)
         {
             var dict = new Dictionary<string, string>();
-            
+
             string[] lines = File.ReadAllLines(path);
 
             for (var i = 0; i < lines.Length; i += 2)
             {
                 dict[lines[i]] = lines[i + 1];
             }
+
             return dict;
         }
 
-        public static Dictionary<string, string> GetMonsterData(string file, string monsterOverrideFile)
+        public Dictionary<string, string> GetMonsterData(string file, string monsterOverrideFile)
         {
             var monster = new Dictionary<string, string>();
 
@@ -54,25 +99,26 @@ namespace FrameGenerator.FileReading
                 var keyValue = line.Split(' ');
                 monster[keyValue[0]] = keyValue[1];
             }
-            monster.Remove("8BLUE");//remove roxanne impersonating statue
+
+            monster.Remove("8BLUE"); //remove roxanne impersonating statue
             return monster;
         }
-        public static Dictionary<string, string> GetWeaponData(string file)
+
+        public Dictionary<string, string> GetWeaponData(string file)
         {
             var weapon = new Dictionary<string, string>();
 
             string[] lines = File.ReadAllLines(file);
 
-            for (var i = 0; i < lines.Length; i+=2)
+            for (var i = 0; i < lines.Length; i += 2)
             {
-
-                weapon[lines[i]] = lines[i+1];
-                
+                weapon[lines[i]] = lines[i + 1];
             }
+
             return weapon;
         }
 
-        public static List<NamedMonsterOverride> GetNamedMonsterOverrideData(string monsterOverrideFile)
+        public List<NamedMonsterOverride> GetNamedMonsterOverrideData(string monsterOverrideFile)
         {
             var monster = new List<NamedMonsterOverride>();
 
@@ -95,6 +141,7 @@ namespace FrameGenerator.FileReading
                     pngParse = false;
                     continue;
                 }
+
                 if (pngParse)
                 {
                     string[] tokens = lines[i].Split(' ');
@@ -107,15 +154,13 @@ namespace FrameGenerator.FileReading
                     location = tokens.Length > 1 ? tokens[1] : "";
                     pngParse = true;
                 }
-
             }
 
             return monster;
         }
 
-        public static Dictionary<string, string[]> GetFloorAndWallNamesForDungeons(string file)
+        public Dictionary<string, string[]> GetFloorAndWallNamesForDungeons(string file)
         {
-
             var floorandwall = new Dictionary<string, string[]>();
             string[] lines = File.ReadAllLines(file);
 
@@ -130,11 +175,13 @@ namespace FrameGenerator.FileReading
             return floorandwall;
         }
 
-        public static Dictionary<string, SKBitmap> GetSKBitmapDictionaryFromFolder(string folder)
+        public Dictionary<string, SKBitmap> GetSKBitmapDictionaryFromFolder(string folder)
         {
             var dict = new Dictionary<string, SKBitmap>();
             List<string> pngFiles = Directory.GetFiles(folder, "*.png*", SearchOption.AllDirectories).ToList();
-            var files = Directory.GetFiles(folder.Substring(0, folder.IndexOf("Extra", StringComparison.OrdinalIgnoreCase)+5), "*.png", SearchOption.TopDirectoryOnly).ToList();
+            var files = Directory
+                .GetFiles(folder.Substring(0, folder.IndexOf("Extra", StringComparison.OrdinalIgnoreCase) + 5), "*.png",
+                    SearchOption.TopDirectoryOnly).ToList();
             pngFiles.AddRange(files);
             foreach (var file in pngFiles)
             {
@@ -142,16 +189,18 @@ namespace FrameGenerator.FileReading
                 SKBitmap SKBitmap = SKBitmap.Decode(file);
                 dict[info.Name.Replace(".png", "")] = SKBitmap;
             }
+
             return dict;
         }
 
-        public static Dictionary<string, SKBitmap> GetCharacterPNG(string gameLocation)
+        public Dictionary<string, SKBitmap> GetCharacterPNG(string gameLocation)
         {
-
             var GetCharacterPNG = new Dictionary<string, SKBitmap>();
 
-            List<string> allpngfiles = Directory.GetFiles(gameLocation + @"/rltiles/player/base", "*.png*", SearchOption.AllDirectories).ToList();
-            allpngfiles.AddRange(Directory.GetFiles(gameLocation + @"/rltiles/player/felids", "*.png*", SearchOption.AllDirectories).ToList());
+            List<string> allpngfiles = Directory
+                .GetFiles(gameLocation + @"/rltiles/player/base", "*.png*", SearchOption.AllDirectories).ToList();
+            allpngfiles.AddRange(Directory
+                .GetFiles(gameLocation + @"/rltiles/player/felids", "*.png*", SearchOption.AllDirectories).ToList());
             foreach (var file in allpngfiles)
             {
                 FileInfo info = new FileInfo(file);
@@ -159,32 +208,34 @@ namespace FrameGenerator.FileReading
 
 
                 GetCharacterPNG[info.Name.Replace(".png", "")] = SKBitmap;
-
             }
+
             return GetCharacterPNG;
         }
 
-        public static Dictionary<string, SKBitmap> GetMonsterPNG(string gameLocation)
+        public Dictionary<string, SKBitmap> GetMonsterPNG(string gameLocation)
         {
-
             var monsterPNG = new Dictionary<string, SKBitmap>();
-            string[] allpngfiles = Directory.GetFiles(gameLocation + @"/rltiles/mon", "*.png*", SearchOption.AllDirectories);
+            string[] allpngfiles =
+                Directory.GetFiles(gameLocation + @"/rltiles/mon", "*.png*", SearchOption.AllDirectories);
             foreach (var file in allpngfiles)
             {
                 FileInfo info = new FileInfo(file);
                 SKBitmap SKBitmap = SKBitmap.Decode(file);
                 monsterPNG[info.Name.Replace(".png", "")] = SKBitmap;
-
             }
+
             return monsterPNG;
         }
-        public static Dictionary<string, SKBitmap> GetWeaponPNG(string gameLocation)
-        {
 
+        public Dictionary<string, SKBitmap> GetWeaponPNG(string gameLocation)
+        {
             var GetWeaponPNG = new Dictionary<string, SKBitmap>();
 
-            List<string> allpngfiles = Directory.GetFiles(gameLocation + @"/rltiles/player/hand1", "*.png*", SearchOption.AllDirectories).ToList();
-            allpngfiles.AddRange(Directory.GetFiles(gameLocation + @"/rltiles/player/transform", "*.png*", SearchOption.AllDirectories).ToList());
+            List<string> allpngfiles = Directory
+                .GetFiles(gameLocation + @"/rltiles/player/hand1", "*.png*", SearchOption.AllDirectories).ToList();
+            allpngfiles.AddRange(Directory.GetFiles(gameLocation + @"/rltiles/player/transform", "*.png*",
+                SearchOption.AllDirectories).ToList());
             foreach (var file in allpngfiles)
             {
                 FileInfo info = new FileInfo(file);
@@ -192,10 +243,9 @@ namespace FrameGenerator.FileReading
 
 
                 GetWeaponPNG[info.Name.Replace(".png", "")] = SKBitmap;
-
             }
+
             return GetWeaponPNG;
         }
     }
-
 }
