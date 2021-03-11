@@ -10,21 +10,6 @@ RUN apt-get install -y libgtk-3-dev
 ENV TERM=putty-256color
 RUN export TERM=putty-256color
 
-RUN echo "alias ls='ls --color=auto'" >> /root/.bashrc
-RUN echo "alias grep='grep --color=auto'" >> /root/.bashrc
-RUN echo "alias fgrep='fgrep --color=auto'" >> /root/.bashrc
-RUN echo "alias egrep='egrep --color=auto'" >> /root/.bashrc
-RUN echo "force_color_prompt=yes" >> /etc/bash.bashrc
-RUN echo "alias ls='ls --color=auto'" >> /etc/bash.bashrc
-RUN echo "alias grep='grep --color=auto'" >> /etc/bash.bashrc
-RUN echo "alias fgrep='fgrep --color=auto'" >> /etc/bash.bashrc
-RUN echo "alias egrep='egrep --color=auto'" >> /etc/bash.bashrc
-RUN echo "force_color_prompt=yes" >> /etc/bash.bashrc
-RUN echo "force_color_prompt=yes" >> /etc/bash.bashrc
-RUN sed -i '1i force_color_prompt=yes' /etc/skel/.bashrc
-SHELL ["/bin/sh", "-c", "-l"]
-
-
 COPY ["DCSSTV2/libPuttyDLL.so", "../lib/"]
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build

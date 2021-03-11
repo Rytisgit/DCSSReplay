@@ -119,7 +119,7 @@ namespace FrameGenerator
             await InitialiseGenerator();
         }
 
-        public SKBitmap GenerateImage(TerminalCharacter[,] chars, int consoleLevel = 1, Dictionary<string, string> tileoverides = null)
+        public SKBitmap GenerateImage(TerminalCharacter[,] chars, int consoleLevel = 3, Dictionary<string, string> tileoverides = null)
         {
             //return DrawFrame(new Model());
             if (chars != null)
