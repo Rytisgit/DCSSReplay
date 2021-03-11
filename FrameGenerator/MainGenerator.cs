@@ -121,7 +121,7 @@ namespace FrameGenerator
 
         public SKBitmap GenerateImage(TerminalCharacter[,] chars, int consoleLevel = 1, Dictionary<string, string> tileoverides = null)
         {
-            return DrawFrame(new Model());
+            //return DrawFrame(new Model());
             if (chars != null)
             {
                 var model = consoleLevel != 3 ? Parser.ParseData(chars) : Parser.ParseData(chars, true);
