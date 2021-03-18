@@ -329,12 +329,26 @@ namespace TtyRecDecoder
             Width = w;
             Height = h;
 
-            LoadThread = new Thread(() => DoBackgroundLoad());
+            //LoadThread = new Thread(() => DoBackgroundLoad());
             LoadStreams = streams;
             LoadBetweenStreamDelay = between_stream_delay;
             LoadBetweenPacketsDelay = between_packets_delay;
-            LoadThread.Start();
+            DoBackgroundLoad();
+            //LoadThread.Start();
+            if (Packets.Count <= 0) return;
+            CurrentFrame = DumpTerminal(Packets[0].RestartPosition, Packets[0].SinceStart);
+        }
 
+        public TtyRecKeyframeDecoder(IEnumerable<Stream> streams, TimeSpan between_stream_delay, TimeSpan between_packets_delay)
+        {
+            Width = 80;
+            Height = 24;
+
+            LoadStreams = streams;
+            LoadBetweenStreamDelay = between_stream_delay;
+            LoadBetweenPacketsDelay = between_packets_delay;
+
+            DoBackgroundLoad();
             if (Packets.Count <= 0) return;
             CurrentFrame = DumpTerminal(Packets[0].RestartPosition, Packets[0].SinceStart);
         }

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using SkiaSharp;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using InputParser.Constant;
 using InputParser.Decorators;
@@ -47,8 +48,7 @@ namespace FrameGenerator
         private int previousMP = 0;
         private int _lostHpCheckpoint = 0;
         private int _lostMpCheckpoint = 0;
-        public static SKBitmap CharacterSKBitmap = new SKBitmap(32, 32);
-        
+
 
         public MainGenerator(IReadFromFile fileReader, string gameLocation = @"..\..\..\Extra")
         {
@@ -119,11 +119,12 @@ namespace FrameGenerator
             await InitialiseGenerator();
         }
 
-        public SKBitmap GenerateImage(TerminalCharacter[,] chars, int consoleLevel = 3, Dictionary<string, string> tileoverides = null)
+        public SKBitmap GenerateImage(TerminalCharacter[,] chars, int consoleLevel = 1, Dictionary<string, string> tileoverides = null)
         {
             //return DrawFrame(new Model());
             if (chars != null)
             {
+               
                 var model = consoleLevel != 3 ? Parser.ParseData(chars) : Parser.ParseData(chars, true);
                 model.OverideTiles(tileoverides);
                 if (model.Layout == LayoutType.Normal && consoleLevel == 2)
