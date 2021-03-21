@@ -10,9 +10,26 @@ namespace Putty
     [DebuggerDisplay("{Character} {Attributes}")]
     public struct TerminalCharacter
     {
-        private uint chr { get; set; }
-        private uint attr { get; set; }
-        private int cc_next { get; set; }
+        private uint _chr;
+        private uint chr
+        {
+            set { _chr = value; }
+            get { return _chr; }
+        }
+
+        private uint _attr;
+        private uint attr
+        {
+            set { _attr = value; }
+            get { return _attr; }
+        }
+
+        private int _cc_next;
+        private int cc_next
+        {
+            set { _cc_next = value; }
+            get { return _cc_next; }
+        }
 
         //private uint? fixed_attr;//for some reason linux compiled puttydll returns attr and cc_next switched, so we need to have a central attribute to check for color
 
