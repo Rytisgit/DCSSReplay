@@ -20,7 +20,7 @@ namespace DCSSTV
         public TimeSpan MaxDelayBetweenPackets = new TimeSpan(0, 0, 0, 0, 500);//milliseconds
         private int FrameStepCount;
         private int ConsoleSwitchLevel = 1;
-        private int framerateControlTimeout = 1000;
+        public int framerateControlTimeout = 1000;
         public TtyRecKeyframeDecoder ttyrecDecoder = null;
         public double PlaybackSpeed = 0, PausedSpeed = 2;
         public TimeSpan Seek;
@@ -55,7 +55,7 @@ namespace DCSSTV
             CancellationToken = true;
             while (CancellationToken)
             {
-                await Task.Delay(50);
+                await Task.Delay(framerateControlTimeout);
                 var now = DateTime.Now;
 
                 var dt = Math.Max(0, Math.Min(0.1, (now - PreviousFrame).TotalSeconds));

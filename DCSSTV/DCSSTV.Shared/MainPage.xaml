@@ -26,15 +26,14 @@
                 Visibility="{x:Bind Not(hwAcceleration.IsChecked), Mode=OneWay}" />
         </Grid>
         <StackPanel>
-            <TextBox Header="Package asset file name" Text="ms-appx:///Assets/MyPackageAsset.txt" x:Name="assetFileName" Width="1582" />
             <RelativePanel>
 
-                 <Button Content="Do It" Click="Button_Click"/>
-                <Button Content="filePick" Click="OnLogoButtonClicked" Margin="100,0,0,0"/>
-                <Button Content="loop with delay" Click="Button_Click3" Margin="230,0,0,0"/>
-                <TextBox Text="100" x:Name="speed" Margin="350,0,0,0" />
-                <Button Content="load Zip" Click="LoadPackageFile" Margin="500,0,0,0"/>
-                <Button Content="end" Click="Button_Click2" Margin="170,0,0,0"/>
+
+                <Button Content="Start playback" Click="Button_Click3" Margin="380,0,0,0"/>
+                <TextBox Text="2" x:Name="speed" Margin="490,0,0,0" />
+                <TextBox Text="10" x:Name="framerate" Margin="560,0,0,0" />
+                <Button Content="First Time img cache setup" Click="LoadPackageFile" Margin="175,0,0,0"/>
+                <Button Content="Stop Playback" Click="Button_Click2" Margin="700,0,0,0"/>
 
             </RelativePanel>
 
