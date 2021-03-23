@@ -10,7 +10,7 @@ function openFilePicker(htmlId) {
     console.log(htmlId);
     var input = document.createElement('input');
     input.type = 'file';
-    input.accept = '.ttyrec|image/*';
+    input.accept = '.ttyrec';
     input.onchange = e => {
         var file = e.target.files[0];
         var reader = new FileReader();

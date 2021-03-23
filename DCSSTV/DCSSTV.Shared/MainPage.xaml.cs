@@ -56,22 +56,20 @@ namespace DCSSTV
         private void OnPaintSwapChain(object sender, SKPaintGLSurfaceEventArgs e)
         {
             if (driver.currentFrame == null) return;
-            Console.WriteLine("HArdware " + driver.currentFrame.ByteCount);
             // the the canvas and properties
             var canvas = e.Surface.Canvas;
 
-            Render(canvas, new Size(e.BackendRenderTarget.Width, e.BackendRenderTarget.Height), SKColors.Red, "SkiaSharp Red Hardware Rendering", driver.currentFrame);
+            Render(canvas, new Size(e.BackendRenderTarget.Width, e.BackendRenderTarget.Height), SKColors.Black, "SkiaSharp Red Hardware Rendering", driver.currentFrame);
         }
 
         private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
             if (driver.currentFrame == null) return;
-            Console.WriteLine("Software " + driver.currentFrame.ByteCount);
             // the the canvas and properties
             var canvas = e.Surface.Canvas;
             var info = e.Info;
 
-            Render(canvas, new Size(info.Width, info.Height), SKColors.Blue, "SkiaSharp Blue Software Rendering", driver.currentFrame);
+            Render(canvas, new Size(info.Width, info.Height), SKColors.Black, "SkiaSharp Blue Software Rendering", driver.currentFrame);
         }
 
         private static void Render(SKCanvas canvas, Size size, SKColor color, string text, SKBitmap bitmap)
@@ -87,17 +85,6 @@ namespace DCSSTV
             // make sure the canvas is blank
             canvas.Clear(color);
             canvas.DrawBitmap(bitmap, 0, 0);
-            // draw some text
-            var paint = new SKPaint
-            {
-                Color = SKColors.Black,
-                IsAntialias = true,
-                Style = SKPaintStyle.Fill,
-                TextAlign = SKTextAlign.Center,
-                TextSize = 24
-            };
-            var coord = new SKPoint(scaledSize.Width / 2, (scaledSize.Height + paint.TextSize) / 2);
-            canvas.DrawText(text, coord, paint);
 
             // Width 41.6587026 => 144.34135
             // Height 56 => 147
@@ -118,7 +105,6 @@ namespace DCSSTV
         private async void OnFileSelectedEvent(object sender, FileSelectedEventHandlerArgs e)
         {
             MainPage.FileSelectedEvent -= OnFileSelectedEvent;
-            Console.WriteLine(e.FileAsDataUrl);
             var base64Data = Regex.Match(e.FileAsDataUrl, @"data:(?<type1>.+?)/(?<type2>.+?),(?<data>.+)").Groups["data"].Value;
             var binData = Convert.FromBase64String(base64Data);
             var stream = new MemoryStream(binData);
@@ -128,8 +114,7 @@ namespace DCSSTV
                 SeekTime = TimeSpan.Zero
             };
 
-            //driver.ttyrecDecoder = decoder;
-            //decoder.Seek(TimeSpan.Zero);
+            await StartImageLoop();
         }
 
         private static event FileSelectedEventHandler FileSelectedEvent;
@@ -142,39 +127,13 @@ namespace DCSSTV
             public FileSelectedEventHandlerArgs(string fileAsDataUrl) => FileAsDataUrl = fileAsDataUrl;
 
         }
-        public async Task LoadDecoder()
-        {
-            var uri = new Uri("ms-appx:///Assets/mivevestibuledeath.ttyrec");
-            Console.WriteLine(uri.AbsolutePath);
-            Console.WriteLine(uri.LocalPath);
-            var file =
-                // await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(new Uri(assetFileName.Text));
-                await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/mivevestibuledeath.ttyrec"));
-            var bytes = await FileIO.ReadBufferAsync(file);
-            var stream = bytes.AsStream();
-            Console.WriteLine("*.ttyrec :" + bytes.Length);
-            var file3 =
-                // await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(new Uri(assetFileName.Text));
-                await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/mivevestibuledeath.png"));
-            var bytes3 = await FileIO.ReadBufferAsync(file3);
-            Console.WriteLine("*.png :" + bytes3.Length);
-            var file2 =
-                // await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(new Uri(assetFileName.Text));
-                await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/mivevestibuledeath.xxx"));
-            var bytes2 = await FileIO.ReadBufferAsync(file2);
-            Console.WriteLine("*.xxx :" + bytes2.Length);
-            //decoder = new TtyRecKeyframeDecoder(new List<Stream> { stream }, TimeSpan.Zero, driver.MaxDelayBetweenPackets)
-            //{
-            //    PlaybackSpeed = +1,
-            //    SeekTime = TimeSpan.Zero
-            //};
-        }
+  
         public async void LoadPackageFile(object sender, RoutedEventArgs e)
         {
             try
             {
                 var file =
-                    await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(new Uri(assetFileName.Text));
+                    await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Extra.zip"));
                 var bytes = await FileIO.ReadBufferAsync(file);
                 var stream = bytes.AsStream();
                 await ExtractExtraFileFolder(stream);
@@ -195,7 +154,8 @@ namespace DCSSTV
                 await LoadDCSSImage();
 
                 driver.ttyrecDecoder = decoder;
-                driver.PlaybackSpeed = 1;
+                driver.PlaybackSpeed = int.Parse(speed.Text);
+                driver.framerateControlTimeout = int.Parse(framerate.Text);
                 await driver.StartImageGeneration();
             }
             catch (Exception ex)
@@ -270,60 +230,29 @@ namespace DCSSTV
                 Console.WriteLine(e);
             }
         }
-        private async Task<List<StorageFile>> GetFilesFromFolderAndSubfolders(string foldername)
-        {
-            var files = new List<StorageFile>();
-            try
-            {
 
-                var localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
-                var folder = await localFolder.GetFolderAsync(foldername);
-                Debug.WriteLine(folder.Path);
-
-                files.AddRange((await folder.GetFilesAsync()).Where(file => file.Name.EndsWith("png", true, CultureInfo.InvariantCulture)));
-
-                var subFolders = await folder.GetFoldersAsync();
-                foreach (var subFolder in subFolders)
-                {
-                    files.AddRange((await subFolder.GetFilesAsync()).Where(file => file.Name.EndsWith("png", true, CultureInfo.InvariantCulture)));
-                }
-                Debug.WriteLine($"loaded {files.Count} files from {foldername}");
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-            return files;
-        }
-
-        private async void Button_Click(object sender, RoutedEventArgs e)
-        {
-            await LoadDecoder();
-        }
         private async void Button_Click2(object sender, RoutedEventArgs e)
         {
             await EndImageLoop();
         }
         private async void Button_Click3(object sender, RoutedEventArgs e)
         {
-            await StartImageLoop();
+            MainPage.FileSelectedEvent -= OnFileSelectedEvent;
+            MainPage.FileSelectedEvent += OnFileSelectedEvent;
+#if __WASM__
+            WebAssemblyRuntime.InvokeJS("openFilePicker();");
+#endif
+           
         }
 
         public async Task LoadDCSSImage()
         {
 
             await generator.InitialiseGenerator();
-            //this.skBitmap = generator.GenerateImage(null);
-            //output.Text = $"{skBitmap.Height}, {skBitmap.Width}";
-
-
-            //RefreshImage();
         }
 
         public void RefreshImage()
         {
-            Console.WriteLine("refresh");
             if (hwAcceleration.IsChecked.Value)
             {
                 swapChain.Invalidate();
