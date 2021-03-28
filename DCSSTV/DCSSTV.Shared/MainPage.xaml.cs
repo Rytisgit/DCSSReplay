@@ -43,11 +43,12 @@ namespace DCSSTV
         private MainGenerator generator;
         private DCSSReplayDriver driver;
         private TtyRecKeyframeDecoder decoder;
+        private bool readyToRefresh = false;
         public MainPage()
         {
             InitializeComponent();
             generator = new MainGenerator(new UnoFileReader(), 69);
-            driver = new DCSSReplayDriver(generator, RefreshImage);
+            driver = new DCSSReplayDriver(generator, RefreshImage, ReadyForRefresh);
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -97,6 +98,7 @@ namespace DCSSTV
             var canvas = e.Surface.Canvas;
 
             Render(canvas, new Size(e.BackendRenderTarget.Width, e.BackendRenderTarget.Height), SKColors.Black, "SkiaSharp Red Hardware Rendering", driver.currentFrame);
+            readyToRefresh = true;
         }
 
         private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs e)
@@ -107,6 +109,7 @@ namespace DCSSTV
             var info = e.Info;
 
             Render(canvas, new Size(info.Width, info.Height), SKColors.Black, "SkiaSharp Blue Software Rendering", driver.currentFrame);
+            readyToRefresh = true;
         }
 
         private static void Render(SKCanvas canvas, Size size, SKColor color, string text, SKBitmap bitmap)
@@ -121,6 +124,7 @@ namespace DCSSTV
             SKBitmap scaledBitmap;
             if (scaledWidth < 1602 || scaledHeight < 768)
             {
+                Debug.WriteLine("rescale");
                 if ((size.Width / scale) * 0.4794D > (size.Height / scale))// 768/1602 = 0.4794D
                 {
                     scaledBitmapWidth = (int)(size.Height / scale * 2.0859375D);
@@ -223,6 +227,7 @@ namespace DCSSTV
                 driver.ttyrecDecoder = decoder;
                 driver.PlaybackSpeed = int.Parse(speed.Text);
                 driver.framerateControlTimeout = int.Parse(framerate.Text);
+                readyToRefresh = true;
                 await driver.StartImageGeneration();
             }
             catch (Exception ex)
@@ -313,17 +318,21 @@ namespace DCSSTV
            
         }
 
+        public bool ReadyForRefresh() => readyToRefresh;
 
         public void RefreshImage()
         {
             if (hwAcceleration.IsChecked.Value)
             {
-                Console.WriteLine("refresh hardware");
+                //Console.WriteLine("refresh hardware");
+                readyToRefresh = false;
                 swapChain.Invalidate();
+                
             }
             else
             {
-                Console.WriteLine("refresh software");
+                //Console.WriteLine("refresh software");
+                readyToRefresh = false;
                 canvas.Invalidate();
             }
         }

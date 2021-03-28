@@ -13,6 +13,7 @@ namespace DCSSTV
     {
         private readonly MainGenerator frameGenerator;
         private readonly Action _refreshCanvas;
+        private readonly Func<bool> _readyForRefresh;
         public SKBitmap currentFrame { get; private set; }
         private const int TimeStepLengthMS = 5000;
         private readonly List<DateTime> PreviousFrames = new List<DateTime>();
@@ -38,10 +39,11 @@ namespace DCSSTV
         string selectedLink = "";
         string Name;
 
-        public DCSSReplayDriver(MainGenerator imageGenerator, Action RefreshCanvas)
+        public DCSSReplayDriver(MainGenerator imageGenerator, Action RefreshCanvas, Func<bool> readyForRefresh)
         {
             frameGenerator = imageGenerator;
             _refreshCanvas = RefreshCanvas;
+            _readyForRefresh = readyForRefresh;
         }
 
         public async Task CancelImageGeneration()
@@ -93,7 +95,7 @@ namespace DCSSTV
                     if (frame != null)
                     {
 
-                        if (!frameGenerator.isGeneratingFrame)
+                        if (!frameGenerator.isGeneratingFrame && _readyForRefresh.Invoke())
                         {
                             frameGenerator.isGeneratingFrame = true;
 #if true
