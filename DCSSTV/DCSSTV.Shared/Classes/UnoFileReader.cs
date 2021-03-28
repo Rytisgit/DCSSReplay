@@ -66,6 +66,7 @@ namespace DCSSTV
 
         public async Task<Dictionary<string, string>> GetDictionaryFromFile(string path)
         {
+
             var localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
             var file = await localFolder.GetFileAsync(path);
             Debug.WriteLine(file.Path);

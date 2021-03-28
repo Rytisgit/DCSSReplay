@@ -86,8 +86,8 @@ namespace FrameGenerator
         public async Task InitialiseGenerator()
         {
             var gameLocation = "Extra";
-            if (!NeedRefreshDictionaries) return;
-            else NeedRefreshDictionaries = false;
+            if (NeedRefreshDictionaries || _characterdata == null) NeedRefreshDictionaries = false;
+            else return;
             _characterdata = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/racepng.txt");
             _features = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/features.txt");
             _cloudtiles = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/clouds.txt");

@@ -13,6 +13,7 @@ function openFilePicker(htmlId) {
     input.accept = '.ttyrec';
     input.onchange = e => {
         var file = e.target.files[0];
+        document.evaluate("/html/body/div/div/div[1]/div/div/div[1]/div/div/div/div/div/p", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent = "File Selected, Loading..."
         var reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = readerEvent => {

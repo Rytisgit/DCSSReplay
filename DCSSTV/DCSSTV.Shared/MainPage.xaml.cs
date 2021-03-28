@@ -50,6 +50,43 @@ namespace DCSSTV
             driver = new DCSSReplayDriver(generator, RefreshImage);
         }
 
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            await SetOutputText("Navigated");
+            try
+            {
+                await SetOutputText("Trying To Initialise Generator, Please Wait");
+                await generator.InitialiseGenerator();
+            }
+            catch (Exception exception)
+            {
+                try
+                {
+                    await SetOutputText("Caught exception On Navigation Load, trying to Cache missing Images, Please Wait");
+                    Console.WriteLine("Caught exception On Navigation Load, trying to Cache missing Images");
+                    Debug.WriteLine(exception);
+                    await LoadExtraFolderIndexedDB();
+                    await SetOutputText("Done Loading Cache, Reloading Image generator, please wait...");
+                    await generator.ReinitializeGenerator();
+                    Console.WriteLine("Done Loading");
+                }
+                catch (Exception e1)
+                {
+                    await SetOutputText("Something Bad Happened.");
+                    Console.WriteLine(e1);
+                    throw;
+                }
+            }
+
+            await SetOutputText("Image generator Initialized, Start Playback");
+        }
+
+        private Task SetOutputText(string text)
+        {
+            output.Text = text;
+            return Task.CompletedTask;
+        }
 
         private Visibility Not(bool? value) => (!value ?? false) ? Visibility.Visible : Visibility.Collapsed;
 
@@ -92,6 +129,7 @@ namespace DCSSTV
 
         private async void OnLogoButtonClicked(object sender, RoutedEventArgs e)
         {
+            await SetOutputText("Waiting for File Selection, loading file");
             MainPage.FileSelectedEvent -= OnFileSelectedEvent;
             MainPage.FileSelectedEvent += OnFileSelectedEvent;
 #if __WASM__
@@ -104,6 +142,7 @@ namespace DCSSTV
 
         private async void OnFileSelectedEvent(object sender, FileSelectedEventHandlerArgs e)
         {
+            await SetOutputText("File Selected, loading...");
             MainPage.FileSelectedEvent -= OnFileSelectedEvent;
             var base64Data = Regex.Match(e.FileAsDataUrl, @"data:(?<type1>.+?)/(?<type2>.+?),(?<data>.+)").Groups["data"].Value;
             var binData = Convert.FromBase64String(base64Data);
@@ -113,7 +152,7 @@ namespace DCSSTV
                 PlaybackSpeed = +1,
                 SeekTime = TimeSpan.Zero
             };
-
+            await SetOutputText("Done Loading.");
             await StartImageLoop();
         }
 
@@ -128,7 +167,7 @@ namespace DCSSTV
 
         }
   
-        public async void LoadPackageFile(object sender, RoutedEventArgs e)
+        private async Task LoadExtraFolderIndexedDB()
         {
             try
             {
@@ -137,22 +176,26 @@ namespace DCSSTV
                 var bytes = await FileIO.ReadBufferAsync(file);
                 var stream = bytes.AsStream();
                 await ExtractExtraFileFolder(stream);
-                output.Text = await FileIO.ReadTextAsync(file);
+                await SetOutputText("Data Cached");
+
             }
             catch (Exception ex)
             {
                 output.Text = ex.ToString();
             }
-
-
         }
+
+        public async void LoadPackageFile(object sender, RoutedEventArgs e)
+        {
+            await LoadExtraFolderIndexedDB();
+        }
+
         public async Task StartImageLoop()
         {
             var side = false;
             try
             {
-                await LoadDCSSImage();
-
+                await generator.InitialiseGenerator();
                 driver.ttyrecDecoder = decoder;
                 driver.PlaybackSpeed = int.Parse(speed.Text);
                 driver.framerateControlTimeout = int.Parse(framerate.Text);
@@ -231,6 +274,7 @@ namespace DCSSTV
             }
         }
 
+
         private async void Button_Click2(object sender, RoutedEventArgs e)
         {
             await EndImageLoop();
@@ -245,11 +289,6 @@ namespace DCSSTV
            
         }
 
-        public async Task LoadDCSSImage()
-        {
-
-            await generator.InitialiseGenerator();
-        }
 
         public void RefreshImage()
         {
