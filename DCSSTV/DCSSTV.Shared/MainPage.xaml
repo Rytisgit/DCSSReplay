@@ -9,17 +9,17 @@
     xmlns:not_win="http://uno.ui/not_win"
     mc:Ignorable="d not_win">
 
-      <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+      <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Name="Parent">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <CheckBox Content="Hardware Accelerated" x:Name="hwAcceleration" />
-        <Grid Grid.Row="1" Width="1602" Height="768" VerticalAlignment="Top">
+        <CheckBox Content="Hardware Accelerated" x:Name="hwAcceleration" Visibility="Collapsed" />
+        <Grid Grid.Row="1" MaxWidth="1602" MaxHeight="768" Height="{Binding ElementName=Parent,Path=ActualWidth}" VerticalAlignment="Top">
             <views:SKSwapChainPanel
                 x:Name="swapChain"
                 PaintSurface="OnPaintSwapChain"
-                Visibility="{x:Bind hwAcceleration.IsChecked, Mode=OneWay}" />
+                Visibility="{x:Bind hwAcceleration.IsChecked, Mode=OneWay}" VerticalAlignment="Stretch" />
             <views:SKXamlCanvas 
                 x:Name="canvas" 
                 PaintSurface="OnPaintSurface"

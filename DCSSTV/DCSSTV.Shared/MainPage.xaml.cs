@@ -114,14 +114,38 @@ namespace DCSSTV
             // get the screen density for scaling
             var display = DisplayInformation.GetForCurrentView();
             var scale = display.LogicalDpi / 96.0f;
-            var scaledSize = new SKSize((float)size.Width / scale, (float)size.Height / scale);
 
+            var scaledHeight = (size.Height / scale);
+            var scaledWidth = (size.Width / scale);
+            int scaledBitmapWidth, scaledBitmapHeight;
+            SKBitmap scaledBitmap;
+            if (scaledWidth < 1602 || scaledHeight < 768)
+            {
+                if ((size.Width / scale) * 0.4794D > (size.Height / scale))// 768/1602 = 0.4794D
+                {
+                    scaledBitmapWidth = (int)(size.Height / scale * 2.0859375D);
+                    scaledBitmapHeight = (int)(size.Height / scale);
+                }
+                else
+                {
+                    scaledBitmapWidth = (int)(size.Width / scale);
+                    scaledBitmapHeight = (int)(size.Width / scale * 0.4794D);
+                }
+                scaledBitmap = new SKBitmap(new SKImageInfo(scaledBitmapWidth, scaledBitmapHeight));
+                bitmap.ScalePixels(scaledBitmap, SKFilterQuality.Low);
+            }
+            else
+            {
+                scaledBitmap = bitmap;
+            }
+            
             // handle the device screen density
             canvas.Scale(scale);
-
+            
             // make sure the canvas is blank
             canvas.Clear(color);
-            canvas.DrawBitmap(bitmap, 0, 0);
+            //draw bitmap scaled to device size, fitting to width
+            canvas.DrawBitmap(scaledBitmap, 0, 0); 
 
             // Width 41.6587026 => 144.34135
             // Height 56 => 147
@@ -294,10 +318,12 @@ namespace DCSSTV
         {
             if (hwAcceleration.IsChecked.Value)
             {
+                Console.WriteLine("refresh hardware");
                 swapChain.Invalidate();
             }
             else
             {
+                Console.WriteLine("refresh software");
                 canvas.Invalidate();
             }
         }
