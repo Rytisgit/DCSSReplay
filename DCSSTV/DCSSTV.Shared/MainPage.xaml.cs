@@ -168,14 +168,16 @@ namespace DCSSTV
 
         public static void SelectFile(string imageAsDataUrl) => FileSelectedEvent?.Invoke(null, new FileSelectedEventHandlerArgs(imageAsDataUrl));
 
+
+        private readonly Regex _fileSelect = new Regex(@"data:(?<type1>.+?)/(?<type2>.+?),(?<data>.+)", RegexOptions.Compiled);
         private async void OnFileSelectedEvent(object sender, FileSelectedEventHandlerArgs e)
         {
             await SetOutputText("File Selected, loading...");
             MainPage.FileSelectedEvent -= OnFileSelectedEvent;
-            var base64Data = Regex.Match(e.FileAsDataUrl, @"data:(?<type1>.+?)/(?<type2>.+?),(?<data>.+)").Groups["data"].Value;
+            var base64Data = _fileSelect.Match(e.FileAsDataUrl).Groups["data"].Value;
             var binData = Convert.FromBase64String(base64Data);
             var stream = new MemoryStream(binData);
-            decoder = new TtyRecKeyframeDecoder(new List<Stream> { stream }, TimeSpan.Zero, driver.MaxDelayBetweenPackets)
+            decoder = new TtyRecKeyframeDecoder(80,24,new List<Stream> { stream }, TimeSpan.Zero, driver.MaxDelayBetweenPackets)
             {
                 PlaybackSpeed = +1,
                 SeekTime = TimeSpan.Zero
@@ -234,21 +236,6 @@ namespace DCSSTV
             {
                 output.Text = ex.ToString();
             }
-            //while (int.Parse(speed.Text) >= 0)
-            //{
-
-            //    if (side)
-            //    {
-            //        await LoadDCSSImage();
-            //    }
-            //    else
-            //    {
-            //        await WriteAnotherImage();
-            //    }
-
-            //    side = !side;
-            //    await Task.Delay(int.Parse(speed.Text));
-            //}
         }
 
         public async Task EndImageLoop()
@@ -268,7 +255,6 @@ namespace DCSSTV
         {
             try
             {
-                var path = System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), @"Extra.zip");
                 var localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
                 Console.WriteLine(localFolder.Path);
                 var folder = await localFolder.CreateFolderAsync("Extra", CreationCollisionOption.OpenIfExists);
@@ -279,15 +265,10 @@ namespace DCSSTV
                 {
                     var outputFile = Path.Combine(folder.Path, entry.Name);
 
-                    var outputDirectory = Path.GetDirectoryName(outputFile);
-                    //Console.WriteLine(outputDirectory);
-                    var correctFolder = await folder.CreateFolderAsync(outputDirectory, CreationCollisionOption.OpenIfExists);
-
+                    await folder.CreateFolderAsync(Path.GetDirectoryName(outputFile), CreationCollisionOption.OpenIfExists);
 
                     if (entry.IsFile)
                     {
-
-                        int size;
                         byte[] buffer = new byte[zipInStream.Length];
                         zipInStream.Read(buffer, 0, buffer.Length);
                         File.WriteAllBytes(outputFile, buffer);

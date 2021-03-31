@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace TtyRecDecoder
 {
@@ -329,12 +330,13 @@ namespace TtyRecDecoder
             Width = w;
             Height = h;
 
-            //LoadThread = new Thread(() => DoBackgroundLoad());
+
             LoadStreams = streams;
             LoadBetweenStreamDelay = between_stream_delay;
             LoadBetweenPacketsDelay = between_packets_delay;
-            DoBackgroundLoad();
-            //LoadThread.Start();
+
+            Task.Run(DoBackgroundLoad);
+
             if (Packets.Count <= 0) return;
             CurrentFrame = DumpTerminal(Packets[0].RestartPosition, Packets[0].SinceStart);
         }
@@ -360,11 +362,11 @@ namespace TtyRecDecoder
             Height = h;
             LoadCancel = false;
 
-            LoadThread = new Thread(() => DoBackgroundLoad());
-            LoadThread.Start();
+            Task.Run(DoBackgroundLoad);
+
         }
 
-        void DoBackgroundLoad()
+        async Task DoBackgroundLoad()
         {
             var decoded = TtyRecPacket.DecodePackets(LoadStreams, LoadBetweenStreamDelay, LoadBetweenPacketsDelay, () => LoadCancel);
             var annotated = AnnotatedPacket.AnnotatePackets(Width, Height, decoded, () => LoadCancel);
