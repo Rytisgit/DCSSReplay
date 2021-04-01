@@ -139,11 +139,11 @@ namespace DCSSTV
                 scaledBitmap = new SKBitmap(new SKImageInfo(scaledBitmapWidth, scaledBitmapHeight));
                 if (useOldScaling)
                 {
-                    bitmap.Resize(scaledBitmap, SKBitmapResizeMethod.Lanczos3);
+                    bitmap.Resize(scaledBitmap, SKBitmapResizeMethod.Hamming);
                 }
                 else
                 {
-                    bitmap.ScalePixels(scaledBitmap, SKFilterQuality.Medium);
+                    bitmap.ScalePixels(scaledBitmap, SKFilterQuality.High);
                 }
             }
             else
