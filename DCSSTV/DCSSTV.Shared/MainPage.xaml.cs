@@ -100,7 +100,7 @@ namespace DCSSTV
             Render(canvas, new Size(e.BackendRenderTarget.Width, e.BackendRenderTarget.Height), SKColors.Black, true, driver.currentFrame);
             readyToRefresh = true;
         }
-
+        
         private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
             if (driver.currentFrame == null) return;
@@ -116,6 +116,7 @@ namespace DCSSTV
         {
             // get the screen density for scaling
             var display = DisplayInformation.GetForCurrentView();
+
             var scale = display.LogicalDpi / 96.0f;
 
             var scaledHeight = (size.Height / scale);
@@ -326,5 +327,11 @@ namespace DCSSTV
         }
 
 
+        private void Button_Click_Fullscreen(object sender, RoutedEventArgs e)
+        {
+#if __WASM__
+            WebAssemblyRuntime.InvokeJS("toggleFullScreen();");
+#endif
+        }
     }
 }

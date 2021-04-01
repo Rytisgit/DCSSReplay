@@ -14,7 +14,7 @@
             <RowDefinition Height="auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <CheckBox Content="Hardware Accelerated" x:Name="hwAcceleration" Visibility="Visible" />
+        <CheckBox Content="switch canvas" x:Name="hwAcceleration" Visibility="Visible" />
         <Grid Grid.Row="1" MaxWidth="1602" MaxHeight="768" VerticalAlignment="Stretch">
             <views:SKSwapChainPanel
                 x:Name="swapChain"
