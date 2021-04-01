@@ -14,30 +14,16 @@ namespace DCSSTV
 {
     class UnoFileReader : IReadFromFileAsync
     {
-        public async Task<List<StorageFile>> GetFilesFromFolderAndSubfolders(string foldername)
+        public async Task<List<StorageFile>> GetPngsFromFolderAndSubfoldersRecursively(StorageFolder folder)
         {
             var files = new List<StorageFile>();
-            try
+            var subfolders = await folder.GetFoldersAsync();
+            foreach (var subFolder in subfolders)
             {
-
-                var localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
-                var folder = await localFolder.GetFolderAsync(foldername);
-                Debug.WriteLine(folder.Path);
-
-                files.AddRange((await folder.GetFilesAsync()).Where(file => file.Name.EndsWith("png", true, CultureInfo.InvariantCulture)));
-
-                var subFolders = await folder.GetFoldersAsync();
-                foreach (var subFolder in subFolders)
-                {
-                    files.AddRange((await subFolder.GetFilesAsync()).Where(file => file.Name.EndsWith("png", true, CultureInfo.InvariantCulture)));
-                }
-                Debug.WriteLine($"loaded {files.Count} files from {foldername}");
-
+               files.AddRange(await GetPngsFromFolderAndSubfoldersRecursively(subFolder));
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
+            files.AddRange((await folder.GetFilesAsync()).Where(
+                file => file.Name.EndsWith("png", true, CultureInfo.InvariantCulture)));
             return files;
         }
 
@@ -51,7 +37,8 @@ namespace DCSSTV
                 var folder = await localFolder.GetFolderAsync(foldername);
                 Debug.WriteLine(folder.Path);
 
-                files.AddRange((await folder.GetFilesAsync()).Where(file => file.Name.EndsWith("png", true, CultureInfo.InvariantCulture)));
+                files.AddRange((await folder.GetFilesAsync()).Where(
+                    file => file.Name.EndsWith("png", true, CultureInfo.InvariantCulture)));
 
                 Debug.WriteLine($"loaded {files.Count} files from {foldername}");
 
@@ -208,7 +195,9 @@ namespace DCSSTV
         public async Task<Dictionary<string, SkiaSharp.SKBitmap>> GetSKBitmapDictionaryFromFolder(string folder)
         {
             var dict = new Dictionary<string, SkiaSharp.SKBitmap>();
-            List<StorageFile> pngFiles = await GetFilesFromFolderAndSubfolders(folder);
+            
+            List<StorageFile> pngFiles = await GetPngsFromFolderAndSubfoldersRecursively(
+                await ApplicationData.Current.LocalFolder.GetFolderAsync(folder));
             //Add pngs in Extra folder
             var files = await GetFilesFromFolder("Extra");
             pngFiles.AddRange(files);
@@ -230,8 +219,10 @@ namespace DCSSTV
 
             var GetCharacterPNG = new Dictionary<string, SkiaSharp.SKBitmap>();
 
-            List<StorageFile> allpngfiles = await GetFilesFromFolderAndSubfolders(Path.Combine(gameLocation, "rltiles", "player", "base"));
-            allpngfiles.AddRange(await GetFilesFromFolderAndSubfolders(Path.Combine(gameLocation, "rltiles", "player", "felids")));
+            List<StorageFile> allpngfiles = await GetPngsFromFolderAndSubfoldersRecursively(
+                await ApplicationData.Current.LocalFolder.GetFolderAsync(Path.Combine(gameLocation, "rltiles", "player", "base")));
+            allpngfiles.AddRange(await GetPngsFromFolderAndSubfoldersRecursively(
+                await ApplicationData.Current.LocalFolder.GetFolderAsync(Path.Combine(gameLocation, "rltiles", "player", "felids"))));
             foreach (var file in allpngfiles)
             {
                 var buffer = await FileIO.ReadBufferAsync(file);
@@ -246,7 +237,8 @@ namespace DCSSTV
         public async Task<Dictionary<string, SkiaSharp.SKBitmap>> GetMonsterPNG(string gameLocation)
         {
             var monsterPNG = new Dictionary<string, SkiaSharp.SKBitmap>();
-            List<StorageFile> allpngfiles = await GetFilesFromFolderAndSubfolders(Path.Combine(gameLocation, "rltiles", "mon"));
+            List<StorageFile> allpngfiles = await GetPngsFromFolderAndSubfoldersRecursively(
+                await ApplicationData.Current.LocalFolder.GetFolderAsync(Path.Combine(gameLocation, "rltiles", "mon")));
 
             foreach (var file in allpngfiles)
             {
@@ -262,8 +254,10 @@ namespace DCSSTV
         {
             var GetWeaponPNG = new Dictionary<string, SkiaSharp.SKBitmap>();
 
-            List<StorageFile> allpngfiles = await GetFilesFromFolderAndSubfolders(Path.Combine(gameLocation, "rltiles", "player", "hand1"));
-            allpngfiles.AddRange(await GetFilesFromFolderAndSubfolders(Path.Combine(gameLocation, "rltiles", "player", "transform")));
+            List<StorageFile> allpngfiles = await GetPngsFromFolderAndSubfoldersRecursively(
+                await ApplicationData.Current.LocalFolder.GetFolderAsync(Path.Combine(gameLocation, "rltiles", "player", "hand1")));
+            allpngfiles.AddRange(await GetPngsFromFolderAndSubfoldersRecursively(
+                await ApplicationData.Current.LocalFolder.GetFolderAsync(Path.Combine(gameLocation, "rltiles", "player", "transform"))));
 
             foreach (var file in allpngfiles)
             {
