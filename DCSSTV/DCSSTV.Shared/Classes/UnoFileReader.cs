@@ -24,6 +24,7 @@ namespace DCSSTV
             }
             files.AddRange((await folder.GetFilesAsync()).Where(
                 file => file.Name.EndsWith("png", true, CultureInfo.InvariantCulture)));
+            Debug.WriteLine($"loaded {files.Count} files from {folder.Name}");
             return files;
         }
 

@@ -97,7 +97,7 @@ namespace DCSSTV
             // the the canvas and properties
             var canvas = e.Surface.Canvas;
 
-            Render(canvas, new Size(e.BackendRenderTarget.Width, e.BackendRenderTarget.Height), SKColors.Black, "SkiaSharp Red Hardware Rendering", driver.currentFrame);
+            Render(canvas, new Size(e.BackendRenderTarget.Width, e.BackendRenderTarget.Height), SKColors.Black, true, driver.currentFrame);
             readyToRefresh = true;
         }
 
@@ -108,11 +108,11 @@ namespace DCSSTV
             var canvas = e.Surface.Canvas;
             var info = e.Info;
 
-            Render(canvas, new Size(info.Width, info.Height), SKColors.Black, "SkiaSharp Blue Software Rendering", driver.currentFrame);
+            Render(canvas, new Size(info.Width, info.Height), SKColors.Black, false, driver.currentFrame);
             readyToRefresh = true;
         }
 
-        private static void Render(SKCanvas canvas, Size size, SKColor color, string text, SKBitmap bitmap)
+        private static void Render(SKCanvas canvas, Size size, SKColor color, bool useOldScaling, SKBitmap bitmap)
         {
             // get the screen density for scaling
             var display = DisplayInformation.GetForCurrentView();
@@ -136,7 +136,14 @@ namespace DCSSTV
                     scaledBitmapHeight = (int)(size.Width / scale * 0.4794D);
                 }
                 scaledBitmap = new SKBitmap(new SKImageInfo(scaledBitmapWidth, scaledBitmapHeight));
-                bitmap.ScalePixels(scaledBitmap, SKFilterQuality.Low);
+                if (useOldScaling)
+                {
+                    bitmap.Resize(scaledBitmap, SKBitmapResizeMethod.Lanczos3);
+                }
+                else
+                {
+                    bitmap.ScalePixels(scaledBitmap, SKFilterQuality.Medium);
+                }
             }
             else
             {
