@@ -28,7 +28,7 @@
         <StackPanel>
             <RelativePanel>
 
-
+                <Button Content="Full" Click="Button_Click_Fullscreen" Margin="110,5,0,0"/>
                 <Button Content="Start playback" Click="Button_Click3" Margin="547,0,0,0"/>
                 <TextBox Text="2" x:Name="speed" Margin="307,0,0,0" Width="40" InputScope="Digits" />
                 <TextBox Text="10" x:Name="framerate" Margin="480,0,0,0" Width="40" InputScope="Digits" />
