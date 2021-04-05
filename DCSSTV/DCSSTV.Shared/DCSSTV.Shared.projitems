@@ -31,6 +31,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Assets\cour.ttf" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Extra.zip" />
     <None Include="$(MSBuildThisFileDirectory)Assets\SharedAssets.md" />
   </ItemGroup>

@@ -68,7 +68,8 @@ namespace DCSSTV
                     Console.WriteLine("Caught exception On Navigation Load, trying to Cache missing Images");
                     Debug.WriteLine(exception);
                     await LoadExtraFolderIndexedDB();
-                    await SetOutputText("Done Loading Cache, Reloading Image generator, please wait...");
+                    await CacheFontInIndexedDB("cour.ttf");
+                    await SetOutputText("Reloading Image generator after data cache, please wait...");
                     await generator.ReinitializeGenerator();
                     Console.WriteLine("Done Loading");
                 }
@@ -208,6 +209,26 @@ namespace DCSSTV
                 var stream = bytes.AsStream();
                 await ExtractExtraFileFolder(stream);
                 await SetOutputText("Data Cached");
+
+            }
+            catch (Exception ex)
+            {
+                output.Text = ex.ToString();
+            }
+        }
+
+        private async Task CacheFontInIndexedDB(string name)
+        {
+            try
+            {
+                var file = await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/" + name));
+                var localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
+                Console.WriteLine(localFolder.Path);
+                var bytes = await FileIO.ReadBufferAsync(file);
+                var stream = bytes.AsStream();
+                File.WriteAllBytes(Path.Combine(localFolder.Path, "cour.ttf"), bytes.ToArray());
+                
+                await SetOutputText("Font loaded");
 
             }
             catch (Exception ex)

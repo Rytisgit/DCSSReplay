@@ -270,5 +270,12 @@ namespace DCSSTV
 
             return GetWeaponPNG;
         }
+
+        public async Task<MemoryStream> GetFontStream(string name)
+        {
+            var file = await ApplicationData.Current.LocalFolder.GetFileAsync(name);
+            var bytes = await FileIO.ReadBufferAsync(file);
+            return new MemoryStream(bytes.ToArray());
+        }
     }
 }

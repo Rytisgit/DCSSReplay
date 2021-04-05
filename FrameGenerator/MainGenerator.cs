@@ -21,7 +21,6 @@ namespace FrameGenerator
         private readonly IReadFromFileAsync ReadFromFile;
         private const int BottomRightStartX = 1065;
         private const int BottomRightStartY = 468;
-        public string Folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "DCSSReplay");
         public bool isGeneratingFrame = false;
         private bool NeedRefreshDictionaries = true;
         private Dictionary<string, string> _monsterdata;
@@ -43,7 +42,8 @@ namespace FrameGenerator
         private Dictionary<string, SKBitmap> _miscallaneous;
         private Dictionary<string, SKBitmap> _floorpng;
         private Dictionary<string, SKBitmap> _wallpng;
-        private SKBitmap _lastframe = new SKBitmap(1602, 1050);
+        private SKBitmap _lastFrame = new SKBitmap(1602, 1050);
+        private SKTypeface _typeface = SKTypeface.FromFamilyName("Courier New");
         private int previousHP = 0;
         private int previousMP = 0;
         private int _lostHpCheckpoint = 0;
@@ -111,6 +111,8 @@ namespace FrameGenerator
 
             _outOfSightCache = new Cacher();
             _weaponpng = await ReadFromFile.GetWeaponPNG(gameLocation);
+
+            _typeface = SKTypeface.FromStream(await ReadFromFile.GetFontStream("cour.ttf"));
         }
 
         public async Task ReinitializeGenerator()
@@ -152,7 +154,7 @@ namespace FrameGenerator
             {
                 case LayoutType.Normal:
                     currentFrame = DrawNormal(model);
-                    _lastframe = currentFrame;
+                    _lastFrame = currentFrame;
                     _lostHpCheckpoint = model.SideData.Health > previousHP ? 0 : model.SideData.Health == previousHP ? _lostHpCheckpoint : previousHP;
                     _lostMpCheckpoint = model.SideData.Magic > previousMP ? 0 : model.SideData.Magic == previousMP ? _lostMpCheckpoint : previousMP;
                     previousHP = model.SideData.Health;
@@ -160,14 +162,14 @@ namespace FrameGenerator
                     break;
                 case LayoutType.ConsoleSwitch:
                     currentFrame = DrawConsoleSwitch(model);
-                    _lastframe = currentFrame;
+                    _lastFrame = currentFrame;
                     _lostHpCheckpoint = model.SideData.Health > previousHP ? 0 : model.SideData.Health;
                     _lostMpCheckpoint = model.SideData.Magic > previousMP ? 0 : model.SideData.Magic;
                     previousHP = model.SideData.Health;
                     previousMP = model.SideData.Magic;
                     break;
                 case LayoutType.TextOnly:
-                    currentFrame = DrawTextBox(model, _lastframe);
+                    currentFrame = DrawTextBox(model, _lastFrame);
                     break;
                 case LayoutType.MapOnly:
                     currentFrame = DrawMap(model);
@@ -223,7 +225,7 @@ namespace FrameGenerator
             {
                 var font = new SKPaint
                 {
-                    Typeface = SKTypeface.FromFamilyName("Courier New"),
+                    Typeface = _typeface,
                     TextSize = 22
                 };
                 float x = 0;
@@ -247,7 +249,7 @@ namespace FrameGenerator
             using (SKCanvas g = new SKCanvas(overlayImage))
             {
                 var font = new SKPaint {
-                    Typeface = SKTypeface.FromFamilyName("Courier New"),
+                    Typeface = _typeface,
                     TextSize = 12,
                     IsAntialias = true,
                 };
@@ -292,7 +294,7 @@ namespace FrameGenerator
 
                 var overrides = GetOverridesForFrame(model.MonsterData, model.Location);
 
-                DrawSideDATA(g, model, _lostHpCheckpoint, _lostMpCheckpoint);
+                DrawSideDATA(g, model, _lostHpCheckpoint, _lostMpCheckpoint, _typeface);
 
                 DrawTiles(g, model, 0, 0, 0, overrides);
 
@@ -300,7 +302,7 @@ namespace FrameGenerator
 
                 DrawMonsterDisplay(g, model, overrides);
 
-                DrawLogs(g, model);
+                DrawLogs(g, model, _typeface);
 
                 DrawConsole(g, model, BottomRightStartX, BottomRightStartY);
 
@@ -318,7 +320,7 @@ namespace FrameGenerator
 
                 var overrides = GetOverridesForFrame(model.MonsterData, model.Location);
 
-                DrawSideDATA(g, model, _lostHpCheckpoint, _lostMpCheckpoint);
+                DrawSideDATA(g, model, _lostHpCheckpoint, _lostMpCheckpoint, _typeface);
 
                 DrawTiles(g, model, BottomRightStartX, BottomRightStartY, 0, overrides, 0.5f);
 
@@ -326,7 +328,7 @@ namespace FrameGenerator
 
                 DrawMonsterDisplay(g, model, overrides);
 
-                DrawLogs(g, model);
+                DrawLogs(g, model, _typeface);
 
                 DrawConsole(g, model, 0, 0, 2f, 16, 2f, 24);
 
@@ -355,7 +357,7 @@ namespace FrameGenerator
             var currentY = startY - yWidth * yResize;
             var font = new SKPaint
             {
-                Typeface = SKTypeface.FromFamilyName("Mono", 10, 5, SKFontStyleSlant.Upright),
+                Typeface = _typeface,
                 TextSize = fontSize
             };
 
@@ -379,7 +381,7 @@ namespace FrameGenerator
             var sideOfTilesX = 32 * model.LineLength; var currentLineY = 300;
             var font = new SKPaint
             {
-                Typeface = SKTypeface.FromFamilyName("Courier New"),
+                Typeface = _typeface,
                 TextSize = 20
             };
             foreach (var monsterlist in model.MonsterData)
@@ -417,12 +419,12 @@ namespace FrameGenerator
             }
         }
 
-        private static void DrawLogs(SKCanvas g, Model model)
+        private static void DrawLogs(SKCanvas g, Model model, SKTypeface typeface)
         {
             int y = 544;
             var font = new SKPaint
             {
-                Typeface = SKTypeface.FromFamilyName("Courier New"),
+                Typeface = typeface,
                 TextSize = 18
             };
             for (int i = 0; i < model.LogData.Length; i++)
@@ -438,11 +440,11 @@ namespace FrameGenerator
             }
         }
 
-        public static void DrawSideDATA(SKCanvas g, Model model, int prevHP, int prevMP)
+        public static void DrawSideDATA(SKCanvas g, Model model, int prevHP, int prevMP, SKTypeface typeface)
         {
             var font = new SKPaint
             {
-                Typeface = SKTypeface.FromFamilyName("Courier New"),
+                Typeface = typeface,
                 TextSize = 20,
                 IsAntialias = true,
             };
@@ -698,7 +700,7 @@ namespace FrameGenerator
             }
             var font = new SKPaint
             {
-                Typeface = SKTypeface.FromFamilyName("Courier New"),
+                Typeface = _typeface,
                 TextSize = 24 * resize,
                 
             };

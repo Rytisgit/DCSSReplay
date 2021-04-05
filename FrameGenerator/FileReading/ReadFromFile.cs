@@ -49,6 +49,8 @@ namespace FrameGenerator.FileReading
                
         public Task<Dictionary<string, SKBitmap>> GetWeaponPNG(string gameLocation);
 
+        public Task<MemoryStream> GetFontStream(string filename);
+
     }
 
     public class ReadFromFile : IReadFromFile
