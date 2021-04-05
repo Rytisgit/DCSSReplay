@@ -340,11 +340,27 @@ namespace DCSSTV
             }
         }
 
+       
+
 
         private void Button_Click_Fullscreen(object sender, RoutedEventArgs e)
         {
 #if __WASM__
             WebAssemblyRuntime.InvokeJS("toggleFullScreen();");
+#endif
+        }
+
+        private void Button_Click_ZoomIn(object sender, RoutedEventArgs e)
+        {
+#if __WASM__
+            WebAssemblyRuntime.InvokeJS("viewportSet(0);");
+#endif
+        }
+
+        private void Button_Click_ZoomOut(object sender, RoutedEventArgs e)
+        {
+#if __WASM__
+            WebAssemblyRuntime.InvokeJS("viewportSet(2);");
 #endif
         }
     }

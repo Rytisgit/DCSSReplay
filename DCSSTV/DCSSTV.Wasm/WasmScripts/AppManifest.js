@@ -52,3 +52,19 @@ function openFilePicker(htmlId) {
     };
     input.click();
 }
+
+
+function viewportSet(id) {
+    var viewports = {
+        default: "width=device-width, initial-scale=1",
+        zoom: "width=device-width, initial-scale=0.86, maximum-scale=5.0, minimum-scale=0.86"
+    };
+    var viewport_meta = document.getElementsByName("viewport")[0];
+    if (id == 0)
+        viewport_meta.setAttribute('content', viewports.default);
+    else
+        viewport_meta.setAttribute('content', viewports.zoom);
+}
+
+
+
