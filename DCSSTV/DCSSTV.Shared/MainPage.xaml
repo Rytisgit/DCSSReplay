@@ -29,11 +29,11 @@
             <RelativePanel>
 
                 <Button Content="Full" Click="Button_Click_Fullscreen" Margin="110,5,0,0"/>
-                <Button Content="Start playback" Click="Button_Click3" Margin="380,0,0,0"/>
+                <Button Content="Start playback" Click="Button_Click_Start_Playback" Margin="380,0,0,0"/>
                 <TextBox Text="2" x:Name="speed" Margin="550,0,0,0" Width="40" InputScope="Digits" />
                 <TextBox Text="10" x:Name="framerate" Margin="650,0,0,0" Width="40" InputScope="Digits" />
                 <Button Content="Refresh Data Cache" Click="LoadPackageFile" Margin="900,0,0,0"/>
-                <Button Content="Stop Playback" Click="Button_Click2" Margin="700,0,0,0"/>
+                <Button Content="Stop Playback" Click="Button_Click_Stop_Playback" Margin="700,0,0,0"/>
                 <TextBlock Text="Speed:" TextWrapping="Wrap" VerticalAlignment="Stretch" Margin="500,6,0,0"/>
                 <TextBlock Text="Delay:" TextWrapping="Wrap" VerticalAlignment="Stretch" Margin="600,6,0,0"/>
                 <Button Content="ZoomIn Phone" Click="Button_Click_ZoomIn" Margin="155,6,0,0"/>

@@ -44,6 +44,8 @@ namespace DCSSTV
         private DCSSReplayDriver driver;
         private TtyRecKeyframeDecoder decoder;
         private bool readyToRefresh = false;
+        private bool readyToPlay = false;
+        private int clickCount = 0;
         public MainPage()
         {
             InitializeComponent();
@@ -80,7 +82,7 @@ namespace DCSSTV
                     throw;
                 }
             }
-
+            readyToPlay = true;
             await SetOutputText("Image generator Initialized, Start Playback");
         }
 
@@ -157,8 +159,17 @@ namespace DCSSTV
             // Height 56 => 147
         }
 
-        private async void OnLogoButtonClicked(object sender, RoutedEventArgs e)
+        private async void Button_Click_Stop_Playback(object sender, RoutedEventArgs e)
         {
+            await EndImageLoop();
+        }
+        private async void Button_Click_Start_Playback(object sender, RoutedEventArgs e)
+        {
+            if (!readyToPlay)
+            {
+                await SetOutputText($"Still loading, click count:{++clickCount}");
+                return;
+            }
             await SetOutputText("Waiting for File Selection, loading file");
             MainPage.FileSelectedEvent -= OnFileSelectedEvent;
             MainPage.FileSelectedEvent += OnFileSelectedEvent;
@@ -244,7 +255,6 @@ namespace DCSSTV
 
         public async Task StartImageLoop()
         {
-            var side = false;
             try
             {
                 await generator.InitialiseGenerator();
@@ -306,20 +316,6 @@ namespace DCSSTV
             }
         }
 
-
-        private async void Button_Click2(object sender, RoutedEventArgs e)
-        {
-            await EndImageLoop();
-        }
-        private async void Button_Click3(object sender, RoutedEventArgs e)
-        {
-            MainPage.FileSelectedEvent -= OnFileSelectedEvent;
-            MainPage.FileSelectedEvent += OnFileSelectedEvent;
-#if __WASM__
-            WebAssemblyRuntime.InvokeJS("openFilePicker();");
-#endif
-           
-        }
 
         public bool ReadyForRefresh() => readyToRefresh;
 
