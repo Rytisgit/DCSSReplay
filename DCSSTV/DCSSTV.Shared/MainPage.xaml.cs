@@ -137,14 +137,7 @@ namespace DCSSTV
                     scaledBitmapHeight = (int)(size.Width / scale * 0.4794D);
                 }
                 scaledBitmap = new SKBitmap(new SKImageInfo(scaledBitmapWidth, scaledBitmapHeight));
-                if (useOldScaling)
-                {
-                    bitmap.Resize(scaledBitmap, SKBitmapResizeMethod.Hamming);
-                }
-                else
-                {
-                    bitmap.ScalePixels(scaledBitmap, SKFilterQuality.High);
-                }
+                bitmap.ScalePixels(scaledBitmap, SKFilterQuality.Medium);
             }
             else
             {
