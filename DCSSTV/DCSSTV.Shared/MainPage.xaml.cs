@@ -219,7 +219,7 @@ namespace DCSSTV
                 var bytes = await FileIO.ReadBufferAsync(file);
                 var stream = bytes.AsStream();
                 await ExtractExtraFileFolder(stream);
-                await SetOutputText("Data Cached");
+                await SetOutputText("Data Cached, reloading");
 
             }
             catch (Exception ex)
