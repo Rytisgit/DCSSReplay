@@ -44,7 +44,6 @@ namespace InputParser
         public string TrueHealth { get; set; } = "(321)";
         public int Magic { get; set; } = 50;
         public int MaxMagic { get; set; } = 50;
-        public string TrueMagic { get; set; } = "(100)";
         public string ArmourClass { get; set; } = "100";
         public string Evasion { get; set; } = "100";
         public string Shield { get; set; } = "100";

@@ -1,4 +1,4 @@
-        BLACK,//0 (black if sleeping? color is background for monster list?)
+        BLACK, none
         RED,  CLOUD_FIRE
         GREEN, CLOUD_MEPHITIC if qaz CLOUD_DUST
         BROWN, CLOUD_DUST

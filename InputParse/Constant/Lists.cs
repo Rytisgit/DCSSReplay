@@ -14,14 +14,14 @@ namespace InputParser.Constant
     }
     public enum ColorListEnum
     {
-        BLACK,//0 (black if sleeping? color is background for monster list?)
+        BLACK,//0
         RED,//1
         GREEN,//2
-        BROWN,//3 (wandering)(can hide yellow and brown)
+        BROWN,//3
         BLUE,//4
         MAGENTA,//5
         CYAN, //6
-        LIGHTGREY,//7 if nothing nothing its black, otherwise default is 7 for lightgrey
+        LIGHTGREY,//7 
         DARKGREY, //8
         LIGHTRED,//9
         LIGHTGREEN,//10
