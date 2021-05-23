@@ -11,6 +11,7 @@ namespace DCSSTV
 {
     class DCSSReplayDriver
     {
+        public int ConsoleSwitchLevel = 1;
         private readonly MainGenerator frameGenerator;
         private readonly Action _refreshCanvas;
         private readonly Func<bool> _readyForRefresh;
@@ -20,7 +21,6 @@ namespace DCSSTV
         private DateTime PreviousFrame = DateTime.Now;
         public TimeSpan MaxDelayBetweenPackets = new TimeSpan(0, 0, 0, 0, 500);//milliseconds
         private int FrameStepCount;
-        private int ConsoleSwitchLevel = 1;
         public int framerateControlTimeout = 1000;
         public TtyRecKeyframeDecoder ttyrecDecoder = null;
         public double PlaybackSpeed = 0, PausedSpeed = 2;
@@ -103,7 +103,7 @@ namespace DCSSTV
                             {
                                 try
                                 {
-                                    currentFrame = frameGenerator.GenerateImage(frame);
+                                    currentFrame = frameGenerator.GenerateImage(frame, ConsoleSwitchLevel);
                                     frameGenerator.isGeneratingFrame = false;
                                     frame = null;
                                     _refreshCanvas();
