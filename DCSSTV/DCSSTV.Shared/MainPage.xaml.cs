@@ -25,6 +25,7 @@ using Putty;
 using SkiaSharp;
 using SkiaSharp.Views.UWP;
 using TtyRecDecoder;
+using Windows.System;
 #if __WASM__
 using Uno.Foundation;
 #endif
@@ -38,19 +39,80 @@ namespace DCSSTV
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        private bool readyToPlay = false;
+        private int clickCount = 0;
+        private bool PlaybackPaused = false;
+        private int TimeStepLengthMS = 5000;
+        private int FrameStepCount=0;
         private CancellationTokenSource cancellations;
         public SKBitmap skBitmap = new SKBitmap(new SKImageInfo(1602, 768));
         private MainGenerator generator;
         private DCSSReplayDriver driver;
         private TtyRecKeyframeDecoder decoder;
         private bool readyToRefresh = false;
-        private bool readyToPlay = false;
-        private int clickCount = 0;
         public MainPage()
         {
             InitializeComponent();
             generator = new MainGenerator(new UnoFileReader(), 69);
             driver = new DCSSReplayDriver(generator, RefreshImage, ReadyForRefresh);
+        }
+
+        void Grid_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (decoder != null)
+            {
+                switch (e.Key)
+                {
+                    case VirtualKey.Z: driver.PlaybackSpeed = -100; break;
+                    case VirtualKey.X: driver.PlaybackSpeed = -10; break;
+                    case VirtualKey.C: driver.PlaybackSpeed = -1; break;
+                    case VirtualKey.B: driver.PlaybackSpeed = +1; break;
+                    case VirtualKey.N: driver.PlaybackSpeed = +10; break;
+                    case VirtualKey.M: driver.PlaybackSpeed += +100; break;
+
+                    case VirtualKey.F: driver.PlaybackSpeed -= 1; break;//progresive increase/decrease
+                    case VirtualKey.G: driver.PlaybackSpeed += 1; break;
+
+                    case VirtualKey.D: driver.PlaybackSpeed -= 0.2; break;//progresive increase/decrease
+                    case VirtualKey.H: driver.PlaybackSpeed += 0.2; break;
+
+                    case VirtualKey.K:
+                        if (driver.PlaybackSpeed != 0) { decoder.Pause(); } //pause when frame stepping
+                        FrameStepCount -= 1;//FrameStep -1 
+                        break;
+
+                    case VirtualKey.L:
+                        if (driver.PlaybackSpeed != 0) { decoder.Pause(); }//pause when frame stepping
+                        FrameStepCount += 1; //FrameStep +1
+                        break;
+
+                    case VirtualKey.Left:
+                        driver.Seek -= driver.Seek - TimeSpan.FromMilliseconds(TimeStepLengthMS) > TimeSpan.Zero ? TimeSpan.FromMilliseconds(TimeStepLengthMS) : TimeSpan.Zero;
+                        break;
+
+                    case VirtualKey.Right:
+                        driver.Seek += driver.Seek + TimeSpan.FromMilliseconds(TimeStepLengthMS) < driver.ttyrecDecoder.Length ? TimeSpan.FromMilliseconds(TimeStepLengthMS) : driver.ttyrecDecoder.Length;
+                        break;
+
+                    case VirtualKey.A:
+                        driver.ConsoleSwitchLevel = driver.ConsoleSwitchLevel != 2 ? 2 : 1;//switch console and tile windows around when in normal layout mode
+                        break;
+
+                    case VirtualKey.S:
+                        driver.ConsoleSwitchLevel = driver.ConsoleSwitchLevel != 3 ? 3 : 1;//switch to full console mode ound when in normal layout mode
+                        break;
+
+                    case VirtualKey.V://Play / Pause
+                    case VirtualKey.Space:
+                        driver.PlaybackSpeed = PlaybackPaused ? 1 : 0; 
+                        PlaybackPaused = !PlaybackPaused;
+                        break;
+                }
+              
+
+            }
+
+            base.OnKeyDown(e);
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
