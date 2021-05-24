@@ -7,10 +7,7 @@ namespace FrameGenerator.Extensions
     public static class TextWriteExtensions
     {
         public static void WriteCharacter(this SKCanvas g, string coloredCharacter, SKPaint font, float x, float y)
-        { 
-            //font.Typeface = SKTypeface.FromFamilyName("Courier New",10,20,SKFontStyleSlant.Upright);
-            //font.TextSize = 20;
-            //g.DrawText("asdf", 20, 20, font);
+        {
             font.Color = ColorList.GetColor(coloredCharacter.Substring(1));
             g.DrawText(coloredCharacter[0].ToString(), x, y + font.TextSize, font);
         }
