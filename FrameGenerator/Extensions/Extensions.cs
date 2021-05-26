@@ -320,7 +320,7 @@ namespace FrameGenerator.Extensions
                     if (model.TileNames[i].Contains(key))
                     {
                         Console.WriteLine(key);
-                       // System.Console.WriteLine(model.TileNames[i]);
+                       
                         string newtile = tileOverides[key] + model.TileNames[i].Substring(1);
                         model.TileNames[i] = newtile;
                         Console.WriteLine(model.TileNames[i]);

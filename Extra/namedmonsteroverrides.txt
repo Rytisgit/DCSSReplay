@@ -28,7 +28,7 @@ saltling
 shapeshifter
 pLIGHTRED shapeshifter
 
-glowing_shapeshifter
+glowing shapeshifter
 pLIGHTRED glowing_shapeshifter
 
 slave

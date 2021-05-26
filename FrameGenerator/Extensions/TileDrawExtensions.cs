@@ -95,22 +95,10 @@ namespace FrameGenerator.Extensions
 
                 if (!monsterData.TryGetValue(correctTile, out var pngName)) return false;
 
-                //foreach (var item in monsterData)
-                //{
-                //    if (item.Key[0] == '*') Console.WriteLine(item.Key);
-                //}
                 if (!monsterPng.TryGetValue(pngName, out SKBitmap png)) return false;
-                //foreach (var monsterTileName in monsterData)
-                //{
-                //    if (!monsterPng.TryGetValue(monsterTileName.Value, out SKBitmap temp)) Console.WriteLine(monsterTileName.Key + " badPngName: " + monsterTileName.Value);
-                //}
 
                 if (tile.Substring(1) != Enum.GetName(typeof(ColorListEnum), ColorListEnum.BLACK))
                 {
-                    //if (background == Enum.GetName(typeof(ColorList2), ColorList2.BROWN))//idk
-                    //{
-                    //    miscPng.TryGetValue("good_neutral", out BrandToDraw);
-                    //}
                     if (background == Enum.GetName(typeof(ColorListEnum), ColorListEnum.LIGHTGREY))
                     {
                         miscPng.TryGetValue("neutral", out BrandToDraw);
@@ -146,7 +134,7 @@ namespace FrameGenerator.Extensions
             using (SKCanvas g = new SKCanvas(tileToDraw))
             {
                 g.Clear(SKColors.Black);
-                if (tile.StartsWith("@BL")) return false;//player tile draw override TODO
+                if (tile.StartsWith("@BL")) return false;
                 var correctTile = ApplyBackgroundColorIfTileIsHighlighted(tile, background);
                 string pngName;
                 if (!overrides.TryGetValue(correctTile, out pngName))

@@ -37,7 +37,7 @@ namespace InputParser.Decorators
                 foreach (var item in chars)
                 {
                     if (item.ForegroundPaletteIndex > 15)
-                        Console.WriteLine(item.ForegroundPaletteIndex + item.ForegroundPaletteIndex);
+                        Console.WriteLine(item.Character + item.ForegroundPaletteIndex);
                 }
 
                 return new Model();

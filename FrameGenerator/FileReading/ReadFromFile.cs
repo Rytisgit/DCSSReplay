@@ -49,6 +49,8 @@ namespace FrameGenerator.FileReading
                
         public Task<Dictionary<string, SKBitmap>> GetWeaponPNG(string gameLocation);
 
+        public Task<MemoryStream> GetFontStream(string filename);
+
     }
 
     public class ReadFromFile : IReadFromFile
@@ -82,7 +84,7 @@ namespace FrameGenerator.FileReading
                     tokens[2] = tokens[2].Replace(" ", "");
                     tokens[0] = tokens[0].Replace("MONS_", "").Replace(" ", "").ToLower();
                     //if(!Enum.TryParse(tokens[2], out ColorList2 res)) Console.WriteLine(tokens[1] + tokens[2] + " badly colored: " + tokens[0]);
-                    if (monster.TryGetValue(tokens[1] + tokens[2], out var existing))
+                    if (monster.TryGetValue(tokens[1] + tokens[2], out var existing))//check if duplicate
                     {
                         //Console.WriteLine(tokens[1] + tokens[2] + "exist: " + existing + " new: " + tokens[0]); 
                     }

@@ -3,7 +3,6 @@
 // See the file LICENSE.txt for copying permission.
 
 using System.Diagnostics;
-using System.Dynamic;
 
 namespace Putty
 {
@@ -31,11 +30,8 @@ namespace Putty
             get { return _cc_next; }
         }
 
-        //private uint? fixed_attr;//for some reason linux compiled puttydll returns attr and cc_next switched, so we need to have a central attribute to check for color
-
         public char Character { get { return (char)chr; } }
         public uint Attributes =>
-            //fixed_attr ??= attr != 0 ? attr : (uint) cc_next;
             (attr | (uint)cc_next);
 
         public bool Blink { get { return (0x200000u & Attributes) != 0; } }

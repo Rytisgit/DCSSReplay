@@ -11,15 +11,16 @@ namespace DCSSTV
 {
     class DCSSReplayDriver
     {
+        public int ConsoleSwitchLevel = 1;
         private readonly MainGenerator frameGenerator;
         private readonly Action _refreshCanvas;
+        private readonly Func<bool> _readyForRefresh;
         public SKBitmap currentFrame { get; private set; }
         private const int TimeStepLengthMS = 5000;
         private readonly List<DateTime> PreviousFrames = new List<DateTime>();
         private DateTime PreviousFrame = DateTime.Now;
         public TimeSpan MaxDelayBetweenPackets = new TimeSpan(0, 0, 0, 0, 500);//milliseconds
         private int FrameStepCount;
-        private int ConsoleSwitchLevel = 1;
         public int framerateControlTimeout = 1000;
         public TtyRecKeyframeDecoder ttyrecDecoder = null;
         public double PlaybackSpeed = 0, PausedSpeed = 2;
@@ -38,10 +39,11 @@ namespace DCSSTV
         string selectedLink = "";
         string Name;
 
-        public DCSSReplayDriver(MainGenerator imageGenerator, Action RefreshCanvas)
+        public DCSSReplayDriver(MainGenerator imageGenerator, Action RefreshCanvas, Func<bool> readyForRefresh)
         {
             frameGenerator = imageGenerator;
             _refreshCanvas = RefreshCanvas;
+            _readyForRefresh = readyForRefresh;
         }
 
         public async Task CancelImageGeneration()
@@ -93,7 +95,7 @@ namespace DCSSTV
                     if (frame != null)
                     {
 
-                        if (!frameGenerator.isGeneratingFrame)
+                        if (!frameGenerator.isGeneratingFrame && _readyForRefresh.Invoke())
                         {
                             frameGenerator.isGeneratingFrame = true;
 #if true
@@ -101,7 +103,7 @@ namespace DCSSTV
                             {
                                 try
                                 {
-                                    currentFrame = frameGenerator.GenerateImage(frame);
+                                    currentFrame = frameGenerator.GenerateImage(frame, ConsoleSwitchLevel);
                                     frameGenerator.isGeneratingFrame = false;
                                     frame = null;
                                     _refreshCanvas();

@@ -50,6 +50,12 @@ namespace InputParser
         {
             if (chars == null) throw new ArgumentNullException("TerminalCharacter array is null");
 
+            Model DecorateWithTextAndHighlights()
+            {
+                var model = new HighLightDecorator(new TextDecorator(new BaseParser())).ParseData(chars);
+                return model;
+            }
+
             switch (GetLayoutType(chars, consoleFull, out var location))
             {
                 case LayoutType.Normal:
@@ -61,21 +67,21 @@ namespace InputParser
                 }
                 case LayoutType.TextOnly:
                 {
-                    var model = new HighLightDecorator(new TextDecorator(new BaseParser())).ParseData(chars);
+                    var model = DecorateWithTextAndHighlights();
                     model.Layout = LayoutType.TextOnly;
                     return model;
                 }
                     
                 case LayoutType.MapOnly:
                 {
-                    var model = new HighLightDecorator(new TextDecorator(new BaseParser())).ParseData(chars);
+                    var model = DecorateWithTextAndHighlights();
                     model.Layout = LayoutType.MapOnly;
                     model.Location = location;
                     return model;
                 }
                 case LayoutType.ConsoleFull:
                 {
-                    var model = new HighLightDecorator(new TextDecorator(new BaseParser())).ParseData(chars);
+                    var model = DecorateWithTextAndHighlights();
                     model.Layout = LayoutType.ConsoleFull;
                     return model;
                 }
