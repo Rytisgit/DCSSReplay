@@ -40,7 +40,11 @@ namespace Putty
             Handle = CreatePuttyTerminal(width, height);
             Width = width;
             Height = height;
+            DoubleSpace = Environment.GetEnvironmentVariable("ISDOCKER").Equals("DoubleSpace", StringComparison.InvariantCultureIgnoreCase) ;
+            //on docker linux the puttydll includes a space without a character in each row, so we skip them
         }
+
+        public bool DoubleSpace { get; set; }
 
         /// <summary>
         /// Create a copy of an existing PuTTY terminal, including PuTTY's parse state
@@ -51,6 +55,8 @@ namespace Putty
             Handle = ClonePuttyTerminal(toclone.Handle);
             Width = toclone.Width;
             Height = toclone.Height;
+            DoubleSpace = toclone.DoubleSpace;
+
         }
 
         /// <summary>
@@ -106,10 +112,10 @@ namespace Putty
             if (row < 0 || Height <= row) throw new ArgumentException("Row outside of terminal boundary", "row");
 
             var w = Width;
-
             var buffer = new List<TerminalCharacter>(w);
             var src = GetPuttyTerminalLine(Handle, row);
-            for (int x = 0; x < w; ++x) buffer.Add(src[x]);
+            if(DoubleSpace) for (int x = 0; x < w * 2; x += 2) buffer.Add(src[x]);
+            else for(int x = 0; x < w; ++x) buffer.Add(src[x]);
             Debug.Assert(buffer.Count == w);
             return buffer.AsReadOnly();
         }

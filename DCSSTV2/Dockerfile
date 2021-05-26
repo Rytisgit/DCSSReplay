@@ -5,11 +5,8 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 RUN apt-get update && apt-get install -y libfontconfig1 && apt-get install fontconfig
-RUN apt-get install ncurses-term
 RUN apt-get install -y libgtk-3-dev
-ENV TERM=putty-256color
-RUN export TERM=putty-256color
-
+ENV ISDOCKER=DoubleSpace
 COPY ["DCSSTV2/libPuttyDLL.so", "../lib/"]
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build

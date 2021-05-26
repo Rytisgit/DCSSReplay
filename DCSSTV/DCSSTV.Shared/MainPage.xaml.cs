@@ -18,6 +18,7 @@ using SkiaSharp;
 using SkiaSharp.Views.UWP;
 using TtyRecDecoder;
 using Windows.System;
+using Windows.UI.Xaml.Input;
 #if __WASM__
 using Uno.Foundation;
 #endif
