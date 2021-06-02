@@ -40,7 +40,8 @@ namespace Putty
             Handle = CreatePuttyTerminal(width, height);
             Width = width;
             Height = height;
-            DoubleSpace = Environment.GetEnvironmentVariable("ISDOCKER").Equals("DoubleSpace", StringComparison.InvariantCultureIgnoreCase) ;
+            var env = Environment.GetEnvironmentVariable("ISDOCKER");
+            DoubleSpace = env == null ? false : env.Equals("DoubleSpace", StringComparison.InvariantCultureIgnoreCase) ;
             //on docker linux the puttydll includes a space without a character in each row, so we skip them
         }
 
