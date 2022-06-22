@@ -61,7 +61,7 @@ namespace TtyRecMonkey
                     {
                         if (node.InnerText.Contains("ttyrec"))
                         {
-                            table.Rows.Add(i+1, node.InnerText.Split(new string[] { ".t" }, StringSplitOptions.None)[0], 0);
+                            table.Rows.Add(i, node.InnerText.Split(new string[] { ".t" }, StringSplitOptions.None)[0], 0);
                             i++;
                         }
                     }
