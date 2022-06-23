@@ -181,11 +181,11 @@ namespace FrameGenerator
                     break;
             }
             SKBitmap forupdate = currentFrame.Copy();
-
+            currentFrame.Dispose();
             return forupdate;
 
         }
-
+        // TODO possibly use to override for old and new version
         private Dictionary<string, string> GetOverridesForFrame(MonsterData[] monsters, string location)
         {
             var finalOverrides = new Dictionary<string, string>();
@@ -223,7 +223,7 @@ namespace FrameGenerator
             
             using (SKCanvas g = new SKCanvas(bmp))
             {
-                var font = new SKPaint
+                using var font = new SKPaint
                 {
                     Typeface = _typeface,
                     TextSize = 22
@@ -248,25 +248,25 @@ namespace FrameGenerator
 
             using (SKCanvas g = new SKCanvas(overlayImage))
             {
-                var font = new SKPaint {
+                using var font = new SKPaint {
                     Typeface = _typeface,
                     TextSize = 12,
                     IsAntialias = true,
                 };
-                var darkPen = new SKPaint() { 
+                using var darkPen = new SKPaint() { 
                 Color = SKColors.Black,
                 StrokeWidth = 2,
                 Style = SKPaintStyle.StrokeAndFill
                 };
                 var rect2 = new SKRect(25, 25, 25+ 1000, 25 + 430);
                 g.DrawRect(rect2, darkPen);
-                darkPen = new SKPaint()
+                using var darkPen2 = new SKPaint()
                 {
                     Color = new SKColor(255, 125, 98, 60),
                     StrokeWidth = 2,
                     Style = SKPaintStyle.Stroke
                 };
-                g.DrawRect(rect2, darkPen);
+                g.DrawRect(rect2, darkPen2);
 
                 float x = 50;
                 float y = 34;
@@ -355,7 +355,7 @@ namespace FrameGenerator
         {
             var currentX = startX;
             var currentY = startY - yWidth * yResize;
-            var font = new SKPaint
+            using var font = new SKPaint
             {
                 Typeface = _typeface,
                 TextSize = fontSize
@@ -379,7 +379,7 @@ namespace FrameGenerator
         private void DrawMonsterDisplay(SKCanvas g, Model model, Dictionary<string, string> overrides)
         {
             var sideOfTilesX = 32 * model.LineLength; var currentLineY = 300;
-            var font = new SKPaint
+            using var font = new SKPaint
             {
                 Typeface = _typeface,
                 TextSize = 20
@@ -400,6 +400,7 @@ namespace FrameGenerator
                             g.WriteCharacter(monsterlist.MonsterDisplay[i], font, x, currentLineY, monsterlist.MonsterBackground[i]);//not found write as string
                         }
                         x += 32;
+                        tileToDraw.Dispose();
                     }
                     var otherx = x;
                     foreach (var backgroundColor in monsterlist.MonsterBackground.Skip(monsterlist.MonsterDisplay.Length))
@@ -422,7 +423,7 @@ namespace FrameGenerator
         private static void DrawLogs(SKCanvas g, Model model, SKTypeface typeface)
         {
             int y = 544;
-            var font = new SKPaint
+            using var font = new SKPaint
             {
                 Typeface = typeface,
                 TextSize = 18
@@ -442,7 +443,7 @@ namespace FrameGenerator
 
         public static void DrawSideDATA(SKCanvas g, Model model, int prevHP, int prevMP, SKTypeface typeface)
         {
-            var font = new SKPaint
+            using var font = new SKPaint
             {
                 Typeface = typeface,
                 TextSize = 20,
@@ -672,22 +673,16 @@ namespace FrameGenerator
                 }
                 else if (!tileHighlight.Equals(Enum.GetName(typeof(ColorListEnum), ColorListEnum.BLACK)) && (!tile.Substring(1).Equals(Enum.GetName(typeof(ColorListEnum), ColorListEnum.BLACK)) || tile[0] == '.'))
                 {
-                    var backgroundPaint = new SKPaint()
-                    {
-                        Color = ColorList.GetColor(tileHighlight).WithAlpha(100),
-                        Style = SKPaintStyle.StrokeAndFill
-                    };
-
+                    using var backgroundPaint = new SKPaint();
+                    backgroundPaint.Color = ColorList.GetColor(tileHighlight).WithAlpha(100);
+                    backgroundPaint.Style = SKPaintStyle.StrokeAndFill;
                     g.DrawRect(rect, backgroundPaint);
                 }
                 if (cached)//darken to match out of sight
                 {
-                    var backgroundPaint = new SKPaint()
-                    {
-                        Color = new SKColor(0, 0, 0, 150),
-                        Style = SKPaintStyle.StrokeAndFill
-                    };
-
+                    using var backgroundPaint = new SKPaint();
+                    backgroundPaint.Color = new SKColor(0, 0, 0, 150);
+                    backgroundPaint.Style = SKPaintStyle.StrokeAndFill;
                     g.DrawRect(rect, backgroundPaint);
                 }
 
@@ -698,11 +693,10 @@ namespace FrameGenerator
             {
                 dict.Add(tile, "");
             }
-            var font = new SKPaint
+            using var font = new SKPaint
             {
                 Typeface = _typeface,
                 TextSize = 24 * resize,
-                
             };
             g.WriteCharacter(tile, font, x, y, tileHighlight);//unhandled tile, write it as a character instead
 
