@@ -315,7 +315,7 @@ namespace DCSSTV
                 await generator.InitialiseGenerator();
                 driver.ttyrecDecoder = decoder;
                 driver.PlaybackSpeed = int.Parse(speed.Text);
-                driver.framerateControlTimeout = int.Parse(framerate.Text);
+                driver.framerateControlTimeout = int.Parse(framerate.Text);//check 0 for speedup
                 readyToRefresh = true;
                 await driver.StartImageGeneration();
             }

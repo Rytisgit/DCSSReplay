@@ -271,7 +271,7 @@ namespace FrameGenerator.Extensions
 
                 var tileColor = tile.Substring(1);
 
-                if (sideData.Statuses1.Contains("Torna") || sideData.Statuses2.Contains("Torna"))//tornado override
+                if (sideData.Statuses1.Contains("Torna") || sideData.Statuses2.Contains("Torna") || sideData.Statuses1.Contains("Vortex") || sideData.Statuses2.Contains("Vortex"))//tornado override
                 {
                     var t1Colors = new List<string>() {
                             Enum.GetName(typeof(ColorListEnum), ColorListEnum.LIGHTRED),
