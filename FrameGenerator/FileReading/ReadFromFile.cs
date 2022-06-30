@@ -88,6 +88,10 @@ namespace FrameGenerator.FileReading
                     {
                         //Console.WriteLine(tokens[1] + tokens[2] + "exist: " + existing + " new: " + tokens[0]); 
                     }
+                    if (!char.IsLetterOrDigit(tokens[1][0]))//check if duplicate
+                    {
+                        Console.WriteLine(tokens[1] + tokens[2]);
+                    }
                     else monster[tokens[1] + tokens[2]] = tokens[0];
                 }
             }
@@ -102,6 +106,16 @@ namespace FrameGenerator.FileReading
                 monster[keyValue[0]] = keyValue[1];
             }
 
+            monster.Remove("*RED");//Remove monsters interfering with selectors, they are added back in with named overrides
+            monster.Remove("*MAGENTA");
+            monster.Remove("*BLUE");
+            monster.Remove("*LIGTBLUE");
+            monster.Remove("*LIGHTGREEN");
+            monster.Remove("*LIGHTCYAN");
+            monster.Remove("*GREEN");
+            monster.Remove("*BLUE");
+            monster.Remove("*RED");
+            monster.Remove("*WHITE");
             monster.Remove("8BLUE"); //remove roxanne impersonating statue
             return monster;
         }

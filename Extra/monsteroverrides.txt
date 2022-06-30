@@ -36,3 +36,5 @@ PGREEN plant_11
 PBLACK plant_11
 PWHITE plant_11
 PLIGHTGREY plant_11
+WMAGENTA shadow
+DLIGHTGREEN hydra5

@@ -194,3 +194,27 @@ DDARKGREY serpent_of_hell-dis
 the Serpent of Hell;Tartarus
 DDARKGREY serpent_of_hell-tar
 DMAGENTA serpent_of_hell-tar
+
+orb of fire
+*RED orb_of_fire
+
+wretched star
+*MAGENTA wretched_star
+
+battlesphere
+*LIGHTMAGENTA battlesphere
+*LIGHTBLUE battlesphere
+*MAGENTA battlesphere
+*BLUE battlesphere
+
+lurking horror
+*BLUE lurking_horror
+
+lost soul
+*LIGHTGREEN lost_soul
+
+deep elf necromancer
+*LIGHTGREEN lost_soul
+
+starspawn
+*LIGHTCYAN starspawn_tentacle_NW

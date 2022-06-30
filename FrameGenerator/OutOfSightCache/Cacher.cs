@@ -38,7 +38,6 @@ namespace FrameGenerator.OutOfSightCache
         }
         public bool TryGetLastSeenBitmapByChar(char key, out SKBitmap lastSeen)
         {
-            //TODO Track Cache Hits
             return OutofSightCache.TryGetValue(key, out lastSeen);
         }
 

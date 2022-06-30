@@ -48,7 +48,7 @@ namespace InputParser
 
         public static Model ParseData(TerminalCharacter[,] chars, bool consoleFull = false)
         {
-            if (chars == null) throw new ArgumentNullException("TerminalCharacter array is null");
+            if (chars == null) throw new ArgumentNullException("chars");
 
             Model DecorateWithTextAndHighlights()
             {

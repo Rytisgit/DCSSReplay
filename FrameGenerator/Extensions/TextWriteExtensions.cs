@@ -25,7 +25,7 @@ namespace FrameGenerator.Extensions
                     color = yellow;
                 }
                 var rect = SKRect.Create(x,y + OffsetY + 5, font.TextSize * 0.9f, font.TextSize * 0.9f);
-                var recpaint = new SKPaint
+                using var recpaint = new SKPaint
                 {
                     Style = SKPaintStyle.Fill,
                     Color = color
@@ -67,12 +67,14 @@ namespace FrameGenerator.Extensions
                 if (barLength != 250 && previousAmount - amount > 0)
                 {
                     int prevBarLength = (int)(250 * ((float)(previousAmount - amount) / maxAmount)) + 1;
-                    SKBitmap losthealthbar = new SKBitmap(prevBarLength, 16);
-                    new SKCanvas(losthealthbar).Clear(LostAmmountColor);
+                    using SKBitmap losthealthbar = new SKBitmap(prevBarLength, 16);
+                    using var a = new SKCanvas(losthealthbar);
+                    a.Clear(LostAmmountColor);
                     g.DrawBitmap(losthealthbar, x + barLength, y);
                 }
             }
-
+            temp.Dispose();
+            bar.Dispose();
             return g;
         }
     }

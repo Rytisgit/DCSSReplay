@@ -181,7 +181,6 @@ namespace FrameGenerator
                     break;
             }
             SKBitmap forupdate = currentFrame.Copy();
-            currentFrame.Dispose();
             return forupdate;
 
         }
@@ -522,7 +521,7 @@ namespace FrameGenerator
             if (!_characterdata.TryGetValue(characterRace, out var pngName)) return false;
             if (!_characterpng.TryGetValue(pngName, out SKBitmap png)) return false;
 
-            string[] location = model.SideData.Place.Split(':'); //TODO add floor is lava and water based on status
+            string[] location = model.SideData.Place.Split(':');
             if (!_floorandwall.TryGetValue(location[0].ToUpper(), out var currentLocationFloorAndWallName)) return false;
 
             if (!_floorpng.TryGetValue(currentLocationFloorAndWallName[1], out var floor)) return false;
@@ -602,7 +601,7 @@ namespace FrameGenerator
             if (!_wallpng.TryGetValue(CurrentLocationFloorAndWallName[0], out var wall)) return;
             if (!_floorpng.TryGetValue(CurrentLocationFloorAndWallName[1], out var floor)) return;
 
-            //TODO special handling for pan abyss zot and elf
+            //TODO special handling for pan abyss zot and elf tomb
 
             var currentTileX = startX;
             var currentTileY = startY;
@@ -658,7 +657,7 @@ namespace FrameGenerator
             bool cached = false;
             if (tile.TryDrawWallOrFloor(tileHighlight, wall, floor, wallAndFloorColors, out drawnTile) ||
                 tile.TryDrawMonster(tileHighlight, overrides, _monsterpng, _miscallaneous, floor, out drawnTile, out brandToDraw) ||//first try drawing overrides, that include blue color monsters, and monsters in sight
-                tile.TryDrawCachedTile(tileHighlight, _outOfSightCache, new List<char> {'!', '?', '=', '"', '$', ')', '[', '_', '}', '/', '(', ':', '|', '%', '÷', '†'}, new List<string> { "≈RED"}, out drawnTile, out cached) ||
+                tile.TryDrawCachedTile(tileHighlight, _outOfSightCache, new List<char> {'!', '?', '=', '"', '$', ')', '[', '_', '}', '/', '(', ':', '|', '%', '÷', '†', '*'}, new List<string> { "≈RED"}, out drawnTile, out cached) ||
                 tile.TryDrawMonster(tileHighlight, _monsterdata, _monsterpng, _miscallaneous, floor, out drawnTile, out brandToDraw) ||//draw the rest of the monsters
                 tile.TryDrawFeature(tileHighlight, _features, _alldngnpng, _miscallaneous, floor, wall, model.Location, out drawnTile) ||
                 tile.TryDrawCloud(_cloudtiles, _alleffects, floor, model.SideData, model.MonsterData, out drawnTile) ||

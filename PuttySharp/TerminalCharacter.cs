@@ -40,7 +40,7 @@ namespace Putty
         public bool Bold { get { return (0x040000u & Attributes) != 0; } }
         public bool Underline { get { return (0x080000u & Attributes) != 0; } }
         public bool Reverse { get { return (0x100000u & Attributes) != 0; } }
-        public int ForegroundPaletteIndex { get { var fg = (0x0001FFu & Attributes) >> 0; if (fg < 16 && Bold) fg |= 8; if (fg > 255 && Bold) fg |= 1; return (int)fg; } } // TODO: Reverse modes
+        public int ForegroundPaletteIndex { get { var fg = (0x0001FFu & Attributes) >> 0; if (fg < 16 && Bold) fg |= 8; if (fg > 255 && Bold) fg |= 1; return (int)fg; } }
         public int BackgroundPaletteIndex { get { var bg = (0x03FE00u & Attributes) >> 9; if (bg < 16 && Blink) bg |= 8; if (bg > 255 && Blink) bg |= 1; return (int)bg; } }
     }
 }

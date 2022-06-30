@@ -54,6 +54,12 @@ namespace FrameGenerator.Extensions
                     g.DrawColor(new SKColor(40, 20, 20, 200), SKBlendMode.Overlay);
                     return true;
                 }
+                if (correctTile == "*MAGENTA" || tile == "*LIGHTMAGENTA" || tile == "*BLACK")//selector highlight
+                {
+                    g.DrawBitmap(floor, new SKRect(0, 0, floor.Width, floor.Height));
+                    g.DrawColor(new SKColor(255, 255, 0, 145), SKBlendMode.Plus);
+                    return true;
+                }
             }
 
             return false;
