@@ -19,7 +19,7 @@ namespace TtyRecMonkey
         public int ChunksTargetMemoryMB = 100; // for all 3 expected 'active' chunks
         public int TimeStepLengthMS = 5000;
         public int MaxDelayBetweenPackets = 500;//millisecondss
-        public int framerateControlTimeout = 5;
+        public int framerateControlTimeout = 15;
         public bool OpenNone = true;
         public bool OpenFileSelect = false;
         public bool OpenDownload = false;
