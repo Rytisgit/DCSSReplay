@@ -240,3 +240,37 @@ starspawn
 
 glowing shapeshifter
 pLIGHTRED glowing_shapeshifter
+
+peacekeeper
+8YELLOW peacekeeper
+
+iron golem
+8CYAN iron_golem
+
+crystal guardian
+8GREEN crystal_guardian
+
+toenail golem
+8RED toenail_golem
+
+electric golem
+8CYAN electric_golem
+8LIGHTCYAN electric_golem
+
+ushabti
+8BROWN ushabti
+
+guardian golem
+8LIGHTCYAN guardian_golem
+
+spellforged servitor
+8LIGHTMAGENTA spellforged_servitor
+
+ice statue
+8LIGHTBLUE ice_statue
+
+obsidian statue
+8MAGENTA obsidian_statue
+
+orange crystal statue
+8LIGHTRED orange_crystal_statue

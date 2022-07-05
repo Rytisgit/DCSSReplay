@@ -106,17 +106,9 @@ namespace FrameGenerator.FileReading
                 monster[keyValue[0]] = keyValue[1];
             }
 
-            monster.Remove("*RED");//Remove monsters interfering with selectors, they are added back in with named overrides
-            monster.Remove("*MAGENTA");
-            monster.Remove("*BLUE");
-            monster.Remove("*LIGTBLUE");
-            monster.Remove("*LIGHTGREEN");
-            monster.Remove("*LIGHTCYAN");
-            monster.Remove("*GREEN");
-            monster.Remove("*BLUE");
-            monster.Remove("*RED");
-            monster.Remove("*WHITE");
-            monster.Remove("8BLUE"); //remove roxanne impersonating statue
+            //Remove monsters interfering with selectors and statues, they are added back in with named overrides
+            monster = monster.Where(x => !(x.Key.Contains('*') || x.Key.Contains('8'))).ToDictionary(x => x.Key, x => x.Value);
+
             return monster;
         }
 
@@ -171,7 +163,7 @@ namespace FrameGenerator.FileReading
                     pngParse = true;
                 }
             }
-
+            monster.Add(new NamedMonsterOverride(name, location, tileNameOverrides));
             return monster;
         }
 
