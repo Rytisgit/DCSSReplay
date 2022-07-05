@@ -27,7 +27,7 @@ namespace FrameGenerator
         private List<NamedMonsterOverride> _namedMonsterOverrideData;
         private Dictionary<string, string> _characterdata;
         private Dictionary<string, string[]> _floorandwall;
-        private Dictionary<string, string[]> _floorandwallColor;
+        private Dictionary<string, Tuple<List<string>, List<string>>> _floorandwallColor;
         private Dictionary<string, string> _features;
         private Dictionary<string, string> _cloudtiles;
         private Dictionary<string, string> _itemdata;
@@ -60,7 +60,7 @@ namespace FrameGenerator
             _weapondata = ReadFromFile.GetDictionaryFromFile(gameLocation + @"/weapons.txt");
 
             _floorandwall = ReadFromFile.GetFloorAndWallNamesForDungeons(gameLocation + @"/tilefloor.txt");
-            _floorandwallColor = ReadFromFile.GetFloorAndWallNamesForDungeons(gameLocation + @"/tilefloorColors.txt");
+            _floorandwallColor = ReadFromFile.GetFloorAndWallColours(gameLocation + @"/tilefloorColors.txt");
             _monsterdata = ReadFromFile.GetMonsterData(gameLocation + @"/mon-data.h", gameLocation + @"/monsteroverrides.txt");
             _namedMonsterOverrideData = ReadFromFile.GetNamedMonsterOverrideData(gameLocation + @"/namedmonsteroverrides.txt");
 
@@ -95,7 +95,7 @@ namespace FrameGenerator
             _weapondata = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/weapons.txt");
 
             _floorandwall = await ReadFromFile.GetFloorAndWallNamesForDungeons(gameLocation + @"/tilefloor.txt");
-            _floorandwallColor = await ReadFromFile.GetFloorAndWallNamesForDungeons(gameLocation + @"/tilefloorColors.txt");
+            _floorandwallColor = await ReadFromFile.GetFloorAndWallColours(gameLocation + @"/tilefloorColors.txt");
             _monsterdata = await ReadFromFile.GetMonsterData(gameLocation + @"/mon-data.h", gameLocation + @"/monsteroverrides.txt");
             _namedMonsterOverrideData = await ReadFromFile.GetNamedMonsterOverrideData(gameLocation + @"/namedmonsteroverrides.txt");
 
@@ -599,8 +599,6 @@ namespace FrameGenerator
             if (!_wallpng.TryGetValue(CurrentLocationFloorAndWallName[0], out var wall)) return;
             if (!_floorpng.TryGetValue(CurrentLocationFloorAndWallName[1], out var floor)) return;
 
-            //TODO special handling for pan abyss zot and elf tomb
-
             var currentTileX = startX;
             var currentTileY = startY;
 
@@ -644,7 +642,7 @@ namespace FrameGenerator
 #endif
         }
 
-        private bool DrawCurrentTile(SKCanvas g, Model model, Dictionary<string, string> dict, string tile, string tileHighlight, SKBitmap wall, SKBitmap floor, string[] wallAndFloorColors, Dictionary<string, string> overrides, float x, float y, float resize, out SKBitmap drawnTile)
+        private bool DrawCurrentTile(SKCanvas g, Model model, Dictionary<string, string> dict, string tile, string tileHighlight, SKBitmap wall, SKBitmap floor, Tuple<List<string>, List<string>> wallAndFloorColors, Dictionary<string, string> overrides, float x, float y, float resize, out SKBitmap drawnTile)
         {
             if (tile[0] == ' ' && (tileHighlight == Enum.GetName(typeof(ColorListEnum), ColorListEnum.LIGHTGREY) || tileHighlight == Enum.GetName(typeof(ColorListEnum), ColorListEnum.BLACK)) || tile.StartsWith("@BL")) { 
                 drawnTile = null; 

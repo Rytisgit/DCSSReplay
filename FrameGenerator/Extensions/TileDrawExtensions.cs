@@ -9,7 +9,7 @@ namespace FrameGenerator.Extensions
 {
     public static class TileDrawExtensions
     {
-        public static bool TryDrawWallOrFloor(this string tile, string background, SKBitmap wall, SKBitmap floor, string[] wallAndFloorColors, out SKBitmap tileToDraw)
+        public static bool TryDrawWallOrFloor(this string tile, string background, SKBitmap wall, SKBitmap floor, Tuple<List<string>, List<string>> wallAndFloorColors, out SKBitmap tileToDraw)
         {
             var correctTile = ApplyBackgroundColorIfTileIsHighlighted(tile, background);
             tileToDraw = new SKBitmap(32, 32);
@@ -23,7 +23,7 @@ namespace FrameGenerator.Extensions
                     return true;
                 }
 
-                if (correctTile[0] == '#' && correctTile.Substring(1).Equals(wallAndFloorColors[0]))
+                if (correctTile[0] == '#' && wallAndFloorColors.Item1.Contains(correctTile.Substring(1)))
                 {
                     g.DrawBitmap(wall, new SKRect(0, 0, wall.Width, wall.Height));
                     return true;
@@ -36,7 +36,7 @@ namespace FrameGenerator.Extensions
                     return true;
                 }
 
-                if (correctTile[0] == '.' && correctTile.Substring(1).Equals(wallAndFloorColors[1]))
+                if (correctTile[0] == '.' && wallAndFloorColors.Item2.Contains(correctTile.Substring(1)))
                 {
                     g.DrawBitmap(floor, new SKRect(0, 0, floor.Width, floor.Height));
                     return true;

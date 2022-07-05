@@ -18,6 +18,8 @@ namespace FrameGenerator.FileReading
 
         public List<NamedMonsterOverride> GetNamedMonsterOverrideData(string monsterOverrideFile);
 
+        public Dictionary<string, Tuple<List<string>, List<string>>> GetFloorAndWallColours(string file);
+
         public Dictionary<string, string[]> GetFloorAndWallNamesForDungeons(string file);
 
         public Dictionary<string, SKBitmap> GetSKBitmapDictionaryFromFolder(string folder);
@@ -40,6 +42,8 @@ namespace FrameGenerator.FileReading
         public Task<List<NamedMonsterOverride>> GetNamedMonsterOverrideData(string monsterOverrideFile);
 
         public Task<Dictionary<string, string[]>> GetFloorAndWallNamesForDungeons(string file);
+
+        public Task<Dictionary<string, Tuple<List<string>, List<string>>>> GetFloorAndWallColours(string file);
 
         public Task<Dictionary<string, SKBitmap>> GetSKBitmapDictionaryFromFolder(string folder);
 
@@ -88,11 +92,7 @@ namespace FrameGenerator.FileReading
                     {
                         //Console.WriteLine(tokens[1] + tokens[2] + "exist: " + existing + " new: " + tokens[0]); 
                     }
-                    if (!char.IsLetterOrDigit(tokens[1][0]))//check if duplicate
-                    {
-                        Console.WriteLine(tokens[1] + tokens[2]);
-                    }
-                    else monster[tokens[1] + tokens[2]] = tokens[0];
+                    monster[tokens[1] + tokens[2]] = tokens[0];
                 }
             }
 
@@ -174,6 +174,40 @@ namespace FrameGenerator.FileReading
 
             return monster;
         }
+
+        public Dictionary<string, Tuple<List<string>, List<string>>> GetFloorAndWallColours(string file)
+        {
+            var floorandwall = new Dictionary<string, Tuple<List<string>, List<string>>>();
+            string[] lines = File.ReadAllLines(file);
+            List<string> colorListFloor = new();
+            List<string> readingList = new();
+            string name = "";
+            for (var i = 0; i < lines.Length; i++)
+            {
+                if(!string.IsNullOrWhiteSpace(lines[i]) && string.IsNullOrWhiteSpace(name))
+                {
+                    name = lines[i];
+                    continue;
+                }
+                if (string.IsNullOrWhiteSpace(lines[i]) && colorListFloor.Count<1)
+                {
+                    colorListFloor.AddRange(readingList);
+                    readingList.Clear(); 
+                    continue;
+                }
+                if (string.IsNullOrWhiteSpace(lines[i]) && !string.IsNullOrWhiteSpace(name) && colorListFloor.Count > 0)
+                {
+                    floorandwall[name] = new Tuple<List<string>, List<string>>(new List<string>(colorListFloor), new List<string>(readingList));
+                    name = "";
+                    colorListFloor.Clear();
+                    readingList.Clear();
+                    continue;
+                }
+                readingList.Add(lines[i]);
+            }
+
+            return floorandwall;
+    }
 
         public Dictionary<string, string[]> GetFloorAndWallNamesForDungeons(string file)
         {
