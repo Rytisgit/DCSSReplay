@@ -218,3 +218,6 @@ deep elf necromancer
 
 starspawn
 *LIGHTCYAN starspawn_tentacle_NW
+
+glowing shapeshifter
+pLIGHTRED glowing_shapeshifter

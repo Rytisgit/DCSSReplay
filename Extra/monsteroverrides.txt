@@ -38,3 +38,5 @@ PWHITE plant_11
 PLIGHTGREY plant_11
 WMAGENTA shadow
 DLIGHTGREEN hydra5
+pYELLOW ironbound_convoker
+pLIGHTRED vault_warden

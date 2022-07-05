@@ -212,3 +212,5 @@ dry_fountain
 sparkling_fountain
 ∆GREEN
 unseen_item
+▓LIGHTMAGENTA
+permarock_magenta
