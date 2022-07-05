@@ -172,8 +172,8 @@ namespace FrameGenerator.Extensions
                         {
                             g.DrawBitmap(blood, new SKRect(0, 0, blood.Width, blood.Height));
                         }
-                        return true;
                     }
+                    return true;
                 }
 
                 if (pngName == "floor")
