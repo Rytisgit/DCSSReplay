@@ -590,14 +590,11 @@ namespace FrameGenerator
             var dict = new Dictionary<string, string>();//logging
             var SKBitmapList = new List<Tuple<string, SKBitmap>>(model.TileNames.Length);
 
-            string characterRace = model.SideData.Race.Substring(0, 6);
-            string[] location = model.SideData.Place.Split(':');
-
             _outOfSightCache.DumpDataOnLocationChange(model.SideData.Place);
 
-            if (!_floorandwall.TryGetValue(location[0].ToUpper(), out var CurrentLocationFloorAndWallName)) return;
+            if (!_floorandwall.TryGetValue(model.Location.ToUpper(), out var CurrentLocationFloorAndWallName)) return;
 
-            if (!_floorandwallColor.TryGetValue(location[0].ToUpper(), out var CurrentLocationFloorAndWallColor)) return;
+            if (!_floorandwallColor.TryGetValue(model.Location.ToUpper(), out var CurrentLocationFloorAndWallColor)) return;
 
             if (!_wallpng.TryGetValue(CurrentLocationFloorAndWallName[0], out var wall)) return;
             if (!_floorpng.TryGetValue(CurrentLocationFloorAndWallName[1], out var floor)) return;
