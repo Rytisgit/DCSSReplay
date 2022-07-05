@@ -195,6 +195,25 @@ the Serpent of Hell;Tartarus
 DDARKGREY serpent_of_hell-tar
 DMAGENTA serpent_of_hell-tar
 
+Serpent of Hell;Gehenna
+DRED serpent_of_hell-geh
+DYELLOW serpent_of_hell-geh
+DLIGHTRED serpent_of_hell-geh
+
+Serpent of Hell;Cocytus
+DLIGHTBLUE serpent_of_hell-coc
+DBLUE serpent_of_hell-coc
+DWHITE serpent_of_hell-coc
+
+Serpent of Hell;Dis
+DCYAN serpent_of_hell-dis
+DLIGHTGREY serpent_of_hell-dis
+DDARKGREY serpent_of_hell-dis
+
+Serpent of Hell;Tartarus
+DDARKGREY serpent_of_hell-tar
+DMAGENTA serpent_of_hell-tar
+
 orb of fire
 *RED orb_of_fire
 

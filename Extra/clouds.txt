@@ -136,3 +136,5 @@ bolt04
 bolt07
 *CYAN
 bolt03
+*YELLOW
+bolt06
