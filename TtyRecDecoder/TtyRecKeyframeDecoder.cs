@@ -69,7 +69,7 @@ namespace TtyRecDecoder
 
             LoadCancel = true;
             LoadThread.Join();
-            foreach (var ap in Packets) using (ap.RestartPosition) { }
+            foreach (var ap in Packets) ap.RestartPosition.Dispose();
             Packets.Clear();
 
             Debug.Assert(!LoadThread.IsAlive); // We assert this...
@@ -204,7 +204,7 @@ namespace TtyRecDecoder
                 var p = Packets[i];
                 if (p.RestartPosition != null)
                 {
-                    using (term) { }
+                    term?.Dispose();
                     term = new Terminal(p.RestartPosition);
                 }
                 if (p.DecodedCache == null)
@@ -213,9 +213,9 @@ namespace TtyRecDecoder
                     // p.DecodedCacheWeak = new WeakReference( p.DecodedCache ); // TODO:  Hook up to a configuration flag?  Actually not that useful from the looks of it.
                     Packets[i] = p;
                 }
-                if (p.Payload != null) term.Send(p.Payload);
+                if (p.Payload != null) term?.Send(p.Payload);
             }
-            using (term) { }
+            term?.Dispose();
         }
 
         public void Seek(TimeSpan when)
@@ -388,7 +388,7 @@ namespace TtyRecDecoder
             }
 
             lock (LoadPacketBuffer) LoadPacketBuffer.Enqueue(buffer);
-            buffer = null;
+            buffer.Clear();
         }
     }
 }

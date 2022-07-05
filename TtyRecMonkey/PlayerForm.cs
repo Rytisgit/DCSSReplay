@@ -65,8 +65,7 @@ namespace TtyRecMonkey
                 if (open.ShowDialog() != DialogResult.OK) return;
 
                 var files = open.FileNames;
-                using (open) { }
-                open = null;
+                open.Dispose();
                 DoOpenFiles(files);
             });
             mt.SetApartmentState(ApartmentState.STA);

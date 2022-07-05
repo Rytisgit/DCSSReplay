@@ -37,7 +37,7 @@ namespace TtyRecDecoder
 
                 if (packet.Payload == null)
                 {
-                    using (term) { }
+                    term?.Dispose();
                     term = new Terminal(w, h);
                     need_restart = true;
                 }
@@ -61,7 +61,7 @@ namespace TtyRecDecoder
 
                 if (packet.Payload != null) term.Send(packet.Payload);
             }
-            using (term) { }
+            term?.Dispose();
         }
     }
 }

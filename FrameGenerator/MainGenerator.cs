@@ -136,7 +136,7 @@ namespace FrameGenerator
                 
                 var image = DrawFrame(model);
                 
-#if true //Memory Limit Mode
+#if false //Memory Limit Mode //TODO: fix the memory leak with annotated packets?
                 GC.Collect();
 #endif
                 //var base64String = Convert.ToBase64String(image.Encode(SKEncodedImageFormat.Png, 80).ToArray());
@@ -154,7 +154,7 @@ namespace FrameGenerator
             {
                 case LayoutType.Normal:
                     currentFrame = DrawNormal(model);
-                    _lastFrame = currentFrame;
+                    _lastFrame = currentFrame.Copy();
                     _lostHpCheckpoint = model.SideData.Health > previousHP ? 0 : model.SideData.Health == previousHP ? _lostHpCheckpoint : previousHP;
                     _lostMpCheckpoint = model.SideData.Magic > previousMP ? 0 : model.SideData.Magic == previousMP ? _lostMpCheckpoint : previousMP;
                     previousHP = model.SideData.Health;
@@ -162,7 +162,7 @@ namespace FrameGenerator
                     break;
                 case LayoutType.ConsoleSwitch:
                     currentFrame = DrawConsoleSwitch(model);
-                    _lastFrame = currentFrame;
+                    _lastFrame = currentFrame.Copy();
                     _lostHpCheckpoint = model.SideData.Health > previousHP ? 0 : model.SideData.Health;
                     _lostMpCheckpoint = model.SideData.Magic > previousMP ? 0 : model.SideData.Magic;
                     previousHP = model.SideData.Health;
@@ -181,6 +181,7 @@ namespace FrameGenerator
                     break;
             }
             SKBitmap forupdate = currentFrame.Copy();
+            currentFrame.Dispose();
             return forupdate;
 
         }
