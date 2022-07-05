@@ -659,7 +659,8 @@ namespace FrameGenerator
                 tile.TryDrawMonster(tileHighlight, _monsterdata, _monsterpng, _miscallaneous, floor, out drawnTile, out brandToDraw) ||//draw the rest of the monsters
                 tile.TryDrawFeature(tileHighlight, _features, _alldngnpng, _miscallaneous, floor, wall, model.Location, out drawnTile) ||
                 tile.TryDrawCloud(_cloudtiles, _alleffects, floor, model.SideData, model.MonsterData, out drawnTile) ||
-                tile.TryDrawItem(tileHighlight, _itemdata, _itempng, _miscallaneous, floor, model.Location, out drawnTile)) 
+                tile.TryDrawItem(tileHighlight, _itemdata, _itempng, _miscallaneous, floor, model.Location, out drawnTile) ||
+                tile.TryDrawCachedTileInView(tileHighlight, _outOfSightCache, new List<char> { '!', '?', '=', '"', '$', ')', '[', '_', '}', '/', '(', ':', '|', '%', '÷', '†', '*' }, new List<string> { "≈RED" }, out drawnTile)) 
             {
                 var rect = new SKRect(x, y, x+ ( drawnTile.Width * resize),y+ ( drawnTile.Height * resize));
                 g.DrawBitmap(drawnTile, rect);

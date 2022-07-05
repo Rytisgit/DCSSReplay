@@ -91,6 +91,25 @@ namespace FrameGenerator.Extensions
             return false;
         }
 
+        public static bool TryDrawCachedTileInView(this string tile, string highlight, Cacher outOfSightCache, List<char> noCache, List<string> list, out SKBitmap lastSeen)
+        {
+            lastSeen = null;
+            if (noCache.Contains(tile[0]))
+            {
+                return false;
+            }
+            if (list.Contains(tile))
+            {
+                return false;
+            }
+            if (outOfSightCache.TryGetLastSeenBitmapByChar(tile[0], out lastSeen))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         public static bool TryDrawMonster(this string tile, string background, Dictionary<string, string> monsterData, Dictionary<string, SKBitmap> monsterPng, Dictionary<string, SKBitmap> miscPng, SKBitmap floor, out SKBitmap tileToDraw, out SKBitmap BrandToDraw)
         {
             tileToDraw = new SKBitmap(32, 32);
