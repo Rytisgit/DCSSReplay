@@ -112,6 +112,11 @@ namespace FrameGenerator.Extensions
 
         public static bool TryDrawMonster(this string tile, string background, Dictionary<string, string> monsterData, Dictionary<string, SKBitmap> monsterPng, Dictionary<string, SKBitmap> miscPng, SKBitmap floor, out SKBitmap tileToDraw, out SKBitmap BrandToDraw)
         {
+            if (tile.IsWallOrFloor()) {
+                tileToDraw = null;
+                BrandToDraw = null;
+                return false; 
+            }
             tileToDraw = new SKBitmap(32, 32);
             BrandToDraw = null;
             using (SKCanvas g = new SKCanvas(tileToDraw))
