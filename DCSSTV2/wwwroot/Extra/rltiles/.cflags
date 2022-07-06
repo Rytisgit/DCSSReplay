@@ -1,1 +1,0 @@
-mingw32-g++ -O2  -g -Wall -Wextra -Wno-parentheses -Wno-unused-parameter           
