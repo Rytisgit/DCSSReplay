@@ -136,7 +136,7 @@ namespace FrameGenerator
                 
                 var image = DrawFrame(model);
                 
-#if false //Memory Limit Mode //TODO: fix the memory leak with annotated packets?
+#if false //Memory Limit Mode //maybe its been fixed?
                 GC.Collect();
 #endif
                 //var base64String = Convert.ToBase64String(image.Encode(SKEncodedImageFormat.Png, 80).ToArray());
