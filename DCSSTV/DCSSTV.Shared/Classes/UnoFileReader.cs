@@ -172,6 +172,45 @@ namespace DCSSTV
         }
 
 
+        public async Task<Dictionary<string, Tuple<List<string>, List<string>>>> GetFloorAndWallColours(string filename)
+        {
+            var floorandwall = new Dictionary<string, Tuple<List<string>, List<string>>>();
+            var localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
+            var file = await localFolder.GetFileAsync(filename);
+            Debug.WriteLine(file.Path);
+
+            var liness = await FileIO.ReadLinesAsync(file);
+            var lines = liness.ToArray();
+            var colorListFloor = new List<string>();
+            var readingList = new List<string>();
+            string name = "";
+            for (var i = 0; i < lines.Length; i++)
+            {
+                if (!string.IsNullOrWhiteSpace(lines[i]) && string.IsNullOrWhiteSpace(name))
+                {
+                    name = lines[i];
+                    continue;
+                }
+                if (string.IsNullOrWhiteSpace(lines[i]) && colorListFloor.Count < 1)
+                {
+                    colorListFloor.AddRange(readingList);
+                    readingList.Clear();
+                    continue;
+                }
+                if (string.IsNullOrWhiteSpace(lines[i]) && !string.IsNullOrWhiteSpace(name) && colorListFloor.Count > 0)
+                {
+                    floorandwall[name] = new Tuple<List<string>, List<string>>(new List<string>(colorListFloor), new List<string>(readingList));
+                    name = "";
+                    colorListFloor.Clear();
+                    readingList.Clear();
+                    continue;
+                }
+                readingList.Add(lines[i]);
+            }
+
+            return floorandwall;
+        }
+
         public async Task<Dictionary<string, string[]>> GetFloorAndWallNamesForDungeons(string filename)
         {
             var floorandwall = new Dictionary<string, string[]>();

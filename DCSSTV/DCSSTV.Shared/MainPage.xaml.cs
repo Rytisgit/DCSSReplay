@@ -344,7 +344,7 @@ namespace DCSSTV
             {
                 var localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
                 Console.WriteLine(localFolder.Path);
-                var folder = await localFolder.CreateFolderAsync("Extra", CreationCollisionOption.OpenIfExists);
+                var folder = localFolder;
 
                 var zipInStream = new ZipInputStream(stream);
                 var entry = zipInStream.GetNextEntry();

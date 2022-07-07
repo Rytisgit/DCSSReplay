@@ -171,8 +171,8 @@ namespace FrameGenerator.FileReading
         {
             var floorandwall = new Dictionary<string, Tuple<List<string>, List<string>>>();
             string[] lines = File.ReadAllLines(file);
-            List<string> colorListFloor = new();
-            List<string> readingList = new();
+            var colorListFloor = new List<string>();
+            var readingList = new List<string>();
             string name = "";
             for (var i = 0; i < lines.Length; i++)
             {
