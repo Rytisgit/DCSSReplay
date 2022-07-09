@@ -98,7 +98,7 @@ namespace DCSSTV
                         if (!frameGenerator.isGeneratingFrame && _readyForRefresh.Invoke())
                         {
                             frameGenerator.isGeneratingFrame = true;
-#if true
+#if faklse
                             ThreadPool.UnsafeQueueUserWorkItem(o =>
                             {
                                 try
@@ -117,9 +117,8 @@ namespace DCSSTV
                             }, null);
 #else //non threaded image generation (slow)
                             currentFrame = frameGenerator.GenerateImage(frame);
-                            Console.WriteLine("driver "+currentFrame.ByteCount);
+                            Console.WriteLine("driver " + currentFrame.ByteCount);
                             frameGenerator.isGeneratingFrame = false;
-                            frame = null;
                             _refreshCanvas();
 #endif
                         }
@@ -131,6 +130,78 @@ namespace DCSSTV
                     currentFrame = frameGenerator.GenerateImage(null);
 
                 }
+
+            }
+
+        }
+        public void GetImage()
+        {
+            //if (PlaybackSpeed != 0) { PausedSpeed = PlaybackSpeed; PlaybackSpeed = 0; text = "Play"; }
+            // else { PlaybackSpeed = PausedSpeed; text = "Pause"; }
+            var now = DateTime.Now;
+
+            var dt = Math.Max(0, Math.Min(0.1, (now - PreviousFrame).TotalSeconds));
+            PreviousFrame = now;
+
+            if (ttyrecDecoder != null)
+            {
+
+                Seek += TimeSpan.FromSeconds(dt * PlaybackSpeed);
+
+                if (Seek > ttyrecDecoder.Length)
+                {
+                    Seek = ttyrecDecoder.Length;
+                }
+                if (Seek < TimeSpan.Zero)
+                {
+                    Seek = TimeSpan.Zero;
+                }
+
+                if (FrameStepCount != 0)
+                {
+                    ttyrecDecoder.FrameStep(FrameStepCount); //step frame index by count
+                    Seek = ttyrecDecoder.CurrentFrame.SinceStart;
+                    FrameStepCount = 0;
+                }
+                else
+                {
+
+                    ttyrecDecoder.Seek(Seek);
+
+                }
+
+                var frame = ttyrecDecoder.CurrentFrame.Data;
+
+                if (frame != null)
+                {
+
+#if faklse
+                    ThreadPool.UnsafeQueueUserWorkItem(o =>
+                    {
+                        try
+                        {
+                            currentFrame = frameGenerator.GenerateImage(frame, ConsoleSwitchLevel);
+                            frameGenerator.isGeneratingFrame = false;
+                            frame = null;
+                            _refreshCanvas();
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                            //generator.GenerateImage(savedFrame);
+                            frameGenerator.isGeneratingFrame = false;
+                        }
+                    }, null);
+#else //non threaded image generation (slow)
+                currentFrame = frameGenerator.GenerateImage(frame);
+                Console.WriteLine("driver " + currentFrame.ByteCount);
+#endif
+                }
+
+            }
+            else
+            {
+                currentFrame = frameGenerator.GenerateImage(null);
 
             }
         }

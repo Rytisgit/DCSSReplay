@@ -9,7 +9,7 @@
     xmlns:not_win="http://uno.ui/not_win"
     mc:Ignorable="d not_win">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" KeyDown="Grid_KeyDown">
+    <Grid KeyDown="Grid_KeyDown" Background="Black">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition/>
@@ -19,12 +19,16 @@
             <views:SKSwapChainPanel
                 x:Name="swapChain"
                 PaintSurface="OnPaintSwapChain"
+                EnableRenderLoop="True"
                 Visibility="{x:Bind hwAcceleration.IsChecked, Mode=OneWay}" VerticalAlignment="Stretch" />
             <views:SKXamlCanvas 
                 x:Name="canvas" 
                 PaintSurface="OnPaintSurface"
                 Visibility="{x:Bind Not(hwAcceleration.IsChecked), Mode=OneWay}" />
+
         </Grid>
+
+
         <StackPanel>
             <RelativePanel>
 

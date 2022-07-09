@@ -19,6 +19,9 @@
     <PackageReference Include="SkiaSharp.Views">
       <Version>2.80.2</Version>
     </PackageReference>
+    <PackageReference Include="SkiaSharp.Views.Forms">
+      <Version>2.80.2</Version>
+    </PackageReference>
     <PackageReference Include="Uno.Core" Version="2.4.0" />
     <PackageReference Include="Uno.UI" Version="2.4.9" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.1" />

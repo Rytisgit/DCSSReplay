@@ -151,7 +151,9 @@ namespace DCSSTV
 
         private void OnPaintSwapChain(object sender, SKPaintGLSurfaceEventArgs e)
         {
+            driver.GetImage();
             if (driver.currentFrame == null) return;
+            
             // the the canvas and properties
             var canvas = e.Surface.Canvas;
 
@@ -203,10 +205,10 @@ namespace DCSSTV
             }
             
             // handle the device screen density
-            canvas.Scale(scale);
+            //canvas.Scale(scale);
             
             // make sure the canvas is blank
-            canvas.Clear(color);
+            //canvas.Clear(color);
             //draw bitmap scaled to device size, fitting to width
             canvas.DrawBitmap(scaledBitmap, 0, 0); 
 
@@ -317,7 +319,7 @@ namespace DCSSTV
                 driver.PlaybackSpeed = int.Parse(speed.Text);
                 driver.framerateControlTimeout = int.Parse(framerate.Text);//check 0 for speedup
                 readyToRefresh = true;
-                await driver.StartImageGeneration();
+                //await driver.StartImageGeneration();
             }
             catch (Exception ex)
             {

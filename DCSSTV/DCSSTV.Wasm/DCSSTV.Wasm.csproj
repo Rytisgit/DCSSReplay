@@ -61,6 +61,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Filter" Version="1.1.1" />
     <PackageReference Include="SkiaSharp.NativeAssets.WebAssembly" Version="2.80.3-preview.24" />
+    <PackageReference Include="SkiaSharp.Views.Forms" Version="2.80.2" />
     <PackageReference Include="SkiaSharp.Views.Uno" Version="2.80.3-preview.24" />
     <PackageReference Include="Uno.Wasm.Bootstrap" Version="2.1.0" />
     <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="2.1.0" />
