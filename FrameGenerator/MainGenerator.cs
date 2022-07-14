@@ -198,10 +198,10 @@ namespace FrameGenerator
                         => !string.IsNullOrWhiteSpace(monsterOverride.Name) &&
                            monsterLine.MonsterTextRaw.Contains(monsterOverride.Name.Substring(0, monsterOverride.Name.Length - 2)));
 
-                foreach (var tileOverride in rules.ToList().Where(
+                foreach (var tileOverride in rules.Where(
                     rule => string.IsNullOrWhiteSpace(rule.Location) || rule.Location == location).SelectMany(rule => rule.TileNameOverrides))
                 {
-                    finalOverrides.Add(tileOverride.Key, tileOverride.Value);
+                    finalOverrides.AddOrIgnore(tileOverride.Key, tileOverride.Value);
                 }
 
                 finalOverrides.AddColorDependantOverrides(monsterLine);
@@ -210,7 +210,7 @@ namespace FrameGenerator
             foreach (var tileOverride in _namedMonsterOverrideData.Where(
                 rule => string.IsNullOrWhiteSpace(rule.Name) && rule.Location == location).SelectMany(rule => rule.TileNameOverrides))
             {
-                finalOverrides.Add(tileOverride.Key, tileOverride.Value); //add all overrides for current location that arent for specific monsters
+                finalOverrides.AddOrIgnore(tileOverride.Key, tileOverride.Value); //add all overrides for current location that arent for specific monsters
             }
 
             return finalOverrides;

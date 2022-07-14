@@ -12,6 +12,11 @@ namespace FrameGenerator.Extensions
             !monsterData[2].Empty && monsterData[2].MonsterTextRaw.Contains(MonsterName) ||
             !monsterData[3].Empty && monsterData[3].MonsterTextRaw.Contains(MonsterName);
 
+        public static void AddOrIgnore(this Dictionary<string, string> dict, string key, string value)
+        {
+            if (!dict.ContainsKey(key))
+                dict.Add(key, value);
+        }
 
         public static string ParseUniqueWeaponName(this string fullstring)
         {
@@ -71,8 +76,7 @@ namespace FrameGenerator.Extensions
                 foreach (var monstertileName in monsterLine.MonsterDisplay
                 ) //can be maelstron on screen and vortex not in list of monster, but ehhh
                 {
-                    var pngName = "";
-                    pngName = (monstertileName.Substring(1)) switch
+                    finalOverrides.AddOrIgnore(monstertileName, (monstertileName.Substring(1)) switch
                     {
                         "BLACK" => "very_ugly_thing",
                         "RED" => "very_ugly_thing",
@@ -91,8 +95,7 @@ namespace FrameGenerator.Extensions
                         "LIGHTCYAN" => "very_ugly_thing3",
                         "WHITE" => "very_ugly_thing5",
                         _ => "very_ugly_thing5",
-                    };
-                    if (!finalOverrides.TryGetValue(monstertileName, out _)) finalOverrides.Add(monstertileName, pngName);
+                    });
                 }
             }
             else
@@ -100,8 +103,7 @@ namespace FrameGenerator.Extensions
                 foreach (var monstertileName in monsterLine.MonsterDisplay
                 ) //can be maelstron on screen and vortex not in list of monster, but ehhh
                 {
-                    var pngName = "";
-                    pngName = (monstertileName.Substring(1)) switch
+                    finalOverrides.AddOrIgnore(monstertileName, (monstertileName.Substring(1)) switch
                     {
                         "BLACK" => "ugly_thing",
                         "RED" => "ugly_thing",
@@ -120,8 +122,7 @@ namespace FrameGenerator.Extensions
                         "LIGHTCYAN" => "ugly_thing3",
                         "WHITE" => "ugly_thing5",
                         _ => "ugly_thing5",
-                    };
-                    if (!finalOverrides.TryGetValue(monstertileName, out _)) finalOverrides.Add(monstertileName, pngName);
+                    });
                 }
             }
         }
@@ -134,14 +135,14 @@ namespace FrameGenerator.Extensions
                 {
                     foreach (var monstertileName in monsterLine.MonsterDisplay)
                     {
-                        finalOverrides.Add(monstertileName, "slime_creature3");
+                        finalOverrides.AddOrIgnore(monstertileName, "slime_creature3");
                     }
                 }
                 else
                 {
                     foreach (var monstertileName in monsterLine.MonsterDisplay)
                     {
-                        finalOverrides.Add(monstertileName, "slime_creature2");
+                        finalOverrides.AddOrIgnore(monstertileName, "slime_creature2");
                     }
                 }
             }
@@ -149,14 +150,14 @@ namespace FrameGenerator.Extensions
             {
                 foreach (var monstertileName in monsterLine.MonsterDisplay)
                 {
-                    finalOverrides.Add(monstertileName, "slime_creature4");
+                    finalOverrides.AddOrIgnore(monstertileName, "slime_creature4");
                 }
             }
             if (monsterLine.MonsterTextRaw.Contains("titan"))
             {
                 foreach (var monstertileName in monsterLine.MonsterDisplay)
                 {
-                    finalOverrides.Add(monstertileName, "slime_creature5");
+                    finalOverrides.AddOrIgnore(monstertileName, "slime_creature5");
                 }
             }
 
@@ -166,8 +167,7 @@ namespace FrameGenerator.Extensions
         {
             foreach (var monstertileName in monsterLine.MonsterDisplay)//well these colours are wrong
             {
-                var pngName = "";
-                pngName = (monstertileName.Substring(1)) switch
+                finalOverrides.AddOrIgnore(monstertileName, (monstertileName.Substring(1)) switch
                 {
                     "BLACK" => "tiamat_black",
                     "RED" => "tiamat_red",
@@ -186,8 +186,7 @@ namespace FrameGenerator.Extensions
                     "LIGHTCYAN" => "tiamat_pale",
                     "WHITE" => "tiamat_white",
                     _ => "tiamat_yellow",
-                };
-                if (!finalOverrides.TryGetValue(monstertileName, out _)) finalOverrides.Add(monstertileName, pngName);
+                });
             }
         }
 
@@ -195,8 +194,7 @@ namespace FrameGenerator.Extensions
         {
             foreach (var monstertileName in monsterLine.MonsterDisplay)//can be maelstron on screen and vortex not in list of monster, but ehhh
             {
-                var pngName = "";
-                pngName = (monstertileName.Substring(1)) switch
+                finalOverrides.AddOrIgnore(monstertileName, (monstertileName.Substring(1)) switch
                 {
                     "BLACK" => "spatial_vortex1",
                     "RED" => "spatial_vortex1",
@@ -215,8 +213,7 @@ namespace FrameGenerator.Extensions
                     "LIGHTCYAN" => "spatial_vortex4",
                     "WHITE" => "spatial_vortex4",
                     _ => "spatial_vortex3",
-                };
-                if (!finalOverrides.TryGetValue(monstertileName, out _)) finalOverrides.Add(monstertileName, pngName);
+                });
             }
         }
 
@@ -224,8 +221,7 @@ namespace FrameGenerator.Extensions
         {
             foreach (var monstertileName in monsterLine.MonsterDisplay)
             {
-                var pngName = "";
-                pngName = (monstertileName.Substring(1)) switch
+                finalOverrides.AddOrIgnore(monstertileName, (monstertileName.Substring(1)) switch
                 {
                     "BLACK" => "chaos_spawn4",
                     "RED" => "chaos_spawn1",
@@ -244,29 +240,28 @@ namespace FrameGenerator.Extensions
                     "LIGHTCYAN" => "chaos_spawn3",
                     "WHITE" => "chaos_spawn2",
                     _ => "chaos_spawn4",
-                };
-                if (!finalOverrides.TryGetValue(monstertileName, out _)) finalOverrides.Add(monstertileName, pngName);
+                });
             }
         }
 
         public static void AddKlownOverrides(this Dictionary<string, string> finalOverrides, MonsterData monsterLine)
         {
-            finalOverrides.Add("pBLACK", "killer_klown_yellow");
-            finalOverrides.Add("pRED", "killer_klown_red");
-            finalOverrides.Add("pGREEN", "killer_klown_green");
-            finalOverrides.Add("pBROWN", "killer_klown_yellow");
-            finalOverrides.Add("pBLUE", "killer_klown_blue");
-            finalOverrides.Add("pMAGENTA", "killer_klown_purple");
-            finalOverrides.Add("pCYAN", "killer_klown_blue");
-            finalOverrides.Add("pLIGHTGREY", "killer_klown_green");
-            finalOverrides.Add("pDARKGREY", "killer_klown_yellow");
-            finalOverrides.Add("pLIGHTRED", "killer_klown_red");
-            finalOverrides.Add("pLIGHTGREEN", "killer_klown_green");
-            finalOverrides.Add("pYELLOW", "killer_klown_yellow");
-            finalOverrides.Add("pLIGHTBLUE", "killer_klown_blue");
-            finalOverrides.Add("pLIGHTMAGENTA", "killer_klown_purple");
-            finalOverrides.Add("pLIGHTCYAN", "killer_klown_blue");
-            finalOverrides.Add("pWHITE", "killer_klown_purple");
+            finalOverrides.AddOrIgnore("pBLACK", "killer_klown_yellow");
+            finalOverrides.AddOrIgnore("pRED", "killer_klown_red");
+            finalOverrides.AddOrIgnore("pGREEN", "killer_klown_green");
+            finalOverrides.AddOrIgnore("pBROWN", "killer_klown_yellow");
+            finalOverrides.AddOrIgnore("pBLUE", "killer_klown_blue");
+            finalOverrides.AddOrIgnore("pMAGENTA", "killer_klown_purple");
+            finalOverrides.AddOrIgnore("pCYAN", "killer_klown_blue");
+            finalOverrides.AddOrIgnore("pLIGHTGREY", "killer_klown_green");
+            finalOverrides.AddOrIgnore("pDARKGREY", "killer_klown_yellow");
+            finalOverrides.AddOrIgnore("pLIGHTRED", "killer_klown_red");
+            finalOverrides.AddOrIgnore("pLIGHTGREEN", "killer_klown_green");
+            finalOverrides.AddOrIgnore("pYELLOW", "killer_klown_yellow");
+            finalOverrides.AddOrIgnore("pLIGHTBLUE", "killer_klown_blue");
+            finalOverrides.AddOrIgnore("pLIGHTMAGENTA", "killer_klown_purple");
+            finalOverrides.AddOrIgnore("pLIGHTCYAN", "killer_klown_blue");
+            finalOverrides.AddOrIgnore("pWHITE", "killer_klown_purple");
         }
 
         public static void AddColorDependantOverrides(this Dictionary<string, string> finalOverrides, MonsterData monsterLine)
