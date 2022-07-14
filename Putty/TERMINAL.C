@@ -1896,7 +1896,7 @@ void term_free(Terminal *term)
 	sfree(beep);
     }
     bufchain_clear(&term->inbuf);
-    if(term->print_job)
+    //if(term->print_job)
 	//printer_finish_job(term->print_job);
     bufchain_clear(&term->printer_buf);
     sfree(term->paste_buffer);
@@ -1913,7 +1913,7 @@ void term_free(Terminal *term)
     sfree(term->pre_bidi_cache);
     sfree(term->post_bidi_cache);
 
-    sfree(term->tabs);
+    //sfree(term->tabs);
 
     //expire_timer_context(term);
 
