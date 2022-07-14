@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "FrameGenerator": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}
