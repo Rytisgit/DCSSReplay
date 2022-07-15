@@ -2,9 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
    <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
-    <LangVersion>9.0</LangVersion>
-    <IsUnoHead>true</IsUnoHead>
+    <TargetFramework>net6.0</TargetFramework>
     <NoWarn>NU1701</NoWarn>
     <WasmShellMonoRuntimeExecutionMode>InterpreterAndAOT</WasmShellMonoRuntimeExecutionMode>
     <!--<WasmShellForceUseWSL>true</WasmShellForceUseWSL>-->
@@ -55,28 +53,36 @@
   </ItemGroup>
   <ItemGroup>
     <!-- Note that for WebAssembly version 1.1.1 of the console logger required -->
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.13" />
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
     <PackageReference Include="SharpZipLib" Version="1.3.3" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Filter" Version="1.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
     <PackageReference Include="SkiaSharp.NativeAssets.WebAssembly" Version="2.80.3-preview.24" />
     <PackageReference Include="SkiaSharp.Views.Forms" Version="2.80.2" />
     <PackageReference Include="SkiaSharp.Views.Uno" Version="2.80.3-preview.24" />
-    <PackageReference Include="Uno.Wasm.Bootstrap" Version="2.1.0" />
-    <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="2.1.0" />
-    <PackageReference Include="Uno.UI.WebAssembly" Version="3.11.9" />
-    <PackageReference Include="Uno.UI.RemoteControl" Version="3.11.9" Condition="'$(Configuration)'=='Debug'" />
+    <PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.4.13" />
+    <PackageReference Include="Uno.Wasm.Bootstrap" Version="3.3.1" />
+    <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="3.3.1" />
+    <PackageReference Include="Uno.Extensions.Logging.WebAssembly.Console" Version="1.0.1" />
+    <PackageReference Include="Uno.UI.WebAssembly" Version="4.4.13" />
+    <PackageReference Include="Uno.UI.RemoteControl" Version="4.4.13" Condition="'$(Configuration)'=='Debug'" />
   </ItemGroup>
   <ItemGroup>
     <!-- This automatically includes any Bitcode file for static linking -->
     <Content Include="*.bc" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Remove="WasmCSS\Fonts.css" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\FrameGenerator\FrameGenerator.csproj" />
     <ProjectReference Include="..\..\InputParse\InputParser.csproj" />
     <ProjectReference Include="..\..\PuttySharp\PuttySharp.csproj" />
     <ProjectReference Include="..\..\TtyRecDecoder\TtyRecDecoder.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="WasmCSS\" />
   </ItemGroup>
   <Import Project="..\DCSSTV.Shared\DCSSTV.Shared.projitems" Label="Shared" Condition="Exists('..\DCSSTV.Shared\DCSSTV.Shared.projitems')" />
 </Project>
