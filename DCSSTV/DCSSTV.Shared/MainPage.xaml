@@ -5,9 +5,8 @@
     xmlns:local="using:DCSSTV"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:views="using:SkiaSharp.Views.UWP"
-    xmlns:not_win="http://uno.ui/not_win"
-    mc:Ignorable="d not_win">
+    xmlns:views="using:SkiaSharp.Views.Windows"
+    mc:Ignorable="d">
 
     <Grid KeyDown="Grid_KeyDown" Background="Black">
         <Grid.RowDefinitions>
@@ -16,16 +15,11 @@
         </Grid.RowDefinitions>
         <CheckBox Content="switch canvas" x:Name="hwAcceleration" Visibility="Visible" />
         <Grid Grid.Row="1" MaxWidth="1602" MaxHeight="768" VerticalAlignment="Stretch">
-            <views:SKSwapChainPanel
+            <views:SKXamlCanvas
                 x:Name="swapChain"
-                PaintSurface="OnPaintSwapChain"
-                EnableRenderLoop="True"
-                Visibility="{x:Bind hwAcceleration.IsChecked, Mode=OneWay}" VerticalAlignment="Stretch" />
-            <views:SKXamlCanvas 
-                x:Name="canvas" 
                 PaintSurface="OnPaintSurface"
-                Visibility="{x:Bind Not(hwAcceleration.IsChecked), Mode=OneWay}" />
-
+                EnableRenderLoop="True"
+                VerticalAlignment="Stretch" />
         </Grid>
 
 

@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Graphics.Display;
 using Windows.Storage;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 using FrameGenerator;
 using ICSharpCode.SharpZipLib.Zip;
 using SkiaSharp;
-using SkiaSharp.Views.UWP;
 using TtyRecDecoder;
 using Windows.System;
-using Windows.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Input;
+using SkiaSharp.Views.Windows;
 #if __WASM__
 using Uno.Foundation;
 #endif
@@ -149,17 +149,15 @@ namespace DCSSTV
 
         private Visibility Not(bool? value) => (!value ?? false) ? Visibility.Visible : Visibility.Collapsed;
 
-        private void OnPaintSwapChain(object sender, SKPaintGLSurfaceEventArgs e)
-        {
-            driver.GetImage();
-            if (driver.currentFrame == null) return;
-            
-            // the the canvas and properties
-            var canvas = e.Surface.Canvas;
+        //private void OnPaintSwapChain(object sender, SKPaintGLSurfaceEventArgs e)
+        //{
+        //    if (driver.currentFrame == null) return;
+        //    // the the canvas and properties
+        //    var canvas = e.Surface.Canvas;
 
-            Render(canvas, new Size(e.BackendRenderTarget.Width, e.BackendRenderTarget.Height), SKColors.Black, true, driver.currentFrame);
-            readyToRefresh = true;
-        }
+        //    Render(canvas, new Size(e.BackendRenderTarget.Width, e.BackendRenderTarget.Height), SKColors.Black, true, driver.currentFrame);
+        //    readyToRefresh = true;
+        //}
         
         private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
@@ -205,10 +203,10 @@ namespace DCSSTV
             }
             
             // handle the device screen density
-            //canvas.Scale(scale);
+            canvas.Scale(scale);
             
             // make sure the canvas is blank
-            //canvas.Clear(color);
+            canvas.Clear(color);
             //draw bitmap scaled to device size, fitting to width
             canvas.DrawBitmap(scaledBitmap, 0, 0); 
 
@@ -319,7 +317,7 @@ namespace DCSSTV
                 driver.PlaybackSpeed = int.Parse(speed.Text);
                 driver.framerateControlTimeout = int.Parse(framerate.Text);//check 0 for speedup
                 readyToRefresh = true;
-                //await driver.StartImageGeneration();
+                await driver.StartImageGeneration();
             }
             catch (Exception ex)
             {
@@ -378,19 +376,19 @@ namespace DCSSTV
 
         public void RefreshImage()
         {
-            if (hwAcceleration.IsChecked.Value)
-            {
+            //if (hwAcceleration.IsChecked.Value)
+            //{
                 //Console.WriteLine("refresh hardware");
                 readyToRefresh = false;
                 swapChain.Invalidate();
                 
-            }
-            else
-            {
-                //Console.WriteLine("refresh software");
-                readyToRefresh = false;
-                canvas.Invalidate();
-            }
+            //}
+            //else
+            //{
+            //    //Console.WriteLine("refresh software");
+            //    readyToRefresh = false;
+            //    canvas.Invalidate();
+            //}
         }
 
        

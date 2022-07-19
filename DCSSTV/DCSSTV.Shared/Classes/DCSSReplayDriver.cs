@@ -117,7 +117,9 @@ namespace DCSSTV
                             }, null);
 #else //non threaded image generation (slow)
                             currentFrame = frameGenerator.GenerateImage(frame);
+#if DEBUG
                             Console.WriteLine("driver " + currentFrame.ByteCount);
+#endif
                             frameGenerator.isGeneratingFrame = false;
                             _refreshCanvas();
 #endif
