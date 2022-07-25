@@ -29,12 +29,14 @@
     <WasmShellMonoEnvironment Include="MONO_LOG_MASK" Value="gc" />
   </ItemGroup>-->
   <ItemGroup>
+    <Content Include="Assets\SplashScreen.png" />
     <Content Include="libPuttyDLL.bc" />
   </ItemGroup>
   <ItemGroup>
     <UpToDateCheckInput Include="..\DCSSTV.Shared\**\*.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Assets\SplashScreen.png" />
     <None Remove="libPuttyDLL.bc" />
   </ItemGroup>
   <ItemGroup>
