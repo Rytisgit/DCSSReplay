@@ -98,6 +98,8 @@ shallow_water
 shoals_shallow_water9
 .RED
 floor
+.GREEN
+floor
 .LIGHTGREEN
 floor
 .BROWN
