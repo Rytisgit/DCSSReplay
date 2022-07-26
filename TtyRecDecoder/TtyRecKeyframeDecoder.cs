@@ -388,7 +388,6 @@ namespace TtyRecDecoder
             }
 
             lock (LoadPacketBuffer) LoadPacketBuffer.Enqueue(buffer);
-            buffer.Clear();
         }
     }
 }
