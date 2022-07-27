@@ -35,6 +35,7 @@ namespace TtyRecMonkey
         private int FrameStepCount;
         private int ConsoleSwitchLevel = 1;
         private int framerateControlTimeout = 5;
+        public int prevHash = 0;
         private TileOverrideForm tileoverrideform;
 
         public PlayerForm()
@@ -195,7 +196,7 @@ namespace TtyRecMonkey
                 if (frame != null)
                 {
 
-                    if (!frameGenerator.isGeneratingFrame)
+                    if (!frameGenerator.isGeneratingFrame && prevHash != frame.GetHashCode())
                     {
                         frameGenerator.isGeneratingFrame = true;
 #if true                
@@ -206,6 +207,7 @@ namespace TtyRecMonkey
                                     bmp = frameGenerator.GenerateImage(frame, ConsoleSwitchLevel, tileoverrideform.tileoverides).ToBitmap();
                                     Update2(bmp);
                                     frameGenerator.isGeneratingFrame = false;
+                                    prevHash = frame.GetHashCode();
                                     frame = null;
                                 }
                                 catch (Exception ex)

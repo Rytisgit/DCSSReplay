@@ -42,6 +42,7 @@ namespace TtyRecDecoder
         public int Width { get; private set; }
         public int Height { get; private set; }
         public double PlaybackSpeed { get; set; }
+        public bool Paused { get { return PlaybackSpeed == 0; } }
         public double PausedSpeed { get; set; }
         
         public IEnumerable<Tuple<int, string>> SearchResults { get; private set; } = new List<Tuple<int, string>>();

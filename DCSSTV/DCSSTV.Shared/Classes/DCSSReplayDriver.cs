@@ -22,6 +22,7 @@ namespace DCSSTV
         public TimeSpan MaxDelayBetweenPackets = new TimeSpan(0, 0, 0, 0, 500);//milliseconds
         private int FrameStepCount;
         public int framerateControlTimeout = 1000;
+        int prevHash = 0;
         public TtyRecKeyframeDecoder ttyrecDecoder = null;
         public double PlaybackSpeed = 0, PausedSpeed = 2;
         public TimeSpan Seek;
@@ -95,7 +96,7 @@ namespace DCSSTV
                     if (frame != null)
                     {
 
-                        if (!frameGenerator.isGeneratingFrame && _readyForRefresh.Invoke())
+                        if (!frameGenerator.isGeneratingFrame && prevHash != frame.GetHashCode() && _readyForRefresh.Invoke())
                         {
                             frameGenerator.isGeneratingFrame = true;
 #if faklse
@@ -121,6 +122,7 @@ namespace DCSSTV
                             Console.WriteLine("driver " + currentFrame.ByteCount);
 #endif
                             frameGenerator.isGeneratingFrame = false;
+                            prevHash = frame.GetHashCode();
                             _refreshCanvas();
 #endif
                         }

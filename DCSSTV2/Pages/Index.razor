@@ -69,6 +69,7 @@
     public List<string> files = new List<string>();
     public IEnumerable<Stream> streams;
     TimeSpan delay = TimeSpan.Zero;
+    int prevHash = 0;
     public bool CancellationToken = false;
     List<string> hostsites = new List<string>() { "https://underhound.eu/crawl/ttyrec/", "http://crawl.akrasiac.org/rawdata/", "http://crawl.berotato.org/crawl/ttyrec/",  "https://webzook.net/soup/ttyrecs/", "https://termcast.shalott.org/ttyrecs/dobrazupa.org/ttyrec/",
         "http://crawl.develz.org/ttyrecs/", "https://crawl.xtahua.com/crawl/ttyrec/","https://crawl.kelbi.org/crawl/ttyrec/","http://lazy-life.ddo.jp/mirror/ttyrecs/" };
@@ -346,7 +347,7 @@
                     if (frame != null)
                     {
 
-                        if (!frameGenerator.isGeneratingFrame)
+                        if (!frameGenerator.isGeneratingFrame && prevHash != frame.GetHashCode())
                         {
                             frameGenerator.isGeneratingFrame = true;
 #if true
@@ -356,6 +357,7 @@
                                 {
                                     imreBase64Data = ToBase64String(frameGenerator.GenerateImage(frame));
                                     frameGenerator.isGeneratingFrame = false;
+                                    prevHash = frame.GetHashCode();
                                     frame = null;
                                     InvokeAsync(StateHasChanged);
                                 }
