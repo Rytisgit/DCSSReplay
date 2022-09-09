@@ -78,3 +78,5 @@ Palent
 centaur_lightgrey_m
 Djinni
 djinni_f
+Meteor
+meteoran_m
