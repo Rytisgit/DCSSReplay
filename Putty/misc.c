@@ -8,7 +8,7 @@
 #include <limits.h>
 #include <ctype.h>
 #include <assert.h>
-#include "PUTTY.H"
+#include "putty.h"
 
 /*
  * Parse a string block size specification. This is approximately a

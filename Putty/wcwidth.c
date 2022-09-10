@@ -61,7 +61,7 @@
 
 #include <wchar.h>
 
-#include "PUTTY.H" /* for prototypes */
+#include "putty.h" /* for prototypes */
 
 struct interval {
   unsigned int first;
