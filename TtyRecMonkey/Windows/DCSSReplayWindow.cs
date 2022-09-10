@@ -24,7 +24,7 @@ namespace DisplayWindow
         public DCSSReplayWindow()
         {
             InitializeComponent();
-            PlayButton.Image = Image.FromFile(@"..\..\..\Extra\pause.png");
+            PlayButton.Image = Image.FromFile(@"../../../Extra/pause.png");
             typeof(Panel).InvokeMember("DoubleBuffered",
             BindingFlags.SetProperty | BindingFlags.Instance | BindingFlags.NonPublic,
             null, SeekBar, new object[] { true });
@@ -160,8 +160,8 @@ namespace DisplayWindow
         {
             this.ActiveControl = null;
             if (ttyrecDecoder == null) return;
-            if (ttyrecDecoder.PlaybackSpeed != 0) { PlayButton.Image = Image.FromFile(@"..\..\..\Extra\play.png"); ttyrecDecoder.Pause(); }
-            else { PlayButton.Image = Image.FromFile(@"..\..\..\Extra\pause.png"); ttyrecDecoder.Unpause(); }
+            if (ttyrecDecoder.PlaybackSpeed != 0) { PlayButton.Image = Image.FromFile(@"../../../Extra/play.png"); ttyrecDecoder.Pause(); }
+            else { PlayButton.Image = Image.FromFile(@"../../../Extra/pause.png"); ttyrecDecoder.Unpause(); }
 
         }
 
