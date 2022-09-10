@@ -217,4 +217,11 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <LinuxPuttyLib Include="..\Putty\libPuttyDLL.so" />
+  </ItemGroup>
+  <Target Name="LinuxAfterBuild" AfterTargets="Build" Condition="$([MSBuild]::IsOsPlatform('Linux'))">
+    <Exec Command="cd ../Putty;make -f UNIX/Makefile" />
+    <Copy SourceFiles="@(LinuxPuttyLib)" DestinationFolder="$(OutDir)" />
+  </Target>
 </Project>
