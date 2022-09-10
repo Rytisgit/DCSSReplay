@@ -157,6 +157,7 @@
     <EmbeddedResource Include="Windows\TileOverrideForm.resx">
       <DependentUpon>TileOverrideForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Files\dcssreplay.ico" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FrameGenerator\FrameGenerator.csproj">
@@ -196,9 +197,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <Content Include="Files\dcssreplay.ico" />
-  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Windows\DCSSReplayWindow.resx">
       <DependentUpon>DCSSReplayWindow.cs</DependentUpon>
