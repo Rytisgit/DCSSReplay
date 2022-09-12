@@ -252,7 +252,7 @@ namespace FrameGenerator
             {
                 using var font = new SKPaint {
                     Typeface = _typeface,
-                    TextSize = 12,
+                    TextSize = 16,
                     IsAntialias = true,
                 };
                 using var darkPen = new SKPaint() { 
