@@ -96,6 +96,16 @@ shallow_water
 shallow_water
 ≈LIGHTCYAN
 shoals_shallow_water9
+~RED
+shallow_water
+~CYAN
+shallow_water
+~GREEN
+shallow_water
+~LIGHTGREEN
+shallow_water
+~LIGHTCYAN
+shoals_shallow_water9
 .RED
 floor
 .GREEN
