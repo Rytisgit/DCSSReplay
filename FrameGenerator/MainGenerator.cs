@@ -172,6 +172,8 @@ namespace FrameGenerator
             
             using (SKCanvas g = new SKCanvas(bmp))
             {
+                g.Clear(SKColors.Black);
+
                 var font = new SKPaint
                 {
                     Typeface = SKTypeface.FromFamilyName("Courier New"),
