@@ -187,7 +187,7 @@ namespace FrameGenerator
                     x += 20;
                 }
                 var overrides = GetOverridesForFrame(model.MonsterData, model.Location);
-                DrawTiles(g, model, 0, 32, model.LineLength, overrides);//draw the rest of the map
+                DrawTiles(g, model, 0, 32, model.LineLength, overrides, 0.75f);//draw the rest of the map
             }
 
             return bmp;
