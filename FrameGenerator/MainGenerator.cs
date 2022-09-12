@@ -201,7 +201,7 @@ namespace FrameGenerator
             {
                 var font = new SKPaint {
                     Typeface = SKTypeface.FromFamilyName("Courier New"),
-                    TextSize = 12,
+                    TextSize = 16,
                     IsAntialias = true,
                 };
                 var darkPen = new SKPaint() { 
