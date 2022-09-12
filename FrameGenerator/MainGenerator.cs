@@ -655,6 +655,9 @@ namespace FrameGenerator
                 TextSize = 24 * resize,
                 
             };
+            // centre character in bounding box
+            x += (32 - font.FontMetrics.XMax) / 2;
+            y -= (32 + font.FontMetrics.Top) / 2;
             g.WriteCharacter(tile, font, x, y, tileHighlight);//unhandled tile, write it as a character instead
 
             return false;
