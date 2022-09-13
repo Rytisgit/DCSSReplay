@@ -59,12 +59,16 @@ namespace InputParser
 
             if (consoleFull) return ParseConsoleLayout(chars);
 
-            return (GetLayoutType(chars, out var location)) switch
+            switch (GetLayoutType(chars, out var location))
             {
-                LayoutType.Normal => ParseNormalLayout(chars, location),
-                LayoutType.TextOnly => ParseTextLayout(chars),
-                LayoutType.MapOnly => ParseMapLayout(chars, location),
-                _ => new Model(),
+                case LayoutType.Normal:
+                    return ParseNormalLayout(chars, location);
+                case LayoutType.TextOnly:
+                    return ParseTextLayout(chars);
+                case LayoutType.MapOnly:
+                    return ParseMapLayout(chars, location);
+                default:
+                    return new Model();
             };
         }
 
