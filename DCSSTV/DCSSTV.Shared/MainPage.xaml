@@ -21,11 +21,10 @@
                 EnableRenderLoop="True"
                 VerticalAlignment="Stretch" />
         </Grid>
-
-
+     
         <StackPanel>
             <RelativePanel>
-
+              
                 <Button Content="Full" Click="Button_Click_Fullscreen" Margin="110,5,0,0"/>
                 <Button Content="Start playback" Click="Button_Click_Start_Playback" Margin="380,0,0,0"/>
                 <TextBox Text="2" x:Name="speed" Margin="550,0,0,0" Width="40" InputScope="Digits" />
