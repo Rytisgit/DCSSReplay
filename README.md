@@ -56,7 +56,7 @@ I Used VS 2019 Enterprise, should work for older versions as well
 
 If your distro is Debian-based (Ubuntu, etc.) install dependencies with:
 
-- sudo apt install monodevelop mono-complete
+- sudo apt install monodevelop mono-complete dialog
 
 (For non-Debian-based distros, do whatever the equivalent is on your distro.)
 
