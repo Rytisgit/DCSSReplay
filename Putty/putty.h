@@ -24,7 +24,7 @@ typedef struct terminal_tag Terminal;
 #endif
 
 
-#include "MISC.H"
+#include "misc.h"
 
 
 /*
@@ -1020,7 +1020,7 @@ void pinger_free(Pinger);
  * Exports from misc.c.
  */
 
-#include "MISC.H"
+#include "misc.h"
 int conf_launchable(Conf *conf);
 char const *conf_dest(Conf *conf);
 

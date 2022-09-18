@@ -42,7 +42,7 @@ Right Arrow   Time Step Forward 5 Seconds
 
 # Development
 
-## Building the Source
+## Building the Source on Windows
 
 I Used VS 2019 Enterprise, should work for older versions as well
 
@@ -51,6 +51,34 @@ I Used VS 2019 Enterprise, should work for older versions as well
 - restore nuget packages
 - rebuild the solution to trigger the PuttyDLL build
 - it should now work
+
+## Building the Source on Linux
+
+If your distro is Debian-based (Ubuntu, etc.) install dependencies with:
+
+- sudo apt install monodevelop mono-complete dialog
+
+(For non-Debian-based distros, do whatever the equivalent is on your distro.)
+
+Open the DCSSReplay solution in monodevelop. A couple of the projects (SlimPutty and PuttyDLL) will fail to open, but don't worry.
+
+You must build the 64-bit version because one of the NuGet dependencies (SkiaSharp native Linux assets) only comes in 64-bit flavour:
+
+- Right-click on the solution -> Options -> Configuration -> Configuration Mappings.
+- Change the TTyRecMonkey configuration to Debug|x64 for the solution's Debug build and to Release|x64 for the solution's Release build.
+
+Now, you are ready to build:
+
+- Change the active configuration to Release (unless you specifically want the Debug build).
+- Right-click on the solution and select "Restore NuGet Packages"
+- Right-click on the TtyRecMonkey project and select "Set as Startup Project"
+- Rebuild All (Ctrl+F8 or select from the Build menu).
+
+To run:
+
+- Open a terminal in the top-level solution folder
+- cd bin/x64/Release
+- mono TtyRecMonkey.exe
 
 ## Project Layout
 

@@ -6,9 +6,11 @@
 #include <assert.h>
 #include <stdlib.h>
 
-#include "PUTTY.H"
+#include "putty.h"
 #include "dialog.h"
+#ifdef _WIN32
 #include "storage.h"
+#endif
 
 #define PRINTER_DISABLED_STRING "None (printing disabled)"
 

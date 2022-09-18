@@ -8,6 +8,7 @@ Thumbs.db
 *.vs
 *.ttyrec
 *.bz2
+*.o
 obj/
 bin/
 Debug/

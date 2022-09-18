@@ -45,7 +45,7 @@ namespace FrameGenerator
         public static SKBitmap CharacterSKBitmap = new SKBitmap(32, 32);
         
 
-        public MainGenerator(string gameLocation = @"..\..\..\Extra")
+        public MainGenerator(string gameLocation = @"../../../Extra")
         {
             _characterdata = ReadFromFile.GetDictionaryFromFile(gameLocation + @"/racepng.txt");
             _features = ReadFromFile.GetDictionaryFromFile(gameLocation + @"/features.txt");
@@ -172,6 +172,8 @@ namespace FrameGenerator
             
             using (SKCanvas g = new SKCanvas(bmp))
             {
+                g.Clear(SKColors.Black);
+
                 var font = new SKPaint
                 {
                     Typeface = SKTypeface.FromFamilyName("Courier New"),

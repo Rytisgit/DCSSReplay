@@ -4,11 +4,15 @@
  */
 
 
-#include "../../../PUTTYMEM.H"
-#include "../../../TERMINAL.H"
-#include "../../../PUTTY.H"
+#include "../../../puttymem.h"
+#include "../../../terminal.h"
+#include "../../../putty.h"
 
+#ifdef _WIN32
 #define EXPORT(rt) __declspec(dllexport) rt
+#else
+#define EXPORT(rt) rt
+#endif
 
 extern Conf *conf;
 

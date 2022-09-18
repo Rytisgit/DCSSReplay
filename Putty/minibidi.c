@@ -23,7 +23,7 @@
 
 #include <stdlib.h>	/* definition of wchar_t*/
 
-#include "MISC.H"
+#include "misc.h"
 
 #define LMASK	0x3F	/* Embedding Level mask */
 #define OMASK	0xC0	/* Override mask */
