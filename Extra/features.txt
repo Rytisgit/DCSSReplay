@@ -98,6 +98,10 @@ shallow_water
 shoals_shallow_water9
 ~RED
 shallow_water
+~BLUE
+shallow_water
+~LIGHTBLUE
+shallow_water
 ~CYAN
 shallow_water
 ~GREEN
