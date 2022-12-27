@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using FrameGenerator;
 using SkiaSharp;
 using TtyRecDecoder;
@@ -15,6 +16,8 @@ namespace DCSSTV
         private readonly MainGenerator frameGenerator;
         private readonly Action _refreshCanvas;
         private readonly Func<bool> _readyForRefresh;
+        private readonly Action<int, int, string> _updateSeekbar;
+
         public SKBitmap currentFrame { get; private set; }
         private const int TimeStepLengthMS = 5000;
         private readonly List<DateTime> PreviousFrames = new List<DateTime>();
@@ -24,7 +27,6 @@ namespace DCSSTV
         public int framerateControlTimeout = 1000;
         int prevHash = 0;
         public TtyRecKeyframeDecoder ttyrecDecoder = null;
-        public double PlaybackSpeed = 0, PausedSpeed = 2;
         public TimeSpan Seek;
         public List<string> files = new List<string>();
         public IEnumerable<Stream> streams;
@@ -40,11 +42,12 @@ namespace DCSSTV
         string selectedLink = "";
         string Name;
 
-        public DCSSReplayDriver(MainGenerator imageGenerator, Action RefreshCanvas, Func<bool> readyForRefresh)
+        public DCSSReplayDriver(MainGenerator imageGenerator, Action RefreshCanvas, Func<bool> readyForRefresh, Action<int, int, string> updateSeekbar)
         {
             frameGenerator = imageGenerator;
             _refreshCanvas = RefreshCanvas;
             _readyForRefresh = readyForRefresh;
+            _updateSeekbar = updateSeekbar;
         }
 
         public async Task CancelImageGeneration()
@@ -67,7 +70,7 @@ namespace DCSSTV
                 if (ttyrecDecoder != null)
                 {
 
-                    Seek += TimeSpan.FromSeconds(dt * PlaybackSpeed);
+                    Seek += TimeSpan.FromSeconds(dt * ttyrecDecoder.PlaybackSpeed);
 
                     if (Seek > ttyrecDecoder.Length)
                     {
@@ -134,6 +137,13 @@ namespace DCSSTV
                     currentFrame = frameGenerator.GenerateImage(null);
 
                 }
+                var start = ttyrecDecoder == null ? new System.TimeSpan(0) : ttyrecDecoder.CurrentFrame.SinceStart;
+                var end = ttyrecDecoder == null ? new System.TimeSpan(0) : ttyrecDecoder.Length;
+                var progress = start.TotalMilliseconds / end.TotalMilliseconds;
+
+                // Return the formatted strings in the desired format
+                var remainingTime = $"{start.ToString(@"hh\:mm\:ss")} / {end.ToString(@"hh\:mm\:ss")}";
+                _updateSeekbar((int)start.TotalMilliseconds, (int)end.TotalMilliseconds, remainingTime);
 
             }
 
@@ -150,7 +160,7 @@ namespace DCSSTV
             if (ttyrecDecoder != null)
             {
 
-                Seek += TimeSpan.FromSeconds(dt * PlaybackSpeed);
+                Seek += TimeSpan.FromSeconds(dt * ttyrecDecoder.PlaybackSpeed);
 
                 if (Seek > ttyrecDecoder.Length)
                 {

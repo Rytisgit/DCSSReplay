@@ -7,10 +7,17 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="using:SkiaSharp.Views.Windows"
     xmlns:utu="using:Uno.Toolkit.UI"
-    mc:Ignorable="d">
+    xmlns:viewmodels="using:DCSSTV.Models.ViewModels"
+    xmlns:datamodels="using:DCSSTV.Models.DataModels"
+    xmlns:models="using:DCSSTV.Models"
+    mc:Ignorable="d"
+    Background="Black">
 
+    <Page.DataContext>
+        <viewmodels:MainViewModel x:Name="ViewModel" />
+    </Page.DataContext>
 
-    <StackPanel KeyDown="Grid_KeyDown" Background="Black" >
+    <StackPanel KeyDown="Grid_KeyDown" >
         <utu:AutoLayout Orientation="Horizontal"  Justify="SpaceBetween" >
             <Button Content="FILLED TONAL"
                     Style="{StaticResource FilledTonalButtonStyle}">
@@ -37,7 +44,7 @@
             <TextBlock x:Uid="output"  x:Name="output"/>
         </utu:AutoLayout>
 
-        <utu:AutoLayout Orientation="vertical" >
+        <StackPanel Orientation="vertical" >
 
             <Grid BorderBrush="Blue" BorderThickness="12" CornerRadius="12" Padding="12" Grid.Row="1" Width="1626" Height="792" VerticalAlignment="Stretch">
                 <views:SKXamlCanvas
@@ -45,8 +52,34 @@
                 PaintSurface="OnPaintSurface"
                 EnableRenderLoop="True"
                 VerticalAlignment="Stretch" />
+            
             </Grid>
-        </utu:AutoLayout>
+            <Grid Width="1626" Height="40">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button Content="Button" x:Name="PlayPause" HorizontalAlignment="Stretch" Click="Button_Click_PlayPause" />
+                <Slider 
+                    x:Name="Seekbar" 
+                    Minimum="0" 
+                    Maximum="{x:Bind ViewModel.SeekbarMaxValue, Mode=OneWay}" 
+                    Value="{x:Bind ViewModel.SeekbarValue, Mode=TwoWay}" 
+                    Grid.Column="1" 
+                    IsThumbToolTipEnabled="False"
+                    HorizontalAlignment="Stretch" 
+                    VerticalAlignment="Center"
+                    Pointer="Seekbar_DragStarting"
+                    PointerMoved="Seekbar_DragDelta"
+                    DragOver="Seekbar_DragCompleted"/>
+                <TextBlock 
+                    Text="{x:Bind ViewModel.RemainingTime, Mode=OneWay}" 
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Grid.Column="2" 
+                    Style="{StaticResource Body1}"/>
+            </Grid>
+        </StackPanel>
 
 
 

@@ -19,6 +19,11 @@ using TtyRecDecoder;
 using Windows.System;
 using Microsoft.UI.Xaml.Input;
 using SkiaSharp.Views.Windows;
+using DCSSTV.Models.ViewModels;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Newtonsoft.Json.Linq;
+using InputParser;
+using Windows.ApplicationModel.DataTransfer.DragDrop;
 #if __WASM__
 using Uno.Foundation;
 #endif
@@ -34,7 +39,6 @@ namespace DCSSTV
     {
         private bool readyToPlay = false;
         private int clickCount = 0;
-        private bool PlaybackPaused = false;
         private int TimeStepLengthMS = 5000;
         private int FrameStepCount=0;
         private CancellationTokenSource cancellations;
@@ -47,7 +51,7 @@ namespace DCSSTV
         {
             InitializeComponent();
             generator = new MainGenerator(new UnoFileReader(), 69);
-            driver = new DCSSReplayDriver(generator, RefreshImage, ReadyForRefresh);
+            driver = new DCSSReplayDriver(generator, RefreshImage, ReadyForRefresh, UpdateSeekbar);
         }
 
         void Grid_KeyDown(object sender, KeyRoutedEventArgs e)
@@ -56,26 +60,26 @@ namespace DCSSTV
             {
                 switch (e.Key)
                 {
-                    case VirtualKey.Z: driver.PlaybackSpeed = -100; break;
-                    case VirtualKey.X: driver.PlaybackSpeed = -10; break;
-                    case VirtualKey.C: driver.PlaybackSpeed = -1; break;
-                    case VirtualKey.B: driver.PlaybackSpeed = +1; break;
-                    case VirtualKey.N: driver.PlaybackSpeed = +10; break;
-                    case VirtualKey.M: driver.PlaybackSpeed += +100; break;
+                    case VirtualKey.Z: driver.ttyrecDecoder.PlaybackSpeed = -100; break;
+                    case VirtualKey.X: driver.ttyrecDecoder.PlaybackSpeed = -10; break;
+                    case VirtualKey.C: driver.ttyrecDecoder.PlaybackSpeed = -1; break;
+                    case VirtualKey.B: driver.ttyrecDecoder.PlaybackSpeed = +1; break;
+                    case VirtualKey.N: driver.ttyrecDecoder.PlaybackSpeed = +10; break;
+                    case VirtualKey.M: driver.ttyrecDecoder.PlaybackSpeed += +100; break;
 
-                    case VirtualKey.F: driver.PlaybackSpeed -= 1; break;//progresive increase/decrease
-                    case VirtualKey.G: driver.PlaybackSpeed += 1; break;
+                    case VirtualKey.F: driver.ttyrecDecoder.PlaybackSpeed -= 1; break;//progresive increase/decrease
+                    case VirtualKey.G: driver.ttyrecDecoder.PlaybackSpeed += 1; break;
 
-                    case VirtualKey.D: driver.PlaybackSpeed -= 0.2; break;//progresive increase/decrease
-                    case VirtualKey.H: driver.PlaybackSpeed += 0.2; break;
+                    case VirtualKey.D: driver.ttyrecDecoder.PlaybackSpeed -= 0.2; break;//progresive increase/decrease
+                    case VirtualKey.H: driver.ttyrecDecoder.PlaybackSpeed += 0.2; break;
 
                     case VirtualKey.K:
-                        if (driver.PlaybackSpeed != 0) { decoder.Pause(); } //pause when frame stepping
+                        if (driver.ttyrecDecoder.PlaybackSpeed != 0) { decoder.Pause(); } //pause when frame stepping
                         FrameStepCount -= 1;//FrameStep -1 
                         break;
 
                     case VirtualKey.L:
-                        if (driver.PlaybackSpeed != 0) { decoder.Pause(); }//pause when frame stepping
+                        if (driver.ttyrecDecoder.PlaybackSpeed != 0) { decoder.Pause(); }//pause when frame stepping
                         FrameStepCount += 1; //FrameStep +1
                         break;
 
@@ -97,8 +101,8 @@ namespace DCSSTV
 
                     case VirtualKey.V://Play / Pause
                     case VirtualKey.Space:
-                        driver.PlaybackSpeed = PlaybackPaused ? 1 : 0; 
-                        PlaybackPaused = !PlaybackPaused;
+                        if (driver.ttyrecDecoder.Paused) driver.ttyrecDecoder.Unpause();
+                        else driver.ttyrecDecoder.Pause(); 
                         break;
                 }
               
@@ -314,7 +318,7 @@ namespace DCSSTV
             {
                 await generator.InitialiseGenerator();
                 driver.ttyrecDecoder = decoder;
-                driver.PlaybackSpeed = int.Parse(speed.Text);
+                driver.ttyrecDecoder.PlaybackSpeed = int.Parse(speed.Text);
                 driver.framerateControlTimeout = int.Parse(framerate.Text);//check 0 for speedup
                 readyToRefresh = true;
                 await driver.StartImageGeneration();
@@ -391,7 +395,41 @@ namespace DCSSTV
             //}
         }
 
-       
+        public void UpdateSeekbar(int currentValue, int maxValue, string remainingTime)
+        {
+            ViewModel.SeekbarMaxValue = maxValue;
+            ViewModel.SeekbarValue = currentValue;
+            ViewModel.RemainingTime = remainingTime;
+        }
+
+        private void Button_Click_PlayPause(object sender, RoutedEventArgs e)
+        {
+            ViewModel.SeekbarMaxValue = 55569;
+        }
+
+        private void Seekbar_DragStarting(object sender, DragEventArgs e)
+        {
+            //FUCK YOU
+            Console.WriteLine("PAUSE");
+            decoder.Pause();
+        }
+
+        private void Seekbar_DragDelta(object sender, PointerRoutedEventArgs e)
+        {
+            //YOURE COOL
+            if (decoder == null) return;
+            decoder.Pause();
+            Slider slider = (Slider)sender;
+            double value = slider.Value;
+            driver.Seek = TimeSpan.FromMilliseconds(value);
+            decoder.Unpause();
+        }
+
+        private void Seekbar_DragCompleted(object sender, DragEventArgs e)
+        {
+            //FUCK YOU
+            decoder.Pause();
+        }
 
 
         private void Button_Click_Fullscreen(object sender, RoutedEventArgs e)

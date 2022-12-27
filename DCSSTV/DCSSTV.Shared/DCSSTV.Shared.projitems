@@ -27,6 +27,8 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Classes\UnoFileReader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\ViewModels\DispatchedBindableBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\ViewModels\MainViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="$(MSBuildThisFileDirectory)MainPage.xaml">
@@ -53,5 +55,8 @@
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\Resources.resw" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Models\DataModels\" />
   </ItemGroup>
 </Project>
