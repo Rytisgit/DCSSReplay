@@ -39,8 +39,8 @@
             <Button Content="Stop Playback" Click="Button_Click_Stop_Playback"/>
             <TextBlock Text="Speed:" TextWrapping="Wrap" VerticalAlignment="Stretch" />
             <TextBlock Text="Delay:" TextWrapping="Wrap" VerticalAlignment="Stretch" />
-            <Button Content="ZoomIn Phone" Click="Button_Click_ZoomIn" />
-            <Button Content="ZoomOut Phone" Click="Button_Click_ZoomOut" />
+            <Button Content="Settings" Click="Button_Click_Settings" />
+            <Button Content="PlaceHolder" Click="Button_Click_ZoomOut" />
             <TextBlock x:Uid="output"  x:Name="output"/>
         </utu:AutoLayout>
 

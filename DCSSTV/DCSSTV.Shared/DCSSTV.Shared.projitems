@@ -17,18 +17,25 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="$(MSBuildThisFileDirectory)SaveSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Classes\DCSSReplayDriver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\DialogExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\DialogManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Classes\UnoFileReader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ViewModels\DispatchedBindableBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ViewModels\MainViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SaveSettings.xaml.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="$(MSBuildThisFileDirectory)MainPage.xaml">

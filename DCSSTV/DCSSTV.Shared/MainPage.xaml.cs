@@ -24,6 +24,8 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Newtonsoft.Json.Linq;
 using InputParser;
 using Windows.ApplicationModel.DataTransfer.DragDrop;
+using DCSSTV.Helpers;
+using System.Runtime.CompilerServices;
 #if __WASM__
 using Uno.Foundation;
 #endif
@@ -52,6 +54,14 @@ namespace DCSSTV
             InitializeComponent();
             generator = new MainGenerator(new UnoFileReader(), 69);
             driver = new DCSSReplayDriver(generator, RefreshImage, ReadyForRefresh, UpdateSeekbar);
+            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+            if (!localSettings.Values.ContainsKey(SaveKeys.MaxPause.ToString()))
+            {
+                localSettings.Values[SaveKeys.MaxPause.ToString()] = "500";
+                localSettings.Values[SaveKeys.ArrowJump.ToString()] = "5000";
+                localSettings.Values[SaveKeys.MinPause.ToString()] = "5";
+                localSettings.Values[SaveKeys.OpenOnStart.ToString()] = "None";
+            }
         }
 
         void Grid_KeyDown(object sender, KeyRoutedEventArgs e)
@@ -249,7 +259,15 @@ namespace DCSSTV
             var base64Data = _fileSelect.Match(e.FileAsDataUrl).Groups["data"].Value;
             var binData = Convert.FromBase64String(base64Data);
             var stream = new MemoryStream(binData);
-            decoder = new TtyRecKeyframeDecoder(80,24,new List<Stream> { stream }, TimeSpan.Zero, driver.MaxDelayBetweenPackets)
+            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+
+            driver.framerateControlTimeout = Convert.ToInt32(localSettings.Values[SaveKeys.MinPause.ToString()].ToString());
+            decoder = new TtyRecKeyframeDecoder(
+                80,
+                24,
+                new List<Stream> { stream },
+                TimeSpan.Zero,
+                TimeSpan.FromMilliseconds(Convert.ToDouble(localSettings.Values[SaveKeys.MaxPause.ToString()].ToString())))
             {
                 PlaybackSpeed = +1,
                 SeekTime = TimeSpan.Zero
@@ -439,11 +457,11 @@ namespace DCSSTV
 #endif
         }
 
-        private void Button_Click_ZoomIn(object sender, RoutedEventArgs e)
+        private async Task Button_Click_Settings(object sender, RoutedEventArgs e)
         {
-#if __WASM__
-            WebAssemblyRuntime.InvokeJS("viewportSet(0);");
-#endif
+            SaveSettings settingsDialog = new SaveSettings();
+
+            ContentDialogResult result = await settingsDialog.ShowOneAtATimeAsync();
         }
 
         private void Button_Click_ZoomOut(object sender, RoutedEventArgs e)
