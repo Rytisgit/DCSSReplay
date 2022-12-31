@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Foundation;
@@ -19,9 +18,10 @@ using TtyRecDecoder;
 using Windows.System;
 using Microsoft.UI.Xaml.Input;
 using SkiaSharp.Views.Windows;
-using DCSSTV.Streams;
 using DCSSTV.Helpers;
-using System.Runtime.CompilerServices;
+using DCSSTV.Pages;
+using System.Net.Http;
+using Windows.Storage.Pickers;
 #if __WASM__
 using Uno.Foundation;
 #endif
@@ -45,12 +45,17 @@ namespace DCSSTV
         private DCSSReplayDriver driver;
         private TtyRecKeyframeDecoder decoder;
         private bool readyToRefresh = false;
+        private TtyrecDownloadSelectionDialog ttyrecDownloadSelectionDialog;
+        private string ttyrecUrl;
+        ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+
         public MainPage()
         {
             InitializeComponent();
             generator = new MainGenerator(new UnoFileReader(), 69);
             driver = new DCSSReplayDriver(generator, RefreshImage, ReadyForRefresh, UpdateSeekbar);
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+            ttyrecDownloadSelectionDialog = new TtyrecDownloadSelectionDialog(PassTtyrecUrl);
             if (!localSettings.Values.ContainsKey(SaveKeys.MaxPause.ToString()))
             {
                 localSettings.Values[SaveKeys.MaxPause.ToString()] = "500";
@@ -62,6 +67,11 @@ namespace DCSSTV
             {
                 TimeStepLengthMS = Convert.ToInt32(localSettings.Values[SaveKeys.ArrowJump.ToString()].ToString());
             }
+        }
+
+        void PassTtyrecUrl(string url)
+        {
+            ttyrecUrl = url;
         }
 
         void Grid_KeyDown(object sender, KeyRoutedEventArgs e)
@@ -240,52 +250,69 @@ namespace DCSSTV
                 return;
             }
             await SetOutputText("Waiting for File Selection, loading file");
-            MainPage.FileSelectedEvent -= OnFileSelectedEvent;
-            MainPage.FileSelectedEvent += OnFileSelectedEvent;
-#if __WASM__
-            WebAssemblyRuntime.InvokeJS("openFilePicker();");
-#endif
+            var picker = new FileOpenPicker();
+            picker.SuggestedStartLocation = PickerLocationId.Downloads;
+            picker.FileTypeFilter.Add(".ttyrec");
+            picker.FileTypeFilter.Add(".ttyrec.gz");
+            picker.FileTypeFilter.Add(".ttyrec.xz");
+            picker.FileTypeFilter.Add(".ttyrec.bz2");
+            var storageFile = await picker.PickSingleFileAsync();
 
-        }
-
-        public static void SelectFile(string imageAsDataUrl) => FileSelectedEvent?.Invoke(null, new FileSelectedEventHandlerArgs(imageAsDataUrl));
-
-
-        private readonly Regex _fileSelect = new Regex(@"data:(?<type1>.+?)/(?<type2>.+?),(?<data>.+)", RegexOptions.Compiled);
-        private async void OnFileSelectedEvent(object sender, FileSelectedEventHandlerArgs e)
-        {
-            await SetOutputText("File Selected, loading...");
-            MainPage.FileSelectedEvent -= OnFileSelectedEvent;
-            var base64Data = _fileSelect.Match(e.FileAsDataUrl).Groups["data"].Value;
-            var binData = Convert.FromBase64String(base64Data);
-            var stream = new MemoryStream(binData);
-            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-
-            driver.framerateControlTimeout = Convert.ToInt32(localSettings.Values[SaveKeys.MinPause.ToString()].ToString());
-            decoder = new TtyRecKeyframeDecoder(
-                80,
-                24,
-                new List<Stream> { DCSSTV.Streams.Streams.CompressedTtyrecToStream("TODO ADD FILE NAME",stream) },
-                TimeSpan.Zero,
-                TimeSpan.FromMilliseconds(Convert.ToDouble(localSettings.Values[SaveKeys.MaxPause.ToString()].ToString())))
+            if (storageFile != null)
             {
-                PlaybackSpeed = +1,
-                SeekTime = TimeSpan.Zero
-            };
-            await SetOutputText("Done Loading.");
-            await StartImageLoop();
+                var memStream = new MemoryStream();
+                using (var stream = await storageFile.OpenReadAsync())
+                {
+                    await stream.AsStream().CopyToAsync(memStream);
+                }
+                    
+                memStream.Position = 0;
+
+                driver.framerateControlTimeout = Convert.ToInt32(localSettings.Values[SaveKeys.MinPause.ToString()].ToString());
+                decoder = new TtyRecKeyframeDecoder(
+                    80,
+                    24,
+                    new List<Stream> { DCSSTV.Streams.Streams.CompressedTtyrecToStream(storageFile.Name, memStream) },
+                    TimeSpan.Zero,
+                    TimeSpan.FromMilliseconds(Convert.ToDouble(localSettings.Values[SaveKeys.MaxPause.ToString()].ToString())))
+                {
+                    PlaybackSpeed = +1,
+                    SeekTime = TimeSpan.Zero
+                };
+                await SetOutputText("Done Loading.");
+                await StartImageLoop();
+
+            }
+            else
+            {
+                // Did not pick any file.
+            }
+
         }
 
-        private static event FileSelectedEventHandler FileSelectedEvent;
+        //public static void SelectFile(string imageAsDataUrl) => FileSelectedEvent?.Invoke(null, new FileSelectedEventHandlerArgs(imageAsDataUrl));
 
-        private delegate void FileSelectedEventHandler(object sender, FileSelectedEventHandlerArgs args);
 
-        private class FileSelectedEventHandlerArgs
-        {
-            public string FileAsDataUrl { get; }
-            public FileSelectedEventHandlerArgs(string fileAsDataUrl) => FileAsDataUrl = fileAsDataUrl;
+        //private readonly Regex _fileSelect = new Regex(@"data:(?<type1>.+?)/(?<type2>.+?),(?<data>.+)", RegexOptions.Compiled);
+        //private async void OnFileSelectedEvent(object sender, FileSelectedEventHandlerArgs e)
+        //{
+        //    await SetOutputText("File Selected, loading...");
+        //    MainPage.FileSelectedEvent -= OnFileSelectedEvent;
+        //    var base64Data = _fileSelect.Match(e.FileAsDataUrl).Groups["data"].Value;
+        //    var binData = Convert.FromBase64String(base64Data);
+            
+        //}
 
-        }
+        //private static event FileSelectedEventHandler FileSelectedEvent;
+
+        //private delegate void FileSelectedEventHandler(object sender, FileSelectedEventHandlerArgs args);
+
+        //private class FileSelectedEventHandlerArgs
+        //{
+        //    public string FileAsDataUrl { get; }
+        //    public FileSelectedEventHandlerArgs(string fileAsDataUrl) => FileAsDataUrl = fileAsDataUrl;
+
+        //}
   
         private async Task LoadExtraFolderIndexedDB()
         {
@@ -468,11 +495,51 @@ namespace DCSSTV
             }
         }
 
-        private void Button_Click_ZoomOut(object sender, RoutedEventArgs e)
+        private async void Button_Click_TTyrecDownloadSelection(object sender, RoutedEventArgs e)
         {
-#if __WASM__
-            WebAssemblyRuntime.InvokeJS("viewportSet(2);");
-#endif
+            ContentDialogResult result = await ttyrecDownloadSelectionDialog.ShowOneAtATimeAsync();
+
+            if (result == ContentDialogResult.Primary)
+            {
+                OnTtyrecUrlReceived();
+            }
+        }
+        private async void OnTtyrecUrlReceived()
+        {
+
+            // Create an HttpClient object
+            using var client = new HttpClient();
+            // Send a GET request to the URL of the file
+            using var response = await client.GetAsync(TtyrecDownloadSelectionDialog.CORS_PROXY + ttyrecUrl);
+            // Check the response status code
+            if (response.IsSuccessStatusCode)
+            {
+                // Get the file content as a stream
+                MemoryStream memStream = new();
+                using var stream = await response.Content.ReadAsStreamAsync();
+                await stream.CopyToAsync(memStream);
+                memStream.Position = 0;
+
+                driver.framerateControlTimeout = Convert.ToInt32(localSettings.Values[SaveKeys.MinPause.ToString()].ToString());
+                decoder = new TtyRecKeyframeDecoder(
+                    80,
+                    24,
+                    new List<Stream> { Streams.Streams.CompressedTtyrecToStream(ttyrecUrl, memStream) },
+                    TimeSpan.Zero,
+                    TimeSpan.FromMilliseconds(Convert.ToDouble(localSettings.Values[SaveKeys.MaxPause.ToString()].ToString())))
+                {
+                    PlaybackSpeed = +1,
+                    SeekTime = TimeSpan.Zero
+                };
+                await SetOutputText("Done Loading.");
+                await StartImageLoop();
+
+            }
+            else
+            {
+                Console.WriteLine(response.ToString());
+            }
+
         }
     }
 }

@@ -66,44 +66,47 @@ namespace DCSSTV.Streams
         }
         public static Stream CompressedTtyrecToStream(string name, Stream maybeCompressed)
         {
-                Stream streamUncompressed = new MemoryStream();
-                if (name.Contains(".bz2"))
+            Stream streamUncompressed = new MemoryStream();
+            if (name.Contains(".bz2"))
+            {
+                try
                 {
-                    try
-                    {
-                        BZip2.Decompress(maybeCompressed, streamUncompressed, false);
-                    }
-                    catch
-                    {
-                        //MessageBox.Show("The file is corrupted or not supported");
-                    }
-                    return streamUncompressed;
+                    BZip2.Decompress(maybeCompressed, streamUncompressed, false);
                 }
-                if (name.Contains(".gz"))
+                catch
                 {
-                    try
-                    {
-                        GZip.Decompress(maybeCompressed, streamUncompressed, false);
-                    }
-                    catch
-                    {
-                        //MessageBox.Show("The file is corrupted or not supported");
-                    }
-                    return streamUncompressed;
+                    throw;
                 }
-                if (name.Contains(".xz"))
+                return streamUncompressed;
+            }
+            if (name.Contains(".gz"))
+            {
+                try
                 {
-                    try
-                    {
-                        using var xzStream = new XZOutputStream(maybeCompressed);
-                        xzStream.CopyTo(streamUncompressed);
-                    }
-                    catch
-                    {
-                        //MessageBox.Show("The file is corrupted or not supported");
-                    }
-                    return streamUncompressed;
+                    GZip.Decompress(maybeCompressed, streamUncompressed, false);
                 }
+                catch
+                {
+                throw;
+                //MessageBox.Show("The file is corrupted or not supported");
+            }
+                return streamUncompressed;
+            }
+            if (name.Contains(".xz"))
+            {
+                try
+                {
+                    using var xzStream = new XZOutputStream(maybeCompressed);
+                    xzStream.CopyTo(streamUncompressed);
+                    streamUncompressed.Position = 0;
+                }
+                catch
+                {
+                    throw;
+                //MessageBox.Show("The file is corrupted or not supported");
+                }
+                return streamUncompressed;
+            }
             return maybeCompressed;
         }
 

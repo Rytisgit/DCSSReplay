@@ -21,6 +21,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Pages\TtyrecDownloadSelectionDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
@@ -38,6 +42,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\ViewModels\MainViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pages\SaveSettings.xaml.cs">
       <DependentUpon>SaveSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\TtyrecDownloadSelectionDialog.xaml.cs">
+      <DependentUpon>TtyrecDownloadSelectionDialog.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -68,6 +75,5 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Models\DataModels\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Pages\" />
   </ItemGroup>
 </Project>

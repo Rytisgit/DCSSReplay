@@ -26,7 +26,7 @@
                 </utu:ControlExtensions.Icon>
             </Button>
             <Button Content="FULL" FontFamily="{StaticResource MaterialRegularFontFamily}" Click="Button_Click_Fullscreen"/>
-            <Button Content="Start playback"   Click="Button_Click_Start_Playback"/>
+            <Button Content="Open Ttyrec File"   Click="Button_Click_Start_Playback"/>
             <muxc:NumberBox 
                 Minimum="10"
                 Maximum="100"
@@ -40,7 +40,7 @@
             <TextBlock Text="Speed:" TextWrapping="Wrap" VerticalAlignment="Stretch" />
             <TextBlock Text="Delay:" TextWrapping="Wrap" VerticalAlignment="Stretch" />
             <Button Content="Settings" Click="Button_Click_Settings" />
-            <Button Content="PlaceHolder" Click="Button_Click_ZoomOut" />
+            <Button Content="Select TTyrec to Download" Click="Button_Click_TTyrecDownloadSelection" />
             <TextBlock x:Uid="output"  x:Name="output"/>
         </utu:AutoLayout>
 
