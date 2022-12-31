@@ -17,7 +17,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)SaveSettings.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)Pages\SaveSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -29,13 +29,16 @@
     <Compile Include="$(MSBuildThisFileDirectory)Classes\DCSSReplayDriver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\DialogExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\DialogManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\Streams.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Classes\UnoFileReader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ViewModels\DispatchedBindableBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ViewModels\MainViewModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SaveSettings.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\SaveSettings.xaml.cs">
+      <DependentUpon>SaveSettings.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Include="$(MSBuildThisFileDirectory)MainPage.xaml">
@@ -65,5 +68,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Models\DataModels\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Pages\" />
   </ItemGroup>
 </Project>

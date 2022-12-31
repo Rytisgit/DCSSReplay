@@ -19,11 +19,7 @@ using TtyRecDecoder;
 using Windows.System;
 using Microsoft.UI.Xaml.Input;
 using SkiaSharp.Views.Windows;
-using DCSSTV.Models.ViewModels;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Newtonsoft.Json.Linq;
-using InputParser;
-using Windows.ApplicationModel.DataTransfer.DragDrop;
+using DCSSTV.Streams;
 using DCSSTV.Helpers;
 using System.Runtime.CompilerServices;
 #if __WASM__
@@ -61,6 +57,10 @@ namespace DCSSTV
                 localSettings.Values[SaveKeys.ArrowJump.ToString()] = "5000";
                 localSettings.Values[SaveKeys.MinPause.ToString()] = "5";
                 localSettings.Values[SaveKeys.OpenOnStart.ToString()] = "None";
+            }
+            else
+            {
+                TimeStepLengthMS = Convert.ToInt32(localSettings.Values[SaveKeys.ArrowJump.ToString()].ToString());
             }
         }
 
@@ -265,7 +265,7 @@ namespace DCSSTV
             decoder = new TtyRecKeyframeDecoder(
                 80,
                 24,
-                new List<Stream> { stream },
+                new List<Stream> { DCSSTV.Streams.Streams.CompressedTtyrecToStream("TODO ADD FILE NAME",stream) },
                 TimeSpan.Zero,
                 TimeSpan.FromMilliseconds(Convert.ToDouble(localSettings.Values[SaveKeys.MaxPause.ToString()].ToString())))
             {
@@ -462,6 +462,10 @@ namespace DCSSTV
             SaveSettings settingsDialog = new SaveSettings();
 
             ContentDialogResult result = await settingsDialog.ShowOneAtATimeAsync();
+            if(result == ContentDialogResult.Primary)
+            {
+                TimeStepLengthMS = Convert.ToInt32(ApplicationData.Current.LocalSettings.Values[SaveKeys.ArrowJump.ToString()].ToString());
+            }
         }
 
         private void Button_Click_ZoomOut(object sender, RoutedEventArgs e)
