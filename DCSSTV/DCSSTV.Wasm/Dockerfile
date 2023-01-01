@@ -1,6 +1,6 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM unoplatform/wasm-build:5.0 AS build
+FROM rytisgit/wasm-build:7.0 AS build
 WORKDIR /src
 COPY ["DCSSTV/DCSSTV.Wasm/DCSSTV.Wasm.csproj", "./DCSSTV/DCSSTV.Wasm/"]
 COPY ["TtyRecDecoder/TtyRecDecoder.csproj", "./TtyRecDecoder/"]

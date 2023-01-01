@@ -71,7 +71,7 @@ namespace DCSSTV.Pages
             { "CXC | crawl.xtahua.com", "https://crawl.xtahua.com/crawl/ttyrec/"},
             { "LLD | lazy-life.ddo.jp", "http://lazy-life.ddo.jp/mirror/ttyrecs/"}};
 
-        public static string CORS_PROXY = "http://localhost:3000/";
+        public static string CORS_PROXY = "http://crawl.uksouth.cloudapp.azure.com:3000/";
         public string DownloadedWebsite = "";
 
         public Action<string> PassTtyrecUrl;
