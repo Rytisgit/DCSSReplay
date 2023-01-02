@@ -250,14 +250,8 @@ namespace DCSSTV
                 return;
             }
             await SetOutputText("Waiting for File Selection, loading file");
-            var picker = new FileOpenPicker
-            {
-                SuggestedStartLocation = PickerLocationId.Downloads
-            };
-            picker.FileTypeFilter.Add(".ttyrec");
-            picker.FileTypeFilter.Add(".ttyrec.gz");
-            picker.FileTypeFilter.Add(".ttyrec.xz");
-            picker.FileTypeFilter.Add(".ttyrec.bz2");
+            var picker = new FileOpenPicker();
+            picker.FileTypeFilter.Add("*");
             var storageFile = await picker.PickSingleFileAsync();
 
             if (storageFile != null)

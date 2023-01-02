@@ -1,0 +1,1 @@
+docker build . -f DCSSTV/DCSSTV.Wasm/Dockerfile -t dcsstv

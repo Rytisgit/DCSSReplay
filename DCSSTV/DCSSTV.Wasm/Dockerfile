@@ -20,6 +20,7 @@ RUN dotnet build "DCSSTV/DCSSTV.Wasm/DCSSTV.Wasm.csproj" -v:n -c Release -o /app
 FROM build AS publish
 RUN dotnet publish "DCSSTV/DCSSTV.Wasm/DCSSTV.Wasm.csproj" -c Release -o /app/publish
 
-FROM ibebbs/wasm-serve:latest
+FROM nginx:alpine
 EXPOSE 80
 COPY --from=publish /app/publish /usr/share/nginx/html
+COPY ["DCSSTV/DCSSTV.Wasm/mime.types", "/etc/nginx/mime.types" ]
