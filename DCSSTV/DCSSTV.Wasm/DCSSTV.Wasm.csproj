@@ -12,7 +12,7 @@
     <WasmShellForceDisableWSL Condition="'$(OS)' != 'Unix' and ('$(CI)' == 'true' or '$(BUILD_BUILDID)' != '')">true</WasmShellForceDisableWSL>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>-->
     <DockerfileContext>..\..</DockerfileContext>
-  </PropertyGroup>  
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <WasmShellMonoRuntimeExecutionMode>Interpreter</WasmShellMonoRuntimeExecutionMode>
     <WasmShellILLinkerEnabled>false</WasmShellILLinkerEnabled>
