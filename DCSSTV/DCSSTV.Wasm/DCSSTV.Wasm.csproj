@@ -4,10 +4,10 @@
     <TargetFramework>net7.0</TargetFramework>
     <NoWarn>NU1701</NoWarn>
     <WasmShellMonoRuntimeExecutionMode>InterpreterAndAot</WasmShellMonoRuntimeExecutionMode>
-    <UnoXamlResourcesTrimming>true</UnoXamlResourcesTrimming>
+    <UnoXamlResourcesTrimming>false</UnoXamlResourcesTrimming>
     <WasmShellILLinkerEnabled>true</WasmShellILLinkerEnabled>
     <WasmShellEnableThreads>false</WasmShellEnableThreads>
-    <WasmShellEmccLinkOptimization>true</WasmShellEmccLinkOptimization>
+    <WasmShellEmccLinkOptimization>false</WasmShellEmccLinkOptimization>
     <!--<WasmShellAOTProfileExcludedMethods>System.Threading.CancellationTokenSource:ExecuteCallbackHandlers;ExecuteCallbackHandlers;System.IO.Strategies.Net5CompatFileStreamStrategy:Dispose</WasmShellAOTProfileExcludedMethods>
     <WasmShellForceDisableWSL Condition="'$(OS)' != 'Unix' and ('$(CI)' == 'true' or '$(BUILD_BUILDID)' != '')">true</WasmShellForceDisableWSL>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>-->
