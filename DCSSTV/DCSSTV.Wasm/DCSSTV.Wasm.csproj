@@ -7,7 +7,7 @@
     <UnoXamlResourcesTrimming>false</UnoXamlResourcesTrimming>
     <WasmShellILLinkerEnabled>true</WasmShellILLinkerEnabled>
     <WasmShellEnableThreads>false</WasmShellEnableThreads>
-    <WasmShellEmccLinkOptimization>false</WasmShellEmccLinkOptimization>
+    <WasmShellEmccLinkOptimization>true</WasmShellEmccLinkOptimization>
     <!--<WasmShellAOTProfileExcludedMethods>System.Threading.CancellationTokenSource:ExecuteCallbackHandlers;ExecuteCallbackHandlers;System.IO.Strategies.Net5CompatFileStreamStrategy:Dispose</WasmShellAOTProfileExcludedMethods>
     <WasmShellForceDisableWSL Condition="'$(OS)' != 'Unix' and ('$(CI)' == 'true' or '$(BUILD_BUILDID)' != '')">true</WasmShellForceDisableWSL>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>-->
