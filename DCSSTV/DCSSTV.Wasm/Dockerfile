@@ -15,10 +15,10 @@ COPY ["TtyRecDecoder/", "./TtyRecDecoder/"]
 COPY ["PuttySharp/", "./PuttySharp/"]
 COPY ["InputParse/", "./InputParse/"]
 COPY ["FrameGenerator/", "./FrameGenerator/"]
-RUN dotnet build "DCSSTV/DCSSTV.Wasm/DCSSTV.Wasm.csproj" -v:n -c Release -o /app/build 
+RUN dotnet build "DCSSTV/DCSSTV.Wasm/DCSSTV.Wasm.csproj" -v:n -c Debug -o /app/build 
 
 FROM build AS publish
-RUN dotnet publish "DCSSTV/DCSSTV.Wasm/DCSSTV.Wasm.csproj" -c Release -o /app/publish
+RUN dotnet publish "DCSSTV/DCSSTV.Wasm/DCSSTV.Wasm.csproj" -c Debug -o /app/publish
 
 FROM ibebbs/wasm-serve:latest
 EXPOSE 80
