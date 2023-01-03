@@ -9,8 +9,9 @@
 #ifndef PUTTY_TERMINAL_H
 #define PUTTY_TERMINAL_H
 
-#include "TREE234.H"
-#include "PUTTY.H"
+#include <stdint.h>
+#include "tree234.h"
+#include "putty.h"
 struct beeptime {
     struct beeptime *next;
     unsigned long ticks;
@@ -38,8 +39,8 @@ struct termchar {
      * when extra fields are added here is labelled with a comment
      * saying FULL-TERMCHAR.
      */
-    unsigned long chr;
-    unsigned long attr;
+    uint32_t chr;
+    uint32_t attr;
 
     /*
      * The cc_next field is used to link multiple termchars
@@ -52,7 +53,7 @@ struct termchar {
      * 
      * Zero means end of list.
      */
-    int cc_next;
+    int32_t cc_next;
 };
 
 struct termline {

@@ -18,6 +18,7 @@ using FrameGenerator.FileReading;
 using ICSharpCode.SharpZipLib.GZip;
 using SkiaSharp.Views.Desktop;
 using TtyRecMonkey.Windows;
+using System.Reflection;
 
 namespace TtyRecMonkey
 {
@@ -39,8 +40,8 @@ namespace TtyRecMonkey
         private TileOverrideForm tileoverrideform;
 
         public PlayerForm()
-        { 
-            this.Icon = Properties.Resource1.dcssreplay;
+        {
+            this.Icon = Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location);
             frameGenerator = new MainGenerator(new ReadFromFile());
             tileoverrideform = new TileOverrideForm();
             Configuration.Load(this);

@@ -9,19 +9,19 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Putty\PUTTY.H">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Putty\putty.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Putty\MISC.H">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Putty\misc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Putty\PUTTYMEM.H">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Putty\puttymem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Putty\TERMINAL.H">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Putty\terminal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Putty\TREE234.H">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Putty\tree234.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Putty\version.h">
@@ -32,22 +32,22 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Putty\callback.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\Putty\MINIBIDI.C">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Putty\minibidi.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\Putty\MISC.C">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Putty\misc.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\Putty\TERMINAL.C">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Putty\terminal.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\Putty\TREE234.C">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Putty\tree234.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\Putty\VERSION.C">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Putty\version.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\Putty\WILDCARD.C">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Putty\wildcard.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "PUTTY.H"
+#include "putty.h"
 
 /*
  * Definition of wildcard syntax:

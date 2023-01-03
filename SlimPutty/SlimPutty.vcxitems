@@ -14,20 +14,20 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Putty\MISC.H" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Putty\PUTTY.H" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Putty\PUTTYMEM.H" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Putty\TERMINAL.H" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Putty\TREE234.H" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Putty\misc.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Putty\putty.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Putty\puttymem.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Putty\terminal.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Putty\tree234.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Putty\version.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\Putty\callback.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\Putty\MINIBIDI.C" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\Putty\MISC.C" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\Putty\TERMINAL.C" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\Putty\TREE234.C" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\Putty\VERSION.C" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\Putty\WILDCARD.C" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Putty\minibidi.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Putty\misc.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Putty\terminal.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Putty\tree234.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Putty\version.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\Putty\wildcard.c" />
   </ItemGroup>
 </Project>

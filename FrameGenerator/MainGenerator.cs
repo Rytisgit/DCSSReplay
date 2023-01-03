@@ -50,7 +50,7 @@ namespace FrameGenerator
         private int _lostMpCheckpoint = 0;
 
 
-        public MainGenerator(IReadFromFile fileReader, string gameLocation = @"..\..\..\Extra")
+        public MainGenerator(IReadFromFile fileReader, string gameLocation = @"../../../Extra")
         {
             var ReadFromFile = fileReader;
             _characterdata = ReadFromFile.GetDictionaryFromFile(gameLocation + @"/racepng.txt");
@@ -223,7 +223,9 @@ namespace FrameGenerator
             
             using (SKCanvas g = new SKCanvas(bmp))
             {
-                using var font = new SKPaint
+                g.Clear(SKColors.Black);
+
+                var font = new SKPaint
                 {
                     Typeface = _typeface,
                     TextSize = 22

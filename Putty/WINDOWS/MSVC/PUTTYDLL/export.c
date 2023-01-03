@@ -4,15 +4,14 @@
  */
 
 
-#include "../../../PUTTYMEM.H"
-#include "../../../TERMINAL.H"
-#include "../../../PUTTY.H"
+#include "../../../puttymem.h"
+#include "../../../terminal.h"
+#include "../../../putty.h"
 
-
-#if defined WIN32
+#ifdef _WIN32
 #define EXPORT(rt) __declspec(dllexport) rt
 #else
-#define EXPORT(rt) extern rt
+#define EXPORT(rt) rt
 #endif
 
 extern Conf* conf;
@@ -48,7 +47,7 @@ EXPORT(Terminal*) CreatePuttyTerminal(int w, int h) {
 
 static void copy_termlines(tree234* dest, tree234* src) {
 	int w, h, x, y;
-	termline* srctl, * desttl;
+	termline* srctl, *desttl;
 
 	h = min(count234(dest), count234(src));
 	for (y = 0; y < h; ++y) {

@@ -59,15 +59,5 @@ namespace TtyRecMonkey.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon dcssreplay {
-            get {
-                object obj = ResourceManager.GetObject("dcssreplay", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
     }
 }

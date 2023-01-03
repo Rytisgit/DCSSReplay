@@ -24,7 +24,7 @@ namespace DisplayWindow
         public DCSSReplayWindow()
         {
             InitializeComponent();
-            PlayButton.Image = Image.FromFile(@"..\..\..\Extra\pause.png");
+            PlayButton.Image = Image.FromFile(@"../../../Extra/pause.png");
             typeof(Panel).InvokeMember("DoubleBuffered",
             BindingFlags.SetProperty | BindingFlags.Instance | BindingFlags.NonPublic,
             null, SeekBar, new object[] { true });
@@ -58,21 +58,26 @@ namespace DisplayWindow
         }
         public void UpdateTime(string start, string end)
         {
-                if (StartTimeLabel.InvokeRequired )
-                {
+            // prevent exception on Window close
+            if (!this.Visible)
+            {
+                return;
+            }
+            else if (StartTimeLabel.InvokeRequired )
+            {
                 var d = new SafeCallDelegateTitle2(UpdateTime);
                 IAsyncResult ar2 = this.BeginInvoke(d, new object[] { start, end });
                 // ar2.AsyncWaitHandle.WaitOne();
             }
-                else
+            else
+            {
+                if (StartTimeLabel.Text != start)
                 {
-                    if (StartTimeLabel.Text != start)
-                    {
-                        StartTimeLabel.Text = start;
-                        EndTimeLabel.Text = end;
-                        SeekBar.Invalidate();
-                    }
+                    StartTimeLabel.Text = start;
+                    EndTimeLabel.Text = end;
+                    SeekBar.Invalidate();
                 }
+            }
         }
 
         public void ShowControls(bool shouldShow)
@@ -160,8 +165,8 @@ namespace DisplayWindow
         {
             this.ActiveControl = null;
             if (ttyrecDecoder == null) return;
-            if (ttyrecDecoder.PlaybackSpeed != 0) { PlayButton.Image = Image.FromFile(@"..\..\..\Extra\play.png"); ttyrecDecoder.Pause(); }
-            else { PlayButton.Image = Image.FromFile(@"..\..\..\Extra\pause.png"); ttyrecDecoder.Unpause(); }
+            if (ttyrecDecoder.PlaybackSpeed != 0) { PlayButton.Image = Image.FromFile(@"../../../Extra/play.png"); ttyrecDecoder.Pause(); }
+            else { PlayButton.Image = Image.FromFile(@"../../../Extra/pause.png"); ttyrecDecoder.Unpause(); }
 
         }
 
