@@ -5,11 +5,11 @@ services:
     ports:
       - "5000:80"
     environment:
-      - PROXY_HOST=value1
+      - PROXY_HOST=http://localhost:3000
       - UPDATED_ON=0
   cors-anywhere:
     image: redocly/cors-anywhere:latest
     ports:
       - "3000:8080"
     environment:
-      - CORSANYWHERE_WHITELIST=
+      - CORSANYWHERE_WHITELIST=https://localhost,http://localhost,http://localhost:5000

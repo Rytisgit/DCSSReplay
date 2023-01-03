@@ -67,7 +67,9 @@ namespace DCSSTV
             {
                 TimeStepLengthMS = Convert.ToInt32(localSettings.Values[SaveKeys.ArrowJump.ToString()].ToString());
             }
-        }
+            UpdatedDateTextBlock.Visibility = Not(Environment.GetEnvironmentVariable("UPDATED_ON") == null);
+            UpdatedDateTextBlock.Text = Environment.GetEnvironmentVariable("UPDATED_ON");
+    }
 
         void PassTtyrecUrl(string url)
         {
@@ -171,7 +173,7 @@ namespace DCSSTV
             return Task.CompletedTask;
         }
 
-        private Visibility Not(bool? value) => (!value ?? false) ? Visibility.Visible : Visibility.Collapsed;
+        private static Visibility Not(bool? value) => (!value ?? false) ? Visibility.Visible : Visibility.Collapsed;
 
         //private void OnPaintSwapChain(object sender, SKPaintGLSurfaceEventArgs e)
         //{
