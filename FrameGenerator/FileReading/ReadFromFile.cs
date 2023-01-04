@@ -22,7 +22,9 @@ namespace FrameGenerator.FileReading
 
         public Dictionary<string, string[]> GetFloorAndWallNamesForDungeons(string file);
 
-        public Dictionary<string, SKBitmap> GetSKBitmapDictionaryFromFolder(string folder);
+        public List<string> GetExtraPngFiles(string folder);
+
+        public Dictionary<string, SKBitmap> GetSKBitmapDictionaryFromFolder(string folder, List<string> extraFiles);
 
         public Dictionary<string, SKBitmap> GetCharacterPNG(string gameLocation);
 
@@ -45,7 +47,7 @@ namespace FrameGenerator.FileReading
 
         public Task<Dictionary<string, Tuple<List<string>, List<string>>>> GetFloorAndWallColours(string file);
 
-        public Task<Dictionary<string, SKBitmap>> GetSKBitmapDictionaryFromFolder(string folder);
+        public Task<Dictionary<string, SKBitmap>> GetSKBitmapDictionaryFromFolder(string folder, string extraFolder);
 
         public Task<Dictionary<string, SKBitmap>> GetCharacterPNG(string gameLocation);
                
@@ -88,10 +90,10 @@ namespace FrameGenerator.FileReading
                     tokens[2] = tokens[2].Replace(" ", "");
                     tokens[0] = tokens[0].Replace("MONS_", "").Replace(" ", "").ToLower();
                     //if(!Enum.TryParse(tokens[2], out ColorList2 res)) Console.WriteLine(tokens[1] + tokens[2] + " badly colored: " + tokens[0]);
-                    if (monster.TryGetValue(tokens[1] + tokens[2], out var existing))//check if duplicate
-                    {
-                        //Console.WriteLine(tokens[1] + tokens[2] + "exist: " + existing + " new: " + tokens[0]); 
-                    }
+                    //if (monster.TryGetValue(tokens[1] + tokens[2], out var existing))//check if duplicate
+                    //{
+                    //    Console.WriteLine(tokens[1] + tokens[2] + "exist: " + existing + " new: " + tokens[0]); 
+                    //}
                     monster[tokens[1] + tokens[2]] = tokens[0];
                 }
             }
@@ -217,14 +219,16 @@ namespace FrameGenerator.FileReading
             return floorandwall;
         }
 
-        public Dictionary<string, SKBitmap> GetSKBitmapDictionaryFromFolder(string folder)
+        public List<string> GetExtraPngFiles(string folder)
+        {
+            return Directory.GetFiles(folder, "*.png", SearchOption.TopDirectoryOnly).ToList();
+        }
+
+        public Dictionary<string, SKBitmap> GetSKBitmapDictionaryFromFolder(string folder, List<string> extraFiles)
         {
             var dict = new Dictionary<string, SKBitmap>();
             List<string> pngFiles = Directory.GetFiles(folder, "*.png*", SearchOption.AllDirectories).ToList();
-            var files = Directory
-                .GetFiles(folder.Substring(0, folder.IndexOf("Extra", StringComparison.OrdinalIgnoreCase) + 5), "*.png",
-                    SearchOption.TopDirectoryOnly).ToList();
-            pngFiles.AddRange(files);
+            pngFiles.AddRange(extraFiles);
             foreach (var file in pngFiles)
             {
                 FileInfo info = new FileInfo(file);
@@ -289,5 +293,6 @@ namespace FrameGenerator.FileReading
 
             return GetWeaponPNG;
         }
+
     }
 }

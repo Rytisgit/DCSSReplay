@@ -1,49 +1,27 @@
 ﻿using FrameGenerator.Extensions;
 using FrameGenerator.FileReading;
-using FrameGenerator.Models;
 using FrameGenerator.OutOfSightCache;
 using InputParser;
 using Putty;
 using System;
 using System.Collections.Generic;
 using SkiaSharp;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using InputParser.Constant;
-using InputParser.Decorators;
 
 namespace FrameGenerator
 {
+
     public class MainGenerator
     {
         private readonly IReadFromFileAsync ReadFromFile;
         private const int BottomRightStartX = 1065;
         private const int BottomRightStartY = 468;
         public bool isGeneratingFrame = false;
-        private bool NeedRefreshDictionaries = true;
-        private Dictionary<string, string> _monsterdata;
-        private List<NamedMonsterOverride> _namedMonsterOverrideData;
-        private Dictionary<string, string> _characterdata;
-        private Dictionary<string, string[]> _floorandwall;
-        private Dictionary<string, Tuple<List<string>, List<string>>> _floorandwallColor;
-        private Dictionary<string, string> _features;
-        private Dictionary<string, string> _cloudtiles;
-        private Dictionary<string, string> _itemdata;
-        private Dictionary<string, string> _weapondata;
-        private Dictionary<string, SKBitmap> _monsterpng;
+
         private Cacher _outOfSightCache;
-        private Dictionary<string, SKBitmap> _characterpng;
-        private Dictionary<string, SKBitmap> _weaponpng;
-        private Dictionary<string, SKBitmap> _itempng;
-        private Dictionary<string, SKBitmap> _alldngnpng;
-        private Dictionary<string, SKBitmap> _alleffects;
-        private Dictionary<string, SKBitmap> _miscallaneous;
-        private Dictionary<string, SKBitmap> _floorpng;
-        private Dictionary<string, SKBitmap> _wallpng;
-        //so what I want is a class containing all the dictionaries that can be passed around the different objects, and I can then fill in a second class with updated data to be used for other versions
-        // need to get the new images, delete the unused ones like I did in a previous commit, prepare to load them into memory
+        private VersionSelectableDataHolder _data;
         private SKBitmap _lastFrame = new SKBitmap(1602, 1050);
         private SKTypeface _typeface = SKTypeface.FromFamilyName("Courier New");
         private int previousHP = 0;
@@ -55,80 +33,33 @@ namespace FrameGenerator
         public MainGenerator(IReadFromFile fileReader, string gameLocation = @"../../../Extra")
         {
             var ReadFromFile = fileReader;
-            _characterdata = ReadFromFile.GetDictionaryFromFile(gameLocation + @"/racepng.txt");
-            _features = ReadFromFile.GetDictionaryFromFile(gameLocation + @"/features.txt");
-            _cloudtiles = ReadFromFile.GetDictionaryFromFile(gameLocation + @"/clouds.txt");
-            _itemdata = ReadFromFile.GetDictionaryFromFile(gameLocation + @"/items.txt");
-            _weapondata = ReadFromFile.GetDictionaryFromFile(gameLocation + @"/weapons.txt");
-
-            _floorandwall = ReadFromFile.GetFloorAndWallNamesForDungeons(gameLocation + @"/tilefloor.txt");
-            _floorandwallColor = ReadFromFile.GetFloorAndWallColours(gameLocation + @"/tilefloorColors.txt");
-            _monsterdata = ReadFromFile.GetMonsterData(gameLocation + @"/mon-data.h", gameLocation + @"/monsteroverrides.txt");
-            _namedMonsterOverrideData = ReadFromFile.GetNamedMonsterOverrideData(gameLocation + @"/namedmonsteroverrides.txt");
-
-            _floorpng = ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "dngn", "floor"));
-            _wallpng = ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "dngn", "wall"));
-            _alldngnpng = ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "dngn"));
-            _alleffects = ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "effect"));
-            _miscallaneous = ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "misc"));
-            _itempng = ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "item"));
-
-            _characterpng = ReadFromFile.GetCharacterPNG(gameLocation);
-            _monsterpng = ReadFromFile.GetMonsterPNG(gameLocation);
-
+            _data = new VersionSelectableDataHolder(ReadFromFile);
             _outOfSightCache = new Cacher();
-            _weaponpng = ReadFromFile.GetWeaponPNG(gameLocation);
         }
 
         public MainGenerator(IReadFromFileAsync fileReader, int test)
         {
-            ReadFromFile = fileReader;
+            _data = new VersionSelectableDataHolder(fileReader);
         }
 
         public async Task InitialiseGenerator()
         {
-            var gameLocation = "Extra";
-            if (NeedRefreshDictionaries || _characterdata == null) NeedRefreshDictionaries = false;
-            else return;
-            _characterdata = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/racepng.txt");
-            _features = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/features.txt");
-            _cloudtiles = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/clouds.txt");
-            _itemdata = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/items.txt");
-            _weapondata = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/weapons.txt");
-
-            _floorandwall = await ReadFromFile.GetFloorAndWallNamesForDungeons(gameLocation + @"/tilefloor.txt");
-            _floorandwallColor = await ReadFromFile.GetFloorAndWallColours(gameLocation + @"/tilefloorColors.txt");
-            _monsterdata = await ReadFromFile.GetMonsterData(gameLocation + @"/mon-data.h", gameLocation + @"/monsteroverrides.txt");
-            _namedMonsterOverrideData = await ReadFromFile.GetNamedMonsterOverrideData(gameLocation + @"/namedmonsteroverrides.txt");
-
-            _floorpng = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "dngn", "floor"));
-            _wallpng = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "dngn", "wall"));
-            _alldngnpng = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "dngn"));
-            _alleffects = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "effect"));
-            _miscallaneous = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "misc"));
-            _itempng = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "item"));
-
-            _characterpng = await ReadFromFile.GetCharacterPNG(gameLocation);
-            _monsterpng = await ReadFromFile.GetMonsterPNG(gameLocation);
-
-            _outOfSightCache = new Cacher();
-            _weaponpng = await ReadFromFile.GetWeaponPNG(gameLocation);
-
+            await _data.InitialiseData();
             _typeface = SKTypeface.FromStream(await ReadFromFile.GetFontStream("cour.ttf"));
         }
 
         public async Task ReinitializeGenerator()
         {
-            NeedRefreshDictionaries = true;
+            _data.NeedRefreshDictionaries = true;
             await InitialiseGenerator();
         }
 
-        public SKBitmap GenerateImage(TerminalCharacter[,] chars, int consoleLevel = 1, Dictionary<string, string> tileoverides = null)
+        public SKBitmap GenerateImage(TerminalCharacter[,] chars, int consoleLevel = 1, Dictionary<string, string> tileoverides = null, string versionSwitch = "Classic")
         {
             //return DrawFrame(new Model());
             if (chars != null)
             {
-               
+                _data.version = versionSwitch;
                 var model = consoleLevel != 3 ? Parser.ParseData(chars) : Parser.ParseData(chars, true);
                 model.OverideTiles(tileoverides);
                 if (model.Layout == LayoutType.Normal && consoleLevel == 2)
@@ -195,7 +126,7 @@ namespace FrameGenerator
             {
                 if (monsterLine.Empty) continue;
 
-                var rules = _namedMonsterOverrideData.Where(
+                var rules = _data.NamedMonsterOverrideData.Where(
                     monsterOverride
                         => !string.IsNullOrWhiteSpace(monsterOverride.Name) &&
                            monsterLine.MonsterTextRaw.Contains(monsterOverride.Name.Substring(0, monsterOverride.Name.Length - 2)));
@@ -209,7 +140,7 @@ namespace FrameGenerator
                 finalOverrides.AddColorDependantOverrides(monsterLine);
             }
            
-            foreach (var tileOverride in _namedMonsterOverrideData.Where(
+            foreach (var tileOverride in _data.NamedMonsterOverrideData.Where(
                 rule => string.IsNullOrWhiteSpace(rule.Name) && rule.Location == location).SelectMany(rule => rule.TileNameOverrides))
             {
                 finalOverrides.AddOrIgnore(tileOverride.Key, tileOverride.Value); //add all overrides for current location that arent for specific monsters
@@ -395,7 +326,7 @@ namespace FrameGenerator
                 {
                     for (int i = 0; i < monsterlist.MonsterDisplay.Length; i++)
                     {
-                        if (monsterlist.MonsterDisplay[i].TryDrawMonster(monsterlist.MonsterBackground[i], _monsterdata, _monsterpng, overrides, out SKBitmap tileToDraw))
+                        if (monsterlist.MonsterDisplay[i].TryDrawMonster(monsterlist.MonsterBackground[i], _data.Monsterdata, _data.Monsterpng, overrides, out SKBitmap tileToDraw))
                         {
                             g.DrawBitmap(tileToDraw, x, currentLineY);
                         }
@@ -523,13 +454,13 @@ namespace FrameGenerator
             
 
             var CharacterSKBitmap = new SKBitmap(32, 32);
-            if (!_characterdata.TryGetValue(characterRace, out var pngName)) return false;
-            if (!_characterpng.TryGetValue(pngName, out SKBitmap png)) return false;
+            if (!_data.Characterdata.TryGetValue(characterRace, out var pngName)) return false;
+            if (!_data.Characterpng.TryGetValue(pngName, out SKBitmap png)) return false;
 
             string[] location = model.SideData.Place.Split(':');
-            if (!_floorandwall.TryGetValue(location[0].ToUpper(), out var currentLocationFloorAndWallName)) return false;
+            if (!_data.Floorandwall.TryGetValue(location[0].ToUpper(), out var currentLocationFloorAndWallName)) return false;
 
-            if (!_floorpng.TryGetValue(currentLocationFloorAndWallName[1], out var floor)) return false;
+            if (!_data.Floorpng.TryGetValue(currentLocationFloorAndWallName[1], out var floor)) return false;
 
             
             
@@ -541,43 +472,43 @@ namespace FrameGenerator
                 {
                     _outOfSightCache.TryGetLastSeenBitmapByChar('≈', out var lastSeen);
                     if(lastSeen!=null) floor = lastSeen;
-                    else if(!_alldngnpng.TryGetValue("shallow_water", out floor)) return false;
+                    else if(!_data.Alldngnpng.TryGetValue("shallow_water", out floor)) return false;
                 }
                 else if(model.SideData.Statuses1.ToLower().Contains("lava"))
                 {
-                    if (!_alldngnpng.TryGetValue("lava08", out floor)) return false;
+                    if (!_data.Alldngnpng.TryGetValue("lava08", out floor)) return false;
                 }
 
                 characterg.DrawBitmap(floor, rect);
 
                 foreach (string status in BasicStatusArray)
                 {
-                    if (model.SideData.Statuses1.ToLowerInvariant().Contains(status) && _weaponpng.TryGetValue(status + "_form", out png)) break;
+                    if (model.SideData.Statuses1.ToLowerInvariant().Contains(status) && _data.Weaponpng.TryGetValue(status + "_form", out png)) break;
                 }
 
                 foreach (string status in CompStatusArray)
                 {
                     if (model.SideData.Statuses1.ToLowerInvariant().Contains(status))
                     {
-                        if (!_weaponpng.TryGetValue(status + "_form_" + characterRace.ToLower(), out png)) _weaponpng.TryGetValue(status + "_form_humanoid", out png);
+                        if (!_data.Weaponpng.TryGetValue(status + "_form_" + characterRace.ToLower(), out png)) _data.Weaponpng.TryGetValue(status + "_form_humanoid", out png);
                     }
                 }
 
                 characterg.DrawBitmap(png, rect);
 
-                if (_weaponpng.TryGetValue(model.SideData.Weapon.ParseUniqueWeaponName(), out png)) characterg.DrawBitmap(png, rect);
+                if (_data.Weaponpng.TryGetValue(model.SideData.Weapon.ParseUniqueWeaponName(), out png)) characterg.DrawBitmap(png, rect);
 
-                else if (_weaponpng.TryGetValue(model.SideData.Weapon.GetNonUniqueWeaponName(_weapondata), out png)) characterg.DrawBitmap(png, rect);
+                else if (_data.Weaponpng.TryGetValue(model.SideData.Weapon.GetNonUniqueWeaponName(_data.Weapondata), out png)) characterg.DrawBitmap(png, rect);
 
                 else if (model.SideData.Statuses1.ToLower().Contains("held"))
                 {
                     if (location.Contains("Spider"))
                     {
-                        if (_alldngnpng.TryGetValue("cobweb_none_0", out var cobweb)) characterg.DrawBitmap(cobweb, rect);
+                        if (_data.Alldngnpng.TryGetValue("cobweb_none_0", out var cobweb)) characterg.DrawBitmap(cobweb, rect);
                     }
                     else
                     {
-                        if (_alldngnpng.TryGetValue("net_trap", out var net)) characterg.DrawBitmap(net, rect);
+                        if (_data.Alldngnpng.TryGetValue("net_trap", out var net)) characterg.DrawBitmap(net, rect);
                     }
                     
                 }
@@ -596,12 +527,12 @@ namespace FrameGenerator
 
             _outOfSightCache.DumpDataOnLocationChange(model.SideData.Place);
 
-            if (!_floorandwall.TryGetValue(model.Location.ToUpper(), out var CurrentLocationFloorAndWallName)) return;
+            if (!_data.Floorandwall.TryGetValue(model.Location.ToUpper(), out var CurrentLocationFloorAndWallName)) return;
 
-            if (!_floorandwallColor.TryGetValue(model.Location.ToUpper(), out var CurrentLocationFloorAndWallColor)) return;
+            if (!_data.FloorandwallColor.TryGetValue(model.Location.ToUpper(), out var CurrentLocationFloorAndWallColor)) return;
 
-            if (!_wallpng.TryGetValue(CurrentLocationFloorAndWallName[0], out var wall)) return;
-            if (!_floorpng.TryGetValue(CurrentLocationFloorAndWallName[1], out var floor)) return;
+            if (!_data.Wallpng.TryGetValue(CurrentLocationFloorAndWallName[0], out var wall)) return;
+            if (!_data.Floorpng.TryGetValue(CurrentLocationFloorAndWallName[1], out var floor)) return;
 
             var currentTileX = startX;
             var currentTileY = startY;
@@ -656,12 +587,12 @@ namespace FrameGenerator
             SKBitmap brandToDraw = null;
             bool cached = false;
             if (tile.TryDrawWallOrFloor(tileHighlight, wall, floor, wallAndFloorColors, out drawnTile) ||
-                tile.TryDrawMonster(tileHighlight, overrides, _monsterpng, _miscallaneous, floor, out drawnTile, out brandToDraw) ||//first try drawing overrides, that include blue color monsters, and monsters in sight
+                tile.TryDrawMonster(tileHighlight, overrides, _data.Monsterpng, _data.Miscallaneous, floor, out drawnTile, out brandToDraw) ||//first try drawing overrides, that include blue color monsters, and monsters in sight
                 tile.TryDrawCachedTile(tileHighlight, _outOfSightCache, new List<char> {'!', '?', '=', '"', '$', ')', '[', '_', '}', '/', '(', ':', '|', '%', '÷', '†', '*'}, new List<string> { "≈RED"}, out drawnTile, out cached) ||
-                tile.TryDrawMonster(tileHighlight, _monsterdata, _monsterpng, _miscallaneous, floor, out drawnTile, out brandToDraw) ||//draw the rest of the monsters
-                tile.TryDrawFeature(tileHighlight, _features, _alldngnpng, _miscallaneous, floor, wall, model.Location, out drawnTile) ||
-                tile.TryDrawCloud(_cloudtiles, _alleffects, floor, model.SideData, model.MonsterData, out drawnTile) ||
-                tile.TryDrawItem(tileHighlight, _itemdata, _itempng, _miscallaneous, floor, model.Location, out drawnTile) ||
+                tile.TryDrawMonster(tileHighlight, _data.Monsterdata, _data.Monsterpng, _data.Miscallaneous, floor, out drawnTile, out brandToDraw) ||//draw the rest of the monsters
+                tile.TryDrawFeature(tileHighlight, _data.Features, _data.Alldngnpng, _data.Miscallaneous, floor, wall, model.Location, out drawnTile) ||
+                tile.TryDrawCloud(_data.Cloudtiles, _data.Alleffects, floor, model.SideData, model.MonsterData, out drawnTile) ||
+                tile.TryDrawItem(tileHighlight, _data.Itemdata, _data.Itempng, _data.Miscallaneous, floor, model.Location, out drawnTile) ||
                 tile.TryDrawCachedTileInView(tileHighlight, _outOfSightCache, new List<char> { '!', '?', '=', '"', '$', ')', '[', '_', '}', '/', '(', ':', '|', '%', '÷', '†', '*' }, new List<string> { "≈RED" }, out drawnTile)) 
             {
                 var rect = new SKRect(x, y, x+ ( drawnTile.Width * resize),y+ ( drawnTile.Height * resize));

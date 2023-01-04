@@ -274,3 +274,6 @@ obsidian statue
 
 orange crystal statue
 8LIGHTRED orange_crystal_statue
+
+slave
+pWHITE slave

@@ -232,14 +232,14 @@ namespace DCSSTV
             return floorandwall;
         }
 
-        public async Task<Dictionary<string, SkiaSharp.SKBitmap>> GetSKBitmapDictionaryFromFolder(string folder)
+        public async Task<Dictionary<string, SkiaSharp.SKBitmap>> GetSKBitmapDictionaryFromFolder(string folder, string extraFolder)
         {
             var dict = new Dictionary<string, SkiaSharp.SKBitmap>();
             
             List<StorageFile> pngFiles = await GetPngsFromFolderAndSubfoldersRecursively(
                 await ApplicationData.Current.LocalFolder.GetFolderAsync(folder));
             //Add pngs in Extra folder
-            var files = await GetFilesFromFolder("Extra");
+            var files = await GetFilesFromFolder(extraFolder);
             pngFiles.AddRange(files);
 
             foreach (var file in pngFiles)

@@ -316,6 +316,7 @@ namespace DCSSTV
         {
             try
             {
+                //TODO wasm multiple extra folder handling
                 var file =
                     await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Extra.zip"));
                 var bytes = await FileIO.ReadBufferAsync(file);

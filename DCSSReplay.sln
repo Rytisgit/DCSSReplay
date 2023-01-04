@@ -43,6 +43,20 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "DCSSTV.Shared", "DCSSTV\DCS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DCSSTV.Wasm", "DCSSTV\DCSSTV.Wasm\DCSSTV.Wasm.csproj", "{7EACE17D-862D-4301-BD7D-D3507CF35E8C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extra2023", "Extra2023", "{ABD7C62E-2D01-4FDA-87BF-05A31FC439C7}"
+	ProjectSection(SolutionItems) = preProject
+		Extra2023\clouds.txt = Extra2023\clouds.txt
+		Extra2023\features.txt = Extra2023\features.txt
+		Extra2023\items.txt = Extra2023\items.txt
+		Extra2023\mon-data.h = Extra2023\mon-data.h
+		Extra2023\monsteroverrides.txt = Extra2023\monsteroverrides.txt
+		Extra2023\namedmonsteroverrides.txt = Extra2023\namedmonsteroverrides.txt
+		Extra2023\racepng.txt = Extra2023\racepng.txt
+		Extra2023\tilefloor.txt = Extra2023\tilefloor.txt
+		Extra2023\tilefloorColors.txt = Extra2023\tilefloorColors.txt
+		Extra2023\weapons.txt = Extra2023\weapons.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Ad-Hoc|Any CPU = Ad-Hoc|Any CPU

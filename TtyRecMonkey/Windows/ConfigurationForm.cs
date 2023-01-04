@@ -23,7 +23,7 @@ namespace TtyRecMonkey
             radioButton1.Checked = Configuration.Main.OpenNone;
             radioButton2.Checked = Configuration.Main.OpenFileSelect;
             radioButton3.Checked = Configuration.Main.OpenDownload;
-
+            //todo add default version selection
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)

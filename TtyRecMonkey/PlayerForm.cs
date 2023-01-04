@@ -39,6 +39,8 @@ namespace TtyRecMonkey
         public int prevHash = 0;
         private TileOverrideForm tileoverrideform;
 
+        public string VersionSwitch { get; private set; }
+
         public PlayerForm()
         {
             this.Icon = Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location);
@@ -205,7 +207,7 @@ namespace TtyRecMonkey
                             {
                                 try
                                 {
-                                    bmp = frameGenerator.GenerateImage(frame, ConsoleSwitchLevel, tileoverrideform.tileoverides).ToBitmap();
+                                    bmp = frameGenerator.GenerateImage(frame, ConsoleSwitchLevel, tileoverrideform.tileoverides, VersionSwitch).ToBitmap();
                                     Update2(bmp);
                                     frameGenerator.isGeneratingFrame = false;
                                     prevHash = frame.GetHashCode();
@@ -349,6 +351,10 @@ namespace TtyRecMonkey
 
                     case Keys.S:
                         ConsoleSwitchLevel = ConsoleSwitchLevel != 3 ? 3 : 1;//switch to full console mode ound when in normal layout mode
+                        break;
+
+                    case Keys.Q:
+                        VersionSwitch = VersionSwitch == "Classic" ? "2023" : "Classic";//switch png version which is being used
                         break;
 
                     case Keys.V://Play / Pause

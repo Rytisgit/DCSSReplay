@@ -129,6 +129,7 @@ Ctrl+F        Open ttyrec search window
 Escape        Close ttyrec and return here
 Alt+Enter     Toggle fullscreen
 A / S         Switch Tile to console / Full Console Mode
+Q             Toggle Data Version
 
                 PLAYBACK CONTROLS
 ZXC           Play backwards at x100, x10, or x1 speed

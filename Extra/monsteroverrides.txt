@@ -25,8 +25,6 @@ bLIGHTMAGENTA butterfly10
 bRED butterfly
 bGREEN butterfly3
 bBLUE butterfly9
-bWHITE butterfly5
-bLIGHTGREY butterfly2
 bMAGENTA butterfly4
 bLIGHTRED butterfly2
 bYELLOW butterfly7
@@ -40,3 +38,4 @@ WMAGENTA shadow
 DLIGHTGREEN hydra5
 pYELLOW ironbound_convoker
 pLIGHTRED vault_warden
+hYELLOW hound
