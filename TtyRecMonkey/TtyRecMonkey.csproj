@@ -198,22 +198,25 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack">
-      <Version>1.11.23</Version>
+      <Version>1.11.46</Version>
     </PackageReference>
     <PackageReference Include="SharpZipLib">
-      <Version>1.3.3</Version>
+      <Version>1.4.1</Version>
     </PackageReference>
     <PackageReference Include="SkiaSharp.NativeAssets.Linux" Condition="$([MSBuild]::IsOsPlatform('Linux'))">
-      <Version>1.68.2.1</Version>
+      <Version>1.68.3</Version>
     </PackageReference>
     <PackageReference Include="SkiaSharp.Views">
-      <Version>1.68.2.1</Version>
+      <Version>1.68.3</Version>
     </PackageReference>
     <PackageReference Include="SkiaSharp.Views.Forms">
-      <Version>1.60.0</Version>
+      <Version>1.68.3</Version>
     </PackageReference>
     <PackageReference Include="SkiaSharp.Views.Forms.WPF">
-      <Version>1.68.2.1</Version>
+      <Version>1.68.3</Version>
+    </PackageReference>
+    <PackageReference Include="System.Drawing.Common">
+      <Version>4.7.2</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup />
