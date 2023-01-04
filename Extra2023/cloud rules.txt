@@ -1,0 +1,25 @@
+        BLACK, none
+        RED,  CLOUD_FIRE
+        GREEN, CLOUD_MEPHITIC if qaz CLOUD_DUST
+        BROWN, CLOUD_DUST
+        BLUE, CLOUD_COLD
+        MAGENTA, if § neg tloc hybrid else CLOUD_NEGATIVE_ENERGY
+        CYAN, CLOUD_SPECTRAL
+        LIGHTGREY, if salt CLOUD_SALT CLOUD_GREY_SMOKE if cloud god CLOUD_STORM
+        DARKGREY, CLOUD_MIASMA, if shoals CLOUD_INK if cloud god CLOUD_STORM
+        LIGHTRED, CLOUD_FIRE
+        LIGHTGREEN,CLOUD_POISON
+        YELLOW, if § CLOUD_FIRE else CLOUD_ACID  if gold dust status CLOUD_GOLD_DUST
+        LIGHTBLUE,CLOUD_COLD
+        LIGHTMAGENTA, CLOUD_MUTAGENIC
+        LIGHTCYAN, CLOUD_SPECTRAL
+        WHITE, if § salt CLOUD_SALT  if § d or lair CLOUD_PETRIFY, else if § and pan? TILE_CLOUD_YELLOW_SMOKE else if § CLOUD_COLD if gold dust status CLOUD_GOLD_DUST 
+		
+TORNADO:	
+
+tornado1 LIGHTRED  LIGHTCYAN LIGHTBLUE  WHITE 
+tornado2 RED CYAN BLUE LIGHTGREY
+
+magical condensation random clouds - caused by ood, maybe should change when orb spiders on screen
+
+recolor tiles based on background color (selectors, travels paths, bolts)

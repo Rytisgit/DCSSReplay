@@ -42,6 +42,8 @@ namespace FrameGenerator
         private Dictionary<string, SKBitmap> _miscallaneous;
         private Dictionary<string, SKBitmap> _floorpng;
         private Dictionary<string, SKBitmap> _wallpng;
+        //so what I want is a class containing all the dictionaries that can be passed around the different objects, and I can then fill in a second class with updated data to be used for other versions
+        // need to get the new images, delete the unused ones like I did in a previous commit, prepare to load them into memory
         private SKBitmap _lastFrame = new SKBitmap(1602, 1050);
         private SKTypeface _typeface = SKTypeface.FromFamilyName("Courier New");
         private int previousHP = 0;
