@@ -1515,11 +1515,6 @@ static void power_on(Terminal *term, int clear)
 	term->alt_b = term->marg_b = term->rows - 1;
     else
 	term->alt_b = term->marg_b = 0;
-    if (term->cols != -1) {
-	int i;
-	for (i = 0; i < term->cols; i++)
-	    term->tabs[i] = (i % 8 == 0 ? TRUE : FALSE);
-    }
     term->alt_om = term->dec_om = 0;
     term->alt_ins = term->insert = FALSE;
     term->alt_wnext = term->wrapnext =
@@ -1832,7 +1827,6 @@ Terminal *term_init(struct unicode_data *ucsdata,
     term->disptop = 0;
     term->disptext = NULL;
     term->dispcursx = term->dispcursy = -1;
-    term->tabs = NULL;
 	
     deselect(term);
     term->rows = term->cols = -1;
@@ -1913,7 +1907,6 @@ void term_free(Terminal *term)
     sfree(term->pre_bidi_cache);
     sfree(term->post_bidi_cache);
 
-    //sfree(term->tabs);
 
     //expire_timer_context(term);
 
@@ -2062,12 +2055,6 @@ void term_size(Terminal *term, int newrows, int newcols, int newsavelines)
     term->alt_screen = newalt;
     term->alt_sblines = 0;
 
-    term->tabs = sresize(term->tabs, newcols, unsigned char);
-    {
-	int i;
-	for (i = (term->cols > 0 ? term->cols : 0); i < newcols; i++)
-	    term->tabs[i] = (i % 8 == 0 ? TRUE : FALSE);
-    }
 
     /* Check that the cursor positions are still valid. */
     if (term->savecurs.y < 0)
@@ -3181,26 +3168,6 @@ static void term_out(Terminal *term)
 		seen_disp_event(term);
 		break;
 	      case '\t':	      /* HT: Character tabulation */
-		{
-		    pos old_curs = term->curs;
-		    termline *ldata = scrlineptr(term->curs.y);
-
-		    do {
-			term->curs.x++;
-		    } while (term->curs.x < term->cols - 1 &&
-			     !term->tabs[term->curs.x]);
-
-		    if ((ldata->lattr & LATTR_MODE) != LATTR_NORM) {
-			if (term->curs.x >= term->cols / 2)
-			    term->curs.x = term->cols / 2 - 1;
-		    } else {
-			if (term->curs.x >= term->cols)
-			    term->curs.x = term->cols - 1;
-		    }
-
-		    check_selection(term, old_curs, term->curs);
-		}
-		seen_disp_event(term);
 		break;
 	    }
 	} else
@@ -3441,8 +3408,6 @@ static void term_out(Terminal *term)
 		    seen_disp_event(term);
 		    break;
 		  case 'H':	       /* HTS: set a tab */
-		    compatibility(VT100);
-		    term->tabs[term->curs.x] = TRUE;
 		    break;
 
 		  case ANSI('8', '#'):	/* DECALN: fills screen with Es :-) */
@@ -3783,16 +3748,6 @@ static void term_out(Terminal *term)
 			}
 			break;
 		      case 'g':       /* TBC: clear tabs */
-			compatibility(VT100);
-			if (term->esc_nargs == 1) {
-			    if (term->esc_args[0] == 0) {
-				term->tabs[term->curs.x] = FALSE;
-			    } else if (term->esc_args[0] == 3) {
-				int i;
-				for (i = 0; i < term->cols; i++)
-				    term->tabs[i] = FALSE;
-			    }
-			}
 			break;
 		      case 'r':       /* DECSTBM: set scroll margins */
 			compatibility(VT100);
@@ -4219,20 +4174,7 @@ static void term_out(Terminal *term)
 			}*/
 			break;
 		      case 'Z':		/* CBT */
-			compatibility(OTHER);
-			CLAMP(term->esc_args[0], term->cols);
-			{
-			    int i = def(term->esc_args[0], 1);
-			    pos old_curs = term->curs;
 
-			    for(;i>0 && term->curs.x>0; i--) {
-				do {
-				    term->curs.x--;
-				} while (term->curs.x >0 &&
-					 !term->tabs[term->curs.x]);
-			    }
-			    check_selection(term, old_curs, term->curs);
-			}
 			break;
 		      case ANSI('c', '='):      /* Hide or Show Cursor */
 			compatibility(SCOANSI);

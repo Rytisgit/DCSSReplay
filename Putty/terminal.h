@@ -186,8 +186,6 @@ struct terminal_tag {
 
     char id_string[1024];
 
-    unsigned char *tabs;
-
     enum {
 	TOPLEVEL,
 	SEEN_ESC,
@@ -236,14 +234,6 @@ struct terminal_tag {
 
     struct unicode_data *ucsdata;
 
-    /*
-     * We maintain a full copy of a Conf here, not merely a pointer
-     * to it. That way, when we're passed a new one for
-     * reconfiguration, we can check the differences and adjust the
-     * _current_ setting of (e.g.) auto wrap mode rather than only
-     * the default.
-     */
-    Conf *conf;
 
     /*
      * from_backend calls term_out, but it can also be called from
