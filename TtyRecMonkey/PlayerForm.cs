@@ -44,10 +44,10 @@ namespace TtyRecMonkey
         public PlayerForm()
         {
             this.Icon = Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location);
-            frameGenerator = new MainGenerator(new ReadFromFile());
-            tileoverrideform = new TileOverrideForm();
             Configuration.Load(this);
             AfterConfiguration();
+            frameGenerator = new MainGenerator(new ReadFromFile());
+            tileoverrideform = new TileOverrideForm();
             Visible = true;
         }
 
@@ -258,7 +258,7 @@ namespace TtyRecMonkey
         {
             TimeStepLengthMS = Configuration.Main.TimeStepLengthMS;
             framerateControlTimeout = Configuration.Main.framerateControlTimeout;
-
+            VersionSwitch = Configuration.Main.VersionClassic == true ? "Classic" : "2023";
             if (MaxDelayBetweenPackets == new TimeSpan(0, 0, 0, 0, Configuration.Main.MaxDelayBetweenPackets)) return;
 
             ttyrecDecoder = null;

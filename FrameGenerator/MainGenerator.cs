@@ -30,7 +30,7 @@ namespace FrameGenerator
         private int _lostMpCheckpoint = 0;
 
 
-        public MainGenerator(IReadFromFile fileReader, string gameLocation = @"../../../Extra")
+        public MainGenerator(IReadFromFile fileReader)
         {
             var ReadFromFile = fileReader;
             _data = new VersionSelectableDataHolder(ReadFromFile);

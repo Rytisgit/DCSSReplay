@@ -23,6 +23,8 @@ namespace TtyRecMonkey
         public bool OpenNone = true;
         public bool OpenFileSelect = false;
         public bool OpenDownload = false;
+        public bool VersionClassic = true;//set the default for the version of tile data
+        public bool Version2023 = false;
 
 
         public ConfigurationData1()

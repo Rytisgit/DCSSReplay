@@ -35,9 +35,16 @@
             this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.radioButton3 = new System.Windows.Forms.RadioButton();
             this.label1 = new System.Windows.Forms.Label();
+            this.ClassicVersionRadioButton = new System.Windows.Forms.RadioButton();
+            this.Version2023RadioButton = new System.Windows.Forms.RadioButton();
+            this.label2 = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
+            this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // labelTargetChunksMemory
@@ -70,7 +77,7 @@
             // 
             // buttonSave
             // 
-            this.buttonSave.Location = new System.Drawing.Point(12, 152);
+            this.buttonSave.Location = new System.Drawing.Point(10, 213);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(75, 23);
             this.buttonSave.TabIndex = 15;
@@ -81,7 +88,7 @@
             // buttonCancel
             // 
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(257, 152);
+            this.buttonCancel.Location = new System.Drawing.Point(257, 213);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 16;
@@ -138,7 +145,7 @@
             // radioButton1
             // 
             this.radioButton1.AutoSize = true;
-            this.radioButton1.Location = new System.Drawing.Point(15, 114);
+            this.radioButton1.Location = new System.Drawing.Point(13, 35);
             this.radioButton1.Name = "radioButton1";
             this.radioButton1.Size = new System.Drawing.Size(51, 17);
             this.radioButton1.TabIndex = 20;
@@ -149,7 +156,7 @@
             // radioButton2
             // 
             this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(121, 114);
+            this.radioButton2.Location = new System.Drawing.Point(111, 35);
             this.radioButton2.Name = "radioButton2";
             this.radioButton2.Size = new System.Drawing.Size(74, 17);
             this.radioButton2.TabIndex = 21;
@@ -160,7 +167,7 @@
             // radioButton3
             // 
             this.radioButton3.AutoSize = true;
-            this.radioButton3.Location = new System.Drawing.Point(234, 114);
+            this.radioButton3.Location = new System.Drawing.Point(202, 35);
             this.radioButton3.Name = "radioButton3";
             this.radioButton3.Size = new System.Drawing.Size(106, 17);
             this.radioButton3.TabIndex = 22;
@@ -171,11 +178,66 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 98);
+            this.label1.Location = new System.Drawing.Point(3, 16);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(133, 13);
             this.label1.TabIndex = 23;
             this.label1.Text = "Window To Open On Start";
+            // 
+            // ClassicVersionRadioButton
+            // 
+            this.ClassicVersionRadioButton.AutoSize = true;
+            this.ClassicVersionRadioButton.Location = new System.Drawing.Point(13, 29);
+            this.ClassicVersionRadioButton.Name = "ClassicVersionRadioButton";
+            this.ClassicVersionRadioButton.Size = new System.Drawing.Size(58, 17);
+            this.ClassicVersionRadioButton.TabIndex = 24;
+            this.ClassicVersionRadioButton.TabStop = true;
+            this.ClassicVersionRadioButton.Text = "Classic";
+            this.ClassicVersionRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // Version2023RadioButton
+            // 
+            this.Version2023RadioButton.AutoSize = true;
+            this.Version2023RadioButton.Location = new System.Drawing.Point(111, 29);
+            this.Version2023RadioButton.Name = "Version2023RadioButton";
+            this.Version2023RadioButton.Size = new System.Drawing.Size(49, 17);
+            this.Version2023RadioButton.TabIndex = 25;
+            this.Version2023RadioButton.TabStop = true;
+            this.Version2023RadioButton.Text = "2023";
+            this.Version2023RadioButton.UseVisualStyleBackColor = true;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(2, 13);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(125, 13);
+            this.label2.TabIndex = 27;
+            this.label2.Text = "Default Tile Data Version";
+            this.label2.Click += new System.EventHandler(this.label2_Click);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.radioButton3);
+            this.groupBox1.Controls.Add(this.radioButton2);
+            this.groupBox1.Controls.Add(this.radioButton1);
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Location = new System.Drawing.Point(10, 86);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(322, 58);
+            this.groupBox1.TabIndex = 28;
+            this.groupBox1.TabStop = false;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.Version2023RadioButton);
+            this.groupBox2.Controls.Add(this.ClassicVersionRadioButton);
+            this.groupBox2.Controls.Add(this.label2);
+            this.groupBox2.Location = new System.Drawing.Point(10, 144);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(322, 58);
+            this.groupBox2.TabIndex = 29;
+            this.groupBox2.TabStop = false;
             // 
             // ConfigurationForm
             // 
@@ -183,11 +245,9 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(352, 186);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.radioButton3);
-            this.Controls.Add(this.radioButton2);
-            this.Controls.Add(this.radioButton1);
+            this.ClientSize = new System.Drawing.Size(346, 248);
+            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.numericUpDown3);
             this.Controls.Add(this.numericUpDown2);
             this.Controls.Add(this.numericUpDown1);
@@ -202,6 +262,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -220,5 +284,10 @@
         private System.Windows.Forms.RadioButton radioButton2;
         private System.Windows.Forms.RadioButton radioButton3;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.RadioButton ClassicVersionRadioButton;
+        private System.Windows.Forms.RadioButton Version2023RadioButton;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBox2;
     }
 }

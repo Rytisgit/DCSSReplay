@@ -23,7 +23,8 @@ namespace TtyRecMonkey
             radioButton1.Checked = Configuration.Main.OpenNone;
             radioButton2.Checked = Configuration.Main.OpenFileSelect;
             radioButton3.Checked = Configuration.Main.OpenDownload;
-            //todo add default version selection
+            ClassicVersionRadioButton.Checked = Configuration.Main.VersionClassic;
+            Version2023RadioButton.Checked = Configuration.Main.Version2023;
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -41,6 +42,8 @@ namespace TtyRecMonkey
             Configuration.Main.OpenNone = radioButton1.Checked;
             Configuration.Main.OpenFileSelect = radioButton2.Checked;
             Configuration.Main.OpenDownload = radioButton3.Checked;
+            Configuration.Main.VersionClassic = ClassicVersionRadioButton.Checked;
+            Configuration.Main.Version2023 = Version2023RadioButton.Checked;
 
             Configuration.Save(this);
             DialogResult = DialogResult.OK;
@@ -48,6 +51,11 @@ namespace TtyRecMonkey
         }
 
         private void labelTargetChunksMemory_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
         {
 
         }
