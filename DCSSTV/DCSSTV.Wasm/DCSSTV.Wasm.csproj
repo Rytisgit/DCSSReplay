@@ -4,6 +4,10 @@
     <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
   </PropertyGroup>
   <PropertyGroup>
+    <WasmShellWebAppBasePath>/</WasmShellWebAppBasePath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);__WASM__</DefineConstants>
     <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
     <NoWarn>NU1701</NoWarn>

@@ -48,14 +48,21 @@ namespace DCSSTV
         private TtyrecDownloadSelectionDialog ttyrecDownloadSelectionDialog;
         private string ttyrecUrl;
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+        string proxyUrl;
 
         public MainPage()
         {
             InitializeComponent();
-            generator = new MainGenerator(new UnoFileReader(), 69);
+#if __WASM__
+            var href = WebAssemblyRuntime.InvokeJS("window.location.href");
+            var uri = new Uri(href);
+            proxyUrl = $"{uri.Scheme}://{uri.Host}:3000/";
+            var queriesValues = System.Web.HttpUtility.ParseQueryString(uri.Query);
+#endif
+            generator = new MainGenerator(new UnoFileReader());
             driver = new DCSSReplayDriver(generator, RefreshImage, ReadyForRefresh, UpdateSeekbar);
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-            ttyrecDownloadSelectionDialog = new TtyrecDownloadSelectionDialog(PassTtyrecUrl);
+            ttyrecDownloadSelectionDialog = new TtyrecDownloadSelectionDialog(PassTtyrecUrl, proxyUrl);
             if (!localSettings.Values.ContainsKey(SaveKeys.MaxPause.ToString()))
             {
                 localSettings.Values[SaveKeys.MaxPause.ToString()] = "500";
@@ -67,9 +74,7 @@ namespace DCSSTV
             {
                 TimeStepLengthMS = Convert.ToInt32(localSettings.Values[SaveKeys.ArrowJump.ToString()].ToString());
             }
-            UpdatedDateTextBlock.Visibility = Not(Environment.GetEnvironmentVariable("UPDATED_ON") == null);
-            UpdatedDateTextBlock.Text = Environment.GetEnvironmentVariable("UPDATED_ON");
-    }
+        }
 
         void PassTtyrecUrl(string url)
         {
@@ -319,9 +324,14 @@ namespace DCSSTV
                 //TODO wasm multiple extra folder handling
                 var file =
                     await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Extra.zip"));
+                var file2 =
+                    await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Extra2023.zip"));
                 var bytes = await FileIO.ReadBufferAsync(file);
                 var stream = bytes.AsStream();
-                await ExtractExtraFileFolder(stream);
+                await ExtractExtraFileFolder(stream, "Extra");
+                var bytes2 = await FileIO.ReadBufferAsync(file2);
+                var stream2 = bytes2.AsStream();
+                await ExtractExtraFileFolder(stream2, "Extra2023");
                 await SetOutputText("Data Cached, reloading");
 
             }
@@ -386,7 +396,7 @@ namespace DCSSTV
         }
 
 
-        private async Task ExtractExtraFileFolder(Stream stream)
+        private async Task ExtractExtraFileFolder(Stream stream, string subfolderName)
         {
             try
             {
@@ -398,8 +408,7 @@ namespace DCSSTV
                 var entry = zipInStream.GetNextEntry();
                 while (entry != null && entry.CanDecompress)
                 {
-                    var outputFile = Path.Combine(folder.Path, entry.Name);
-
+                    var outputFile = Path.Combine(folder.Path, subfolderName, entry.Name);
                     await folder.CreateFolderAsync(Path.GetDirectoryName(outputFile), CreationCollisionOption.OpenIfExists);
 
                     if (entry.IsFile)
@@ -509,7 +518,7 @@ namespace DCSSTV
             // Create an HttpClient object
             using var client = new HttpClient();
             // Send a GET request to the URL of the file
-            using var response = await client.GetAsync(TtyrecDownloadSelectionDialog.CORS_PROXY + ttyrecUrl);
+            using var response = await client.GetAsync(proxyUrl + ttyrecUrl);
             // Check the response status code
             if (response.IsSuccessStatusCode)
             {

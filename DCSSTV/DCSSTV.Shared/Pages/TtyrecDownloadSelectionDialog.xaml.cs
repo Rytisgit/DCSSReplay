@@ -71,17 +71,18 @@ namespace DCSSTV.Pages
             { "CXC | crawl.xtahua.com", "https://crawl.xtahua.com/crawl/ttyrec/"},
             { "LLD | lazy-life.ddo.jp", "http://lazy-life.ddo.jp/mirror/ttyrecs/"}};
 
-        public static string CORS_PROXY = Environment.GetEnvironmentVariable("PROXY_HOST") ?? "http://localhost:3000/";
+        public string CORS_PROXY;
         public string DownloadedWebsite = "";
 
         public Action<string> PassTtyrecUrl;
 
-        public TtyrecDownloadSelectionDialog(Action<string> passTtyrecUrl)
+        public TtyrecDownloadSelectionDialog(Action<string> passTtyrecUrl, string corsProxy)
         {
             this.InitializeComponent();
             //this.Opened += SignInContentDialog_Opened;
             //this.Closing += SignInContentDialog_Closing;
             ttyrecList = new List<string>();
+            CORS_PROXY= corsProxy;
 
             // Create PeopleFiltered collection and copy data from original People collection
             TtyrecListFiltered = new SilentObservableCollection<string>();
@@ -171,6 +172,7 @@ namespace DCSSTV.Pages
             //else
             //{
             //linkList.Clear();
+
             var website = hostsites[ServerSelectionComboBox.SelectedItem.ToString()] + PlayerNameTextBox.Text + '/';
             var proxyWebsite = CORS_PROXY + website;
             if (await CheckUrlExists(proxyWebsite) && PlayerNameTextBox.Text != "")

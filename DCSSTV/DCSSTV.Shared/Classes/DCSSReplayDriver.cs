@@ -19,8 +19,6 @@ namespace DCSSTV
         private readonly Action<int, int, string> _updateSeekbar;
 
         public SKBitmap currentFrame { get; private set; }
-        private const int TimeStepLengthMS = 5000;
-        private readonly List<DateTime> PreviousFrames = new List<DateTime>();
         private DateTime PreviousFrame = DateTime.Now;
         public TimeSpan MaxDelayBetweenPackets = new TimeSpan(0, 0, 0, 0, 500);//milliseconds
         private int FrameStepCount;
@@ -30,17 +28,7 @@ namespace DCSSTV
         public TimeSpan Seek;
         public List<string> files = new List<string>();
         public IEnumerable<Stream> streams;
-        TimeSpan delay = TimeSpan.Zero;
         public bool CancellationToken = false;
-        List<string> hostsites = new List<string>() { "https://underhound.eu/crawl/ttyrec/", "http://crawl.akrasiac.org/rawdata/", "http://crawl.berotato.org/crawl/ttyrec/",  "https://webzook.net/soup/ttyrecs/", "https://termcast.shalott.org/ttyrecs/dobrazupa.org/ttyrec/",
-            "http://crawl.develz.org/ttyrecs/", "https://crawl.xtahua.com/crawl/ttyrec/","https://crawl.kelbi.org/crawl/ttyrec/","http://lazy-life.ddo.jp/mirror/ttyrecs/" };
-        string selectedString = "https://underhound.eu/crawl/ttyrec/";
-
-        List<string> linkList = new List<string>() { };
-        List<string> ttyrecList = new List<string>() { };
-        string selectedttyrec = "";
-        string selectedLink = "";
-        string Name;
 
         public DCSSReplayDriver(MainGenerator imageGenerator, Action RefreshCanvas, Func<bool> readyForRefresh, Action<int, int, string> updateSeekbar)
         {

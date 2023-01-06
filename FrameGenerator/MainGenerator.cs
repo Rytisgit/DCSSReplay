@@ -15,11 +15,9 @@ namespace FrameGenerator
 
     public class MainGenerator
     {
-        private readonly IReadFromFileAsync ReadFromFile;
         private const int BottomRightStartX = 1065;
         private const int BottomRightStartY = 468;
         public bool isGeneratingFrame = false;
-
         private Cacher _outOfSightCache;
         private VersionSelectableDataHolder _data;
         private SKBitmap _lastFrame = new SKBitmap(1602, 1050);
@@ -37,15 +35,16 @@ namespace FrameGenerator
             _outOfSightCache = new Cacher();
         }
 
-        public MainGenerator(IReadFromFileAsync fileReader, int test)
+        public MainGenerator(IReadFromFileAsync fileReader)
         {
             _data = new VersionSelectableDataHolder(fileReader);
+            _outOfSightCache = new Cacher();
         }
 
         public async Task InitialiseGenerator()
         {
             await _data.InitialiseData();
-            _typeface = SKTypeface.FromStream(await ReadFromFile.GetFontStream("cour.ttf"));
+            _typeface = SKTypeface.FromStream(await _data.ReadFromFile.GetFontStream("cour.ttf"));
         }
 
         public async Task ReinitializeGenerator()
