@@ -277,3 +277,6 @@ orange crystal statue
 
 slave
 pWHITE slave
+
+orb of fire
+*RED orb_of_fire

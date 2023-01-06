@@ -9,10 +9,12 @@ namespace FrameGenerator.Extensions
 {
     public static class TileDrawExtensions
     {
-        public static bool TryDrawWallOrFloor(this string tile, string background, SKBitmap wall, SKBitmap floor, Tuple<List<string>, List<string>> wallAndFloorColors, out SKBitmap tileToDraw)
+        public static bool TryDrawWallOrFloor(this string tile, string background, SKBitmap wall, SKBitmap floor, Tuple<List<string>, List<string>> wallAndFloorColors, Dictionary<string, string> overrides, out SKBitmap tileToDraw)
         {
             var correctTile = ApplyBackgroundColorIfTileIsHighlighted(tile, background);
             tileToDraw = new SKBitmap(32, 32);
+
+            if (overrides.ContainsKey(tile)) return false;
 
             using (SKCanvas g = new SKCanvas(tileToDraw))
             {

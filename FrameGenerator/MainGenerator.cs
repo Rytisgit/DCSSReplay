@@ -585,7 +585,7 @@ namespace FrameGenerator
 
             SKBitmap brandToDraw = null;
             bool cached = false;
-            if (tile.TryDrawWallOrFloor(tileHighlight, wall, floor, wallAndFloorColors, out drawnTile) ||
+            if (tile.TryDrawWallOrFloor(tileHighlight, wall, floor, wallAndFloorColors, overrides, out drawnTile) ||
                 tile.TryDrawMonster(tileHighlight, overrides, _data.Monsterpng, _data.Miscallaneous, floor, out drawnTile, out brandToDraw) ||//first try drawing overrides, that include blue color monsters, and monsters in sight
                 tile.TryDrawCachedTile(tileHighlight, _outOfSightCache, new List<char> {'!', '?', '=', '"', '$', ')', '[', '_', '}', '/', '(', ':', '|', '%', '÷', '†', '*'}, new List<string> { "≈RED"}, out drawnTile, out cached) ||
                 tile.TryDrawMonster(tileHighlight, _data.Monsterdata, _data.Monsterpng, _data.Miscallaneous, floor, out drawnTile, out brandToDraw) ||//draw the rest of the monsters
