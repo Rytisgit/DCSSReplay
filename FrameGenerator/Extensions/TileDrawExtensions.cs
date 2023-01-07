@@ -114,7 +114,7 @@ namespace FrameGenerator.Extensions
 
         public static bool TryDrawMonster(this string tile, string background, Dictionary<string, string> monsterData, Dictionary<string, SKBitmap> monsterPng, Dictionary<string, SKBitmap> miscPng, SKBitmap floor, out SKBitmap tileToDraw, out SKBitmap BrandToDraw)
         {
-            if (tile.IsWallOrFloor()) {
+            if (tile.IsWallOrFloor() && !monsterData.ContainsKey(tile)) {
                 tileToDraw = null;
                 BrandToDraw = null;
                 return false; 
