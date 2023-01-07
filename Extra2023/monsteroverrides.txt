@@ -39,3 +39,4 @@ DLIGHTGREEN hydra5
 pYELLOW ironbound_convoker
 pLIGHTRED vault_warden
 hYELLOW hound
+eLIGHTBLUE deep_elf_annihilator
