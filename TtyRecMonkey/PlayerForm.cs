@@ -281,17 +281,17 @@ namespace TtyRecMonkey
 
                     ttyrecDecoder = null;
                     break;
-                case Keys.Control | Keys.G:
+                case Keys.W:
                     PlayerDownloadWindow();
                     break;
                 //case Keys.Control | Keys.T: TileOverrideWindow(); break;
-                case Keys.Control | Keys.O:
+                case Keys.Q:
                     OpenFile();
                     break;
-                case Keys.Control | Keys.F:
+                case Keys.R:
                     ReplayTextSearchWindow();
                     break;
-                case Keys.Control | Keys.C:
+                case Keys.E:
                     Reconfigure();
                     break;
                 case Keys.Alt | Keys.Enter:
@@ -327,12 +327,12 @@ namespace TtyRecMonkey
                     case Keys.D: ttyrecDecoder.PlaybackSpeed -= 0.2; break;//progresive increase/decrease
                     case Keys.H: ttyrecDecoder.PlaybackSpeed += 0.2; break;
 
-                    case Keys.Oemcomma:
+                    case Keys.K:
                         if (ttyrecDecoder.PlaybackSpeed != 0) { ttyrecDecoder.Pause(); } //pause when frame stepping
                         FrameStepCount -= 1;//FrameStep -1 
                         break;
 
-                    case Keys.OemPeriod:
+                    case Keys.L:
                         if (ttyrecDecoder.PlaybackSpeed != 0) { ttyrecDecoder.Pause(); }//pause when frame stepping
                         FrameStepCount += 1; //FrameStep +1
                         break;
@@ -353,7 +353,7 @@ namespace TtyRecMonkey
                         ConsoleSwitchLevel = ConsoleSwitchLevel != 3 ? 3 : 1;//switch to full console mode ound when in normal layout mode
                         break;
 
-                    case Keys.Q:
+                    case Keys.T:
                         VersionSwitch = VersionSwitch == "Classic" ? "2023" : "Classic";//switch png version which is being used
                         break;
 
