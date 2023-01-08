@@ -11,7 +11,8 @@
     PrimaryButtonText="Download"  
     CloseButtonText="Cancel"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
-    SecondaryButtonClick="ContentDialog_CloseButtonClick">
+    SecondaryButtonClick="ContentDialog_CloseButtonClick"
+    KeyDown="Dialog_OnKeyDown" >
 
     <Grid ColumnSpacing="10" RowSpacing="10">
         <Grid.RowDefinitions>
@@ -27,20 +28,20 @@
         </Grid.ColumnDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Text="Server:" />
-        <ComboBox x:Name="ServerSelectionComboBox"  HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="1" SelectedIndex="0">>
+        <ComboBox IsTabStop="True" x:Name="ServerSelectionComboBox"  HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="1" SelectedIndex="0">>
         </ComboBox>
 
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Name:" VerticalAlignment="Center" />
         <StackPanel Grid.Row="1" Grid.Column="1"   Orientation="Horizontal">
-            <TextBox x:Name="PlayerNameTextBox"  Grid.Row="1" Grid.Column="1" Width="200"  PlaceholderText="(Case-sensitive)" BeforeTextChanging="TextBox_OnBeforeTextChanging" Margin="0,0,10,0" KeyDown="TTyrecFilterTextBox_KeyDown" />
-            <Button Grid.Row="1" Grid.Column="2" Content="Search" Click="Button_Click_SearchTTyrecs" />
+            <TextBox IsTabStop="True" x:Name="PlayerNameTextBox"  Grid.Row="1" Grid.Column="1" Width="200"  PlaceholderText="(Case-sensitive)" BeforeTextChanging="TextBox_OnBeforeTextChanging" Margin="0,0,10,0" KeyDown="TTyrecFilterTextBox_KeyDown" />
+            <Button IsTabStop="True" Grid.Row="1" Grid.Column="2" Content="Search" Click="Button_Click_SearchTTyrecs" />
         </StackPanel>
 
         <TextBlock Grid.Row="2" Grid.Column="0" Text="Filter:" VerticalAlignment="Center"  />
-        <TextBox x:Name="TTyrecFilterTextBox" Grid.Row="2" Grid.Column="1" PlaceholderText="eg. 2021-" TextChanged ="TTyrecFilterTextBox_TextChanged"  />
+        <TextBox IsTabStop="True" x:Name="TTyrecFilterTextBox" Grid.Row="2" Grid.Column="1" PlaceholderText="eg. 2021-" TextChanged ="TTyrecFilterTextBox_TextChanged"  />
 
         <TextBlock Grid.Row="3" Grid.Column="0" Text="Ttyrecs:"  VerticalAlignment="Center" />
-        <ListView x:Name="TTyrecSelectionListView"
+        <ListView IsTabStop="True" x:Name="TTyrecSelectionListView"
                   Grid.Row="3"
                   Height="200"
                   Grid.Column="1"
@@ -49,7 +50,7 @@
         </ListView>
 
         <TextBlock Grid.Row="4" Grid.Column="0" Text="URL:" VerticalAlignment="Center"/>
-        <TextBox x:Name="UrlTextBox" Grid.Row="4" Grid.Column="1" />
+        <TextBox IsTabStop="True" x:Name="UrlTextBox" Grid.Row="4" Grid.Column="1" />
     </Grid>
 
 

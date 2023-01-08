@@ -13,6 +13,7 @@ namespace DCSSTV
     class DCSSReplayDriver
     {
         public int ConsoleSwitchLevel = 1;
+        public string VersionSwitch = "Classic";
         private readonly MainGenerator frameGenerator;
         private readonly Action _refreshCanvas;
         private readonly Func<bool> _readyForRefresh;
@@ -21,8 +22,8 @@ namespace DCSSTV
         public SKBitmap currentFrame { get; private set; }
         private DateTime PreviousFrame = DateTime.Now;
         public TimeSpan MaxDelayBetweenPackets = new TimeSpan(0, 0, 0, 0, 500);//milliseconds
-        private int FrameStepCount;
-        public int framerateControlTimeout = 1000;
+        public int FrameStepCount;
+        public int framerateControlTimeout = 5;
         int prevHash = 0;
         public TtyRecKeyframeDecoder ttyrecDecoder = null;
         public TimeSpan Seek;
@@ -95,7 +96,7 @@ namespace DCSSTV
                             {
                                 try
                                 {
-                                    currentFrame = frameGenerator.GenerateImage(frame, ConsoleSwitchLevel);
+                                    currentFrame = frameGenerator.GenerateImage(frame, ConsoleSwitchLevel, ConsoleSwitchLevel, versionSwitch: VersionSwitch);
                                     frameGenerator.isGeneratingFrame = false;
                                     frame = null;
                                     _refreshCanvas();
@@ -108,7 +109,7 @@ namespace DCSSTV
                                 }
                             }, null);
 #else //non threaded image generation (slow)
-                            currentFrame = frameGenerator.GenerateImage(frame);
+                            currentFrame = frameGenerator.GenerateImage(frame, ConsoleSwitchLevel, versionSwitch: VersionSwitch);
 #if DEBUG
                             Console.WriteLine("driver " + currentFrame.ByteCount);
 #endif
@@ -182,7 +183,7 @@ namespace DCSSTV
                     {
                         try
                         {
-                            currentFrame = frameGenerator.GenerateImage(frame, ConsoleSwitchLevel);
+                            currentFrame = frameGenerator.GenerateImage(frame, ConsoleSwitchLevel, versionSwitch: VersionSwitch);
                             frameGenerator.isGeneratingFrame = false;
                             frame = null;
                             _refreshCanvas();
@@ -195,7 +196,7 @@ namespace DCSSTV
                         }
                     }, null);
 #else //non threaded image generation (slow)
-                currentFrame = frameGenerator.GenerateImage(frame);
+                    currentFrame = frameGenerator.GenerateImage(frame, ConsoleSwitchLevel, versionSwitch: VersionSwitch);
                 Console.WriteLine("driver " + currentFrame.ByteCount);
 #endif
                 }

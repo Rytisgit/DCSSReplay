@@ -5,16 +5,20 @@
     xmlns:local="using:DCSSTV"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="SETTINGS"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     PrimaryButtonText="Save"  
     CloseButtonText="Cancel"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
-    SecondaryButtonClick="ContentDialog_CloseButtonClick">
+    SecondaryButtonClick="ContentDialog_CloseButtonClick"
+    KeyDown="Dialog_OnKeyDown"
+    Opened="SignInContentDialog_Opened">
     <StackPanel>
-        <Grid>
+        <Grid >
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -22,16 +26,16 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="Minimum Pause Between Frames (ms) :" />
-            <TextBox x:Name="MinPause" Grid.Row="0" Grid.Column="1" BeforeTextChanging="TextBox_OnBeforeTextChanging" HorizontalAlignment="Right" Width="100" />
+            <TextBlock  Margin="5" Grid.Row="0" Grid.Column="0" Text="Minimum Pause Between Frames (ms) :" />
+            <TextBox  Margin="5" KeyDown="Dialog_OnKeyDown" x:Name="MinPause" Grid.Row="0" Grid.Column="1" BeforeTextChanging="TextBox_OnBeforeTextChanging" HorizontalAlignment="Right" Width="100" />
 
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="Maximum Pause Between Frames (ms) :" />
-            <TextBox x:Name="MaxPause" Grid.Row="1" Grid.Column="1" BeforeTextChanging="TextBox_OnBeforeTextChanging" HorizontalAlignment="Right" Width="100" />
+            <TextBlock Margin="5" Grid.Row="1" Grid.Column="0" Text="Maximum Pause Between Frames (ms) :" />
+            <TextBox Margin="5" KeyDown="Dialog_OnKeyDown" x:Name="MaxPause" Grid.Row="1" Grid.Column="1" BeforeTextChanging="TextBox_OnBeforeTextChanging" HorizontalAlignment="Right" Width="100" />
 
-            <TextBlock Grid.Row="2" Grid.Column="0" Text="Arrow Key Time Jump (ms) :" />
-            <TextBox x:Name="ArrowJump" Grid.Row="2" Grid.Column="1" BeforeTextChanging="TextBox_OnBeforeTextChanging" HorizontalAlignment="Right" Width="100" />
-        </Grid>
-        <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" Text="Window To Open On Start" />
+            <TextBlock Margin="5" Grid.Row="2" Grid.Column="0" Text="Arrow Key Time Jump (ms) :" />
+            <TextBox Margin="5"  KeyDown="Dialog_OnKeyDown" x:Name="ArrowJump" Grid.Row="2" Grid.Column="1" BeforeTextChanging="TextBox_OnBeforeTextChanging" HorizontalAlignment="Right" Width="100" />
+        </Grid >
+        <TextBlock Margin="10" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" Text="Window To Open On Start" />
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -44,6 +48,19 @@
             <RadioButton Grid.Column="0" x:Name="None" Content="None" />
             <RadioButton Grid.Column="1" x:Name="OpenFile" Content="File Select" />
             <RadioButton Grid.Column="2" x:Name="OpenDownload" Content="Download" />
+        </Grid>
+        <TextBlock Margin="10"  Grid.Row="3" Grid.Column="0" HorizontalAlignment="Center" Text="Default Tile Data Version" />
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <RadioButton Grid.Column="0" x:Name="Classic" Content="Classic" />
+            <RadioButton Grid.Column="1" x:Name="Version2023" Content="2023" />
         </Grid>
     </StackPanel>
 

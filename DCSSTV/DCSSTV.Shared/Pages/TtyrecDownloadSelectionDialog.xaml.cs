@@ -11,6 +11,7 @@ using AngleSharp;
 using System.ComponentModel;
 using System.Collections.Specialized;
 using Microsoft.UI.Xaml.Input;
+using Uno.Foundation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -95,8 +96,12 @@ namespace DCSSTV.Pages
             _timer = new DispatcherTimer();
             _timer.Interval = TimeSpan.FromMilliseconds(500);
             _timer.Tick += Timer_Tick;
+
             PassTtyrecUrl = passTtyrecUrl;
+
+            this.LayoutUpdated += Focus;
         }
+
         private void Timer_Tick(object sender, object e)
         {
             _timer.Stop();
@@ -118,6 +123,16 @@ namespace DCSSTV.Pages
             {
                 // Submit the form or trigger the action
                 await SearchTTyrecs();
+            }
+        }
+
+        private async void Dialog_OnKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            // Check if the key pressed was the Enter key
+            if (e.Key == Windows.System.VirtualKey.Escape)
+            {
+                // Submit the form or trigger the action
+                this.Hide();
             }
         }
 
@@ -147,19 +162,14 @@ namespace DCSSTV.Pages
             //cancel any ongoing download?
         }
 
-        void SignInContentDialog_Opened(ContentDialog sender, ContentDialogOpenedEventArgs args)
+        void Focus(object sender, object e)
         {
-            ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-
-            //MaxPause.Text = localSettings.Values[SaveKeys.MaxPause.ToString()].ToString();
-            //ArrowJump.Text = localSettings.Values[SaveKeys.ArrowJump.ToString()].ToString();
-            //MinPause.Text = localSettings.Values[SaveKeys.MinPause.ToString()].ToString();
-            //switch (localSettings.Values[SaveKeys.OpenOnStart.ToString()].ToString())
-            //{
-            //    case "File" :       { OpenFile.IsChecked = true; break; }
-            //    case "Download":    { OpenDownload.IsChecked = true; break; }
-            //    default:            { None.IsChecked = true; break; }
-            //}
+            Console.WriteLine("Focussed something in the ttyrec download");
+#if __WASM__
+            WebAssemblyRuntime.InvokeJS("document.evaluate(\" /html/body/div/div/div[3]/div\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.addEventListener(\"click\", focusTtyrecDownload);");
+            WebAssemblyRuntime.InvokeJS("focusTtyrecDownload()");
+            Console.WriteLine("FOCUSSSSSSSSSSSSS");
+#endif
         }
         private void TTyrecSelectionListView_ItemSelected(object sender, SelectionChangedEventArgs e)
         {

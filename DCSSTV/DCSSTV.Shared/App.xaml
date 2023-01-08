@@ -9,9 +9,9 @@
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
                 <!-- Load Uno.Material resources -->
-                <MaterialColors xmlns="using:Uno.Material" />
+                <!--<MaterialColors xmlns="using:Uno.Material" />
                 <MaterialFonts xmlns="using:Uno.Material" OverrideSource="ms-appx:///MaterialFontsOverride.xaml"/>
-                <MaterialResources xmlns="using:Uno.Material" />
+                <Ma--><!--terialResources xmlns="using:Uno.Material" />-->
                 
                 <!-- Load Uno.Toolkit.UI resources -->
                 <ToolkitResources xmlns="using:Uno.Toolkit.UI" />

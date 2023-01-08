@@ -22,6 +22,7 @@ using DCSSTV.Helpers;
 using DCSSTV.Pages;
 using System.Net.Http;
 using Windows.Storage.Pickers;
+using System.Timers;
 #if __WASM__
 using Uno.Foundation;
 #endif
@@ -38,8 +39,6 @@ namespace DCSSTV
         private bool readyToPlay = false;
         private int clickCount = 0;
         private int TimeStepLengthMS = 5000;
-        private int FrameStepCount=0;
-        private CancellationTokenSource cancellations;
         public SKBitmap skBitmap = new SKBitmap(new SKImageInfo(1602, 768));
         private MainGenerator generator;
         private DCSSReplayDriver driver;
@@ -49,6 +48,8 @@ namespace DCSSTV
         private string ttyrecUrl;
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         string proxyUrl;
+        bool  controlIsPressed = false;
+        private DispatcherTimer _timer;
 
         public MainPage()
         {
@@ -59,6 +60,13 @@ namespace DCSSTV
             proxyUrl = $"{uri.Scheme}://{uri.Host}:3000/";
             var queriesValues = System.Web.HttpUtility.ParseQueryString(uri.Query);
 #endif
+            this.LostFocus += Page_LostFocus;
+            this.KeyDown += Grid_KeyDown;
+            _timer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromMilliseconds(500)
+            };
+            _timer.Tick += Timer_Tick;
             generator = new MainGenerator(new UnoFileReader());
             driver = new DCSSReplayDriver(generator, RefreshImage, ReadyForRefresh, UpdateSeekbar);
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
@@ -74,6 +82,16 @@ namespace DCSSTV
             {
                 TimeStepLengthMS = Convert.ToInt32(localSettings.Values[SaveKeys.ArrowJump.ToString()].ToString());
             }
+            if (!localSettings.Values.ContainsKey(SaveKeys.TileDataVersion.ToString()))
+            {
+                localSettings.Values[SaveKeys.TileDataVersion.ToString()] = "Classic";
+                driver.VersionSwitch = "Classic";
+            }
+            else
+            {
+                driver.VersionSwitch = localSettings.Values[SaveKeys.TileDataVersion.ToString()].ToString();
+            }
+            this.LayoutUpdated += Focus;
         }
 
         void PassTtyrecUrl(string url)
@@ -81,33 +99,53 @@ namespace DCSSTV
             ttyrecUrl = url;
         }
 
-        void Grid_KeyDown(object sender, KeyRoutedEventArgs e)
+        void Grid_KeyUp(object sender, KeyRoutedEventArgs e)
         {
+            if (e.Key == VirtualKey.Control)
+            {
+                controlIsPressed = false;
+                base.OnKeyDown(e);
+                return;
+            }
+        }
+        //TODO unset when entering a new window, esc to exit windows
+        async void Grid_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            //if (controlIsPressed)
+            //{
+            switch (e.Key)
+            {
+                case VirtualKey.E: { await OpenSettings(); return; }
+                case VirtualKey.W: { await OpenTTyrecDownloadSelection(); return; }
+                case VirtualKey.Q: { await OpenTTyrecFile(); return; }
+                case VirtualKey.R: break;
+            }
+
             if (decoder != null)
             {
                 switch (e.Key)
                 {
-                    case VirtualKey.Z: driver.ttyrecDecoder.PlaybackSpeed = -100; break;
-                    case VirtualKey.X: driver.ttyrecDecoder.PlaybackSpeed = -10; break;
-                    case VirtualKey.C: driver.ttyrecDecoder.PlaybackSpeed = -1; break;
-                    case VirtualKey.B: driver.ttyrecDecoder.PlaybackSpeed = +1; break;
-                    case VirtualKey.N: driver.ttyrecDecoder.PlaybackSpeed = +10; break;
-                    case VirtualKey.M: driver.ttyrecDecoder.PlaybackSpeed += +100; break;
+                    case VirtualKey.Z: SetSpeed(-100); break;
+                    case VirtualKey.X: SetSpeed(-10); break;
+                    case VirtualKey.C: SetSpeed(-1); break;
+                    case VirtualKey.B: SetSpeed(+1); break;
+                    case VirtualKey.N: SetSpeed(+10); break;
+                    case VirtualKey.M: SetSpeed(+100); break;
 
-                    case VirtualKey.F: driver.ttyrecDecoder.PlaybackSpeed -= 1; break;//progresive increase/decrease
-                    case VirtualKey.G: driver.ttyrecDecoder.PlaybackSpeed += 1; break;
+                    case VirtualKey.F: AdjustSpeed(-1); break;//progresive increase/decrease
+                    case VirtualKey.G: AdjustSpeed(1); break;
 
-                    case VirtualKey.D: driver.ttyrecDecoder.PlaybackSpeed -= 0.2; break;//progresive increase/decrease
-                    case VirtualKey.H: driver.ttyrecDecoder.PlaybackSpeed += 0.2; break;
+                    case VirtualKey.D: AdjustSpeed(-0.2); break;//progresive increase/decrease
+                    case VirtualKey.H: AdjustSpeed(0.2); break;
 
                     case VirtualKey.K:
-                        if (driver.ttyrecDecoder.PlaybackSpeed != 0) { decoder.Pause(); } //pause when frame stepping
-                        FrameStepCount -= 1;//FrameStep -1 
+                        if (!driver.ttyrecDecoder.Paused) { Pause(); } //pause when frame stepping
+                        driver.FrameStepCount -= 1;//FrameStep -1 
                         break;
 
                     case VirtualKey.L:
-                        if (driver.ttyrecDecoder.PlaybackSpeed != 0) { decoder.Pause(); }//pause when frame stepping
-                        FrameStepCount += 1; //FrameStep +1
+                        if (!driver.ttyrecDecoder.Paused) { Pause(); }//pause when frame stepping
+                        driver.FrameStepCount += 1; //FrameStep +1
                         break;
 
                     case VirtualKey.Left:
@@ -126,10 +164,13 @@ namespace DCSSTV
                         driver.ConsoleSwitchLevel = driver.ConsoleSwitchLevel != 3 ? 3 : 1;//switch to full console mode ound when in normal layout mode
                         break;
 
+                    case VirtualKey.T:
+                        driver.VersionSwitch = driver.VersionSwitch == "Classic" ? "2023" : "Classic";//switch png version which is being used
+                        break;
                     case VirtualKey.V://Play / Pause
                     case VirtualKey.Space:
-                        if (driver.ttyrecDecoder.Paused) driver.ttyrecDecoder.Unpause();
-                        else driver.ttyrecDecoder.Pause(); 
+                        if (driver.ttyrecDecoder.Paused) UnPause();
+                        else Pause(); 
                         break;
                 }
               
@@ -137,6 +178,30 @@ namespace DCSSTV
             }
 
             base.OnKeyDown(e);
+        }
+
+        private void Pause()
+        {
+            driver.ttyrecDecoder.Pause();
+            speedTextBlock.Text = $"Speed: {driver.ttyrecDecoder.PlaybackSpeed}";
+        }
+
+        private void UnPause()
+        {
+            driver.ttyrecDecoder.Unpause();
+            speedTextBlock.Text = $"Speed: {driver.ttyrecDecoder.PlaybackSpeed}";
+        }
+
+        private void SetSpeed(int speed)
+        {
+            driver.ttyrecDecoder.PlaybackSpeed = speed;
+            speedTextBlock.Text = $"Speed: {driver.ttyrecDecoder.PlaybackSpeed}";
+        }
+
+        private void AdjustSpeed(double speed)
+        {
+            driver.ttyrecDecoder.PlaybackSpeed += speed;
+            speedTextBlock.Text = $"Speed: {driver.ttyrecDecoder.PlaybackSpeed}";
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -251,6 +316,24 @@ namespace DCSSTV
         }
         private async void Button_Click_Start_Playback(object sender, RoutedEventArgs e)
         {
+            await OpenTTyrecFile();
+
+        }
+        private void Timer_Tick(object sender, object e)
+        {
+            _timer.Stop();
+            // Bring focus back to the base page
+            this.Focus(FocusState.Programmatic);
+            Console.WriteLine("focus restored");
+        }
+        private void Page_LostFocus(object sender, RoutedEventArgs e)
+        {  
+                Console.WriteLine("focus lost");
+                _timer.Stop();
+                _timer.Start();
+        }
+        private async Task OpenTTyrecFile()
+        {
             if (!readyToPlay)
             {
                 await SetOutputText($"Still loading, click count:{++clickCount}");
@@ -268,7 +351,7 @@ namespace DCSSTV
                 {
                     await stream.AsStream().CopyToAsync(memStream);
                 }
-                    
+
                 memStream.Position = 0;
 
                 driver.framerateControlTimeout = Convert.ToInt32(localSettings.Values[SaveKeys.MinPause.ToString()].ToString());
@@ -290,7 +373,6 @@ namespace DCSSTV
             {
                 // Did not pick any file.
             }
-
         }
 
         //public static void SelectFile(string imageAsDataUrl) => FileSelectedEvent?.Invoke(null, new FileSelectedEventHandlerArgs(imageAsDataUrl));
@@ -303,7 +385,7 @@ namespace DCSSTV
         //    MainPage.FileSelectedEvent -= OnFileSelectedEvent;
         //    var base64Data = _fileSelect.Match(e.FileAsDataUrl).Groups["data"].Value;
         //    var binData = Convert.FromBase64String(base64Data);
-            
+
         //}
 
         //private static event FileSelectedEventHandler FileSelectedEvent;
@@ -316,7 +398,7 @@ namespace DCSSTV
         //    public FileSelectedEventHandlerArgs(string fileAsDataUrl) => FileAsDataUrl = fileAsDataUrl;
 
         //}
-  
+
         private async Task LoadExtraFolderIndexedDB()
         {
             try
@@ -370,10 +452,11 @@ namespace DCSSTV
         {
             try
             {
+                instructions.Visibility = Not(true);
                 await generator.InitialiseGenerator();
                 driver.ttyrecDecoder = decoder;
-                driver.ttyrecDecoder.PlaybackSpeed = int.Parse(speed.Text);
-                driver.framerateControlTimeout = int.Parse(framerate.Text);//check 0 for speedup
+                driver.ttyrecDecoder.PlaybackSpeed = 1;
+                driver.framerateControlTimeout = Convert.ToInt32(localSettings.Values[SaveKeys.MinPause.ToString()].ToString());
                 readyToRefresh = true;
                 await driver.StartImageGeneration();
             }
@@ -494,24 +577,61 @@ namespace DCSSTV
 
         private async Task Button_Click_Settings(object sender, RoutedEventArgs e)
         {
+            await OpenSettings();
+        }
+        void Focus(object sender, object e)
+        {
+            Console.WriteLine("Focussed something in the ttyrec download");
+#if __WASM__
+            WebAssemblyRuntime.InvokeJS("focusMain()");
+            Console.WriteLine("FOCUSSSSSSSSSSSSS");
+#endif
+        }
+        private async Task OpenSettings()
+        {
             SaveSettings settingsDialog = new SaveSettings();
-
+            this.LostFocus -= Page_LostFocus;
+            this.KeyDown -= Grid_KeyDown;
+            _timer.Stop();
             ContentDialogResult result = await settingsDialog.ShowOneAtATimeAsync();
-            if(result == ContentDialogResult.Primary)
+
+            this.LostFocus += Page_LostFocus;
+            this.KeyDown += Grid_KeyDown;
+            if (result == ContentDialogResult.Primary)
             {
-                TimeStepLengthMS = Convert.ToInt32(ApplicationData.Current.LocalSettings.Values[SaveKeys.ArrowJump.ToString()].ToString());
+                TimeStepLengthMS = Convert.ToInt32(localSettings.Values[SaveKeys.ArrowJump.ToString()].ToString());
+                driver.VersionSwitch = localSettings.Values[SaveKeys.TileDataVersion.ToString()].ToString();
             }
+#if __WASM__
+            WebAssemblyRuntime.InvokeJS("focusMain()");
+            Console.WriteLine("FOCUSSSSSSSSSSSSS");
+#endif
         }
 
         private async void Button_Click_TTyrecDownloadSelection(object sender, RoutedEventArgs e)
         {
+            await OpenTTyrecDownloadSelection();
+        }
+
+        private async Task OpenTTyrecDownloadSelection()
+        {
+            this.LostFocus -= Page_LostFocus;
+            this.KeyDown -= Grid_KeyDown;
+            _timer.Stop();
             ContentDialogResult result = await ttyrecDownloadSelectionDialog.ShowOneAtATimeAsync();
 
+            this.LostFocus += Page_LostFocus;
+            this.KeyDown += Grid_KeyDown;
             if (result == ContentDialogResult.Primary)
             {
                 OnTtyrecUrlReceived();
             }
+#if __WASM__
+            WebAssemblyRuntime.InvokeJS("focusMain()");
+            Console.WriteLine("FOCUSSSSSSSSSSSSS");
+#endif
         }
+        
         private async void OnTtyrecUrlReceived()
         {
 
@@ -549,5 +669,56 @@ namespace DCSSTV
             }
 
         }
+        private void Button_Reverse100(object sender, RoutedEventArgs e)
+        {
+            SetSpeed(-100);
+            this.Focus(FocusState.Programmatic);
+        }
+        private void Button_Reverse10(object sender, RoutedEventArgs e)
+        {
+            SetSpeed(-10);
+            this.Focus(FocusState.Programmatic);
+        }
+        private void Button_Reverse1(object sender, RoutedEventArgs e)
+        {
+            SetSpeed(-1);
+            this.Focus(FocusState.Programmatic);
+        }
+        private void Button_Forward100(object sender, RoutedEventArgs e)
+        {
+            SetSpeed(100);
+            this.Focus(FocusState.Programmatic);
+        }
+        private void Button_Forward10(object sender, RoutedEventArgs e)
+        {
+            SetSpeed(10);
+            this.Focus(FocusState.Programmatic);
+        }
+        private void Button_Forward1(object sender, RoutedEventArgs e)
+        {
+            SetSpeed(1);
+            this.Focus(FocusState.Programmatic);
+        }
+        private void Button_Reduce1(object sender, RoutedEventArgs e)
+        {
+            AdjustSpeed(-1);
+            this.Focus(FocusState.Programmatic);
+        }
+        private void Button_Reduce02(object sender, RoutedEventArgs e)
+        {
+            AdjustSpeed(-0.2);
+            this.Focus(FocusState.Programmatic);
+        }
+        private void Button_Add1(object sender, RoutedEventArgs e)
+        {
+            AdjustSpeed(1);
+            this.Focus(FocusState.Programmatic);
+        }
+        private void Button_Add02(object sender, RoutedEventArgs e)
+        {
+            AdjustSpeed(0.2);
+            this.Focus(FocusState.Programmatic);
+        }
+       
     }
 }

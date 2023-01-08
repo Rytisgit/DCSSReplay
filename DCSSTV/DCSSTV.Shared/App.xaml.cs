@@ -25,7 +25,7 @@ namespace DCSSTV
             InitializeLogging();
 
             this.InitializeComponent();
-
+            Uno.UI.ApplicationHelper.RequestedCustomTheme = "Dark";
 #if HAS_UNO || NETFX_CORE
             this.Suspending += OnSuspending;
 #endif

@@ -11,55 +11,119 @@
     xmlns:datamodels="using:DCSSTV.Models.DataModels"
     xmlns:models="using:DCSSTV.Models"
     mc:Ignorable="d"
-    Background="Black">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    KeyUp="Grid_KeyUp">
 
     <Page.DataContext>
         <viewmodels:MainViewModel x:Name="ViewModel" />
     </Page.DataContext>
 
-    <StackPanel KeyDown="Grid_KeyDown" >
-        <utu:AutoLayout Orientation="Horizontal"  Justify="SpaceBetween" >
-            <Button Content="FILLED TONAL"
-                    Style="{StaticResource FilledTonalButtonStyle}">
-                <utu:ControlExtensions.Icon xmlns:um="using:Uno.Material">
-                    <PathIcon Data="M21 3C21.53 3 22.04 3.21 22.41 3.59C22.79 3.96 23 4.47 23 5V15C23 15.53 22.79 16.04 22.41 16.41C22.04 16.79 21.53 17 21 17H7C6.47 17 5.96 16.79 5.59 16.41C5.21 16.04 5 15.53 5 15V5C5 4.47 5.21 3.96 5.59 3.59C5.96 3.21 6.47 3 7 3H21M3 19H18V21H3C2.47 21 1.96 20.79 1.59 20.41C1.21 20.04 1 19.53 1 19V8H3V19Z" />
-                </utu:ControlExtensions.Icon>
-            </Button>
-            <Button Content="FULL" FontFamily="{StaticResource MaterialRegularFontFamily}" Click="Button_Click_Fullscreen"/>
-            <Button Content="Open Ttyrec File"   Click="Button_Click_Start_Playback"/>
-            <muxc:NumberBox 
-                Minimum="10"
-                Maximum="100"
-                PlaceholderText="10"
-                FontFamily="{StaticResource MaterialRegularFontFamily}"
-                xmlns:muxc="using:Microsoft.UI.Xaml.Controls" />
-            <TextBox Text="2" x:Name="speed" Width="40" Height="10" InputScope="Digits" />
-            <TextBox Text="10" x:Name="framerate" Width="40" InputScope="Digits" />
-            <Button Content="Refresh Data Cache" Style="{StaticResource ContainedButtonStyle}"  Click="LoadPackageFile" />
-            <Button Content="Stop Playback" Click="Button_Click_Stop_Playback"/>
-            <TextBlock Text="Speed:" TextWrapping="Wrap" VerticalAlignment="Stretch" />
+    <StackPanel Width="1626" >
+        <utu:AutoLayout Orientation="Horizontal" Margin="5" Justify="SpaceBetween" >
+            <TextBlock x:Uid="output" Text=""  x:Name="output"/>
+        </utu:AutoLayout>
+        <utu:AutoLayout Orientation="Horizontal"  Margin="5"  Justify="SpaceBetween" >
+
+            <Button Content="Open TTyrec File"   Click="Button_Click_Start_Playback"/>
+            <Button Content="Download TTyrec File" Click="Button_Click_TTyrecDownloadSelection" />
+            <Button Content="End Playback" Click="Button_Click_Stop_Playback"/>
+            <Button Content="Refresh Tile Data"  Click="LoadPackageFile" />
             <Button Content="Settings" Click="Button_Click_Settings" />
-            <Button Content="Select TTyrec to Download" Click="Button_Click_TTyrecDownloadSelection" />
-            <TextBlock x:Uid="output"  x:Name="output"/>
+            <Button Content="Fullscreen" Click="Button_Click_Fullscreen"/>
+            <Button Content="Tile Data: Classic"/>
+
         </utu:AutoLayout>
 
         <StackPanel Orientation="vertical" >
 
             <Grid BorderBrush="Blue" BorderThickness="12" CornerRadius="12" Padding="12" Grid.Row="1" Width="1626" Height="792" VerticalAlignment="Stretch">
+
                 <views:SKXamlCanvas
                 x:Name="swapChain"
                 PaintSurface="OnPaintSurface"
                 EnableRenderLoop="True"
                 VerticalAlignment="Stretch" />
-            
+
+                <Grid x:Name="instructions">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"  />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Width="Auto" Height="Auto"  />
+                        <RowDefinition Width="Auto" Height="Auto" />
+                        <RowDefinition Width="Auto" Height="Auto"  />
+                        <RowDefinition Width="Auto" Height="Auto"  />
+                        <RowDefinition Width="Auto" Height="Auto"  />
+                        <RowDefinition Width="Auto" Height="Auto" />
+                        <RowDefinition Width="Auto" Height="Auto"  />
+                        <RowDefinition Width="Auto" Height="Auto"  />
+                        <RowDefinition Width="Auto" Height="Auto"  />
+                        <RowDefinition Width="Auto" Height="Auto"  />
+                        <RowDefinition Width="Auto" Height="Auto"  />
+                        <RowDefinition Width="Auto" Height="Auto"  />
+                        <RowDefinition Width="Auto" Height="Auto"  />
+                        <RowDefinition Width="Auto" Height="Auto"  />
+                        <RowDefinition Width="Auto" Height="Auto"  />
+                        <RowDefinition Width="Auto" Height="Auto"  />
+                        <RowDefinition Width="Auto" Height="Auto"  />
+                        <RowDefinition Width="Auto" Height="Auto"  />
+                        <RowDefinition Width="Auto" Height="Auto" />
+                        <RowDefinition Width="Auto" Height="Auto"  />
+                        <RowDefinition Width=""  />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Column="0" Grid.Row="0"  Text=" " TextWrapping="Wrap"  TextAlignment="Left"  />
+                    <TextBlock Grid.Column="1" Grid.Row="0"  Style="{StaticResource TitleTextBlockStyle}" Text="CONTROLS" TextWrapping="Wrap"  TextAlignment="Left" />
+                    <TextBlock Grid.Column="0" Grid.Row="1"  Text="Q" TextWrapping="Wrap"  TextAlignment="Left"  />
+                    <TextBlock Grid.Column="1" Grid.Row="1"  Text="Open a TTyrec from filesystem" TextWrapping="Wrap"  TextAlignment="Left" />
+                    <TextBlock Grid.Column="0" Grid.Row="2"  Text="W" TextWrapping="Wrap"  TextAlignment="Left"  />
+                    <TextBlock Grid.Column="1" Grid.Row="2"  Text="Open TTyrec download window" TextWrapping="Wrap"    />
+                    <TextBlock Grid.Column="0" Grid.Row="3"  Text="E" TextWrapping="Wrap"  TextAlignment="Left"  />
+                    <TextBlock Grid.Column="1" Grid.Row="3"  Text="Open Configuration window" TextWrapping="Wrap"   TextAlignment="Left"/>
+                    <TextBlock Grid.Column="0" Grid.Row="4"  Text="R" TextWrapping="Wrap"  TextAlignment="Left"  />
+                    <TextBlock Grid.Column="1" Grid.Row="4"  Text="Open TTyrec search window (Not Implemented Yet)" TextWrapping="Wrap"  TextAlignment="Left" />
+                    <TextBlock Grid.Column="0" Grid.Row="5"  Text="Escape" TextWrapping="Wrap"  TextAlignment="Left"  />
+                    <TextBlock Grid.Column="1" Grid.Row="5"  Text="Close open dialog window" TextWrapping="Wrap"  TextAlignment="Left" />
+                    <TextBlock Grid.Column="0" Grid.Row="6"  Text="F11" TextWrapping="Wrap"  TextAlignment="Left"  />
+                    <TextBlock Grid.Column="1" Grid.Row="6"  Text="Toggle fullscreen" TextWrapping="Wrap"  TextAlignment="Left" />
+                    <TextBlock Grid.Column="0" Grid.Row="7"  Text="A / S " TextWrapping="Wrap"  TextAlignment="Left"  />
+                    <TextBlock Grid.Column="1" Grid.Row="7"  Text="Switch Tile to console / Full Console Mode" TextWrapping="Wrap"  TextAlignment="Left" />
+                    <TextBlock Grid.Column="0" Grid.Row="8"  Text="T" TextWrapping="Wrap"  TextAlignment="Left"  />
+                    <TextBlock Grid.Column="1" Grid.Row="8"  Text="Toggle Tile Data Version" TextWrapping="Wrap"  TextAlignment="Left" />
+                    <TextBlock Grid.Column="0" Grid.Row="9"  Text="" TextWrapping="Wrap"  TextAlignment="Left"  />
+                    <TextBlock Grid.Column="1" Grid.Row="9"  Text="" TextWrapping="Wrap"  TextAlignment="Left" />
+                    <TextBlock Grid.Column="0" Grid.Row="10"  Text="ZXC " TextWrapping="Wrap"  TextAlignment="Left"  />
+                    <TextBlock Grid.Column="1" Grid.Row="10"  Text="Play backwards at x100, x10, or x1 speed" TextWrapping="Wrap"  TextAlignment="Left" />
+                    <TextBlock Grid.Column="0" Grid.Row="11"  Text="V, SPACE" TextWrapping="Wrap"  TextAlignment="Left"  />
+                    <TextBlock Grid.Column="1" Grid.Row="11"  Text="Play / Pause" TextWrapping="Wrap"  TextAlignment="Left" />
+                    <TextBlock Grid.Column="0" Grid.Row="12"  Text="BNM" TextWrapping="Wrap"  TextAlignment="Left"  />
+                    <TextBlock Grid.Column="1" Grid.Row="12"  Text="Play forwards at 1x, x10, or x100 speed" TextWrapping="Wrap"  TextAlignment="Left" />
+                    <TextBlock Grid.Column="0" Grid.Row="13"  Text="F / G" TextWrapping="Wrap"  TextAlignment="Left"  />
+                    <TextBlock Grid.Column="1" Grid.Row="13"  Text="Adjust speed by +/- 1" TextWrapping="Wrap"  TextAlignment="Left" />
+                    <TextBlock Grid.Column="0" Grid.Row="14"  Text="D / H" TextWrapping="Wrap"  TextAlignment="Left"  />
+                    <TextBlock Grid.Column="1" Grid.Row="14"  Text="Adjust speed by +/- 0.2" TextWrapping="Wrap"  TextAlignment="Left" />
+                    <TextBlock Grid.Column="0" Grid.Row="15"  Text="" TextWrapping="Wrap"  TextAlignment="Left"  />
+                    <TextBlock Grid.Column="1" Grid.Row="15"  Text="" TextWrapping="Wrap"  TextAlignment="Left" />
+                    <TextBlock Grid.Column="0" Grid.Row="16"  Text="K" TextWrapping="Wrap"  TextAlignment="Left"  />
+                    <TextBlock Grid.Column="1" Grid.Row="16"  Text="Frame Step Back" TextWrapping="Wrap"  TextAlignment="Left" />
+                    <TextBlock Grid.Column="0" Grid.Row="17"  Text="L" TextWrapping="Wrap"  TextAlignment="Left"  />
+                    <TextBlock Grid.Column="1" Grid.Row="17"  Text="Frame Step Forward" TextWrapping="Wrap"  TextAlignment="Left" />
+                    <TextBlock Grid.Column="0" Grid.Row="18"  Text="" TextWrapping="Wrap"  TextAlignment="Left"  />
+                    <TextBlock Grid.Column="1" Grid.Row="18"  Text="" TextWrapping="Wrap"  TextAlignment="Left" />
+                    <TextBlock Grid.Column="0" Grid.Row="19"  Text="Left Arrow" TextWrapping="Wrap"  TextAlignment="Left"  />
+                    <TextBlock Grid.Column="1" Grid.Row="19"  Text="Time Step Backward X Seconds(Configurable)" TextWrapping="Wrap"  TextAlignment="Left" />
+                    <TextBlock Grid.Column="0" Grid.Row="20"  Text="Right Arrow" TextWrapping="Wrap"  TextAlignment="Left"  />
+                    <TextBlock Grid.Column="1" Grid.Row="20"  Text="Time Step Forward X Seconds(Configurable)" TextWrapping="Wrap"  TextAlignment="Left" />
+                </Grid>
             </Grid>
-            <Grid Width="1626" Height="40">
+            <Grid Width="1626" Height="40"  Margin="5" >
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto"  />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Button Content="Button" x:Name="PlayPause" HorizontalAlignment="Stretch" Click="Button_Click_PlayPause" />
                 <Slider 
+                    Margin="5"
                     x:Name="Seekbar" 
                     Minimum="0" 
                     Maximum="{x:Bind ViewModel.SeekbarMaxValue, Mode=OneWay}" 
@@ -75,14 +139,34 @@
                     Text="{x:Bind ViewModel.RemainingTime, Mode=OneWay}" 
                     HorizontalAlignment="Right"
                     VerticalAlignment="Top"
-                    Grid.Column="2" 
-                    Style="{StaticResource Body1}"/>
+                    Grid.Column="2" />
             </Grid>
+            <utu:AutoLayout Orientation="Horizontal"  Margin="5" Width="1000"  Justify="SpaceBetween" >
+                <Button Content="100 R" Width="110" Click="Button_Reverse100"/>
+                <Button Content="10 R" Width="110" Click="Button_Reverse10"/>
+                <Button Content="1 R" Width="110" Click="Button_Reverse1"/>
+                <TextBlock x:Name="speedTextBlock" Text="Speed: 1" TextWrapping="Wrap"  TextAlignment="Left" />
+                <Button Content="1 F" Width="110" Click="Button_Forward1"/>
+                <Button Content="10 F" Width="110" Click="Button_Forward10"/>
+                <Button Content="100 F" Width="110" Click="Button_Forward100"/>
+            </utu:AutoLayout>
+            <utu:AutoLayout Orientation="Horizontal"  Margin="5" Width="600"  Justify="SpaceBetween" >
+                <Button Content="-0.2" Width="100" Click="Button_Reduce02"/>
+                <Button Content="-1" Width="100" Click="Button_Reduce1"/>
+                <Button Content="+1" Width="100" Click="Button_Add1"/>
+                <Button Content="+0.2" Width="100" Click="Button_Add02"/>
+            </utu:AutoLayout>
+            <utu:AutoLayout Orientation="Horizontal"  Margin="5" Width="450"  Justify="SpaceBetween" >
+                <Button Content="Jump R" Width="90"/>
+                <Button Content="Frame -1" Width="90" />
+                <Button Content="Frame +1" Width="90"/>
+                <Button Content="Jump F" Width="90"/>
+            </utu:AutoLayout>
         </StackPanel>
 
 
 
 
     </StackPanel>
-    
+
 </Page>

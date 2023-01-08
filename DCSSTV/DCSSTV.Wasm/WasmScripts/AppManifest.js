@@ -30,7 +30,18 @@ function toggleFullScreen() {
         }
     }
 }
-
+function focusTtyrecDownload() {
+    var a = document.evaluate("//p[text()='TTYREC DOWNLOAD']", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+    if (a.singleNodeValue) a.singleNodeValue.focus();
+}
+function focusSettings() {
+    var a = document.evaluate("//p[text()='SETTINGS']", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+    if (a.singleNodeValue) a.singleNodeValue.focus();
+}
+function focusMain() {
+    var a = document.querySelector("canvas");
+    if (a) a.focus();
+}
 function viewportSet(id) {
     var viewports = {
         default: "width=device-width, initial-scale=1",

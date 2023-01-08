@@ -1,6 +1,9 @@
-﻿using System.Linq;
-using System.Security.Policy;
+﻿using System;
+using System.Linq;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+using Uno.Foundation;
 using Windows.Storage;
 
 namespace DCSSTV
@@ -10,19 +13,29 @@ namespace DCSSTV
         MaxPause,
         MinPause,
         ArrowJump,
-        OpenOnStart
+        OpenOnStart,
+        TileDataVersion
     }
 
     public sealed partial class SaveSettings : ContentDialog
     {
-
         public SaveSettings()
         {
             this.InitializeComponent();
             this.Opened += SignInContentDialog_Opened;
             //this.Closing += SignInContentDialog_Closing;
-        }
+            this.LayoutUpdated += Focus;
 
+        }
+        void Focus(object sender, object e)
+        {
+            Console.WriteLine("Focussed something in the ttyrec download");
+#if __WASM__
+            WebAssemblyRuntime.InvokeJS("document.evaluate(\" /html/body/div/div/div[3]/div\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.addEventListener(\"click\", focusSettings);");
+            WebAssemblyRuntime.InvokeJS("focusSettings()");
+            Console.WriteLine("FOCUSSSSSSSSSSSSS");
+#endif
+        }
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             // Ensure the user name and password fields aren't empty. If a required field
@@ -57,6 +70,15 @@ namespace DCSSTV
         {
 
         }
+        private async void Dialog_OnKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            // Check if the key pressed was the Enter key
+            if (e.Key == Windows.System.VirtualKey.Escape)
+            {
+                // Submit the form or trigger the action
+                this.Hide();
+            }
+        }
 
         void SignInContentDialog_Opened(ContentDialog sender, ContentDialogOpenedEventArgs args)
         {
@@ -71,6 +93,11 @@ namespace DCSSTV
                 case "Download": { OpenDownload.IsChecked = true; break; }
                 default: { None.IsChecked = true; break; }
             }
+            switch (localSettings.Values[SaveKeys.TileDataVersion.ToString()].ToString())
+            {
+                case "Classic": { Classic.IsChecked = true; break; }
+                case "2023": { Version2023.IsChecked = true; break; }
+            }
         }
 
         private void SaveSettingsLocally()
@@ -83,6 +110,8 @@ namespace DCSSTV
             if ((bool)OpenFile.IsChecked) localSettings.Values[SaveKeys.OpenOnStart.ToString()] = "File";
             else if ((bool)OpenDownload.IsChecked) localSettings.Values[SaveKeys.OpenOnStart.ToString()] = "Download";
             else localSettings.Values[SaveKeys.OpenOnStart.ToString()] = "None";
+            if ((bool)Classic.IsChecked) localSettings.Values[SaveKeys.TileDataVersion.ToString()] = "Classic";
+            else localSettings.Values[SaveKeys.TileDataVersion.ToString()] = "2023";
         }
 
         //TODO possibly use muxc:NumberBox instead

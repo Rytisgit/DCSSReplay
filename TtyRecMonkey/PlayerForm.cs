@@ -35,7 +35,7 @@ namespace TtyRecMonkey
         private TimeSpan MaxDelayBetweenPackets = new TimeSpan(0,0,0,0,500);//millisecondss
         private int FrameStepCount;
         private int ConsoleSwitchLevel = 1;
-        private int framerateControlTimeout = 5;
+        private int framerateControlTimeout = 25;
         public int prevHash = 0;
         private TileOverrideForm tileoverrideform;
 
