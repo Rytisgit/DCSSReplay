@@ -492,6 +492,7 @@ namespace DCSSTV
             try
             {
                 await driver.CancelImageGeneration();
+                instructions.Visibility = Not(false);
             }
             catch (Exception ex)
             {

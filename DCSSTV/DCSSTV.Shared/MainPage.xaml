@@ -44,7 +44,7 @@
                 EnableRenderLoop="True"
                 VerticalAlignment="Stretch" />
 
-                <Grid x:Name="instructions" Margin="10">
+                <Grid x:Name="instructions"  Padding="20,10" Background="Black" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="100"  />
                         <ColumnDefinition Width="*" />
