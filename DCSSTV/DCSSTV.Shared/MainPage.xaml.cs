@@ -23,7 +23,6 @@ using DCSSTV.Pages;
 using System.Net.Http;
 using Windows.Storage.Pickers;
 using System.Timers;
-using Newtonsoft.Json.Linq;
 #if __WASM__
 using Uno.Foundation;
 #endif
