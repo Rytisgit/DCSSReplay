@@ -210,31 +210,31 @@ namespace DCSSTV
             await SetOutputText("Navigated");
             try
             {
-                await SetOutputText("Trying To Initialise Generator, Please Wait");
+                await SetOutputText("Trying To Initialise Generator");
                 await generator.InitialiseGenerator();
             }
             catch (Exception exception)
             {
                 try
                 {
-                    await SetOutputText("Caught exception On Navigation Load, trying to Cache missing Images, Please Wait");
-                    Console.WriteLine("Caught exception On Navigation Load, trying to Cache missing Images");
-                    Debug.WriteLine(exception);
+                    await SetOutputText("Files Not Found, performing first time initialisation");
+#if DEBUG
+                    Console.WriteLine(exception);
+#endif
                     await LoadExtraFolderIndexedDB();
                     await CacheFontInIndexedDB("cour.ttf");
-                    await SetOutputText("Reloading Image generator after data cache, please wait...");
+                    await SetOutputText("Reinitialising Generator");
                     await generator.ReinitializeGenerator();
-                    Console.WriteLine("Done Loading");
                 }
                 catch (Exception e1)
                 {
-                    await SetOutputText("Something Bad Happened.");
+                    await SetOutputText("Something Bad Happened while reinitialising, check console output.");
                     Console.WriteLine(e1);
                     throw;
                 }
             }
             readyToPlay = true;
-            await SetOutputText("Image generator Initialized, Start Playback");
+            await SetOutputText("Image generator Initialized");
         }
 
         private Task SetOutputText(string text)
@@ -279,7 +279,6 @@ namespace DCSSTV
             SKBitmap scaledBitmap;
             if (scaledWidth < 1602 || scaledHeight < 768)
             {
-                Debug.WriteLine("rescale");
                 if ((size.Width / scale) * 0.4794D > (size.Height / scale))// 768/1602 = 0.4794D
                 {
                     scaledBitmapWidth = (int)(size.Height / scale * 2.0859375D);
@@ -324,11 +323,9 @@ namespace DCSSTV
             _timer.Stop();
             // Bring focus back to the base page
             this.Focus(FocusState.Programmatic);
-            Console.WriteLine("focus restored");
         }
         private void Page_LostFocus(object sender, RoutedEventArgs e)
         {  
-                Console.WriteLine("focus lost");
                 _timer.Stop();
                 _timer.Start();
         }
@@ -429,7 +426,6 @@ namespace DCSSTV
             {
                 var file = await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/" + name));
                 var localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
-                Console.WriteLine(localFolder.Path);
                 var bytes = await FileIO.ReadBufferAsync(file);
                 var stream = bytes.AsStream();
                 File.WriteAllBytes(Path.Combine(localFolder.Path, "cour.ttf"), bytes.ToArray());
@@ -484,7 +480,6 @@ namespace DCSSTV
             try
             {
                 var localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
-                Console.WriteLine(localFolder.Path);
                 var folder = localFolder;
 
                 var zipInStream = new ZipInputStream(stream);
@@ -581,10 +576,8 @@ namespace DCSSTV
         }
         void Focus(object sender, object e)
         {
-            Console.WriteLine("Focussed something in the ttyrec download");
 #if __WASM__
             WebAssemblyRuntime.InvokeJS("focusMain()");
-            Console.WriteLine("FOCUSSSSSSSSSSSSS");
 #endif
         }
         private async Task OpenSettings()
@@ -604,7 +597,6 @@ namespace DCSSTV
             }
 #if __WASM__
             WebAssemblyRuntime.InvokeJS("focusMain()");
-            Console.WriteLine("FOCUSSSSSSSSSSSSS");
 #endif
         }
 
@@ -628,7 +620,6 @@ namespace DCSSTV
             }
 #if __WASM__
             WebAssemblyRuntime.InvokeJS("focusMain()");
-            Console.WriteLine("FOCUSSSSSSSSSSSSS");
 #endif
         }
         
@@ -665,6 +656,7 @@ namespace DCSSTV
             }
             else
             {
+                await SetOutputText("Failed to download ttyrec, check console output.");
                 Console.WriteLine(response.ToString());
             }
 

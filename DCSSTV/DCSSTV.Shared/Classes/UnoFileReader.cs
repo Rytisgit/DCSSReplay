@@ -24,7 +24,9 @@ namespace DCSSTV
             }
             files.AddRange((await folder.GetFilesAsync()).Where(
                 file => file.Name.EndsWith("png", true, CultureInfo.InvariantCulture)));
-            Debug.WriteLine($"loaded {files.Count} files from {folder.Name}");
+#if DEBUG
+            Console.WriteLine($"loaded {files.Count} files from {folder.Name}");
+#endif
             return files;
         }
 
@@ -36,13 +38,11 @@ namespace DCSSTV
 
                 var localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
                 var folder = await localFolder.GetFolderAsync(foldername);
-                Debug.WriteLine(folder.Path);
-
                 files.AddRange((await folder.GetFilesAsync()).Where(
                     file => file.Name.EndsWith("png", true, CultureInfo.InvariantCulture)));
-
-                Debug.WriteLine($"loaded {files.Count} files from {foldername}");
-
+#if DEBUG
+                Console.WriteLine($"loaded {files.Count} files from {foldername}");
+#endif
             }
             catch (Exception e)
             {
@@ -57,7 +57,6 @@ namespace DCSSTV
 
             var localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
             var file = await localFolder.GetFileAsync(path);
-            Debug.WriteLine(file.Path);
 
             var lines = await FileIO.ReadLinesAsync(file);
             var lineArray = lines.ToArray();
@@ -78,7 +77,6 @@ namespace DCSSTV
 
             var localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
             var file = await localFolder.GetFileAsync(filename);
-            Debug.WriteLine(file.Path);
 
             var liness = await FileIO.ReadLinesAsync(file);
             var lines = liness.ToArray();
@@ -103,7 +101,7 @@ namespace DCSSTV
             //Overrides for duplicates, others handled by name from monster log
 
             file = await localFolder.GetFileAsync(monsterOverrideFile);
-            Debug.WriteLine(file.Path);
+            
 
             liness = await FileIO.ReadLinesAsync(file);
             lines = liness.ToArray();
@@ -131,7 +129,7 @@ namespace DCSSTV
 
             var localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
             var file = await localFolder.GetFileAsync(monsterOverrideFile);
-            Debug.WriteLine(file.Path);
+
 
             var liness = await FileIO.ReadLinesAsync(file);
             var lines = liness.ToArray();
@@ -177,7 +175,6 @@ namespace DCSSTV
             var floorandwall = new Dictionary<string, Tuple<List<string>, List<string>>>();
             var localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
             var file = await localFolder.GetFileAsync(filename);
-            Debug.WriteLine(file.Path);
 
             var liness = await FileIO.ReadLinesAsync(file);
             var lines = liness.ToArray();
@@ -216,7 +213,6 @@ namespace DCSSTV
             var floorandwall = new Dictionary<string, string[]>();
             var localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
             var file = await localFolder.GetFileAsync(filename);
-            Debug.WriteLine(file.Path);
 
             var liness = await FileIO.ReadLinesAsync(file);
             var lines = liness.ToArray();

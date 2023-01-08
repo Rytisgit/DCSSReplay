@@ -29,11 +29,9 @@ namespace DCSSTV
         }
         void Focus(object sender, object e)
         {
-            Console.WriteLine("Focussed something in the ttyrec download");
 #if __WASM__
             WebAssemblyRuntime.InvokeJS("document.evaluate(\" /html/body/div/div/div[3]/div\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.addEventListener(\"click\", focusSettings);");
             WebAssemblyRuntime.InvokeJS("focusSettings()");
-            Console.WriteLine("FOCUSSSSSSSSSSSSS");
 #endif
         }
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)

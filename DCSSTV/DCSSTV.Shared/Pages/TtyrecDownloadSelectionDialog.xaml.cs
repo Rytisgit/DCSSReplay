@@ -164,11 +164,9 @@ namespace DCSSTV.Pages
 
         void Focus(object sender, object e)
         {
-            Console.WriteLine("Focussed something in the ttyrec download");
 #if __WASM__
             WebAssemblyRuntime.InvokeJS("document.evaluate(\" /html/body/div/div/div[3]/div\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.addEventListener(\"click\", focusTtyrecDownload);");
             WebAssemblyRuntime.InvokeJS("focusTtyrecDownload()");
-            Console.WriteLine("FOCUSSSSSSSSSSSSS");
 #endif
         }
         private void TTyrecSelectionListView_ItemSelected(object sender, SelectionChangedEventArgs e)
@@ -203,9 +201,6 @@ namespace DCSSTV.Pages
                 ttyrecList.Clear();
                 foreach (var cell in document.GetElementsByTagName("a"))
                 {
-                    //Console.WriteLine(cell.BaseUrl.ToString());
-                    //Console.WriteLine(cell.TextContent);
-
                     if (cell.TextContent.Contains(".ttyrec"))
                     {
                         ttyrecList.Add(cell.TextContent);
@@ -217,7 +212,8 @@ namespace DCSSTV.Pages
             }
             else
             {
-                Console.WriteLine("ITsnot wokring");
+
+                //Console.WriteLine("ITsnot wokring");
                 //MessageBox.Show("Not a Valid Player Name");
             }
             //}
