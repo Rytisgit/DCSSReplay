@@ -148,6 +148,8 @@ namespace FrameGenerator.FileReading
             var gameLocation = "Extra";
             _characterdata = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/racepng.txt");
             _characterpng = await ReadFromFile.GetCharacterPNG(gameLocation);
+            _weapondata = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/weapons.txt");
+            _weaponpng = await ReadFromFile.GetWeaponPNG(gameLocation);
 
             _floorandwall = await ReadFromFile.GetFloorAndWallNamesForDungeons(gameLocation + @"/tilefloor.txt");
             _floorandwallColor = await ReadFromFile.GetFloorAndWallColours(gameLocation + @"/tilefloorColors.txt");
@@ -158,25 +160,23 @@ namespace FrameGenerator.FileReading
             _namedMonsterOverrideData = await ReadFromFile.GetNamedMonsterOverrideData(gameLocation + @"/namedmonsteroverrides.txt");
             _monsterpng = await ReadFromFile.GetMonsterPNG(gameLocation);
 
-
-            _features = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/features.txt");
-            _alldngnpng = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "dngn"), gameLocation);
-
             _cloudtiles = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/clouds.txt");
             _alleffects = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "effect"), gameLocation);
             _miscallaneous = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "misc"), gameLocation);
 
+            _features = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/features.txt");
+            _alldngnpng = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "dngn"), gameLocation);
+
             _itemdata = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/items.txt");
             _itempng = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "item"), gameLocation);
-
-            _weapondata = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/weapons.txt");
-            _weaponpng = await ReadFromFile.GetWeaponPNG(gameLocation);
         }
         private async Task LoadVersionData2023()
         {
             var gameLocation = "Extra2023";
             _characterdata2023 = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/racepng.txt");
             _characterpng2023 = await ReadFromFile.GetCharacterPNG(gameLocation);
+            _weapondata2023 = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/weapons.txt");
+            _weaponpng2023 = await ReadFromFile.GetWeaponPNG(gameLocation);
 
             _floorandwall2023 = await ReadFromFile.GetFloorAndWallNamesForDungeons(gameLocation + @"/tilefloor.txt");
             _floorandwallColor2023 = await ReadFromFile.GetFloorAndWallColours(gameLocation + @"/tilefloorColors.txt");
@@ -187,19 +187,16 @@ namespace FrameGenerator.FileReading
             _namedMonsterOverrideData2023 = await ReadFromFile.GetNamedMonsterOverrideData(gameLocation + @"/namedmonsteroverrides.txt");
             _monsterpng2023 = await ReadFromFile.GetMonsterPNG(gameLocation);
 
-
-            _features2023 = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/features.txt");
-            _alldngnpng2023 = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "dngn"), gameLocation);
-
             _cloudtiles2023 = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/clouds.txt");
             _alleffects2023 = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "effect"), gameLocation);
             _miscallaneous2023 = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "misc"), gameLocation);
 
+            _features2023 = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/features.txt");
+            _alldngnpng2023 = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "dngn"), gameLocation);
+
             _itemdata2023 = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/items.txt");
             _itempng2023 = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "item"), gameLocation);
 
-            _weapondata2023 = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/weapons.txt");
-            _weaponpng2023 = await ReadFromFile.GetWeaponPNG(gameLocation);
         }
     }
 }
