@@ -139,21 +139,19 @@ namespace DCSSTV
                     case VirtualKey.H: AdjustSpeed(0.2); break;
 
                     case VirtualKey.K:
-                        if (!driver.ttyrecDecoder.Paused) { Pause(); } //pause when frame stepping
-                        driver.FrameStepCount -= 1;//FrameStep -1 
+                        FrameStep(-1);
                         break;
 
                     case VirtualKey.L:
-                        if (!driver.ttyrecDecoder.Paused) { Pause(); }//pause when frame stepping
-                        driver.FrameStepCount += 1; //FrameStep +1
+                        FrameStep(1);
                         break;
 
                     case VirtualKey.Left:
-                        driver.Seek -= driver.Seek - TimeSpan.FromMilliseconds(TimeStepLengthMS) > TimeSpan.Zero ? TimeSpan.FromMilliseconds(TimeStepLengthMS) : TimeSpan.Zero;
+                        TimeJumpBackwards(TimeStepLengthMS);
                         break;
 
                     case VirtualKey.Right:
-                        driver.Seek += driver.Seek + TimeSpan.FromMilliseconds(TimeStepLengthMS) < driver.ttyrecDecoder.Length ? TimeSpan.FromMilliseconds(TimeStepLengthMS) : driver.ttyrecDecoder.Length;
+                        TimeJumpForwards(TimeStepLengthMS);
                         break;
 
                     case VirtualKey.A:
@@ -165,7 +163,7 @@ namespace DCSSTV
                         break;
 
                     case VirtualKey.T:
-                        driver.VersionSwitch = driver.VersionSwitch == "Classic" ? "2023" : "Classic";//switch png version which is being used
+                        SwitchTileDataVersion(driver.VersionSwitch == "Classic" ? "2023" : "Classic");//switch png version which is being used
                         break;
                     case VirtualKey.V://Play / Pause
                     case VirtualKey.Space:
@@ -182,26 +180,51 @@ namespace DCSSTV
 
         private void Pause()
         {
+            if (driver.ttyrecDecoder == null) return;
             driver.ttyrecDecoder.Pause();
             speedTextBlock.Text = $"Speed: {driver.ttyrecDecoder.PlaybackSpeed}";
         }
 
         private void UnPause()
         {
+            if (driver.ttyrecDecoder == null) return;
             driver.ttyrecDecoder.Unpause();
             speedTextBlock.Text = $"Speed: {driver.ttyrecDecoder.PlaybackSpeed}";
         }
 
         private void SetSpeed(int speed)
         {
+            if (driver.ttyrecDecoder == null) return;
             driver.ttyrecDecoder.PlaybackSpeed = speed;
             speedTextBlock.Text = $"Speed: {driver.ttyrecDecoder.PlaybackSpeed}";
         }
 
         private void AdjustSpeed(double speed)
         {
+            if (driver.ttyrecDecoder == null) return;
             driver.ttyrecDecoder.PlaybackSpeed += speed;
             speedTextBlock.Text = $"Speed: {driver.ttyrecDecoder.PlaybackSpeed}";
+        }
+        private void FrameStep(int frameCount)
+        {
+            if (driver.ttyrecDecoder == null) return;
+            Pause(); //pause when frame stepping
+            driver.FrameStepCount += frameCount;
+        }
+        private void TimeJumpBackwards(int timeStepMiliseconds)
+        {
+            if (driver.ttyrecDecoder == null) return;
+            driver.Seek -= driver.Seek - TimeSpan.FromMilliseconds(timeStepMiliseconds) > TimeSpan.Zero ? TimeSpan.FromMilliseconds(timeStepMiliseconds) : TimeSpan.Zero;
+        }
+        private void TimeJumpForwards(int timeStepMiliseconds)
+        {
+            if (driver.ttyrecDecoder == null) return;
+            driver.Seek += driver.Seek + TimeSpan.FromMilliseconds(timeStepMiliseconds) < driver.ttyrecDecoder.Length ? TimeSpan.FromMilliseconds(timeStepMiliseconds) : driver.ttyrecDecoder.Length;
+        }
+        private void SwitchTileDataVersion(string version)
+        {
+            driver.VersionSwitch = version;
+            TileDataVersionButton.Content = $"Tile Data: {version}";
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -266,19 +289,21 @@ namespace DCSSTV
             readyToRefresh = true;
         }
 
-        private static void Render(SKCanvas canvas, Size size, SKColor color, bool useOldScaling, SKBitmap bitmap)
+        private void Render(SKCanvas canvas, Size size, SKColor color, bool useOldScaling, SKBitmap bitmap)
         {
             // get the screen density for scaling
             var display = DisplayInformation.GetForCurrentView();
-
+           
             var scale = display.LogicalDpi / 96.0f;
 
             var scaledHeight = (size.Height / scale);
             var scaledWidth = (size.Width / scale);
             int scaledBitmapWidth, scaledBitmapHeight;
             SKBitmap scaledBitmap;
+            
             if (scaledWidth < 1602 || scaledHeight < 768)
             {
+               
                 if ((size.Width / scale) * 0.4794D > (size.Height / scale))// 768/1602 = 0.4794D
                 {
                     scaledBitmapWidth = (int)(size.Height / scale * 2.0859375D);
@@ -296,7 +321,7 @@ namespace DCSSTV
             {
                 scaledBitmap = bitmap;
             }
-            
+
             // handle the device screen density
             canvas.Scale(scale);
             
@@ -697,6 +722,31 @@ namespace DCSSTV
             AdjustSpeed(0.2);
             this.Focus(FocusState.Programmatic);
         }
-       
+        private void Button_Click_VersionSwitch(object sender, RoutedEventArgs e)
+        {
+            SwitchTileDataVersion(driver.VersionSwitch == "Classic" ? "2023" : "Classic");
+            this.Focus(FocusState.Programmatic);
+        }
+        private void Button_Click_FrameStepBackward(object sender, RoutedEventArgs e)
+        {
+            FrameStep(-1);
+            this.Focus(FocusState.Programmatic);
+        }
+        private void Button_Click_FrameStepForward(object sender, RoutedEventArgs e)
+        {
+            FrameStep(1);
+            this.Focus(FocusState.Programmatic);
+        }
+        private void Button_Click_TimeJumpBackwards(object sender, RoutedEventArgs e)
+        {
+            TimeJumpBackwards(TimeStepLengthMS);
+            this.Focus(FocusState.Programmatic);
+        }
+        private void Button_Click_TimeJumpForwards(object sender, RoutedEventArgs e)
+        {
+            TimeJumpForwards(TimeStepLengthMS);
+            this.Focus(FocusState.Programmatic);
+        }
+
     }
 }

@@ -18,7 +18,7 @@
         <viewmodels:MainViewModel x:Name="ViewModel" />
     </Page.DataContext>
 
-    <StackPanel Width="1626" >
+    <StackPanel Width="1602" >
         <utu:AutoLayout Orientation="Horizontal" Margin="5" Justify="SpaceBetween" >
             <TextBlock x:Uid="output" Text=""  x:Name="output"/>
         </utu:AutoLayout>
@@ -30,13 +30,13 @@
             <Button Content="Refresh Tile Data"  Click="LoadPackageFile" />
             <Button Content="Settings" Click="Button_Click_Settings" />
             <Button Content="Fullscreen" Click="Button_Click_Fullscreen"/>
-            <Button Content="Tile Data: Classic"/>
+            <Button x:Name="TileDataVersionButton" Content="Tile Data: Classic" Click="Button_Click_VersionSwitch"/>
 
         </utu:AutoLayout>
 
         <StackPanel Orientation="vertical" >
 
-            <Grid BorderBrush="Blue" BorderThickness="12" CornerRadius="12" Padding="12" Grid.Row="1" Width="1626" Height="792" VerticalAlignment="Stretch">
+            <Grid Grid.Row="1" Width="1602" Height="768" x:Name="CanvasGrid" Background="Black" VerticalAlignment="Stretch">
 
                 <views:SKXamlCanvas
                 x:Name="swapChain"
@@ -44,7 +44,7 @@
                 EnableRenderLoop="True"
                 VerticalAlignment="Stretch" />
 
-                <Grid x:Name="instructions">
+                <Grid x:Name="instructions" Margin="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="100"  />
                         <ColumnDefinition Width="*" />
@@ -116,7 +116,7 @@
                     <TextBlock Grid.Column="1" Grid.Row="20"  Text="Time Step Forward X Seconds(Configurable)" TextWrapping="Wrap"  TextAlignment="Left" />
                 </Grid>
             </Grid>
-            <Grid Width="1626" Height="40"  Margin="5" >
+            <Grid Width="1590" Height="40"  Margin="5" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"  />
                     <ColumnDefinition Width="*" />
@@ -155,10 +155,10 @@
                 <Button Content="+0.2" Width="100" Click="Button_Add02"/>
             </utu:AutoLayout>
             <utu:AutoLayout Orientation="Horizontal"  Margin="5" Width="450"  Justify="SpaceBetween" >
-                <Button Content="Jump R" Width="90"/>
-                <Button Content="Frame -1" Width="90" />
-                <Button Content="Frame +1" Width="90"/>
-                <Button Content="Jump F" Width="90"/>
+                <Button Content="Jump R" Width="90" Click="Button_Click_TimeJumpBackwards"/>
+                <Button Content="Frame -1" Width="90" Click="Button_Click_FrameStepBackward"/>
+                <Button Content="Frame +1" Width="90" Click="Button_Click_FrameStepForward"/>
+                <Button Content="Jump F" Width="90" Click="Button_Click_TimeJumpForwards"/>
             </utu:AutoLayout>
         </StackPanel>
 
