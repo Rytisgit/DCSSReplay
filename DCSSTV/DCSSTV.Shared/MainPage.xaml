@@ -19,6 +19,12 @@
     </Page.DataContext>
 
     <StackPanel Width="1602" >
+        <utu:AutoLayout Orientation="Horizontal" Width="700" Margin="5" >
+            <TextBlock  Margin="0,7"
+             Text="For Players interested in trying Crawl forks - check out XOM's Fork Collection at:"/>
+            <HyperlinkButton Content="xom.montres.org.uk:8080"
+                 NavigateUri="http://xom.montres.org.uk:8080" />
+        </utu:AutoLayout>
         <utu:AutoLayout Orientation="Horizontal" Margin="5" Justify="SpaceBetween" >
             <TextBlock x:Uid="output" Text=""  x:Name="output"/>
         </utu:AutoLayout>
@@ -30,7 +36,7 @@
             <Button Content="Refresh Tile Data"  Click="LoadPackageFile" />
             <Button Content="Settings" Click="Button_Click_Settings" />
             <Button Content="Fullscreen" Click="Button_Click_Fullscreen"/>
-            <Button x:Name="TileDataVersionButton"  Width="140" Content="Tile Data: Classic" Click="Button_Click_VersionSwitch"/>
+            <Button x:Name="TileDataVersionButton" Width="140" Content="Tile Data: Classic" Click="Button_Click_VersionSwitch"/>
 
         </utu:AutoLayout>
 
