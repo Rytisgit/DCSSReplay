@@ -30,7 +30,7 @@
             <Button Content="Refresh Tile Data"  Click="LoadPackageFile" />
             <Button Content="Settings" Click="Button_Click_Settings" />
             <Button Content="Fullscreen" Click="Button_Click_Fullscreen"/>
-            <Button x:Name="TileDataVersionButton" Content="Tile Data: Classic" Click="Button_Click_VersionSwitch"/>
+            <Button x:Name="TileDataVersionButton"  Width="140" Content="Tile Data: Classic" Click="Button_Click_VersionSwitch"/>
 
         </utu:AutoLayout>
 
@@ -116,12 +116,12 @@
                     <TextBlock Grid.Column="1" Grid.Row="20"  Text="Time Step Forward X Seconds(Configurable)" TextWrapping="Wrap"  TextAlignment="Left" />
                 </Grid>
             </Grid>
-            <Grid Width="1590" Height="40"  Margin="5" >
+            <Grid Width="1590" Height="50"  Margin="5" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"  />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Button Content="Button" x:Name="PlayPause" HorizontalAlignment="Stretch" Click="Button_Click_PlayPause" />
+                <Button Content="Pause" Height="50" Width="65" x:Name="PlayPause" HorizontalAlignment="Stretch" Click="Button_Click_PlayPause" />
                 <Slider 
                     Margin="5"
                     x:Name="Seekbar" 
@@ -135,6 +135,7 @@
                     PointerMoved="Seekbar_DragDelta"/>
                 <TextBlock 
                     Text="{x:Bind ViewModel.RemainingTime, Mode=OneWay}" 
+                    Padding="0,0,5,5"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Top"
                     Grid.Column="2" />

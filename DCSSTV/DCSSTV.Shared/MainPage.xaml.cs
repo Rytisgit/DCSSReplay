@@ -181,29 +181,33 @@ namespace DCSSTV
         private void Pause()
         {
             if (driver.ttyrecDecoder == null) return;
-            driver.ttyrecDecoder.Pause();
+            if (!driver.ttyrecDecoder.Paused) driver.ttyrecDecoder.Pause();
             speedTextBlock.Text = $"Speed: {driver.ttyrecDecoder.PlaybackSpeed}";
+            PlayPause.Content = "Pause";
         }
 
         private void UnPause()
         {
             if (driver.ttyrecDecoder == null) return;
-            driver.ttyrecDecoder.Unpause();
+            if(driver.ttyrecDecoder.Paused) driver.ttyrecDecoder.Unpause();
             speedTextBlock.Text = $"Speed: {driver.ttyrecDecoder.PlaybackSpeed}";
+            PlayPause.Content = "Play";
         }
 
         private void SetSpeed(int speed)
         {
             if (driver.ttyrecDecoder == null) return;
             driver.ttyrecDecoder.PlaybackSpeed = speed;
-            speedTextBlock.Text = $"Speed: {driver.ttyrecDecoder.PlaybackSpeed}";
+            if (driver.ttyrecDecoder.Paused) Pause();
+            else UnPause();
         }
 
         private void AdjustSpeed(double speed)
         {
             if (driver.ttyrecDecoder == null) return;
             driver.ttyrecDecoder.PlaybackSpeed += speed;
-            speedTextBlock.Text = $"Speed: {driver.ttyrecDecoder.PlaybackSpeed}";
+            if (driver.ttyrecDecoder.Paused) Pause();
+            else UnPause();
         }
         private void FrameStep(int frameCount)
         {
@@ -479,6 +483,7 @@ namespace DCSSTV
                 driver.ttyrecDecoder.PlaybackSpeed = 1;
                 driver.framerateControlTimeout = Convert.ToInt32(localSettings.Values[SaveKeys.MinPause.ToString()].ToString());
                 readyToRefresh = true;
+                UnPause();
                 await driver.StartImageGeneration();
             }
             catch (Exception ex)
@@ -493,6 +498,7 @@ namespace DCSSTV
             {
                 await driver.CancelImageGeneration();
                 instructions.Visibility = Not(false);
+                Pause();
             }
             catch (Exception ex)
             {
@@ -561,7 +567,9 @@ namespace DCSSTV
 
         private void Button_Click_PlayPause(object sender, RoutedEventArgs e)
         {
-            ViewModel.SeekbarMaxValue = 55569;
+            if (driver.ttyrecDecoder.Paused) UnPause();
+            else Pause();
+            this.Focus(FocusState.Programmatic);
         }
 
         private void Seekbar_DragDelta(object sender, PointerRoutedEventArgs e)
