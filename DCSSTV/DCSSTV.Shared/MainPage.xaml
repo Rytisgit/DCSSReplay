@@ -132,9 +132,7 @@
                     IsThumbToolTipEnabled="False"
                     HorizontalAlignment="Stretch" 
                     VerticalAlignment="Center"
-                    Pointer="Seekbar_DragStarting"
-                    PointerMoved="Seekbar_DragDelta"
-                    DragOver="Seekbar_DragCompleted"/>
+                    PointerMoved="Seekbar_DragDelta"/>
                 <TextBlock 
                     Text="{x:Bind ViewModel.RemainingTime, Mode=OneWay}" 
                     HorizontalAlignment="Right"

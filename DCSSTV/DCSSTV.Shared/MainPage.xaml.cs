@@ -23,6 +23,7 @@ using DCSSTV.Pages;
 using System.Net.Http;
 using Windows.Storage.Pickers;
 using System.Timers;
+using Newtonsoft.Json.Linq;
 #if __WASM__
 using Uno.Foundation;
 #endif
@@ -48,7 +49,7 @@ namespace DCSSTV
         private string ttyrecUrl;
         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         string proxyUrl;
-        bool  controlIsPressed = false;
+        bool controlIsPressed = false;
         private DispatcherTimer _timer;
 
         public MainPage()
@@ -538,30 +539,16 @@ namespace DCSSTV
             ViewModel.SeekbarMaxValue = 55569;
         }
 
-        private void Seekbar_DragStarting(object sender, DragEventArgs e)
-        {
-            //FUCK YOU
-            Console.WriteLine("PAUSE");
-            decoder.Pause();
-        }
-
         private void Seekbar_DragDelta(object sender, PointerRoutedEventArgs e)
         {
             //YOURE COOL
             if (decoder == null) return;
+            var wasPaused = decoder.Paused;
             decoder.Pause();
             Slider slider = (Slider)sender;
-            double value = slider.Value;
-            driver.Seek = TimeSpan.FromMilliseconds(value);
-            decoder.Unpause();
+            driver.Seek = TimeSpan.FromMilliseconds(slider.Value);
+            if (!wasPaused) decoder.Unpause();
         }
-
-        private void Seekbar_DragCompleted(object sender, DragEventArgs e)
-        {
-            //FUCK YOU
-            decoder.Pause();
-        }
-
 
         private void Button_Click_Fullscreen(object sender, RoutedEventArgs e)
         {
