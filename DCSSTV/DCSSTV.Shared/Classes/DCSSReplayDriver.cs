@@ -88,7 +88,7 @@ namespace DCSSTV
                     if (frame != null)
                     {
 
-                        if (!frameGenerator.isGeneratingFrame && prevHash != frame.GetHashCode() && _readyForRefresh.Invoke())
+                        if (!frameGenerator.isGeneratingFrame && (prevHash != frame.GetHashCode() || frameGenerator.isLoading) && _readyForRefresh.Invoke())
                         {
                             frameGenerator.isGeneratingFrame = true;
 #if faklse
@@ -136,77 +136,6 @@ namespace DCSSTV
 
             }
 
-        }
-        public void GetImage()
-        {
-            //if (PlaybackSpeed != 0) { PausedSpeed = PlaybackSpeed; PlaybackSpeed = 0; text = "Play"; }
-            // else { PlaybackSpeed = PausedSpeed; text = "Pause"; }
-            var now = DateTime.Now;
-
-            var dt = Math.Max(0, Math.Min(0.1, (now - PreviousFrame).TotalSeconds));
-            PreviousFrame = now;
-
-            if (ttyrecDecoder != null)
-            {
-
-                Seek += TimeSpan.FromSeconds(dt * ttyrecDecoder.PlaybackSpeed);
-
-                if (Seek > ttyrecDecoder.Length)
-                {
-                    Seek = ttyrecDecoder.Length;
-                }
-                if (Seek < TimeSpan.Zero)
-                {
-                    Seek = TimeSpan.Zero;
-                }
-
-                if (FrameStepCount != 0)
-                {
-                    ttyrecDecoder.FrameStep(FrameStepCount); //step frame index by count
-                    Seek = ttyrecDecoder.CurrentFrame.SinceStart;
-                    FrameStepCount = 0;
-                }
-                else
-                {
-
-                    ttyrecDecoder.Seek(Seek);
-
-                }
-
-                var frame = ttyrecDecoder.CurrentFrame.Data;
-
-                if (frame != null)
-                {
-
-#if faklse
-                    ThreadPool.UnsafeQueueUserWorkItem(o =>
-                    {
-                        try
-                        {
-                            currentFrame = frameGenerator.GenerateImage(frame, ConsoleSwitchLevel, versionSwitch: VersionSwitch);
-                            frameGenerator.isGeneratingFrame = false;
-                            frame = null;
-                            _refreshCanvas();
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                            //generator.GenerateImage(savedFrame);
-                            frameGenerator.isGeneratingFrame = false;
-                        }
-                    }, null);
-#else //non threaded image generation (slow)
-                    currentFrame = frameGenerator.GenerateImage(frame, ConsoleSwitchLevel, versionSwitch: VersionSwitch);
-                Console.WriteLine("driver " + currentFrame.ByteCount);
-#endif
-                }
-
-            }
-            else
-            {
-                currentFrame = frameGenerator.GenerateImage(null);
-
-            }
         }
     }
 }

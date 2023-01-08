@@ -9,43 +9,43 @@ namespace FrameGenerator.FileReading
 {
     public class VersionSelectableDataHolder
     {
-        private Dictionary<string, string> _monsterdata;
-        private List<NamedMonsterOverride> _namedMonsterOverrideData;
-        private Dictionary<string, string> _characterdata;
-        private Dictionary<string, string[]> _floorandwall;
-        private Dictionary<string, Tuple<List<string>, List<string>>> _floorandwallColor;
-        private Dictionary<string, string> _features;
-        private Dictionary<string, string> _cloudtiles;
-        private Dictionary<string, string> _itemdata;
-        private Dictionary<string, string> _weapondata;
-        private Dictionary<string, SKBitmap> _monsterpng;
-        private Dictionary<string, SKBitmap> _characterpng;
-        private Dictionary<string, SKBitmap> _weaponpng;
-        private Dictionary<string, SKBitmap> _itempng;
-        private Dictionary<string, SKBitmap> _alldngnpng;
-        private Dictionary<string, SKBitmap> _alleffects;
-        private Dictionary<string, SKBitmap> _miscallaneous;
-        private Dictionary<string, SKBitmap> _floorpng;
-        private Dictionary<string, SKBitmap> _wallpng;
+        private Dictionary<string, string> _monsterdata = new();
+        private List<NamedMonsterOverride> _namedMonsterOverrideData = new();
+        private Dictionary<string, string> _characterdata = new();
+        private Dictionary<string, string[]> _floorandwall = new();
+        private Dictionary<string, Tuple<List<string>, List<string>>> _floorandwallColor = new();
+        private Dictionary<string, string> _features = new();
+        private Dictionary<string, string> _cloudtiles = new();
+        private Dictionary<string, string> _itemdata = new();
+        private Dictionary<string, string> _weapondata = new();
+        private Dictionary<string, SKBitmap> _monsterpng = new();
+        private Dictionary<string, SKBitmap> _characterpng = new();
+        private Dictionary<string, SKBitmap> _weaponpng = new();
+        private Dictionary<string, SKBitmap> _itempng = new();
+        private Dictionary<string, SKBitmap> _alldngnpng = new();
+        private Dictionary<string, SKBitmap> _alleffects = new();
+        private Dictionary<string, SKBitmap> _miscallaneous = new();
+        private Dictionary<string, SKBitmap> _floorpng = new();
+        private Dictionary<string, SKBitmap> _wallpng = new();
 
-        private Dictionary<string, string> _monsterdata2023;
-        private List<NamedMonsterOverride> _namedMonsterOverrideData2023;
-        private Dictionary<string, string> _characterdata2023;
-        private Dictionary<string, string[]> _floorandwall2023;
-        private Dictionary<string, Tuple<List<string>, List<string>>> _floorandwallColor2023;
-        private Dictionary<string, string> _features2023;
-        private Dictionary<string, string> _cloudtiles2023;
-        private Dictionary<string, string> _itemdata2023;
-        private Dictionary<string, string> _weapondata2023;
-        private Dictionary<string, SKBitmap> _monsterpng2023;
-        private Dictionary<string, SKBitmap> _characterpng2023;
-        private Dictionary<string, SKBitmap> _weaponpng2023;
-        private Dictionary<string, SKBitmap> _itempng2023;
-        private Dictionary<string, SKBitmap> _alldngnpng2023;
-        private Dictionary<string, SKBitmap> _alleffects2023;
-        private Dictionary<string, SKBitmap> _miscallaneous2023;
-        private Dictionary<string, SKBitmap> _floorpng2023;
-        private Dictionary<string, SKBitmap> _wallpng2023;
+        private Dictionary<string, string> _monsterdata2023 = new();
+        private List<NamedMonsterOverride> _namedMonsterOverrideData2023 = new();
+        private Dictionary<string, string> _characterdata2023 = new();
+        private Dictionary<string, string[]> _floorandwall2023 = new();
+        private Dictionary<string, Tuple<List<string>, List<string>>> _floorandwallColor2023 = new();
+        private Dictionary<string, string> _features2023 = new();
+        private Dictionary<string, string> _cloudtiles2023 = new();
+        private Dictionary<string, string> _itemdata2023 = new();
+        private Dictionary<string, string> _weapondata2023 = new();
+        private Dictionary<string, SKBitmap> _monsterpng2023 = new();
+        private Dictionary<string, SKBitmap> _characterpng2023 = new();
+        private Dictionary<string, SKBitmap> _weaponpng2023 = new();
+        private Dictionary<string, SKBitmap> _itempng2023 = new();
+        private Dictionary<string, SKBitmap> _alldngnpng2023 = new();
+        private Dictionary<string, SKBitmap> _alleffects2023 = new();
+        private Dictionary<string, SKBitmap> _miscallaneous2023 = new();
+        private Dictionary<string, SKBitmap> _floorpng2023 = new();
+        private Dictionary<string, SKBitmap> _wallpng2023 = new();
 
         public Dictionary<string, string> Monsterdata { get => version == "Classic" ? _monsterdata : _monsterdata2023; }
         public List<NamedMonsterOverride> NamedMonsterOverrideData { get => version == "Classic" ? _namedMonsterOverrideData : _namedMonsterOverrideData2023; }
@@ -128,56 +128,78 @@ namespace FrameGenerator.FileReading
 
         public async Task InitialiseData()
         {
-            var gameLocation = "Extra";
-            var gameLocation2 = "Extra2023";
-            if (NeedRefreshDictionaries || _characterdata == null) NeedRefreshDictionaries = false;
+            if (NeedRefreshDictionaries || _characterdata == null) { NeedRefreshDictionaries = false; }
             else return;
+
+            if (version == "Classic")
+            {
+                await LoadVersionDataClassic();
+                await LoadVersionData2023();
+            }
+            else
+            {
+                await LoadVersionData2023();
+                await LoadVersionDataClassic();
+            }
+        }
+
+        private async Task LoadVersionDataClassic()
+        {
+            var gameLocation = "Extra";
             _characterdata = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/racepng.txt");
-            _features = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/features.txt");
-            _cloudtiles = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/clouds.txt");
-            _itemdata = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/items.txt");
-            _weapondata = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/weapons.txt");
+            _characterpng = await ReadFromFile.GetCharacterPNG(gameLocation);
 
             _floorandwall = await ReadFromFile.GetFloorAndWallNamesForDungeons(gameLocation + @"/tilefloor.txt");
             _floorandwallColor = await ReadFromFile.GetFloorAndWallColours(gameLocation + @"/tilefloorColors.txt");
-            _monsterdata = await ReadFromFile.GetMonsterData(gameLocation + @"/mon-data.h", gameLocation + @"/monsteroverrides.txt");
-            _namedMonsterOverrideData = await ReadFromFile.GetNamedMonsterOverrideData(gameLocation + @"/namedmonsteroverrides.txt");
-
             _floorpng = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "dngn", "floor"), gameLocation);
             _wallpng = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "dngn", "wall"), gameLocation);
-            _alldngnpng = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "dngn"), gameLocation);
-            _alleffects = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "effect"), gameLocation);
-            _miscallaneous = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "misc"), gameLocation);
-            _itempng = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "item"), gameLocation);
 
-            _characterpng = await ReadFromFile.GetCharacterPNG(gameLocation);
+            _monsterdata = await ReadFromFile.GetMonsterData(gameLocation + @"/mon-data.h", gameLocation + @"/monsteroverrides.txt");
+            _namedMonsterOverrideData = await ReadFromFile.GetNamedMonsterOverrideData(gameLocation + @"/namedmonsteroverrides.txt");
             _monsterpng = await ReadFromFile.GetMonsterPNG(gameLocation);
 
+
+            _features = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/features.txt");
+            _alldngnpng = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "dngn"), gameLocation);
+
+            _cloudtiles = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/clouds.txt");
+            _alleffects = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "effect"), gameLocation);
+            _miscallaneous = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "misc"), gameLocation);
+
+            _itemdata = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/items.txt");
+            _itempng = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "item"), gameLocation);
+
+            _weapondata = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/weapons.txt");
             _weaponpng = await ReadFromFile.GetWeaponPNG(gameLocation);
-
-            _characterdata2023 = await ReadFromFile.GetDictionaryFromFile(gameLocation2 + @"/racepng.txt");
-            _features2023 = await ReadFromFile.GetDictionaryFromFile(gameLocation2 + @"/features.txt");
-            _cloudtiles2023 = await ReadFromFile.GetDictionaryFromFile(gameLocation2 + @"/clouds.txt");
-            _itemdata2023 = await ReadFromFile.GetDictionaryFromFile(gameLocation2 + @"/items.txt");
-            _weapondata2023 = await ReadFromFile.GetDictionaryFromFile(gameLocation2 + @"/weapons.txt");
-
-            _floorandwall2023 = await ReadFromFile.GetFloorAndWallNamesForDungeons(gameLocation2 + @"/tilefloor.txt");
-            _floorandwallColor2023 = await ReadFromFile.GetFloorAndWallColours(gameLocation2 + @"/tilefloorColors.txt");
-            _monsterdata2023 = await ReadFromFile.GetMonsterData(gameLocation2 + @"/mon-data.h", gameLocation2 + @"/monsteroverrides.txt");
-            _namedMonsterOverrideData2023 = await ReadFromFile.GetNamedMonsterOverrideData(gameLocation2 + @"/namedmonsteroverrides.txt");
-
-            _floorpng2023 = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation2, "rltiles", "dngn", "floor"), gameLocation2);
-            _wallpng2023 = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation2, "rltiles", "dngn", "wall"), gameLocation2);
-            _alldngnpng2023 = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation2, "rltiles", "dngn"), gameLocation2);
-            _alleffects2023 = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation2, "rltiles", "effect"), gameLocation2);
-            _miscallaneous2023 = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation2, "rltiles", "misc"), gameLocation2);
-            _itempng2023 = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation2, "rltiles", "item"), gameLocation2);
-
-            _characterpng2023 = await ReadFromFile.GetCharacterPNG(gameLocation2);
-            _monsterpng2023 = await ReadFromFile.GetMonsterPNG(gameLocation2);
-
-            _weaponpng2023 = await ReadFromFile.GetWeaponPNG(gameLocation2);
         }
+        private async Task LoadVersionData2023()
+        {
+            var gameLocation = "Extra2023";
+            _characterdata2023 = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/racepng.txt");
+            _characterpng2023 = await ReadFromFile.GetCharacterPNG(gameLocation);
 
+            _floorandwall2023 = await ReadFromFile.GetFloorAndWallNamesForDungeons(gameLocation + @"/tilefloor.txt");
+            _floorandwallColor2023 = await ReadFromFile.GetFloorAndWallColours(gameLocation + @"/tilefloorColors.txt");
+            _floorpng2023 = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "dngn", "floor"), gameLocation);
+            _wallpng2023 = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "dngn", "wall"), gameLocation);
+
+            _monsterdata2023 = await ReadFromFile.GetMonsterData(gameLocation + @"/mon-data.h", gameLocation + @"/monsteroverrides.txt");
+            _namedMonsterOverrideData2023 = await ReadFromFile.GetNamedMonsterOverrideData(gameLocation + @"/namedmonsteroverrides.txt");
+            _monsterpng2023 = await ReadFromFile.GetMonsterPNG(gameLocation);
+
+
+            _features2023 = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/features.txt");
+            _alldngnpng2023 = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "dngn"), gameLocation);
+
+            _cloudtiles2023 = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/clouds.txt");
+            _alleffects2023 = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "effect"), gameLocation);
+            _miscallaneous2023 = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "misc"), gameLocation);
+
+            _itemdata2023 = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/items.txt");
+            _itempng2023 = await ReadFromFile.GetSKBitmapDictionaryFromFolder(Path.Combine(gameLocation, "rltiles", "item"), gameLocation);
+
+            _weapondata2023 = await ReadFromFile.GetDictionaryFromFile(gameLocation + @"/weapons.txt");
+            _weaponpng2023 = await ReadFromFile.GetWeaponPNG(gameLocation);
+        }
     }
 }

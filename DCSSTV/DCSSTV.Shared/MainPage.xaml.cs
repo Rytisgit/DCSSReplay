@@ -85,11 +85,11 @@ namespace DCSSTV
             if (!localSettings.Values.ContainsKey(SaveKeys.TileDataVersion.ToString()))
             {
                 localSettings.Values[SaveKeys.TileDataVersion.ToString()] = "Classic";
-                driver.VersionSwitch = "Classic";
+                SwitchTileDataVersion("Classic");
             }
             else
             {
-                driver.VersionSwitch = localSettings.Values[SaveKeys.TileDataVersion.ToString()].ToString();
+                SwitchTileDataVersion(localSettings.Values[SaveKeys.TileDataVersion.ToString()].ToString());
             }
             this.LayoutUpdated += Focus;
         }
@@ -155,11 +155,11 @@ namespace DCSSTV
                         break;
 
                     case VirtualKey.A:
-                        driver.ConsoleSwitchLevel = driver.ConsoleSwitchLevel != 2 ? 2 : 1;//switch console and tile windows around when in normal layout mode
+                        ToggleConsoleSwitchLevel(2);//switch console and tile windows around when in normal layout mode
                         break;
 
                     case VirtualKey.S:
-                        driver.ConsoleSwitchLevel = driver.ConsoleSwitchLevel != 3 ? 3 : 1;//switch to full console mode ound when in normal layout mode
+                        ToggleConsoleSwitchLevel(3);//switch to full console mode ound when in normal layout mode
                         break;
 
                     case VirtualKey.T:
@@ -168,14 +168,19 @@ namespace DCSSTV
                     case VirtualKey.V://Play / Pause
                     case VirtualKey.Space:
                         if (driver.ttyrecDecoder.Paused) UnPause();
-                        else Pause(); 
+                        else Pause();
                         break;
                 }
-              
+
 
             }
 
             base.OnKeyDown(e);
+        }
+
+        private void ToggleConsoleSwitchLevel(int level)
+        {
+            driver.ConsoleSwitchLevel = driver.ConsoleSwitchLevel != level ? level : 1;//if it's not the level switch to it, else return to default
         }
 
         private void Pause()
@@ -360,11 +365,6 @@ namespace DCSSTV
         }
         private async Task OpenTTyrecFile()
         {
-            if (!readyToPlay)
-            {
-                await SetOutputText($"Still loading, click count:{++clickCount}");
-                return;
-            }
             await SetOutputText("Waiting for File Selection, loading file");
             var picker = new FileOpenPicker();
             picker.FileTypeFilter.Add("*");
@@ -392,6 +392,11 @@ namespace DCSSTV
                     SeekTime = TimeSpan.Zero
                 };
                 await SetOutputText("Done Loading.");
+                //if (!readyToPlay)
+                //{
+                //    FileSelectedEvent += OnFileSelectedEvent;
+                //    return;
+                //}
                 await StartImageLoop();
 
             }
@@ -399,18 +404,18 @@ namespace DCSSTV
             {
                 // Did not pick any file.
             }
+            
         }
 
         //public static void SelectFile(string imageAsDataUrl) => FileSelectedEvent?.Invoke(null, new FileSelectedEventHandlerArgs(imageAsDataUrl));
 
 
-        //private readonly Regex _fileSelect = new Regex(@"data:(?<type1>.+?)/(?<type2>.+?),(?<data>.+)", RegexOptions.Compiled);
         //private async void OnFileSelectedEvent(object sender, FileSelectedEventHandlerArgs e)
         //{
         //    await SetOutputText("File Selected, loading...");
         //    MainPage.FileSelectedEvent -= OnFileSelectedEvent;
-        //    var base64Data = _fileSelect.Match(e.FileAsDataUrl).Groups["data"].Value;
-        //    var binData = Convert.FromBase64String(base64Data);
+        //    //var base64Data = _fileSelect.Match(e.FileAsDataUrl).Groups["data"].Value;
+        //    //var binData = Convert.FromBase64String(base64Data);
 
         //}
 
@@ -429,7 +434,7 @@ namespace DCSSTV
         {
             try
             {
-                //TODO wasm multiple extra folder handling
+                driver.ConsoleSwitchLevel = 2;
                 var file =
                     await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Extra.zip"));
                 var file2 =
@@ -441,7 +446,7 @@ namespace DCSSTV
                 var stream2 = bytes2.AsStream();
                 await ExtractExtraFileFolder(stream2, "Extra2023");
                 await SetOutputText("Data Cached, reloading");
-
+                driver.ConsoleSwitchLevel = 1;
             }
             catch (Exception ex)
             {

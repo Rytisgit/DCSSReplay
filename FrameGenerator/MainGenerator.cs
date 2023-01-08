@@ -26,13 +26,14 @@ namespace FrameGenerator
         private int previousMP = 0;
         private int _lostHpCheckpoint = 0;
         private int _lostMpCheckpoint = 0;
-
+        public bool isLoading = true;
 
         public MainGenerator(IReadFromFile fileReader)
         {
             var ReadFromFile = fileReader;
             _data = new VersionSelectableDataHolder(ReadFromFile);
             _outOfSightCache = new Cacher();
+            isLoading = false;
         }
 
         public MainGenerator(IReadFromFileAsync fileReader)
@@ -45,10 +46,12 @@ namespace FrameGenerator
         {
             await _data.InitialiseData();
             _typeface = SKTypeface.FromStream(await _data.ReadFromFile.GetFontStream("cour.ttf"));
+            isLoading = false;
         }
 
         public async Task ReinitializeGenerator()
         {
+            isLoading = true;
             _data.NeedRefreshDictionaries = true;
             await InitialiseGenerator();
         }
