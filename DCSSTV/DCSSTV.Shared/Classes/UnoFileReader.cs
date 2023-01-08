@@ -92,11 +92,11 @@ namespace DCSSTV
                     tokens[2] = tokens[2].Replace(" ", "");
                     tokens[0] = tokens[0].Replace("MONS_", "").Replace(" ", "").ToLower();
                     //if(!Enum.TryParse(tokens[2], out ColorList2 res)) Console.WriteLine(tokens[1] + tokens[2] + " badly colored: " + tokens[0]);
-                    if (monster.TryGetValue(tokens[1] + tokens[2], out var existing))
-                    {
-                        //Console.WriteLine(tokens[1] + tokens[2] + "exist: " + existing + " new: " + tokens[0]); 
-                    }
-                    else monster[tokens[1] + tokens[2]] = tokens[0];
+                    //if (monster.TryGetValue(tokens[1] + tokens[2], out var existing))
+                    //{
+                    //    Console.WriteLine(tokens[1] + tokens[2] + "exist: " + existing + " new: " + tokens[0]); 
+                    //}
+                    monster[tokens[1] + tokens[2]] = tokens[0];
                 }
             }
 
