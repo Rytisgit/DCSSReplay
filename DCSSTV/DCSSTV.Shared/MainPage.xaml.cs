@@ -243,8 +243,13 @@ namespace DCSSTV
             try
             {
                 await SetOutputText("Trying To Initialise Generator");
+                switch (localSettings.Values[SaveKeys.OpenOnStart.ToString()].ToString())
+                {
+                    case "Download": OpenTTyrecDownloadSelection(); break;
+                    case "File": OpenTTyrecFile(); break;
+                }
                 await generator.InitialiseGenerator();
-            }
+        }
             catch (Exception exception)
             {
                 try
