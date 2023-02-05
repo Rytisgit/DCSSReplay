@@ -9,6 +9,12 @@ namespace Putty
     [DebuggerDisplay("{Character} {Attributes}")]
     public struct TerminalCharacter
     {
+        public TerminalCharacter(uint charValue, uint attrValue, int ccNextValue = 0)
+        {
+            chr = charValue;
+            attr = attrValue;
+            cc_next = ccNextValue;
+        }
         private uint _chr;
         private uint chr
         {

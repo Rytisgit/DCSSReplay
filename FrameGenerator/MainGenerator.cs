@@ -191,9 +191,9 @@ namespace FrameGenerator
                     IsAntialias = true,
                 };
                 using var darkPen = new SKPaint() { 
-                Color = SKColors.Black,
-                StrokeWidth = 2,
-                Style = SKPaintStyle.StrokeAndFill
+                    Color = SKColors.Black,
+                    StrokeWidth = 2,
+                    Style = SKPaintStyle.StrokeAndFill
                 };
                 var rect2 = new SKRect(25, 25, 25+ 1000, 25 + 430);
                 g.DrawRect(rect2, darkPen);

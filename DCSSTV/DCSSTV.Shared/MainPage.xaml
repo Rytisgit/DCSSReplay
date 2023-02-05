@@ -32,6 +32,7 @@
 
             <Button Content="Open TTyrec File"   Click="Button_Click_Start_Playback"/>
             <Button Content="Download TTyrec File" Click="Button_Click_TTyrecDownloadSelection" />
+            <Button Content="Connect FooTV" Click="Button_Click_Start_FooTV"/>
             <Button Content="End Playback" Click="Button_Click_Stop_Playback"/>
             <Button Content="Refresh Tile Data"  Click="LoadPackageFile" />
             <Button Content="Settings" Click="Button_Click_Settings" />

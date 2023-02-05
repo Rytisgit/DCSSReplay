@@ -38,7 +38,7 @@
         </StackPanel>
 
         <TextBlock Grid.Row="2" Grid.Column="0" Text="Filter:" VerticalAlignment="Center"  />
-        <TextBox IsTabStop="True" x:Name="TTyrecFilterTextBox" Grid.Row="2" Grid.Column="1" PlaceholderText="eg. 2021-" TextChanged ="TTyrecFilterTextBox_TextChanged"  />
+        <TextBox IsTabStop="True" x:Name="TTyrecFilterTextBox" Grid.Row="2" Grid.Column="1" PlaceholderText="e.g. 2021-" TextChanged ="TTyrecFilterTextBox_TextChanged"  />
 
         <TextBlock Grid.Row="3" Grid.Column="0" Text="Ttyrecs:"  VerticalAlignment="Center" />
         <ListView IsTabStop="True" x:Name="TTyrecSelectionListView"

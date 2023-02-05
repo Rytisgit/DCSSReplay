@@ -374,7 +374,7 @@ namespace FrameGenerator.Extensions
 
                     if (tileColor == Enum.GetName(typeof(ColorListEnum), ColorListEnum.GREEN)) //replace poison cloud with dust
                     {
-                        if (effectPngs.TryGetValue("cloud_dust" + durationLength[tile[0]], out SKBitmap bmp))
+                        if (effectPngs.TryGetValue("cloud_dust" + (durationLength.TryGetValue(tile[0], out int value) ? value : -1), out SKBitmap bmp))
                         {
                             g.DrawBitmap(bmp, new SKRect(0, 0, bmp.Width, bmp.Height));
                             return true;

@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using FrameGenerator;
+using Microsoft.UI.Xaml.Documents;
+using Putty;
 using SkiaSharp;
 using TtyRecDecoder;
 
@@ -43,6 +47,71 @@ namespace DCSSTV
         {
             await Task.Run(() => CancellationToken = false);
         }
+
+        public static TtyRecFrame DumpTerminal(Terminal term, TimeSpan since_start, int height = 24, int width = 80)
+        {
+            var h = height;
+            var w = width;
+
+            var frame = new TtyRecFrame()
+            {
+                Data = new TerminalCharacter[w, h],
+                SinceStart = since_start
+            };
+
+            for (int y = 0; y < h; ++y)
+            {
+                var line = term.GetLine(y);
+                for (int x = 0; x < w; ++x) frame.Data[x, y] = line[x];
+            }
+
+            return frame;
+        }
+
+        public async Task StartTelnetLoop()
+        {
+            using var term = new Putty.Terminal(80, 24);
+            using (TcpClient telnetClient = new TcpClient("termcast.shalott.org", 23))
+            using (NetworkStream stream = telnetClient.GetStream())
+            {
+                // Send the Telnet command to the server
+                byte[] command = Encoding.ASCII.GetBytes("a");
+                stream.Write(command, 0, command.Length);
+                // Read the response from the server in a loop
+                CancellationToken = true;
+                while (CancellationToken)
+                {
+                    await Task.Delay(framerateControlTimeout);
+                    byte[] buffer = new byte[8192];
+                    int bytesRead = stream.Read(buffer, 0, buffer.Length);
+                    //string response = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+
+                    // Process the response
+                    term.Send(buffer);
+                    if (!frameGenerator.isGeneratingFrame)
+                    {
+                        frameGenerator.isGeneratingFrame = true;
+                        ThreadPool.UnsafeQueueUserWorkItem(o =>
+                        {
+                            try
+                            {
+                                var realFrame = DumpTerminal(term, new TimeSpan());
+                                currentFrame = frameGenerator.GenerateImage(realFrame.Data, ConsoleSwitchLevel, versionSwitch: VersionSwitch);
+                                frameGenerator.isGeneratingFrame = false;
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine(ex.StackTrace);
+                                //generator.GenerateImage(savedFrame);
+                                frameGenerator.isGeneratingFrame = false;
+                            }
+                        }, null);
+                    }
+
+                }
+            }
+        }
+
         public async Task StartImageGeneration()
         {
             //if (PlaybackSpeed != 0) { PausedSpeed = PlaybackSpeed; PlaybackSpeed = 0; text = "Play"; }

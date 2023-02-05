@@ -487,6 +487,7 @@ namespace DCSSTV
         {
             try
             {
+                await EndImageLoop();
                 instructions.Visibility = Not(true);
                 await generator.InitialiseGenerator();
                 driver.ttyrecDecoder = decoder;
@@ -495,6 +496,20 @@ namespace DCSSTV
                 readyToRefresh = true;
                 UnPause();
                 await driver.StartImageGeneration();
+            }
+            catch (Exception ex)
+            {
+                output.Text = ex.ToString();
+            }
+        }
+
+        public async Task StartTelnetLoop()
+        {
+            try
+            {
+                await EndImageLoop();
+                instructions.Visibility = Not(true);
+                await driver.StartTelnetLoop();
             }
             catch (Exception ex)
             {
@@ -690,6 +705,10 @@ namespace DCSSTV
                 Console.WriteLine(response.ToString());
             }
 
+        }
+        private async Task Button_Click_Start_FooTV(object sender, RoutedEventArgs e)
+        {
+            await StartTelnetLoop();
         }
         private void Button_Reverse100(object sender, RoutedEventArgs e)
         {
