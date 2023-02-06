@@ -509,6 +509,7 @@ namespace DCSSTV
             {
                 await EndImageLoop();
                 instructions.Visibility = Not(true);
+                driver.StartWebsocketLoop();
                 await driver.StartTelnetLoop();
             }
             catch (Exception ex)
@@ -522,6 +523,7 @@ namespace DCSSTV
             try
             {
                 await driver.CancelImageGeneration();
+                await driver.CancelWebsockets();
                 instructions.Visibility = Not(false);
                 Pause();
             }

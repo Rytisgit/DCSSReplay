@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
+using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -34,6 +35,8 @@ namespace DCSSTV
         public List<string> files = new List<string>();
         public IEnumerable<Stream> streams;
         public bool CancellationToken = false;
+        public bool WebsocketCancellationToken = false;
+        private Terminal term = new Putty.Terminal(80, 24);
 
         public DCSSReplayDriver(MainGenerator imageGenerator, Action RefreshCanvas, Func<bool> readyForRefresh, Action<int, int, string> updateSeekbar)
         {
@@ -46,6 +49,11 @@ namespace DCSSTV
         public async Task CancelImageGeneration()
         {
             await Task.Run(() => CancellationToken = false);
+        }
+
+        public async Task CancelWebsockets()
+        {
+            await Task.Run(() => WebsocketCancellationToken = false);
         }
 
         public static TtyRecFrame DumpTerminal(Terminal term, TimeSpan since_start, int height = 24, int width = 80)
@@ -68,46 +76,47 @@ namespace DCSSTV
             return frame;
         }
 
+        public async Task StartWebsocketLoop()
+        {
+            var ws = new ClientWebSocket();
+            await ws.ConnectAsync(new Uri("ws://localhost:5001/ws"), default);
+            while (WebsocketCancellationToken)
+            {
+                var buffer = new byte[1024 * 8];
+                var result = await ws.ReceiveAsync(new ArraySegment<byte>(buffer), default);
+                while (!result.EndOfMessage)
+                {
+                    // process the data in buffer.Slice(0, result.Count)
+                    result = await ws.ReceiveAsync(new ArraySegment<byte>(buffer), default);
+                }
+                // Process the response
+                term.Send(buffer);
+            }
+            await ws.CloseAsync(WebSocketCloseStatus.NormalClosure, "closed", default);
+        }
+
         public async Task StartTelnetLoop()
         {
-            using var term = new Putty.Terminal(80, 24);
-            using (TcpClient telnetClient = new TcpClient("termcast.shalott.org", 23))
-            using (NetworkStream stream = telnetClient.GetStream())
+            //using var term = new Putty.Terminal(80, 24);
+
+
+            // Read the response from the server in a loop
+            WebsocketCancellationToken = true;
+            while (WebsocketCancellationToken)
             {
-                // Send the Telnet command to the server
-                byte[] command = Encoding.ASCII.GetBytes("a");
-                stream.Write(command, 0, command.Length);
-                // Read the response from the server in a loop
-                CancellationToken = true;
-                while (CancellationToken)
+                await Task.Delay(framerateControlTimeout);
+                
+                if (!frameGenerator.isGeneratingFrame)
                 {
-                    await Task.Delay(framerateControlTimeout);
-                    byte[] buffer = new byte[8192];
-                    int bytesRead = stream.Read(buffer, 0, buffer.Length);
-                    //string response = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-
-                    // Process the response
-                    term.Send(buffer);
-                    if (!frameGenerator.isGeneratingFrame)
-                    {
-                        frameGenerator.isGeneratingFrame = true;
-                        ThreadPool.UnsafeQueueUserWorkItem(o =>
-                        {
-                            try
-                            {
-                                var realFrame = DumpTerminal(term, new TimeSpan());
-                                currentFrame = frameGenerator.GenerateImage(realFrame.Data, ConsoleSwitchLevel, versionSwitch: VersionSwitch);
-                                frameGenerator.isGeneratingFrame = false;
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine(ex.StackTrace);
-                                //generator.GenerateImage(savedFrame);
-                                frameGenerator.isGeneratingFrame = false;
-                            }
-                        }, null);
-                    }
-
+                    frameGenerator.isGeneratingFrame = true;
+                    var realFrame = DumpTerminal(term, new TimeSpan());
+                    currentFrame = frameGenerator.GenerateImage(realFrame.Data, ConsoleSwitchLevel, versionSwitch: VersionSwitch);
+#if DEBUG
+                    Console.WriteLine("driver " + currentFrame.ByteCount);
+#endif
+                    frameGenerator.isGeneratingFrame = false;
+                    prevHash = realFrame.GetHashCode();
+                    _refreshCanvas();
                 }
             }
         }
