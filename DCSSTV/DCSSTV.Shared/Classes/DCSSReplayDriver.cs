@@ -12,6 +12,7 @@ using Microsoft.UI.Xaml.Documents;
 using Putty;
 using SkiaSharp;
 using TtyRecDecoder;
+using Uno.Extensions;
 
 namespace DCSSTV
 {
@@ -84,21 +85,23 @@ namespace DCSSTV
             await ws.ConnectAsync(new Uri(wsUrl), default);
             while (WebsocketCancellationToken)
             {
-                await Task.Delay(2);
                 var buffer = new byte[1024 * 8];
+                await Task.Delay(2);
                 var result = await ws.ReceiveAsync(new ArraySegment<byte>(buffer), default);
+                var bytesRead = result.Count;
                 while (!result.EndOfMessage)
                 {
                     // process the data in buffer.Slice(0, result.Count)
-                    result = await ws.ReceiveAsync(new ArraySegment<byte>(buffer), default);
+                    result = await ws.ReceiveAsync(new ArraySegment<byte>(buffer, bytesRead, 1024 * 8 - bytesRead), default);
+                    bytesRead += result.Count;
                 }
                 // Process the response
-                if (result.Count>0)
+                if (bytesRead > 0)
                 {
 #if DEBUG
-                    Console.WriteLine(result.Count);
+                    Console.WriteLine(bytesRead);
 #endif
-                    term.Send(buffer);
+                    term.Send(buffer.ToRangeArray(0, bytesRead));
                     frameGenerator.isGeneratingFrame = false;
                 }
             }
