@@ -23,6 +23,7 @@ namespace DCSSTV
         private readonly Action _refreshCanvas;
         private readonly Func<bool> _readyForRefresh;
         private readonly Action<int, int, string> _updateSeekbar;
+        private readonly string wsUrl;
 
         public SKBitmap currentFrame { get; private set; }
         private DateTime PreviousFrame = DateTime.Now;
@@ -38,12 +39,13 @@ namespace DCSSTV
         public bool WebsocketCancellationToken = false;
         private Terminal term = new Putty.Terminal(80, 24);
 
-        public DCSSReplayDriver(MainGenerator imageGenerator, Action RefreshCanvas, Func<bool> readyForRefresh, Action<int, int, string> updateSeekbar)
+        public DCSSReplayDriver(MainGenerator imageGenerator, Action RefreshCanvas, Func<bool> readyForRefresh, Action<int, int, string> updateSeekbar, string wsUrl)
         {
             frameGenerator = imageGenerator;
             _refreshCanvas = RefreshCanvas;
             _readyForRefresh = readyForRefresh;
             _updateSeekbar = updateSeekbar;
+            this.wsUrl = wsUrl;
         }
 
         public async Task CancelImageGeneration()
@@ -79,9 +81,10 @@ namespace DCSSTV
         public async Task StartWebsocketLoop()
         {
             var ws = new ClientWebSocket();
-            await ws.ConnectAsync(new Uri("ws://localhost:5001/ws"), default);
+            await ws.ConnectAsync(new Uri(wsUrl), default);
             while (WebsocketCancellationToken)
             {
+                await Task.Delay(2);
                 var buffer = new byte[1024 * 8];
                 var result = await ws.ReceiveAsync(new ArraySegment<byte>(buffer), default);
                 while (!result.EndOfMessage)
@@ -90,7 +93,14 @@ namespace DCSSTV
                     result = await ws.ReceiveAsync(new ArraySegment<byte>(buffer), default);
                 }
                 // Process the response
-                term.Send(buffer);
+                if (result.Count>0)
+                {
+#if DEBUG
+                    Console.WriteLine(result.Count);
+#endif
+                    term.Send(buffer);
+                    frameGenerator.isGeneratingFrame = false;
+                }
             }
             await ws.CloseAsync(WebSocketCloseStatus.NormalClosure, "closed", default);
         }
@@ -98,15 +108,13 @@ namespace DCSSTV
         public async Task StartTelnetLoop()
         {
             //using var term = new Putty.Terminal(80, 24);
-
-
             // Read the response from the server in a loop
             WebsocketCancellationToken = true;
             while (WebsocketCancellationToken)
             {
                 await Task.Delay(framerateControlTimeout);
-                
-                if (!frameGenerator.isGeneratingFrame)
+
+                if ((!frameGenerator.isGeneratingFrame || frameGenerator.isLoading) && _readyForRefresh.Invoke())
                 {
                     frameGenerator.isGeneratingFrame = true;
                     var realFrame = DumpTerminal(term, new TimeSpan());
@@ -114,8 +122,7 @@ namespace DCSSTV
 #if DEBUG
                     Console.WriteLine("driver " + currentFrame.ByteCount);
 #endif
-                    frameGenerator.isGeneratingFrame = false;
-                    prevHash = realFrame.GetHashCode();
+
                     _refreshCanvas();
                 }
             }

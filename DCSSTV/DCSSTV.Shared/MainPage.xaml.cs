@@ -58,6 +58,7 @@ namespace DCSSTV
             var href = WebAssemblyRuntime.InvokeJS("window.location.href");
             var uri = new Uri(href);
             proxyUrl = $"{uri.Scheme}://{uri.Host}:3000/";
+            var wsUrl = $"ws://{uri.Host}:5001/ws";
             var queriesValues = System.Web.HttpUtility.ParseQueryString(uri.Query);
 #endif
             this.LostFocus += Page_LostFocus;
@@ -68,7 +69,7 @@ namespace DCSSTV
             };
             _timer.Tick += Timer_Tick;
             generator = new MainGenerator(new UnoFileReader());
-            driver = new DCSSReplayDriver(generator, RefreshImage, ReadyForRefresh, UpdateSeekbar);
+            driver = new DCSSReplayDriver(generator, RefreshImage, ReadyForRefresh, UpdateSeekbar, wsUrl);
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
             ttyrecDownloadSelectionDialog = new TtyrecDownloadSelectionDialog(PassTtyrecUrl, proxyUrl);
             if (!localSettings.Values.ContainsKey(SaveKeys.MaxPause.ToString()))
@@ -510,6 +511,7 @@ namespace DCSSTV
                 await EndImageLoop();
                 instructions.Visibility = Not(true);
                 driver.StartWebsocketLoop();
+                readyToRefresh = true;
                 await driver.StartTelnetLoop();
             }
             catch (Exception ex)
