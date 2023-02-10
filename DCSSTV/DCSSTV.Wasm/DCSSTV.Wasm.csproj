@@ -39,14 +39,12 @@
   </ItemGroup>-->
   <ItemGroup>
     <Content Include="Assets\SplashScreen.png" />
-    <Content Include="libPuttyDLL.bc" />
   </ItemGroup>
   <ItemGroup>
     <UpToDateCheckInput Include="..\DCSSTV.Shared\**\*.xaml" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Assets\SplashScreen.png" />
-    <None Remove="libPuttyDLL.bc" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="WasmCSS\Fonts.css" />
@@ -59,6 +57,7 @@
     <PackageReference Include="AngleSharp" Version="0.17.1" />
     <PackageReference Include="AngleSharp.Io" Version="0.17.0" />
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
+    <PackageReference Include="PuttyXtermEmulator" Version="1.0.0" />
     <PackageReference Include="SharpZipLib" Version="1.4.1" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
     <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.3" />
@@ -74,7 +73,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\FrameGenerator\FrameGenerator.csproj" />
     <ProjectReference Include="..\..\InputParse\InputParser.csproj" />
-    <ProjectReference Include="..\..\PuttySharp\PuttySharp.csproj" />
     <ProjectReference Include="..\..\TtyRecDecoder\TtyRecDecoder.csproj" />
   </ItemGroup>
   <Import Project="..\DCSSTV.Shared\DCSSTV.Shared.projitems" Label="Shared" Condition="Exists('..\DCSSTV.Shared\DCSSTV.Shared.projitems')" />

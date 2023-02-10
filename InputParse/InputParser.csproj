@@ -6,15 +6,14 @@
     <AssemblyName>InputParser</AssemblyName>
     <RootNamespace>InputParser</RootNamespace>
     <Version>1.0.0</Version>
-    <Configurations>Debug;Release;LinuxRelease</Configurations>
+    <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="PuttyXtermEmulator" Version="1.0.0" />
     <PackageReference Include="SkiaSharp" Version="1.68.2.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\PuttySharp\PuttySharp.csproj" />
-  </ItemGroup>
+
 
 </Project>

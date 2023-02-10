@@ -23,3 +23,5 @@ Packages/
 .sonarqube/*
 /dcssinterface/*
 /MemoriesInImagers/*
+
+/Intro*
