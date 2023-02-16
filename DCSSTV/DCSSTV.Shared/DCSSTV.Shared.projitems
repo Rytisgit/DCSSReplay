@@ -17,11 +17,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)Pages\SaveSettings.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)Controls\SaveSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)Pages\TtyrecDownloadSelectionDialog.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)Controls\TtyrecDownloadSelectionDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -31,6 +31,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Classes\DCSSReplayDriver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\GithubStar.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\DialogExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\DialogManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\Streams.cs" />
@@ -40,10 +41,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Classes\UnoFileReader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ViewModels\DispatchedBindableBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ViewModels\MainViewModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Pages\SaveSettings.xaml.cs">
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\SaveSettings.xaml.cs">
       <DependentUpon>SaveSettings.xaml</DependentUpon>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Pages\TtyrecDownloadSelectionDialog.xaml.cs">
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\TtyrecDownloadSelectionDialog.xaml.cs">
       <DependentUpon>TtyrecDownloadSelectionDialog.xaml</DependentUpon>
     </Compile>
   </ItemGroup>

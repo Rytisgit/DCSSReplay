@@ -10,6 +10,7 @@
     xmlns:viewmodels="using:DCSSTV.Models.ViewModels"
     xmlns:datamodels="using:DCSSTV.Models.DataModels"
     xmlns:models="using:DCSSTV.Models"
+    xmlns:html="using:DCSSTV.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     KeyUp="Grid_KeyUp">
@@ -19,11 +20,17 @@
     </Page.DataContext>
 
     <StackPanel Width="1602" >
-        <utu:AutoLayout Orientation="Horizontal" Width="700" Margin="5" >
+        <utu:AutoLayout Orientation="Horizontal" Width="900" Margin="5" >
             <TextBlock  Margin="0,7"
-             Text="For Players interested in trying Crawl forks - check out XOM's Fork Collection at:"/>
+             Text="If you enjoyed using XOMTV, add a "/>
+            <html:GithubStar Width="130" Margin="0,5"/>
+            <TextBlock  Margin="0,7"
+             Text=" Also check out XOM's Fork Collection server at:"/>
             <HyperlinkButton Content="xom.montres.org.uk:8080"
                  NavigateUri="http://xom.montres.org.uk:8080" />
+        </utu:AutoLayout>
+        <utu:AutoLayout Orientation="Horizontal" Width="900" Margin="5" >
+            
         </utu:AutoLayout>
         <utu:AutoLayout Orientation="Horizontal" Margin="5" Justify="SpaceBetween" >
             <TextBlock x:Uid="output" Text=""  x:Name="output"/>

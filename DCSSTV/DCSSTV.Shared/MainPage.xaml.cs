@@ -577,7 +577,6 @@ namespace DCSSTV
                 //Console.WriteLine("refresh hardware");
                 readyToRefresh = false;
                 swapChain.Invalidate();
-                
             //}
             //else
             //{
