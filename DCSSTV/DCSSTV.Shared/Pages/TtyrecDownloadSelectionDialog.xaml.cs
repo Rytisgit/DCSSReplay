@@ -63,7 +63,8 @@ namespace DCSSTV.Pages
         readonly Dictionary<string, string> hostsites = new() {
 
             { "CAO | crawl.akrasiac.org", "http://crawl.akrasiac.org/rawdata/" },
-            { "CBR | crawl.berotato.org", "http://crawl.berotato.org/crawl/ttyrec/" },
+            { "CBRO | crawl.berotato.org", "http://crawl.berotato.org/crawl/ttyrec/" },
+            { "CBR2 | cbro.berotato.org", "https://cbro.berotato.org/ttyrec" },
             { "CDO | crawl.develz.org", "http://crawl.develz.org/ttyrecs/"},
             { "CKO | crawl.kelbi.org", "https://crawl.kelbi.org/crawl/ttyrec/"},
             { "CPO | crawl.project357.org", "https://crawl.project357.org/ttyrec/"},
