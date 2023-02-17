@@ -2,7 +2,7 @@ var UnoAppManifest = {
 
     splashScreenImage: "Assets/SplashScreen.png",
     splashScreenColor: "#050505",
-    displayName: "DCSSTV"
+    displayName: "XOMTV"
 
 }
 
