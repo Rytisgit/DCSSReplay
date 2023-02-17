@@ -34,9 +34,7 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <!--<ItemGroup>
-    <WasmShellMonoEnvironment Include="MONO_GC_PARAMS" Value="max-heap-size=2048m,soft-heap-limit=1024m,nursery-size=64m,evacuation-threshold=0,major=marksweep" />
-    <WasmShellMonoEnvironment Include="MONO_LOG_LEVEL" Value="debug" />
-    <WasmShellMonoEnvironment Include="MONO_LOG_MASK" Value="gc" />
+    <WasmShellMonoEnvironment Include="MONO_GC_PARAMS" Value="soft-heap-limit=1024m,nursery-size=64m,evacuation-threshold=66,major=marksweep" />
   </ItemGroup>-->
   <ItemGroup>
     <Content Include="Assets\SplashScreen.png" />
@@ -68,6 +66,7 @@
       <Compile Remove="$(CompilerGeneratedFilesOutputPath)\**" />
     </ItemGroup>
   </Target>
+
   <ItemGroup>
     <PackageReference Include="AngleSharp" Version="0.17.1" />
     <PackageReference Include="AngleSharp.Io" Version="0.17.0" />
