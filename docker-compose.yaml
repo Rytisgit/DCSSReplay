@@ -7,6 +7,10 @@ services:
     environment:
       - PROXY_HOST=http://localhost:3000
       - UPDATED_ON=0
+  dcsstv:
+    image: rytisgit/websocket-telnet-proxy:latest
+    ports:
+      - "5001:80"
   cors-anywhere:
     image: redocly/cors-anywhere:latest
     ports:
