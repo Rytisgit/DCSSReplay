@@ -15,10 +15,8 @@ COPY ["InputParse/", "./InputParse/"]
 COPY ["FrameGenerator/", "./FrameGenerator/"]
 RUN dotnet build "DCSSTV/DCSSTV.Wasm/DCSSTV.Wasm.csproj" -v:n -c Release -o /app/build 
 
-FROM build AS publish
-RUN dotnet publish "DCSSTV/DCSSTV.Wasm/DCSSTV.Wasm.csproj" -c Release -o /app/publish
-
-FROM nginx:alpine
+FROM fholzer/nginx-brotli
 EXPOSE 80
-COPY --from=publish /app/publish /usr/share/nginx/html
+COPY --from=build /app/build /usr/share/nginx/html
 COPY ["DCSSTV/DCSSTV.Wasm/mime.types", "/etc/nginx/mime.types" ]
+COPY ["DCSSTV/DCSSTV.Wasm/nginx.conf", "/etc/nginx/nginx.conf" ]
