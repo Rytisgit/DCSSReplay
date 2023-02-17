@@ -64,7 +64,7 @@
   </ItemGroup>
 
   <Target Name="RemoveSourceGeneratedFiles" BeforeTargets="CoreCompile">
-    <ItemGroup>
+    <ItemGroup Condition="'$(Configuration)'=='Debug'">
       <Compile Remove="$(CompilerGeneratedFilesOutputPath)\**" />
     </ItemGroup>
   </Target>
