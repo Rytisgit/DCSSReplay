@@ -4,10 +4,7 @@ services:
     image: rytisgit/dcsstv:latest
     ports:
       - "5000:80"
-    environment:
-      - PROXY_HOST=http://localhost:3000
-      - UPDATED_ON=0
-  dcsstv:
+  websocket-telnet-proxy:
     image: rytisgit/websocket-telnet-proxy:latest
     ports:
       - "5001:80"
