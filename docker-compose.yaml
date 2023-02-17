@@ -1,7 +1,7 @@
 version: "2"
 services:
   dcsstv:
-    image: rytisgit/dcsstv:latest
+    image: rytisgit/dcsstv:uno-platform-dcsstv
     ports:
       - "5000:80"
   websocket-telnet-proxy:

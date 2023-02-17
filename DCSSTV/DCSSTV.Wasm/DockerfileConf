@@ -1,0 +1,4 @@
+#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+
+FROM rytisgit/dcsstv:uno-platform-dcsstv
+COPY ["DCSSTV/DCSSTV.Wasm/nginx.conf", "/etc/nginx/nginx.conf" ]
