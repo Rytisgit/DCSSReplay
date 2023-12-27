@@ -164,11 +164,8 @@ wretched star
 lurking horror
 *BLUE lurking_horror
 
-;Shoals
+kraken
 *LIGHTMAGENTA kraken_tentacle_segment_water_S
-
-;Abyss
-*LIGHTCYAN starspawn_tentacle_segment_S_W
 
 tentacled starspawn
 *LIGHTCYAN starspawn_tentacle_segment_S_W
