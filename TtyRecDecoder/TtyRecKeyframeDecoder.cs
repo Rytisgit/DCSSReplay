@@ -254,7 +254,8 @@ namespace TtyRecDecoder
             }
             if (Packets.Count <= 0) return;
 
-            var nextFrameIndex = CurrentFrame.Index + frameCount;
+            var nextFrameIndex = CurrentFrame.Index + frameCount >= Packets.Count() ? Packets.Count()-1 : CurrentFrame.Index + frameCount;
+
             var nextFrameTime = Packets[nextFrameIndex > 0 ? nextFrameIndex : 0].SinceStart;
 
             DumpChunksAround(nextFrameTime);
