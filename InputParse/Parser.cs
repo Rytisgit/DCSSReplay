@@ -25,6 +25,7 @@ namespace InputParser
             foreach (var location in Locations.locations)
             {
                 if (!sideLocation.Contains(location.Substring(0, 3))) continue;
+                if (sideLocation.Contains(".")) return LayoutType.TextOnly;
                 newlocation = location;
                 return LayoutType.Normal;
             }
