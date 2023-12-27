@@ -47,13 +47,13 @@ namespace FrameGenerator.Extensions
                 if (correctTile == "*BLUE")
                 {
                     g.DrawBitmap(wall, new SKRect(0, 0, wall.Width, wall.Height));
-                    g.DrawColor(new SKColor(50, 40, 100, 200), SKBlendMode.Overlay);
+                    g.DrawColor(new SKColor(60, 60, 150, 150), SKBlendMode.Lighten);
                     return true;
                 }
                 if (correctTile == ",BLUE")
                 {
                     g.DrawBitmap(floor, new SKRect(0, 0, floor.Width, floor.Height));
-                    g.DrawColor(new SKColor(50, 40, 100, 200), SKBlendMode.Overlay);
+                    g.DrawColor(new SKColor(60, 60, 150, 150), SKBlendMode.Lighten);
                     return true;
                 }
                 if (correctTile == "*MAGENTA" || tile == "*LIGHTMAGENTA" || tile == "*BLACK")//selector highlight
