@@ -25,7 +25,7 @@ namespace InputParser.Decorators
             for (int i = 37; i < 75; i++)
             {
                 coloredSideData.Statuses1.Add(GetColoredCharacter(chars[i, 11]));
-                coloredSideData.Statuses1.Add(GetColoredCharacter(chars[i, 12]));
+                coloredSideData.Statuses2.Add(GetColoredCharacter(chars[i, 12]));
             }
             return coloredSideData;
         }
