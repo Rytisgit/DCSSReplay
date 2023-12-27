@@ -77,7 +77,7 @@ porcupine
 rBLUE porcupine
 
 death scarab
-sBLUE death_scarab
+BBLUE death_scarab
 
 steam dragon
 DBLUE steam_dragon
