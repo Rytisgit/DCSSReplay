@@ -69,11 +69,13 @@ namespace TtyRecDecoder
             // n.b. Resize uses this -- we may need to refactor if we need to do something permanent
 
             LoadCancel = true;
-            LoadThread.Join();
-            foreach (var ap in Packets) ap.RestartPosition.Dispose();
+            //DoBackgroundLoad is called in a different way, which might still be wrong, but need to be done
+            // for the uno version, since it doesn't support threading, until a recent update?
+            //LoadThread.Join();
+            foreach (var ap in Packets) ap.RestartPosition?.Dispose();
             Packets.Clear();
 
-            Debug.Assert(!LoadThread.IsAlive); // We assert this...
+            //Debug.Assert(!LoadThread.IsAlive); // We assert this...
             LoadPacketBuffer.Clear(); // ... because we're not locking this.
         }
 
