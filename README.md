@@ -34,12 +34,6 @@ Left Arrow    Time Step Backward 5 Seconds
 Right Arrow   Time Step Forward 5 Seconds
 ```
 
-## Contact
-
-- The author can be contacted in Discord as Sentei#5306
-- Those who prefer slower communication can send emails to petronisrytis@gmail.com
-- You can file github issues as well, in fact I encourage it!
-
 # Development
 
 ## Building the Source on Windows
