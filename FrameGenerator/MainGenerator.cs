@@ -187,7 +187,7 @@ namespace FrameGenerator
                     x += 20;
                 }
                 var overrides = GetOverridesForFrame(model.MonsterData, model.Location);
-                DrawTiles(g, model, 0, 32, model.LineLength, overrides);//draw the rest of the map
+                DrawTiles(g, model, 0, 32, model.LineLength, overrides, 0.75f);//draw the rest of the map
             }
 
             return bmp;
@@ -201,7 +201,7 @@ namespace FrameGenerator
             {
                 var font = new SKPaint {
                     Typeface = SKTypeface.FromFamilyName("Courier New"),
-                    TextSize = 12,
+                    TextSize = 16,
                     IsAntialias = true,
                 };
                 var darkPen = new SKPaint() { 
@@ -655,6 +655,9 @@ namespace FrameGenerator
                 TextSize = 24 * resize,
                 
             };
+            // centre character in bounding box
+            x += (32 - font.FontMetrics.XMax) / 2;
+            y -= (32 + font.FontMetrics.Top) / 2;
             g.WriteCharacter(tile, font, x, y, tileHighlight);//unhandled tile, write it as a character instead
 
             return false;
